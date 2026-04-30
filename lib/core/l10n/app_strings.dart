@@ -1,0 +1,130 @@
+/// Single source for all Korean text in the app.
+/// Prepared for future i18n by centralizing strings.
+class AppStrings {
+  AppStrings._();
+
+  // App
+  static const String appName = '알약';
+  static const String appTagline = '우리 가족 건강한 영양제 습관';
+
+  // Common
+  static const String next = '다음';
+  static const String prev = '이전';
+  static const String done = '완료';
+  static const String save = '저장';
+  static const String cancel = '취소';
+  static const String confirm = '확인';
+  static const String close = '닫기';
+  static const String edit = '수정';
+  static const String delete = '삭제';
+  static const String add = '추가';
+  static const String skip = '건너뛰기';
+  static const String start = '시작하기';
+  static const String more = '더보기';
+  static const String search = '검색';
+  static const String retry = '다시 시도';
+  static const String yes = '네';
+  static const String no = '아니요';
+
+  // Navigation
+  static const String navHome = '홈';
+  static const String navFamily = '가족';
+  static const String navSupplements = '영양제';
+  static const String navSettings = '설정';
+
+  // Privacy
+  static const String privacyTitle = '개인정보 안내';
+  static const String privacyConsent = '개인정보 처리에 동의합니다';
+  static const String privacyDataLocal = '입력하신 건강 정보는 기기에만 저장돼요';
+  static const String privacyEncryption = '민감한 정보는 AES-256으로 암호화돼요';
+  static const String privacyMedicalNote =
+      '본 앱은 의료 상담을 대체할 수 없으며, 정보 제공 목적으로만 사용돼요';
+
+  // Onboarding
+  static const String onboardingWelcome = '우리 가족 영양제 챙기기,\n알약과 함께 시작해요';
+  static const String onboardingDesc1 = '가족 한 명 한 명에 맞는 영양제를 추천해드려요';
+  static const String onboardingDesc2 = '복용 시간과 조합도 알려드릴게요';
+  static const String onboardingDesc3 = '건강검진 결과까지 반영한 맞춤 추천이에요';
+
+  // Home
+  static const String homeGreeting = '안녕하세요';
+  static const String homeTodaySchedule = '오늘의 복용 일정';
+  static const String homeStreak = '연속 복용';
+  static const String homeAddFamily = '가족 추가하기';
+  static const String homeStartRecommendation = '추천 받기';
+
+  // Family
+  static const String familyTitle = '우리 가족';
+  static const String familyAdd = '가족 추가';
+  static const String familyName = '이름';
+  static const String familyAge = '나이';
+  static const String familyGender = '성별';
+  static const String familyMale = '남성';
+  static const String familyFemale = '여성';
+  static const String familyAgeGroup = '연령대';
+  static const String familyAgeNewborn = '영유아 (0-1세)';
+  static const String familyAgeToddler = '유아 (2-6세)';
+  static const String familyAgeChild = '어린이 (7-12세)';
+  static const String familyAgeTeen = '청소년 (13-18세)';
+  static const String familyAgeAdult = '성인 (19-59세)';
+  static const String familyAgeElderly = '시니어 (60세 이상)';
+
+  // Lifestyle
+  static const String lifestyleTitle = '생활 습관';
+  static const String lifestyleSmoking = '흡연';
+  static const String lifestyleDrinking = '음주';
+  static const String lifestyleDiet = '식습관';
+  static const String lifestyleExercise = '운동';
+  static const String lifestyleSleep = '수면';
+  static const String lifestyleStress = '스트레스';
+
+  // Recommendation
+  static const String recoTitle = '맞춤 추천';
+  static const String recoMustTake = '꼭 챙겨야 해요';
+  static const String recoHighlyRecommended = '추천드려요';
+  static const String recoConsiderIf = '필요하면 고려해보세요';
+  static const String recoAlreadyTaking = '이미 복용 중';
+  static const String recoSchedule = '복용 시간표';
+  static const String recoMorning = '아침';
+  static const String recoLunch = '점심';
+  static const String recoEvening = '저녁';
+  static const String recoBeforeSleep = '취침 전';
+  static const String recoConflict = '주의가 필요해요';
+  static const String recoSynergy = '함께 먹으면 좋아요';
+
+  // Symptom
+  static const String symptomTitle = '증상으로 찾기';
+  static const String symptomSearchHint = '어떤 증상이 있으세요?';
+  static const String symptomTypeBNotice =
+      '병원 진료가 필요한 증상이에요. 빠른 시일 내에 의사와 상담하세요';
+
+  // Health checkup
+  static const String checkupTitle = '건강검진 결과';
+  static const String checkupDate = '검진일';
+  static const String checkupCholesterol = '총 콜레스테롤';
+  static const String checkupLdl = 'LDL 콜레스테롤';
+  static const String checkupHdl = 'HDL 콜레스테롤';
+  static const String checkupBloodSugar = '공복 혈당';
+  static const String checkupHemoglobin = '헤모글로빈';
+  static const String checkupAlt = 'ALT';
+  static const String checkupAst = 'AST';
+  static const String checkupVitaminD = '비타민D';
+  static const String checkupBpSystolic = '수축기 혈압';
+  static const String checkupBpDiastolic = '이완기 혈압';
+
+  // Settings
+  static const String settingsTitle = '설정';
+  static const String settingsNotification = '알림';
+  static const String settingsPrivacy = '개인정보 보호';
+  static const String settingsAbout = '앱 정보';
+  static const String settingsVersion = '버전';
+
+  // Disclaimer
+  static const String disclaimerNotMedicalAdvice =
+      '의료 조언이 아니에요. 복용 전 의사 또는 약사와 상의하세요';
+
+  // Errors
+  static const String errorGeneric = '문제가 발생했어요. 다시 시도해주세요';
+  static const String errorNetwork = '네트워크 연결을 확인해주세요';
+  static const String errorLoadingData = '데이터를 불러오지 못했어요';
+}

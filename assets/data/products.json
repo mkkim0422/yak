@@ -1,0 +1,331 @@
+{
+  "version": "2026.04",
+  "currency": "KRW",
+  "products": [
+    {
+      "id": "prod001",
+      "name": "센트룸 우먼",
+      "brand_type": "brand",
+      "category": "multivitamin",
+      "price_per_unit_krw": 850,
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 60,
+      "package_price_krw": 51000,
+      "ingredients": {
+        "vitamin_a_mcg": 700,
+        "vitamin_c_mg": 60,
+        "vitamin_d_iu": 600,
+        "vitamin_e_mg": 11,
+        "vitamin_k_mcg": 25,
+        "vitamin_b1_mg": 1.1,
+        "vitamin_b2_mg": 1.2,
+        "vitamin_b3_mg": 14,
+        "vitamin_b6_mg": 1.4,
+        "vitamin_b9_mcg": 400,
+        "vitamin_b12_mcg": 2.4,
+        "biotin_mcg": 30,
+        "calcium_mg": 162,
+        "magnesium_mg": 50,
+        "iron_mg": 14,
+        "zinc_mg": 8,
+        "selenium_mcg": 55,
+        "iodine_mcg": 100
+      },
+      "good_for": ["성인 여성"],
+      "alternatives": ["prod002", "prod003"],
+      "notes": "여성 성인 1정 1일 기준 종합비타민이에요"
+    },
+    {
+      "id": "prod002",
+      "name": "임팩타민",
+      "brand_type": "brand",
+      "category": "multivitamin",
+      "price_per_unit_krw": 333,
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 90,
+      "package_price_krw": 30000,
+      "ingredients": {
+        "vitamin_b1_mg": 50,
+        "vitamin_b2_mg": 12,
+        "vitamin_b3_mg": 30,
+        "vitamin_b6_mg": 25,
+        "vitamin_b12_mcg": 50,
+        "vitamin_b9_mcg": 200,
+        "biotin_mcg": 50,
+        "vitamin_c_mg": 100,
+        "vitamin_e_mg": 10,
+        "vitamin_d_iu": 200,
+        "calcium_mg": 50,
+        "magnesium_mg": 50
+      },
+      "good_for": ["성인", "피로 관리"],
+      "alternatives": ["prod001", "prod003"],
+      "notes": "B군이 강화된 종합비타민이에요"
+    },
+    {
+      "id": "prod003",
+      "name": "종근당 종합비타민",
+      "brand_type": "brand",
+      "category": "multivitamin",
+      "price_per_unit_krw": 250,
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 120,
+      "package_price_krw": 30000,
+      "ingredients": {
+        "vitamin_a_mcg": 600,
+        "vitamin_c_mg": 100,
+        "vitamin_d_iu": 400,
+        "vitamin_e_mg": 10,
+        "vitamin_b1_mg": 1.5,
+        "vitamin_b2_mg": 1.5,
+        "vitamin_b3_mg": 12,
+        "vitamin_b6_mg": 1.5,
+        "vitamin_b9_mcg": 200,
+        "vitamin_b12_mcg": 2.4,
+        "biotin_mcg": 30,
+        "calcium_mg": 100,
+        "magnesium_mg": 50,
+        "iron_mg": 8,
+        "zinc_mg": 8
+      },
+      "good_for": ["성인"],
+      "alternatives": ["prod001", "prod002"],
+      "notes": "성인 전반을 위한 종합비타민이에요"
+    },
+    {
+      "id": "prod004",
+      "name": "디카맥스 D3",
+      "brand_type": "brand",
+      "category": "vitamin_d_complex",
+      "price_per_unit_krw": 233,
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 60,
+      "package_price_krw": 14000,
+      "ingredients": {
+        "vitamin_d_iu": 2000,
+        "calcium_mg": 200
+      },
+      "good_for": ["비타민D 결핍"],
+      "alternatives": ["prod005"],
+      "notes": "비타민D + 칼슘 조합이에요"
+    },
+    {
+      "id": "prod005",
+      "name": "솔가 비타민D3 1000IU",
+      "brand_type": "brand",
+      "category": "vitamin_d_complex",
+      "price_per_unit_krw": 200,
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 100,
+      "package_price_krw": 20000,
+      "ingredients": {
+        "vitamin_d_iu": 1000
+      },
+      "good_for": ["비타민D 단일 보충"],
+      "alternatives": ["prod004"],
+      "notes": "단일 성분 비타민D3 1000IU예요"
+    },
+    {
+      "id": "prod006",
+      "name": "종근당 프로메가 오메가3",
+      "brand_type": "brand",
+      "category": "omega3",
+      "price_per_unit_krw": 250,
+      "unit": "정",
+      "daily_dose": 2,
+      "package_size": 60,
+      "package_price_krw": 15000,
+      "ingredients": {
+        "epa_mg": 270,
+        "dha_mg": 180,
+        "omega3_total_mg": 600,
+        "vitamin_e_mg": 1
+      },
+      "good_for": ["심혈관·두뇌"],
+      "alternatives": ["prod007"],
+      "notes": "1일 2정 기준 EPA+DHA 약 900mg이에요"
+    },
+    {
+      "id": "prod007",
+      "name": "노르딕내추럴스 오메가3",
+      "brand_type": "brand",
+      "category": "omega3",
+      "price_per_unit_krw": 600,
+      "unit": "정",
+      "daily_dose": 2,
+      "package_size": 60,
+      "package_price_krw": 36000,
+      "ingredients": {
+        "epa_mg": 325,
+        "dha_mg": 225,
+        "omega3_total_mg": 650,
+        "vitamin_e_mg": 0
+      },
+      "good_for": ["심혈관·두뇌"],
+      "alternatives": ["prod006"],
+      "notes": "1일 2정 기준 EPA+DHA 약 1100mg이에요"
+    },
+    {
+      "id": "prod008",
+      "name": "GNC 마그네슘+B6",
+      "brand_type": "brand",
+      "category": "magnesium_complex",
+      "price_per_unit_krw": 200,
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 90,
+      "package_price_krw": 18000,
+      "ingredients": {
+        "magnesium_mg": 250,
+        "vitamin_b6_mg": 10
+      },
+      "good_for": ["근육 이완·수면"],
+      "alternatives": ["prod009"],
+      "notes": "마그네슘 + B6 조합이에요"
+    },
+    {
+      "id": "prod009",
+      "name": "나우푸드 마그네슘 시트레이트",
+      "brand_type": "brand",
+      "category": "magnesium_complex",
+      "price_per_unit_krw": 167,
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 120,
+      "package_price_krw": 20000,
+      "ingredients": {
+        "magnesium_mg": 200
+      },
+      "good_for": ["근육 이완·수면"],
+      "alternatives": ["prod008"],
+      "notes": "마그네슘 시트레이트 단일 성분이에요"
+    },
+    {
+      "id": "prod010",
+      "name": "칼맥디",
+      "brand_type": "brand",
+      "category": "calcium_complex",
+      "price_per_unit_krw": 250,
+      "unit": "정",
+      "daily_dose": 2,
+      "package_size": 60,
+      "package_price_krw": 15000,
+      "ingredients": {
+        "calcium_mg": 300,
+        "magnesium_mg": 100,
+        "vitamin_d_iu": 200
+      },
+      "good_for": ["뼈 건강"],
+      "alternatives": ["prod011"],
+      "notes": "칼슘 + 마그네슘 + 비타민D 조합이에요"
+    },
+    {
+      "id": "prod011",
+      "name": "솔가 칼슘 시트레이트",
+      "brand_type": "brand",
+      "category": "calcium_complex",
+      "price_per_unit_krw": 280,
+      "unit": "정",
+      "daily_dose": 2,
+      "package_size": 120,
+      "package_price_krw": 33000,
+      "ingredients": {
+        "calcium_mg": 250,
+        "vitamin_d_iu": 200,
+        "magnesium_mg": 0
+      },
+      "good_for": ["뼈 건강"],
+      "alternatives": ["prod010"],
+      "notes": "칼슘 시트레이트 + 비타민D예요"
+    },
+    {
+      "id": "prod012",
+      "name": "임팩타민 파워",
+      "brand_type": "brand",
+      "category": "b_complex",
+      "price_per_unit_krw": 350,
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 60,
+      "package_price_krw": 21000,
+      "ingredients": {
+        "vitamin_b1_mg": 100,
+        "vitamin_b2_mg": 25,
+        "vitamin_b3_mg": 30,
+        "vitamin_b5_mg": 20,
+        "vitamin_b6_mg": 50,
+        "vitamin_b12_mcg": 50,
+        "biotin_mcg": 50,
+        "vitamin_b9_mcg": 200
+      },
+      "good_for": ["피로 관리"],
+      "alternatives": ["prod013"],
+      "notes": "고함량 B군 단일 제품이에요"
+    },
+    {
+      "id": "prod013",
+      "name": "솔가 B-컴플렉스 100",
+      "brand_type": "brand",
+      "category": "b_complex",
+      "price_per_unit_krw": 250,
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 100,
+      "package_price_krw": 25000,
+      "ingredients": {
+        "vitamin_b1_mg": 100,
+        "vitamin_b2_mg": 100,
+        "vitamin_b3_mg": 100,
+        "vitamin_b5_mg": 100,
+        "vitamin_b6_mg": 100,
+        "vitamin_b12_mcg": 100,
+        "biotin_mcg": 100,
+        "vitamin_b9_mcg": 400
+      },
+      "good_for": ["B군 보충"],
+      "alternatives": ["prod012"],
+      "notes": "고함량 B군 종합이에요"
+    },
+    {
+      "id": "prod014",
+      "name": "락토핏 골드",
+      "brand_type": "brand",
+      "category": "probiotics",
+      "price_per_unit_krw": 233,
+      "unit": "포",
+      "daily_dose": 1,
+      "package_size": 60,
+      "package_price_krw": 14000,
+      "ingredients": {
+        "probiotics_billion_cfu": 30,
+        "prebiotics_fos_mg": 250
+      },
+      "good_for": ["장 건강"],
+      "alternatives": ["prod015"],
+      "notes": "유산균 30억 + 프리바이오틱스 조합이에요"
+    },
+    {
+      "id": "prod015",
+      "name": "듀오락 케어",
+      "brand_type": "brand",
+      "category": "probiotics",
+      "price_per_unit_krw": 333,
+      "unit": "포",
+      "daily_dose": 1,
+      "package_size": 60,
+      "package_price_krw": 20000,
+      "ingredients": {
+        "probiotics_billion_cfu": 50,
+        "prebiotics_fos_mg": 300
+      },
+      "good_for": ["장 건강"],
+      "alternatives": ["prod014"],
+      "notes": "유산균 50억 + 프리바이오틱스 조합이에요"
+    }
+  ]
+}

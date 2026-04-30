@@ -1,0 +1,603 @@
+{
+  "version": "2026.04",
+  "symptoms": [
+    {
+      "id": "sym001",
+      "symptom": "눈이 떨려요",
+      "type": "A",
+      "keywords": ["눈떨림", "안륜근", "눈 경련"],
+      "related_supplements": [
+        {"supplement": "마그네슘", "relevance": "primary", "safe_expression": "근육 경련은 마그네슘 부족과 관련 있어요"},
+        {"supplement": "비타민B군 종합", "relevance": "secondary", "safe_expression": "신경 안정에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["충분한 수면", "스트레스 관리", "카페인 줄이기"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym002",
+      "symptom": "다리에 쥐가 나요",
+      "type": "A",
+      "keywords": ["근육 경련", "쥐", "종아리"],
+      "related_supplements": [
+        {"supplement": "마그네슘", "relevance": "primary", "safe_expression": "근육 이완에 좋아요"},
+        {"supplement": "칼슘", "relevance": "secondary", "safe_expression": "근육 수축에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["수분 섭취", "스트레칭"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym003",
+      "symptom": "만성 피로",
+      "type": "A",
+      "keywords": ["피로", "기력 저하", "무기력"],
+      "related_supplements": [
+        {"supplement": "비타민B군 종합", "relevance": "primary", "safe_expression": "에너지 대사에 도움이 돼요"},
+        {"supplement": "철분", "relevance": "secondary", "safe_expression": "산소 운반에 도움이 돼요"},
+        {"supplement": "코엔자임Q10", "relevance": "secondary", "safe_expression": "에너지 생성에 좋아요"}
+      ],
+      "lifestyle_tips": ["규칙적인 수면", "가벼운 운동"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym004",
+      "symptom": "머리카락이 빠져요",
+      "type": "A",
+      "keywords": ["탈모", "모발", "헤어"],
+      "related_supplements": [
+        {"supplement": "비오틴", "relevance": "primary", "safe_expression": "모발 건강에 도움이 돼요"},
+        {"supplement": "아연", "relevance": "secondary", "safe_expression": "모발 강화에 좋아요"},
+        {"supplement": "철분", "relevance": "secondary", "safe_expression": "철분 부족이 탈모와 관련 있어요"}
+      ],
+      "lifestyle_tips": ["스트레스 관리", "단백질 섭취"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym005",
+      "symptom": "잠들기 어려워요",
+      "type": "A",
+      "keywords": ["불면", "수면 장애", "입면"],
+      "related_supplements": [
+        {"supplement": "마그네슘", "relevance": "primary", "safe_expression": "근육 이완에 좋아요"},
+        {"supplement": "멜라토닌", "relevance": "primary", "safe_expression": "수면 유도에 도움이 돼요"},
+        {"supplement": "L-테아닌", "relevance": "secondary", "safe_expression": "긴장 완화에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["취침 1시간 전 화면 줄이기", "카페인 줄이기"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym006",
+      "symptom": "소화가 안 돼요",
+      "type": "A",
+      "keywords": ["소화불량", "더부룩"],
+      "related_supplements": [
+        {"supplement": "유산균", "relevance": "primary", "safe_expression": "장 환경 개선에 좋아요"},
+        {"supplement": "프리바이오틱스", "relevance": "secondary", "safe_expression": "장 운동에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["천천히 식사", "저녁 과식 피하기"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym007",
+      "symptom": "변비",
+      "type": "A",
+      "keywords": ["변비", "배변"],
+      "related_supplements": [
+        {"supplement": "유산균", "relevance": "primary", "safe_expression": "장 운동에 도움이 돼요"},
+        {"supplement": "프리바이오틱스", "relevance": "primary", "safe_expression": "변 형태 개선에 좋아요"},
+        {"supplement": "마그네슘", "relevance": "secondary", "safe_expression": "장 운동에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["식이섬유", "수분 섭취", "걷기 운동"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym008",
+      "symptom": "설사",
+      "type": "A",
+      "keywords": ["설사", "묽은 변"],
+      "related_supplements": [
+        {"supplement": "유산균", "relevance": "primary", "safe_expression": "장 환경 회복에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["수분·전해질 보충", "자극적인 음식 피하기"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym009",
+      "symptom": "면역력 저하",
+      "type": "A",
+      "keywords": ["면역력", "잔병"],
+      "related_supplements": [
+        {"supplement": "비타민C", "relevance": "primary", "safe_expression": "면역 유지에 좋아요"},
+        {"supplement": "비타민D", "relevance": "primary", "safe_expression": "면역 조절에 도움이 돼요"},
+        {"supplement": "아연", "relevance": "secondary", "safe_expression": "면역 기능에 좋아요"}
+      ],
+      "lifestyle_tips": ["충분한 수면", "균형 잡힌 식단"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym010",
+      "symptom": "집중력 저하",
+      "type": "A",
+      "keywords": ["집중", "주의력"],
+      "related_supplements": [
+        {"supplement": "오메가3", "relevance": "primary", "safe_expression": "두뇌 기능 유지에 좋아요"},
+        {"supplement": "비타민B군 종합", "relevance": "secondary", "safe_expression": "신경 건강에 도움이 돼요"},
+        {"supplement": "L-테아닌", "relevance": "secondary", "safe_expression": "집중력 유지에 좋아요"}
+      ],
+      "lifestyle_tips": ["충분한 수면", "스트레스 관리"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym011",
+      "symptom": "기억력 저하",
+      "type": "A",
+      "keywords": ["기억", "건망증"],
+      "related_supplements": [
+        {"supplement": "오메가3", "relevance": "primary", "safe_expression": "두뇌 기능에 좋아요"},
+        {"supplement": "DHA", "relevance": "primary", "safe_expression": "인지 기능 유지에 도움이 돼요"},
+        {"supplement": "비타민B12", "relevance": "secondary", "safe_expression": "신경 건강에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["규칙적인 운동", "두뇌 활동"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym012",
+      "symptom": "우울감",
+      "type": "A",
+      "keywords": ["우울", "기분"],
+      "related_supplements": [
+        {"supplement": "오메가3", "relevance": "primary", "safe_expression": "기분 조절에 도움이 돼요"},
+        {"supplement": "비타민D", "relevance": "secondary", "safe_expression": "기분과 관련 있어요"},
+        {"supplement": "5-HTP", "relevance": "secondary", "safe_expression": "기분 안정에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["햇빛 쬐기", "가벼운 운동", "전문가 상담"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym013",
+      "symptom": "불안감",
+      "type": "A",
+      "keywords": ["불안", "초조"],
+      "related_supplements": [
+        {"supplement": "마그네슘", "relevance": "primary", "safe_expression": "신경 안정에 좋아요"},
+        {"supplement": "L-테아닌", "relevance": "primary", "safe_expression": "긴장 완화에 좋아요"},
+        {"supplement": "GABA", "relevance": "secondary", "safe_expression": "심신 안정에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["호흡 명상", "규칙적인 운동"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym014",
+      "symptom": "스트레스",
+      "type": "A",
+      "keywords": ["스트레스", "긴장"],
+      "related_supplements": [
+        {"supplement": "비타민B군 종합", "relevance": "primary", "safe_expression": "스트레스 대응에 좋아요"},
+        {"supplement": "마그네슘", "relevance": "primary", "safe_expression": "긴장 완화에 좋아요"},
+        {"supplement": "아쉬와간다", "relevance": "secondary", "safe_expression": "스트레스 호르몬 균형에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["걷기·요가", "취미 시간"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym015",
+      "symptom": "피부 트러블",
+      "type": "A",
+      "keywords": ["피부", "트러블", "여드름"],
+      "related_supplements": [
+        {"supplement": "비타민C", "relevance": "primary", "safe_expression": "피부 회복에 좋아요"},
+        {"supplement": "비타민B5", "relevance": "secondary", "safe_expression": "피부 회복에 도움이 돼요"},
+        {"supplement": "아연", "relevance": "secondary", "safe_expression": "피부 회복에 좋아요"}
+      ],
+      "lifestyle_tips": ["수분 섭취", "자극적인 음식 피하기"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym016",
+      "symptom": "손톱 부서짐",
+      "type": "A",
+      "keywords": ["손톱", "부서짐"],
+      "related_supplements": [
+        {"supplement": "비오틴", "relevance": "primary", "safe_expression": "손톱 강화에 좋아요"},
+        {"supplement": "콜라겐", "relevance": "secondary", "safe_expression": "손톱 건강에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["충분한 단백질 섭취"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym017",
+      "symptom": "입냄새",
+      "type": "A",
+      "keywords": ["구취", "입냄새"],
+      "related_supplements": [
+        {"supplement": "유산균", "relevance": "primary", "safe_expression": "구강·장 환경에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["수분 섭취", "치과 검진"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym018",
+      "symptom": "잇몸 출혈",
+      "type": "A",
+      "keywords": ["잇몸", "출혈"],
+      "related_supplements": [
+        {"supplement": "비타민C", "relevance": "primary", "safe_expression": "잇몸 건강에 좋아요"},
+        {"supplement": "비타민K", "relevance": "secondary", "safe_expression": "지혈 작용에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["치과 검진"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym019",
+      "symptom": "빈혈",
+      "type": "A",
+      "keywords": ["빈혈", "어지럼"],
+      "related_supplements": [
+        {"supplement": "철분", "relevance": "primary", "safe_expression": "적혈구 생성에 좋아요"},
+        {"supplement": "비타민B12", "relevance": "primary", "safe_expression": "조혈에 도움이 돼요"},
+        {"supplement": "엽산", "relevance": "primary", "safe_expression": "조혈에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["철분 식품 섭취", "정기 검진"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym020",
+      "symptom": "어지러움",
+      "type": "A",
+      "keywords": ["어지럼", "현기증"],
+      "related_supplements": [
+        {"supplement": "철분", "relevance": "primary", "safe_expression": "빈혈 관련 어지럼에 도움이 돼요"},
+        {"supplement": "비타민B12", "relevance": "secondary", "safe_expression": "신경 안정에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["수분 섭취", "급격한 자세 변화 피하기"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym021",
+      "symptom": "관절 통증",
+      "type": "A",
+      "keywords": ["관절", "통증"],
+      "related_supplements": [
+        {"supplement": "글루코사민", "relevance": "primary", "safe_expression": "관절 연골 유지에 좋아요"},
+        {"supplement": "콘드로이틴", "relevance": "primary", "safe_expression": "관절 보호에 도움이 돼요"},
+        {"supplement": "오메가3", "relevance": "secondary", "safe_expression": "염증 완화에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["스트레칭", "체중 관리"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym022",
+      "symptom": "근육 약화",
+      "type": "A",
+      "keywords": ["근육", "약화"],
+      "related_supplements": [
+        {"supplement": "비타민D", "relevance": "primary", "safe_expression": "근육 기능에 좋아요"},
+        {"supplement": "마그네슘", "relevance": "secondary", "safe_expression": "근육 작용에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["근력 운동", "단백질 섭취"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym023",
+      "symptom": "골다공증",
+      "type": "A",
+      "keywords": ["골다공증", "뼈 약화"],
+      "related_supplements": [
+        {"supplement": "칼슘", "relevance": "primary", "safe_expression": "뼈 건강에 좋아요"},
+        {"supplement": "비타민D", "relevance": "primary", "safe_expression": "칼슘 흡수에 도움이 돼요"},
+        {"supplement": "비타민K", "relevance": "secondary", "safe_expression": "뼈로 칼슘 이동을 도와줘요"}
+      ],
+      "lifestyle_tips": ["걷기 운동", "정기 골밀도 검사"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym024",
+      "symptom": "뼈 통증",
+      "type": "A",
+      "keywords": ["뼈", "통증"],
+      "related_supplements": [
+        {"supplement": "비타민D", "relevance": "primary", "safe_expression": "뼈 건강에 좋아요"},
+        {"supplement": "칼슘", "relevance": "secondary", "safe_expression": "뼈 강화에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["햇빛 쬐기"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym025",
+      "symptom": "허리 통증",
+      "type": "A",
+      "keywords": ["허리", "요통"],
+      "related_supplements": [
+        {"supplement": "비타민D", "relevance": "primary", "safe_expression": "근골격 건강에 좋아요"},
+        {"supplement": "마그네슘", "relevance": "secondary", "safe_expression": "근육 이완에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["스트레칭", "자세 교정"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym026",
+      "symptom": "눈 피로",
+      "type": "A",
+      "keywords": ["눈", "피로"],
+      "related_supplements": [
+        {"supplement": "루테인", "relevance": "primary", "safe_expression": "눈 건강에 좋아요"},
+        {"supplement": "아스타잔틴", "relevance": "secondary", "safe_expression": "눈 피로 완화에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["20-20-20 휴식", "조명 조정"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym027",
+      "symptom": "눈 건조",
+      "type": "A",
+      "keywords": ["눈", "건조"],
+      "related_supplements": [
+        {"supplement": "오메가3", "relevance": "primary", "safe_expression": "눈물막 안정에 좋아요"}
+      ],
+      "lifestyle_tips": ["가습", "수분 섭취"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym028",
+      "symptom": "시력 저하",
+      "type": "A",
+      "keywords": ["시력", "저하"],
+      "related_supplements": [
+        {"supplement": "루테인", "relevance": "primary", "safe_expression": "황반 보호에 좋아요"},
+        {"supplement": "비타민A", "relevance": "secondary", "safe_expression": "시력 유지에 좋아요"}
+      ],
+      "lifestyle_tips": ["정기 안과 검진"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym029",
+      "symptom": "안구 건조증",
+      "type": "A",
+      "keywords": ["안구", "건조"],
+      "related_supplements": [
+        {"supplement": "오메가3", "relevance": "primary", "safe_expression": "눈물막 안정에 좋아요"}
+      ],
+      "lifestyle_tips": ["인공눈물", "가습"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym030",
+      "symptom": "감기 자주 걸림",
+      "type": "A",
+      "keywords": ["감기", "면역"],
+      "related_supplements": [
+        {"supplement": "비타민C", "relevance": "primary", "safe_expression": "면역 유지에 좋아요"},
+        {"supplement": "비타민D", "relevance": "primary", "safe_expression": "면역 조절에 도움이 돼요"},
+        {"supplement": "아연", "relevance": "secondary", "safe_expression": "면역 기능에 좋아요"}
+      ],
+      "lifestyle_tips": ["손 씻기", "충분한 수면"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym031",
+      "symptom": "알레르기",
+      "type": "A",
+      "keywords": ["알레르기"],
+      "related_supplements": [
+        {"supplement": "비타민C", "relevance": "primary", "safe_expression": "히스타민 반응에 도움이 돼요"},
+        {"supplement": "유산균", "relevance": "secondary", "safe_expression": "면역 균형에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["알레르겐 회피"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym032",
+      "symptom": "비염",
+      "type": "A",
+      "keywords": ["비염", "콧물"],
+      "related_supplements": [
+        {"supplement": "비타민C", "relevance": "primary", "safe_expression": "면역 균형에 좋아요"},
+        {"supplement": "유산균", "relevance": "secondary", "safe_expression": "면역 안정에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["환기", "먼지 회피"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym033",
+      "symptom": "천식",
+      "type": "A",
+      "keywords": ["천식", "기관지"],
+      "related_supplements": [
+        {"supplement": "오메가3", "relevance": "primary", "safe_expression": "기도 염증 완화에 좋아요"},
+        {"supplement": "비타민D", "relevance": "secondary", "safe_expression": "면역 조절에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["전문의 관리"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym034",
+      "symptom": "생리불순",
+      "type": "A",
+      "keywords": ["생리", "불규칙"],
+      "related_supplements": [
+        {"supplement": "비타민B6", "relevance": "primary", "safe_expression": "호르몬 대사에 좋아요"},
+        {"supplement": "마그네슘", "relevance": "secondary", "safe_expression": "PMS 완화에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["체중 관리", "스트레스 관리"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym035",
+      "symptom": "갱년기",
+      "type": "A",
+      "keywords": ["갱년기", "폐경"],
+      "related_supplements": [
+        {"supplement": "칼슘", "relevance": "primary", "safe_expression": "뼈 건강에 좋아요"},
+        {"supplement": "비타민D", "relevance": "primary", "safe_expression": "골다공증 예방에 좋아요"},
+        {"supplement": "오메가3", "relevance": "secondary", "safe_expression": "심혈관 건강에 좋아요"}
+      ],
+      "lifestyle_tips": ["걷기 운동", "정기 검진"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym036",
+      "symptom": "성욕 감소",
+      "type": "A",
+      "keywords": ["성욕"],
+      "related_supplements": [
+        {"supplement": "아연", "relevance": "primary", "safe_expression": "호르몬 균형에 좋아요"},
+        {"supplement": "비타민D", "relevance": "secondary", "safe_expression": "테스토스테론 유지에 좋아요"}
+      ],
+      "lifestyle_tips": ["수면 관리", "스트레스 관리"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym037",
+      "symptom": "발기부전",
+      "type": "A",
+      "keywords": ["발기"],
+      "related_supplements": [
+        {"supplement": "아연", "relevance": "primary", "safe_expression": "호르몬 균형에 좋아요"},
+        {"supplement": "오메가3", "relevance": "secondary", "safe_expression": "혈류 건강에 좋아요"},
+        {"supplement": "코엔자임Q10", "relevance": "secondary", "safe_expression": "혈관 건강에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["운동", "전문의 상담"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym038",
+      "symptom": "체중 증가",
+      "type": "A",
+      "keywords": ["체중", "비만"],
+      "related_supplements": [
+        {"supplement": "L-카르니틴", "relevance": "secondary", "safe_expression": "지방 대사에 도움이 돼요"},
+        {"supplement": "크롬", "relevance": "secondary", "safe_expression": "혈당 안정에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["식이 조절", "규칙적인 운동"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym039",
+      "symptom": "체중 감소",
+      "type": "A",
+      "keywords": ["체중", "저체중"],
+      "related_supplements": [
+        {"supplement": "비타민B군 종합", "relevance": "primary", "safe_expression": "에너지 대사에 좋아요"},
+        {"supplement": "종합비타민", "relevance": "secondary", "safe_expression": "기본 영양 보충에 좋아요"}
+      ],
+      "lifestyle_tips": ["전문의 상담", "충분한 영양 섭취"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym040",
+      "symptom": "식욕 부진",
+      "type": "A",
+      "keywords": ["식욕", "입맛"],
+      "related_supplements": [
+        {"supplement": "아연", "relevance": "primary", "safe_expression": "미각 유지에 좋아요"},
+        {"supplement": "비타민B군 종합", "relevance": "secondary", "safe_expression": "대사 활성에 좋아요"}
+      ],
+      "lifestyle_tips": ["가벼운 운동", "소량 식사"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym041",
+      "symptom": "단 음식 갈망",
+      "type": "A",
+      "keywords": ["당", "갈망"],
+      "related_supplements": [
+        {"supplement": "크롬", "relevance": "primary", "safe_expression": "혈당 안정에 좋아요"},
+        {"supplement": "마그네슘", "relevance": "secondary", "safe_expression": "당 갈망 완화에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["규칙적인 식사", "단백질·식이섬유 섭취"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym042",
+      "symptom": "땀 많이 남",
+      "type": "A",
+      "keywords": ["땀", "다한증"],
+      "related_supplements": [
+        {"supplement": "비타민B군 종합", "relevance": "secondary", "safe_expression": "에너지 균형에 좋아요"},
+        {"supplement": "마그네슘", "relevance": "secondary", "safe_expression": "전해질 균형에 좋아요"}
+      ],
+      "lifestyle_tips": ["수분·전해질 보충"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym043",
+      "symptom": "손발 차가움",
+      "type": "A",
+      "keywords": ["수족냉증", "차가움"],
+      "related_supplements": [
+        {"supplement": "철분", "relevance": "primary", "safe_expression": "혈액 순환에 도움이 돼요"},
+        {"supplement": "비타민E", "relevance": "secondary", "safe_expression": "혈액 순환에 좋아요"}
+      ],
+      "lifestyle_tips": ["가벼운 운동", "보온"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym044",
+      "symptom": "두통",
+      "type": "A",
+      "keywords": ["두통", "편두통"],
+      "related_supplements": [
+        {"supplement": "마그네슘", "relevance": "primary", "safe_expression": "두통 완화에 도움이 돼요"},
+        {"supplement": "비타민B2", "relevance": "secondary", "safe_expression": "편두통 완화에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["수분 섭취", "수면 관리"],
+      "urgency": "medium"
+    },
+    {
+      "id": "sym045",
+      "symptom": "어깨 결림",
+      "type": "A",
+      "keywords": ["어깨", "결림"],
+      "related_supplements": [
+        {"supplement": "마그네슘", "relevance": "primary", "safe_expression": "근육 이완에 좋아요"},
+        {"supplement": "비타민B군 종합", "relevance": "secondary", "safe_expression": "신경 건강에 도움이 돼요"}
+      ],
+      "lifestyle_tips": ["스트레칭", "자세 교정"],
+      "urgency": "low"
+    },
+    {
+      "id": "sym046",
+      "symptom": "심한 두통",
+      "type": "B",
+      "keywords": ["두통", "심한"],
+      "related_supplements": [],
+      "lifestyle_tips": ["응급실 또는 신경과 즉시 방문하세요"],
+      "urgency": "high"
+    },
+    {
+      "id": "sym047",
+      "symptom": "가슴 통증",
+      "type": "B",
+      "keywords": ["흉통", "심장"],
+      "related_supplements": [],
+      "lifestyle_tips": ["응급실 즉시 방문 또는 119 신고"],
+      "urgency": "high"
+    },
+    {
+      "id": "sym048",
+      "symptom": "갑작스런 시야 흐림",
+      "type": "B",
+      "keywords": ["시야", "흐림"],
+      "related_supplements": [],
+      "lifestyle_tips": ["응급실 또는 안과·신경과 즉시 방문하세요"],
+      "urgency": "high"
+    },
+    {
+      "id": "sym049",
+      "symptom": "의식 잃음",
+      "type": "B",
+      "keywords": ["실신", "기절"],
+      "related_supplements": [],
+      "lifestyle_tips": ["119 즉시 신고 후 응급실 방문하세요"],
+      "urgency": "high"
+    },
+    {
+      "id": "sym050",
+      "symptom": "심한 출혈",
+      "type": "B",
+      "keywords": ["출혈", "지혈"],
+      "related_supplements": [],
+      "lifestyle_tips": ["119 즉시 신고 후 응급실 방문하세요"],
+      "urgency": "high"
+    }
+  ]
+}

@@ -1,0 +1,352 @@
+{
+  "version": "2026.04",
+  "profiles": [
+    {
+      "id": "p001",
+      "age_group": "newborn",
+      "gender": "male",
+      "must_take": [
+        {"name": "비타민D", "priority": 1, "reason": "성장기 뼈 발달과 면역 유지에 좋아요"},
+        {"name": "유산균", "priority": 2, "reason": "장 환경 정착에 도움이 돼요"}
+      ],
+      "highly_recommended": [
+        {"name": "DHA", "reason": "두뇌 발달에 좋아요"}
+      ],
+      "consider_if": [],
+      "avoid": ["성인용 종합비타민", "성인용 단일 미네랄"],
+      "region_notes": {
+        "KR": "한국 식단 기반",
+        "JP": "일본 식단 기반"
+      }
+    },
+    {
+      "id": "p002",
+      "age_group": "newborn",
+      "gender": "female",
+      "must_take": [
+        {"name": "비타민D", "priority": 1, "reason": "성장기 뼈 발달과 면역 유지에 좋아요"},
+        {"name": "유산균", "priority": 2, "reason": "장 환경 정착에 도움이 돼요"}
+      ],
+      "highly_recommended": [
+        {"name": "DHA", "reason": "두뇌 발달에 좋아요"}
+      ],
+      "consider_if": [],
+      "avoid": ["성인용 종합비타민", "성인용 단일 미네랄"],
+      "region_notes": {
+        "KR": "한국 식단 기반",
+        "JP": "일본 식단 기반"
+      }
+    },
+    {
+      "id": "p003",
+      "age_group": "toddler",
+      "gender": "male",
+      "must_take": [
+        {"name": "비타민D", "priority": 1, "reason": "성장기 뼈 발달에 필요해요"},
+        {"name": "유산균", "priority": 2, "reason": "장 건강에 좋아요"},
+        {"name": "DHA", "priority": 2, "reason": "두뇌 발달에 좋아요"}
+      ],
+      "highly_recommended": [
+        {"name": "철분", "reason": "성장기 철분 요구가 높아요"}
+      ],
+      "consider_if": [
+        {"name": "종합비타민", "condition": "편식이 심한 경우"}
+      ],
+      "avoid": ["성인용 종합비타민"],
+      "region_notes": {
+        "KR": "한국 식단 기반",
+        "JP": "일본 식단 기반"
+      }
+    },
+    {
+      "id": "p004",
+      "age_group": "toddler",
+      "gender": "female",
+      "must_take": [
+        {"name": "비타민D", "priority": 1, "reason": "성장기 뼈 발달에 필요해요"},
+        {"name": "유산균", "priority": 2, "reason": "장 건강에 좋아요"},
+        {"name": "DHA", "priority": 2, "reason": "두뇌 발달에 좋아요"}
+      ],
+      "highly_recommended": [
+        {"name": "철분", "reason": "성장기 철분 요구가 높아요"}
+      ],
+      "consider_if": [
+        {"name": "종합비타민", "condition": "편식이 심한 경우"}
+      ],
+      "avoid": ["성인용 종합비타민"],
+      "region_notes": {
+        "KR": "한국 식단 기반",
+        "JP": "일본 식단 기반"
+      }
+    },
+    {
+      "id": "p005",
+      "age_group": "child",
+      "gender": "male",
+      "must_take": [
+        {"name": "비타민D", "priority": 1, "reason": "성장기 뼈 건강에 필요해요"},
+        {"name": "유산균", "priority": 1, "reason": "장 건강과 면역에 좋아요"},
+        {"name": "철분", "priority": 2, "reason": "성장기 산소 운반에 필요해요"}
+      ],
+      "highly_recommended": [
+        {"name": "오메가3", "reason": "두뇌 발달에 좋아요"}
+      ],
+      "consider_if": [
+        {"name": "종합비타민", "condition": "편식이 심한 경우"}
+      ],
+      "avoid": ["성인용 종합비타민"],
+      "region_notes": {
+        "KR": "한국 식단 기반",
+        "JP": "일본 식단 기반"
+      }
+    },
+    {
+      "id": "p006",
+      "age_group": "child",
+      "gender": "female",
+      "must_take": [
+        {"name": "비타민D", "priority": 1, "reason": "성장기 뼈 건강에 필요해요"},
+        {"name": "유산균", "priority": 1, "reason": "장 건강과 면역에 좋아요"},
+        {"name": "철분", "priority": 2, "reason": "성장기 필수예요"}
+      ],
+      "highly_recommended": [
+        {"name": "오메가3", "reason": "두뇌 발달에 좋아요"}
+      ],
+      "consider_if": [
+        {"name": "종합비타민", "condition": "편식이 심한 경우"}
+      ],
+      "avoid": ["성인용 종합비타민"],
+      "region_notes": {
+        "KR": "한국 식단 기반",
+        "JP": "일본 식단 기반"
+      }
+    },
+    {
+      "id": "p007",
+      "age_group": "teen",
+      "gender": "male",
+      "must_take": [
+        {"name": "비타민D", "priority": 1, "reason": "성장기 뼈 발달에 좋아요"},
+        {"name": "오메가3", "priority": 2, "reason": "두뇌·집중력 유지에 좋아요"}
+      ],
+      "highly_recommended": [
+        {"name": "유산균", "reason": "장 건강에 좋아요"},
+        {"name": "비타민B군 종합", "reason": "에너지 대사에 좋아요"}
+      ],
+      "consider_if": [
+        {"name": "종합비타민", "condition": "편식이 심한 경우"},
+        {"name": "마그네슘", "condition": "수면 부족·스트레스가 심한 경우"}
+      ],
+      "avoid": [],
+      "region_notes": {
+        "KR": "한국 식단 기반",
+        "JP": "일본 식단 기반"
+      }
+    },
+    {
+      "id": "p008",
+      "age_group": "teen",
+      "gender": "female",
+      "must_take": [
+        {"name": "비타민D", "priority": 1, "reason": "성장기 뼈 발달에 좋아요"},
+        {"name": "철분", "priority": 1, "reason": "생리로 손실되는 철분 보충에 좋아요"},
+        {"name": "오메가3", "priority": 2, "reason": "두뇌·집중력 유지에 좋아요"}
+      ],
+      "highly_recommended": [
+        {"name": "유산균", "reason": "장 건강과 면역에 좋아요"},
+        {"name": "비타민B군 종합", "reason": "에너지 대사에 좋아요"}
+      ],
+      "consider_if": [
+        {"name": "마그네슘", "condition": "PMS·수면 부족이 심한 경우"}
+      ],
+      "avoid": [],
+      "region_notes": {
+        "KR": "한국 식단 기반",
+        "JP": "일본 식단 기반"
+      }
+    },
+    {
+      "id": "p009",
+      "age_group": "adult",
+      "gender": "male",
+      "must_take": [
+        {"name": "비타민D", "priority": 1, "reason": "한국인의 결핍률이 높아 보충이 좋아요"},
+        {"name": "오메가3", "priority": 2, "reason": "심혈관 건강 유지에 좋아요"}
+      ],
+      "highly_recommended": [
+        {"name": "유산균", "reason": "장 건강에 좋아요"},
+        {"name": "비타민B군 종합", "reason": "피로 회복에 좋아요"},
+        {"name": "마그네슘", "reason": "스트레스·근육 이완에 좋아요"}
+      ],
+      "consider_if": [
+        {"name": "밀크씨슬", "condition": "음주가 잦은 경우"},
+        {"name": "코엔자임Q10", "condition": "스타틴을 복용 중인 경우"},
+        {"name": "루테인", "condition": "장시간 화면을 보는 경우"}
+      ],
+      "avoid": [],
+      "region_notes": {
+        "KR": "한국 식단 기반",
+        "JP": "일본 식단 기반"
+      }
+    },
+    {
+      "id": "p010",
+      "age_group": "adult",
+      "gender": "female",
+      "must_take": [
+        {"name": "비타민D", "priority": 1, "reason": "한국인의 결핍률이 높아 보충이 좋아요"},
+        {"name": "철분", "priority": 1, "reason": "생리로 손실되는 철분 보충에 좋아요"},
+        {"name": "오메가3", "priority": 2, "reason": "심혈관·피부 건강에 좋아요"}
+      ],
+      "highly_recommended": [
+        {"name": "엽산", "reason": "임신 준비기에 필수예요"},
+        {"name": "유산균", "reason": "장 건강과 면역에 좋아요"},
+        {"name": "마그네슘", "reason": "PMS·수면에 좋아요"}
+      ],
+      "consider_if": [
+        {"name": "콜라겐", "condition": "피부 탄력에 신경 쓰는 경우"},
+        {"name": "비오틴", "condition": "탈모·손톱 부서짐이 있는 경우"},
+        {"name": "비타민B군 종합", "condition": "스트레스가 심한 경우"}
+      ],
+      "avoid": [],
+      "region_notes": {
+        "KR": "한국 식단 기반",
+        "JP": "일본 식단 기반"
+      }
+    },
+    {
+      "id": "p011",
+      "age_group": "elderly",
+      "gender": "male",
+      "must_take": [
+        {"name": "비타민D", "priority": 1, "reason": "골다공증 예방에 좋아요"},
+        {"name": "칼슘", "priority": 1, "reason": "뼈 건강 유지에 좋아요"},
+        {"name": "오메가3", "priority": 2, "reason": "심혈관·인지 기능에 좋아요"}
+      ],
+      "highly_recommended": [
+        {"name": "비타민B12", "reason": "위산 감소로 흡수가 떨어져요"},
+        {"name": "코엔자임Q10", "reason": "심장·에너지에 좋아요"},
+        {"name": "유산균", "reason": "장 운동에 좋아요"}
+      ],
+      "consider_if": [
+        {"name": "글루코사민", "condition": "관절 통증이 있는 경우"},
+        {"name": "루테인", "condition": "황반 건강이 걱정되는 경우"},
+        {"name": "비타민K", "condition": "골밀도 저하가 있는 경우"}
+      ],
+      "avoid": [],
+      "region_notes": {
+        "KR": "한국 식단 기반",
+        "JP": "일본 식단 기반"
+      }
+    },
+    {
+      "id": "p012",
+      "age_group": "elderly",
+      "gender": "female",
+      "must_take": [
+        {"name": "칼슘", "priority": 1, "reason": "갱년기 골 손실 예방에 좋아요"},
+        {"name": "비타민D", "priority": 1, "reason": "칼슘 흡수와 면역에 좋아요"},
+        {"name": "오메가3", "priority": 2, "reason": "심혈관·인지 기능에 좋아요"}
+      ],
+      "highly_recommended": [
+        {"name": "비타민B12", "reason": "위산 감소로 흡수가 떨어져요"},
+        {"name": "유산균", "reason": "장 운동에 좋아요"},
+        {"name": "비타민K", "reason": "뼈로 칼슘 이동에 좋아요"}
+      ],
+      "consider_if": [
+        {"name": "글루코사민", "condition": "관절 통증이 있는 경우"},
+        {"name": "루테인", "condition": "황반 건강이 걱정되는 경우"},
+        {"name": "콜라겐", "condition": "관절·피부 탄력 유지에 신경 쓰는 경우"}
+      ],
+      "avoid": [],
+      "region_notes": {
+        "KR": "한국 식단 기반",
+        "JP": "일본 식단 기반"
+      }
+    },
+    {
+      "id": "p013",
+      "age_group": "adult",
+      "gender": "pregnant",
+      "must_take": [
+        {"name": "엽산", "priority": 1, "reason": "태아 신경관 발달에 필수예요"},
+        {"name": "철분", "priority": 1, "reason": "임신 중 철분 요구가 높아요"},
+        {"name": "비타민D", "priority": 1, "reason": "엄마와 아기의 뼈 건강에 좋아요"},
+        {"name": "DHA", "priority": 2, "reason": "태아 두뇌 발달에 좋아요"}
+      ],
+      "highly_recommended": [
+        {"name": "칼슘", "reason": "엄마와 아기의 뼈 건강에 좋아요"},
+        {"name": "유산균", "reason": "장과 면역 균형에 좋아요"}
+      ],
+      "consider_if": [
+        {"name": "비타민B군 종합", "condition": "입덧·피로가 심한 경우"}
+      ],
+      "avoid": ["비타민A 고용량", "한약제"],
+      "region_notes": {
+        "KR": "임신 중 의료진과 상담이 우선이에요",
+        "JP": "일본 식단 기반"
+      }
+    },
+    {
+      "id": "p014",
+      "age_group": "adult",
+      "gender": "lactating",
+      "must_take": [
+        {"name": "비타민D", "priority": 1, "reason": "수유 중 결핍이 흔해요"},
+        {"name": "철분", "priority": 1, "reason": "출산 후 철분 보충에 좋아요"},
+        {"name": "DHA", "priority": 2, "reason": "수유로 전달되는 영양소예요"}
+      ],
+      "highly_recommended": [
+        {"name": "칼슘", "reason": "수유 중 칼슘 손실에 좋아요"},
+        {"name": "유산균", "reason": "장 건강에 좋아요"},
+        {"name": "비타민B군 종합", "reason": "회복과 에너지에 좋아요"}
+      ],
+      "consider_if": [],
+      "avoid": ["고용량 비타민A", "허브 보조제 일부"],
+      "region_notes": {
+        "KR": "수유 중 의료진과 상담이 우선이에요"
+      }
+    },
+    {
+      "id": "p015",
+      "age_group": "child",
+      "gender": "picky_eater",
+      "must_take": [
+        {"name": "종합비타민", "priority": 1, "reason": "편식으로 부족해진 영양 보충에 좋아요"},
+        {"name": "비타민D", "priority": 1, "reason": "한국 어린이 결핍이 흔해요"},
+        {"name": "유산균", "priority": 2, "reason": "장 건강에 좋아요"}
+      ],
+      "highly_recommended": [
+        {"name": "철분", "reason": "고기·채소를 잘 안 먹는 경우 좋아요"},
+        {"name": "오메가3", "reason": "생선을 잘 안 먹는 경우 좋아요"}
+      ],
+      "consider_if": [],
+      "avoid": ["성인용 영양제"],
+      "region_notes": {
+        "KR": "어린이 전용 제품 사용을 권해요"
+      }
+    },
+    {
+      "id": "p016",
+      "age_group": "adult",
+      "gender": "vegetarian",
+      "must_take": [
+        {"name": "비타민B12", "priority": 1, "reason": "채식으로 부족해진 B12 보충에 좋아요"},
+        {"name": "철분", "priority": 1, "reason": "식물성 철분 흡수율을 보완해요"},
+        {"name": "오메가3", "priority": 2, "reason": "EPA·DHA 보충에 좋아요"}
+      ],
+      "highly_recommended": [
+        {"name": "비타민D", "reason": "한국인 결핍률이 높아요"},
+        {"name": "아연", "reason": "식물성 식단에서 부족하기 쉬워요"},
+        {"name": "칼슘", "reason": "유제품 섭취가 적은 경우 좋아요"}
+      ],
+      "consider_if": [
+        {"name": "비타민B군 종합", "condition": "에너지 부족이 자주 있는 경우"}
+      ],
+      "avoid": [],
+      "region_notes": {
+        "KR": "한국 채식 식단 기반"
+      }
+    }
+  ]
+}
