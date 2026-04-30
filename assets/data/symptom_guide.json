@@ -561,6 +561,7 @@
       "keywords": ["두통", "심한"],
       "related_supplements": [],
       "lifestyle_tips": ["응급실 또는 신경과 즉시 방문하세요"],
+      "medical_message": "갑작스럽거나 심한 두통은 즉시 병원 진료가 필요해요",
       "urgency": "high"
     },
     {
@@ -570,6 +571,7 @@
       "keywords": ["흉통", "심장"],
       "related_supplements": [],
       "lifestyle_tips": ["응급실 즉시 방문 또는 119 신고"],
+      "medical_message": "가슴 통증은 심장 질환의 신호일 수 있어요. 즉시 응급실로 가세요",
       "urgency": "high"
     },
     {
@@ -579,6 +581,7 @@
       "keywords": ["시야", "흐림"],
       "related_supplements": [],
       "lifestyle_tips": ["응급실 또는 안과·신경과 즉시 방문하세요"],
+      "medical_message": "갑작스런 시야 변화는 즉시 병원 진료가 필요해요",
       "urgency": "high"
     },
     {
@@ -588,6 +591,7 @@
       "keywords": ["실신", "기절"],
       "related_supplements": [],
       "lifestyle_tips": ["119 즉시 신고 후 응급실 방문하세요"],
+      "medical_message": "의식 변화나 혼미는 즉시 응급 진료가 필요해요",
       "urgency": "high"
     },
     {
@@ -597,6 +601,7 @@
       "keywords": ["출혈", "지혈"],
       "related_supplements": [],
       "lifestyle_tips": ["119 즉시 신고 후 응급실 방문하세요"],
+      "medical_message": "멈추지 않는 출혈은 즉시 응급 진료가 필요해요",
       "urgency": "high"
     }
   ]

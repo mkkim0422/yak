@@ -100,41 +100,43 @@ class DosageBand {
 
 class DosageInfo {
   final DosageBand adult;
-  final DosageBand child7to12;
-  final DosageBand teen13to18;
-  final DosageBand elderly60plus;
-  final double upperLimit;
+  final DosageBand? child7to12;
+  final DosageBand? teen13to18;
+  final DosageBand? elderly60plus;
+  final double? upperLimit;
 
   const DosageInfo({
     required this.adult,
-    required this.child7to12,
-    required this.teen13to18,
-    required this.elderly60plus,
-    required this.upperLimit,
+    this.child7to12,
+    this.teen13to18,
+    this.elderly60plus,
+    this.upperLimit,
   });
 
-  factory DosageInfo.fromJson(Map<String, dynamic> json) => DosageInfo(
-        adult: DosageBand.fromJson(
-          (json['adult'] as Map<String, dynamic>?) ?? const {},
-        ),
-        child7to12: DosageBand.fromJson(
-          (json['child_7_12'] as Map<String, dynamic>?) ?? const {},
-        ),
-        teen13to18: DosageBand.fromJson(
-          (json['teen_13_18'] as Map<String, dynamic>?) ?? const {},
-        ),
-        elderly60plus: DosageBand.fromJson(
-          (json['elderly_60plus'] as Map<String, dynamic>?) ?? const {},
-        ),
-        upperLimit: (json['upper_limit'] as num?)?.toDouble() ?? 0,
-      );
+  factory DosageInfo.fromJson(Map<String, dynamic> json) {
+    DosageBand? optional(String key) {
+      final raw = json[key];
+      if (raw is! Map<String, dynamic>) return null;
+      return DosageBand.fromJson(raw);
+    }
+
+    return DosageInfo(
+      adult: DosageBand.fromJson(
+        (json['adult'] as Map<String, dynamic>?) ?? const {},
+      ),
+      child7to12: optional('child_7_12'),
+      teen13to18: optional('teen_13_18'),
+      elderly60plus: optional('elderly_60plus'),
+      upperLimit: (json['upper_limit'] as num?)?.toDouble(),
+    );
+  }
 
   DosageBand bandForAge(int age) {
-    if (age >= 60) return elderly60plus;
+    if (age >= 60 && elderly60plus != null) return elderly60plus!;
     if (age >= 19) return adult;
-    if (age >= 13) return teen13to18;
-    if (age >= 7) return child7to12;
-    return child7to12;
+    if (age >= 13 && teen13to18 != null) return teen13to18!;
+    if (age >= 7 && child7to12 != null) return child7to12!;
+    return child7to12 ?? adult;
   }
 }
 
@@ -181,13 +183,25 @@ class FoodAlternative {
 }
 
 class SpecialWarnings {
-  final List<DrugInteractionEntry> drugInteractions;
-  final List<CombinationLink> badCombinations;
+  final List<String> contraindications;
+  final List<String> sideEffects;
 
   const SpecialWarnings({
-    required this.drugInteractions,
-    required this.badCombinations,
+    required this.contraindications,
+    required this.sideEffects,
   });
+
+  bool get isEmpty => contraindications.isEmpty && sideEffects.isEmpty;
+
+  factory SpecialWarnings.fromJson(Map<String, dynamic> json) =>
+      SpecialWarnings(
+        contraindications: ((json['contraindications'] as List?) ?? const [])
+            .map((e) => e.toString())
+            .toList(growable: false),
+        sideEffects: ((json['side_effects'] as List?) ?? const [])
+            .map((e) => e.toString())
+            .toList(growable: false),
+      );
 }
 
 class SupplementGuide {
@@ -204,6 +218,7 @@ class SupplementGuide {
   final List<DrugInteractionEntry> drugInteractions;
   final List<FoodAlternative> foodAlternatives;
   final String effectTimeline;
+  final SpecialWarnings? warnings;
 
   const SupplementGuide({
     required this.id,
@@ -219,12 +234,8 @@ class SupplementGuide {
     required this.drugInteractions,
     required this.foodAlternatives,
     required this.effectTimeline,
+    this.warnings,
   });
-
-  SpecialWarnings get specialWarnings => SpecialWarnings(
-        drugInteractions: drugInteractions,
-        badCombinations: badCombinations,
-      );
 
   factory SupplementGuide.fromJson(Map<String, dynamic> json) {
     final reasons = (json['personalized_reasons'] as Map<String, dynamic>?) ??
@@ -258,6 +269,9 @@ class SupplementGuide {
           .map((e) => FoodAlternative(e.toString()))
           .toList(growable: false),
       effectTimeline: (json['effect_timeline'] as String?) ?? '',
+      warnings: json['warnings'] is Map<String, dynamic>
+          ? SpecialWarnings.fromJson(json['warnings'] as Map<String, dynamic>)
+          : null,
     );
   }
 }

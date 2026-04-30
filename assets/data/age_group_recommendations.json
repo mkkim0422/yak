@@ -268,20 +268,21 @@
       "id": "p013",
       "age_group": "adult",
       "gender": "pregnant",
+      "special_condition": "pregnant",
       "must_take": [
         {"name": "엽산", "priority": 1, "reason": "태아 신경관 발달에 필수예요"},
+        {"name": "DHA", "priority": 1, "reason": "태아 두뇌 발달에 꼭 필요해요"},
         {"name": "철분", "priority": 1, "reason": "임신 중 철분 요구가 높아요"},
-        {"name": "비타민D", "priority": 1, "reason": "엄마와 아기의 뼈 건강에 좋아요"},
-        {"name": "DHA", "priority": 2, "reason": "태아 두뇌 발달에 좋아요"}
+        {"name": "칼슘", "priority": 2, "reason": "엄마와 아기의 뼈 건강에 좋아요"}
       ],
       "highly_recommended": [
-        {"name": "칼슘", "reason": "엄마와 아기의 뼈 건강에 좋아요"},
+        {"name": "비타민D", "reason": "엄마와 아기의 뼈 건강에 좋아요"},
         {"name": "유산균", "reason": "장과 면역 균형에 좋아요"}
       ],
       "consider_if": [
         {"name": "비타민B군 종합", "condition": "입덧·피로가 심한 경우"}
       ],
-      "avoid": ["비타민A 고용량", "한약제"],
+      "avoid": ["비타민A 고함량", "카페인 함유 영양제", "호르몬 작용 허브"],
       "region_notes": {
         "KR": "임신 중 의료진과 상담이 우선이에요",
         "JP": "일본 식단 기반"
@@ -290,19 +291,20 @@
     {
       "id": "p014",
       "age_group": "adult",
-      "gender": "lactating",
+      "gender": "breastfeeding",
+      "special_condition": "breastfeeding",
       "must_take": [
-        {"name": "비타민D", "priority": 1, "reason": "수유 중 결핍이 흔해요"},
-        {"name": "철분", "priority": 1, "reason": "출산 후 철분 보충에 좋아요"},
-        {"name": "DHA", "priority": 2, "reason": "수유로 전달되는 영양소예요"}
+        {"name": "DHA", "priority": 1, "reason": "수유로 전달되는 두뇌 영양소예요"},
+        {"name": "칼슘", "priority": 1, "reason": "수유 중 칼슘 손실을 보충해요"},
+        {"name": "비타민D", "priority": 1, "reason": "수유 중 결핍이 흔해요"}
       ],
       "highly_recommended": [
-        {"name": "칼슘", "reason": "수유 중 칼슘 손실에 좋아요"},
-        {"name": "유산균", "reason": "장 건강에 좋아요"},
+        {"name": "철분", "reason": "출산 후 철분 보충에 좋아요"},
+        {"name": "유산균", "reason": "장 건강 회복에 좋아요"},
         {"name": "비타민B군 종합", "reason": "회복과 에너지에 좋아요"}
       ],
       "consider_if": [],
-      "avoid": ["고용량 비타민A", "허브 보조제 일부"],
+      "avoid": ["호르몬 작용 허브", "다이어트 영양제"],
       "region_notes": {
         "KR": "수유 중 의료진과 상담이 우선이에요"
       }
@@ -346,6 +348,56 @@
       "avoid": [],
       "region_notes": {
         "KR": "한국 채식 식단 기반"
+      }
+    },
+    {
+      "id": "p017",
+      "age_group": "middle_age",
+      "gender": "male",
+      "must_take": [
+        {"name": "오메가3", "priority": 1, "reason": "혈관 건강 유지에 좋아요"},
+        {"name": "비타민D", "priority": 1, "reason": "뼈와 근력 유지에 도움돼요"},
+        {"name": "마그네슘", "priority": 2, "reason": "근육과 신경 안정에 좋아요"}
+      ],
+      "highly_recommended": [
+        {"name": "코엔자임Q10", "reason": "심혈관 에너지 대사에 도움돼요"},
+        {"name": "종합비타민", "reason": "전반적인 영양 균형 유지에 좋아요"},
+        {"name": "유산균", "reason": "장 건강과 면역 유지에 좋아요"}
+      ],
+      "consider_if": [
+        {"name": "톱풀", "condition": "전립선 건강 관리가 필요한 경우"},
+        {"name": "밀크씨슬", "condition": "음주 빈도가 잦은 경우"},
+        {"name": "강황(커큐민)", "condition": "관절 불편이 시작된 경우"}
+      ],
+      "avoid": ["고함량 단일 영양제"],
+      "region_notes": {
+        "KR": "한국 중년 식단 기반·실내 활동 많음",
+        "JP": "일본 식단은 생선 섭취가 높아요"
+      }
+    },
+    {
+      "id": "p018",
+      "age_group": "middle_age",
+      "gender": "female",
+      "must_take": [
+        {"name": "칼슘", "priority": 1, "reason": "골밀도 감소를 늦추는 데 좋아요"},
+        {"name": "비타민D", "priority": 1, "reason": "칼슘 흡수와 근력 유지에 좋아요"},
+        {"name": "오메가3", "priority": 2, "reason": "혈관과 호르몬 균형 유지에 좋아요"}
+      ],
+      "highly_recommended": [
+        {"name": "마그네슘", "reason": "근육과 수면 안정에 도움돼요"},
+        {"name": "이소플라본", "reason": "갱년기 변화 완화에 도움돼요"},
+        {"name": "유산균", "reason": "장 건강 유지에 좋아요"}
+      ],
+      "consider_if": [
+        {"name": "이브닝프림로즈오일", "condition": "월경 전 불편이 잦은 경우"},
+        {"name": "철분", "condition": "월경량이 많은 경우"},
+        {"name": "콜라겐", "condition": "피부 탄력 관리가 필요한 경우"}
+      ],
+      "avoid": ["고함량 단일 비타민A"],
+      "region_notes": {
+        "KR": "한국 중년 여성 식단 기반",
+        "JP": "일본 식단은 생선 섭취가 높아요"
       }
     }
   ]

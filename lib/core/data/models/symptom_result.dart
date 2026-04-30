@@ -40,6 +40,7 @@ class SymptomResult {
   final List<SymptomSupplementLink> relatedSupplements;
   final List<String> lifestyleTips;
   final SymptomUrgency urgency;
+  final String? medicalMessage;
 
   const SymptomResult({
     required this.id,
@@ -49,6 +50,7 @@ class SymptomResult {
     required this.relatedSupplements,
     required this.lifestyleTips,
     required this.urgency,
+    this.medicalMessage,
   });
 
   factory SymptomResult.fromJson(Map<String, dynamic> json) => SymptomResult(
@@ -68,5 +70,9 @@ class SymptomResult {
             .map((e) => e.toString())
             .toList(growable: false),
         urgency: symptomUrgencyFrom(json['urgency'] as String?),
+        medicalMessage: json['medical_message'] as String?,
       );
 }
+
+/// Alias for clarity in feature code.
+typedef SymptomGuide = SymptomResult;

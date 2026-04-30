@@ -1855,6 +1855,1686 @@
       "drug_interactions": [],
       "food_alternatives": ["베리류", "녹색 채소"],
       "effect_timeline": "2-3개월 꾸준히 복용해야 효과를 느껴요"
+    },
+    {
+      "id": "s051",
+      "korean_name": "칼륨",
+      "english_name": "Potassium",
+      "category": "mineral",
+      "main_benefits": [
+        "혈압 유지에 도움이 돼요",
+        "근육과 신경 기능을 유지해요",
+        "체내 수분 균형을 잡아줘요"
+      ],
+      "personalized_reasons": {
+        "elderly": "이뇨제 복용 중 손실을 보충해요",
+        "smoker": "전해질 불균형을 보완해요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 흡수가 안정적이에요"
+      },
+      "dosage": {
+        "adult": {"amount": 3500, "unit": "mg"},
+        "child_7_12": {"amount": 2300, "unit": "mg"},
+        "teen_13_18": {"amount": 3000, "unit": "mg"},
+        "elderly_60plus": {"amount": 3500, "unit": "mg"},
+        "upper_limit": 4700
+      },
+      "good_combinations": [
+        {"with": "마그네슘", "reason": "전해질 균형에 함께 도움돼요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "혈압약(ACE 억제제)", "interaction": "고칼륨혈증 위험이 있어요"}
+      ],
+      "food_alternatives": ["바나나", "감자", "시금치"],
+      "effect_timeline": "수일 내 컨디션 변화를 느낄 수 있어요"
+    },
+    {
+      "id": "s052",
+      "korean_name": "망간",
+      "english_name": "Manganese",
+      "category": "mineral",
+      "main_benefits": [
+        "뼈 형성에 관여하는 미네랄이에요",
+        "탄수화물 대사를 도와줘요",
+        "항산화 효소를 활성화해요"
+      ],
+      "personalized_reasons": {},
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 3, "unit": "mg"},
+        "child_7_12": {"amount": 1.5, "unit": "mg"},
+        "teen_13_18": {"amount": 2, "unit": "mg"},
+        "elderly_60plus": {"amount": 3, "unit": "mg"},
+        "upper_limit": 11
+      },
+      "good_combinations": [],
+      "bad_combinations": [
+        {"with": "철분", "reason": "흡수 경쟁이 있어요", "severity": "caution", "solution": "2시간 간격을 두고 드세요"}
+      ],
+      "drug_interactions": [],
+      "food_alternatives": ["통곡물", "견과류", "녹색잎채소"],
+      "effect_timeline": "단기간 변화를 느끼긴 어려운 미네랄이에요"
+    },
+    {
+      "id": "s053",
+      "korean_name": "구리",
+      "english_name": "Copper",
+      "category": "mineral",
+      "main_benefits": [
+        "철분 대사에 꼭 필요해요",
+        "에너지 생성과 신경 기능을 도와줘요",
+        "결합조직 형성에 관여해요"
+      ],
+      "personalized_reasons": {
+        "vegetarian": "동물성 식품 섭취가 적을 때 보충돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 흡수가 안정적이에요"
+      },
+      "dosage": {
+        "adult": {"amount": 0.9, "unit": "mg"},
+        "child_7_12": {"amount": 0.7, "unit": "mg"},
+        "teen_13_18": {"amount": 0.9, "unit": "mg"},
+        "elderly_60plus": {"amount": 0.9, "unit": "mg"},
+        "upper_limit": 10
+      },
+      "good_combinations": [],
+      "bad_combinations": [
+        {"with": "아연", "reason": "고용량 아연이 구리 흡수를 방해해요", "severity": "caution", "solution": "2시간 간격을 두고 드세요"}
+      ],
+      "drug_interactions": [],
+      "food_alternatives": ["견과류", "굴", "콩류"],
+      "effect_timeline": "장기 섭취로 균형 유지에 도움이 돼요"
+    },
+    {
+      "id": "s054",
+      "korean_name": "인",
+      "english_name": "Phosphorus",
+      "category": "mineral",
+      "main_benefits": [
+        "뼈와 치아 구성에 필요해요",
+        "에너지 대사에 관여해요",
+        "세포막 구성에 사용돼요"
+      ],
+      "personalized_reasons": {},
+      "timing": {
+        "best_time": "anytime",
+        "meal_relation": "with_food",
+        "reason": "일상적인 식사로도 충분해요"
+      },
+      "dosage": {
+        "adult": {"amount": 700, "unit": "mg"},
+        "child_7_12": {"amount": 500, "unit": "mg"},
+        "teen_13_18": {"amount": 1250, "unit": "mg"},
+        "elderly_60plus": {"amount": 700, "unit": "mg"},
+        "upper_limit": 4000
+      },
+      "good_combinations": [],
+      "bad_combinations": [
+        {"with": "칼슘", "reason": "비율 균형이 흐트러질 수 있어요", "severity": "info", "solution": "균형 잡힌 식단을 우선해요"}
+      ],
+      "drug_interactions": [],
+      "food_alternatives": ["유제품", "고기", "콩류"],
+      "effect_timeline": "보충 필요성이 낮아 보통 식단으로 충분해요"
+    },
+    {
+      "id": "s055",
+      "korean_name": "종합미네랄",
+      "english_name": "Multi-Mineral",
+      "category": "complex",
+      "main_benefits": [
+        "여러 미네랄을 한 번에 보충해요",
+        "식단이 불규칙할 때 균형을 맞춰줘요",
+        "부족한 미량 영양소를 채워줘요"
+      ],
+      "personalized_reasons": {
+        "vegetarian": "식물성 식단의 미네랄 부족을 보완해요",
+        "elderly": "흡수가 떨어지는 시기에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 1, "unit": "정"},
+        "child_7_12": {"amount": 0, "unit": "정"},
+        "teen_13_18": {"amount": 1, "unit": "정"},
+        "elderly_60plus": {"amount": 1, "unit": "정"},
+        "upper_limit": 1
+      },
+      "good_combinations": [],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["균형 잡힌 식사", "다양한 채소·곡물"],
+      "effect_timeline": "장기적으로 균형 유지에 도움이 돼요"
+    },
+    {
+      "id": "s056",
+      "korean_name": "신바이오틱스",
+      "english_name": "Synbiotics",
+      "category": "probiotic",
+      "main_benefits": [
+        "유산균과 먹이가 함께 들어 있어요",
+        "장내 환경 개선에 도움이 돼요",
+        "꾸준한 장 건강 관리에 좋아요"
+      ],
+      "personalized_reasons": {
+        "elderly": "장 운동이 느려진 시기에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "before_meal",
+        "reason": "위산이 적은 공복에 잘 살아남아요"
+      },
+      "dosage": {
+        "adult": {"amount": 1, "unit": "포"},
+        "child_7_12": {"amount": 1, "unit": "포"},
+        "teen_13_18": {"amount": 1, "unit": "포"},
+        "elderly_60plus": {"amount": 1, "unit": "포"},
+        "upper_limit": 2
+      },
+      "good_combinations": [
+        {"with": "프리바이오틱스", "reason": "유산균 정착에 함께 도움돼요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "항생제", "interaction": "복용 후 2시간 이상 간격을 두세요"}
+      ],
+      "food_alternatives": ["요거트", "김치", "된장"],
+      "effect_timeline": "2-4주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s057",
+      "korean_name": "락토페린",
+      "english_name": "Lactoferrin",
+      "category": "probiotic",
+      "main_benefits": [
+        "면역 균형 유지에 도움이 돼요",
+        "철분 흡수와 운반에 관여해요",
+        "장 점막 환경 개선에 좋아요"
+      ],
+      "personalized_reasons": {
+        "female_30s": "철분 활용에 도움을 줘요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "before_meal",
+        "reason": "공복에 흡수가 잘 돼요"
+      },
+      "dosage": {
+        "adult": {"amount": 200, "unit": "mg"},
+        "child_7_12": {"amount": 100, "unit": "mg"},
+        "teen_13_18": {"amount": 150, "unit": "mg"},
+        "elderly_60plus": {"amount": 200, "unit": "mg"},
+        "upper_limit": 600
+      },
+      "good_combinations": [
+        {"with": "유산균(프로바이오틱스)", "reason": "장내 환경 개선 시너지가 있어요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["우유", "유청 단백"],
+      "effect_timeline": "4-8주 꾸준히 복용해야 효과를 느껴요"
+    },
+    {
+      "id": "s058",
+      "korean_name": "효모",
+      "english_name": "Yeast",
+      "category": "probiotic",
+      "main_benefits": [
+        "비타민B군과 단백질이 풍부해요",
+        "장 환경 균형에 도움이 돼요",
+        "에너지 대사를 도와줘요"
+      ],
+      "personalized_reasons": {
+        "vegetarian": "비타민B군 보충에 좋아요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 부담이 적어요"
+      },
+      "dosage": {
+        "adult": {"amount": 1500, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 1000, "unit": "mg"},
+        "elderly_60plus": {"amount": 1500, "unit": "mg"},
+        "upper_limit": 3000
+      },
+      "good_combinations": [],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["맥주효모 식품", "통곡물"],
+      "effect_timeline": "2-4주 꾸준히 복용하면 변화를 느껴요"
+    },
+    {
+      "id": "s059",
+      "korean_name": "레스베라트롤",
+      "english_name": "Resveratrol",
+      "category": "antioxidant",
+      "main_benefits": [
+        "활성산소로부터 세포를 보호해요",
+        "혈관 건강 유지에 도움이 돼요",
+        "노화 관련 변화를 늦추는 데 도움돼요"
+      ],
+      "personalized_reasons": {
+        "smoker": "흡연으로 늘어난 산화 스트레스를 줄여줘요",
+        "elderly": "혈관 탄력 유지에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "지방과 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 250, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 250, "unit": "mg"},
+        "upper_limit": 1500
+      },
+      "good_combinations": [
+        {"with": "비타민E", "reason": "지질 항산화 시너지가 있어요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "항응고제", "interaction": "출혈 위험이 늘어날 수 있어요"}
+      ],
+      "food_alternatives": ["포도껍질", "블루베리", "땅콩"],
+      "effect_timeline": "2-3개월 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s060",
+      "korean_name": "폴리페놀",
+      "english_name": "Polyphenols",
+      "category": "antioxidant",
+      "main_benefits": [
+        "활성산소로부터 세포를 보호해요",
+        "혈관 건강 유지에 도움이 돼요",
+        "염증 균형 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "smoker": "산화 스트레스 완화에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "anytime",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 흡수가 안정적이에요"
+      },
+      "dosage": {
+        "adult": {"amount": 500, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 250, "unit": "mg"},
+        "elderly_60plus": {"amount": 500, "unit": "mg"},
+        "upper_limit": 1500
+      },
+      "good_combinations": [
+        {"with": "비타민C", "reason": "항산화 시너지가 있어요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["녹차", "베리류", "다크 초콜릿"],
+      "effect_timeline": "2-3개월 꾸준히 복용해야 효과를 느껴요"
+    },
+    {
+      "id": "s061",
+      "korean_name": "리코펜",
+      "english_name": "Lycopene",
+      "category": "antioxidant",
+      "main_benefits": [
+        "활성산소로부터 세포를 보호해요",
+        "전립선 건강 유지에 도움이 돼요",
+        "피부 자외선 손상 완화에 좋아요"
+      ],
+      "personalized_reasons": {
+        "smoker": "산화 스트레스 완화에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "지방과 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 15, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 10, "unit": "mg"},
+        "elderly_60plus": {"amount": 15, "unit": "mg"},
+        "upper_limit": 75
+      },
+      "good_combinations": [],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["익힌 토마토", "수박", "자몽"],
+      "effect_timeline": "2-3개월 꾸준히 복용해야 효과를 느껴요"
+    },
+    {
+      "id": "s062",
+      "korean_name": "루테인",
+      "english_name": "Lutein",
+      "category": "antioxidant",
+      "main_benefits": [
+        "황반 색소 농도 유지에 도움이 돼요",
+        "푸른 빛으로부터 눈을 보호해요",
+        "눈의 피로 회복을 도와요"
+      ],
+      "personalized_reasons": {
+        "elderly": "황반 변성 위험이 늘어나는 시기에 좋아요",
+        "smoker": "안구 산화 스트레스를 줄이는 데 도움돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "지방과 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 20, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 10, "unit": "mg"},
+        "elderly_60plus": {"amount": 20, "unit": "mg"},
+        "upper_limit": 40
+      },
+      "good_combinations": [
+        {"with": "지아잔틴", "reason": "황반 보호 시너지가 있어요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["케일", "시금치", "달걀 노른자"],
+      "effect_timeline": "꾸준히 8주 이상 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s063",
+      "korean_name": "지아잔틴",
+      "english_name": "Zeaxanthin",
+      "category": "antioxidant",
+      "main_benefits": [
+        "황반 색소 농도 유지에 도움이 돼요",
+        "유해 광선으로부터 눈을 보호해요",
+        "눈 피로 회복을 도와줘요"
+      ],
+      "personalized_reasons": {
+        "elderly": "황반 보호가 더 필요한 시기예요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "지방과 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 4, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 2, "unit": "mg"},
+        "elderly_60plus": {"amount": 4, "unit": "mg"},
+        "upper_limit": 10
+      },
+      "good_combinations": [
+        {"with": "루테인", "reason": "황반 보호에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["옥수수", "주황색 채소", "달걀 노른자"],
+      "effect_timeline": "꾸준히 8주 이상 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s064",
+      "korean_name": "안토시아닌",
+      "english_name": "Anthocyanin",
+      "category": "antioxidant",
+      "main_benefits": [
+        "활성산소로부터 세포를 보호해요",
+        "야간 시력 적응에 도움이 돼요",
+        "혈관 탄력 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "elderly": "혈관 건강 유지에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "evening",
+        "meal_relation": "with_food",
+        "reason": "야간 시력 회복 시간대와 잘 맞아요"
+      },
+      "dosage": {
+        "adult": {"amount": 80, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 40, "unit": "mg"},
+        "elderly_60plus": {"amount": 80, "unit": "mg"},
+        "upper_limit": 200
+      },
+      "good_combinations": [
+        {"with": "비타민C", "reason": "항산화 시너지가 있어요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["블루베리", "검은콩", "포도"],
+      "effect_timeline": "4-8주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s065",
+      "korean_name": "빌베리",
+      "english_name": "Bilberry",
+      "category": "antioxidant",
+      "main_benefits": [
+        "야간 시력 적응에 도움이 돼요",
+        "눈 모세혈관 건강을 도와줘요",
+        "눈의 피로 회복을 도와요"
+      ],
+      "personalized_reasons": {
+        "elderly": "야간 시야 회복이 더디어진 시기에 좋아요"
+      },
+      "timing": {
+        "best_time": "evening",
+        "meal_relation": "with_food",
+        "reason": "야간 시력 회복과 시간대가 잘 맞아요"
+      },
+      "dosage": {
+        "adult": {"amount": 160, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 80, "unit": "mg"},
+        "elderly_60plus": {"amount": 160, "unit": "mg"},
+        "upper_limit": 480
+      },
+      "good_combinations": [
+        {"with": "루테인", "reason": "눈 건강에 함께 도움돼요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "항응고제", "interaction": "출혈 경향이 늘 수 있어요"}
+      ],
+      "food_alternatives": ["블루베리", "보라색 베리류"],
+      "effect_timeline": "4-8주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s066",
+      "korean_name": "보스웰리아",
+      "english_name": "Boswellia",
+      "category": "joint",
+      "main_benefits": [
+        "관절 불편함 완화에 도움이 돼요",
+        "관절 움직임 유지에 좋아요",
+        "염증 균형 유지에 도움이 돼요"
+      ],
+      "personalized_reasons": {
+        "elderly": "관절이 뻣뻣해지는 시기에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "지방과 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 300, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 300, "unit": "mg"},
+        "upper_limit": 900
+      },
+      "good_combinations": [
+        {"with": "글루코사민", "reason": "관절 관리에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "소염진통제(NSAIDs)", "interaction": "위장 부담이 늘 수 있어요"}
+      ],
+      "food_alternatives": ["강황", "생강"],
+      "effect_timeline": "4-8주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s067",
+      "korean_name": "히알루론산",
+      "english_name": "Hyaluronic Acid",
+      "category": "joint",
+      "main_benefits": [
+        "관절 윤활 유지에 도움이 돼요",
+        "피부 수분 유지에 좋아요",
+        "결합조직 건강을 도와줘요"
+      ],
+      "personalized_reasons": {
+        "elderly": "관절 윤활이 줄어드는 시기에 좋아요",
+        "female_30s": "피부 수분 유지에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "anytime",
+        "meal_relation": "anytime",
+        "reason": "식사 영향이 적은 편이에요"
+      },
+      "dosage": {
+        "adult": {"amount": 120, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 60, "unit": "mg"},
+        "elderly_60plus": {"amount": 120, "unit": "mg"},
+        "upper_limit": 240
+      },
+      "good_combinations": [
+        {"with": "콜라겐", "reason": "피부와 관절 관리에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["뼈국물", "콩류"],
+      "effect_timeline": "8주 이상 꾸준히 복용해야 효과를 느껴요"
+    },
+    {
+      "id": "s068",
+      "korean_name": "강황(커큐민)",
+      "english_name": "Curcumin",
+      "category": "liver",
+      "main_benefits": [
+        "활성산소로부터 세포를 보호해요",
+        "관절 불편 완화에 도움이 돼요",
+        "간 해독 기능을 도와줘요"
+      ],
+      "personalized_reasons": {
+        "heavy_drinker": "음주로 부담된 간 회복에 도움돼요",
+        "elderly": "관절과 인지 균형 유지에 좋아요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "지방과 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 500, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 500, "unit": "mg"},
+        "upper_limit": 2000
+      },
+      "good_combinations": [
+        {"with": "오메가3", "reason": "염증 균형 유지에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "항응고제", "interaction": "출혈 경향이 늘 수 있어요"},
+        {"drug_category": "당뇨약", "interaction": "혈당 변화에 주의가 필요해요"}
+      ],
+      "food_alternatives": ["카레", "생강"],
+      "effect_timeline": "4-8주 꾸준히 복용해야 효과를 느껴요"
+    },
+    {
+      "id": "s069",
+      "korean_name": "아티초크",
+      "english_name": "Artichoke",
+      "category": "liver",
+      "main_benefits": [
+        "간 기능 유지에 도움이 돼요",
+        "소화액 분비를 도와줘요",
+        "콜레스테롤 균형 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "heavy_drinker": "음주로 부담된 간 회복에 도움돼요"
+      },
+      "timing": {
+        "best_time": "before_meal",
+        "meal_relation": "before_meal",
+        "reason": "식전에 소화액 분비를 도와줘요"
+      },
+      "dosage": {
+        "adult": {"amount": 500, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 500, "unit": "mg"},
+        "upper_limit": 1500
+      },
+      "good_combinations": [
+        {"with": "밀크씨슬", "reason": "간 관리에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["아티초크 채소", "치커리"],
+      "effect_timeline": "4-8주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s070",
+      "korean_name": "셀러리시드",
+      "english_name": "Celery Seed",
+      "category": "liver",
+      "main_benefits": [
+        "수분 균형 유지에 도움이 돼요",
+        "체내 노폐물 배출을 도와줘요",
+        "관절 균형 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "elderly": "수분과 노폐물 배출 균형에 도움돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 부담이 적어요"
+      },
+      "dosage": {
+        "adult": {"amount": 500, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 500, "unit": "mg"},
+        "upper_limit": 1500
+      },
+      "good_combinations": [],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "이뇨제", "interaction": "탈수 위험이 늘 수 있어요"}
+      ],
+      "food_alternatives": ["셀러리", "파슬리"],
+      "effect_timeline": "2-4주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s071",
+      "korean_name": "포스파티딜세린",
+      "english_name": "Phosphatidylserine",
+      "category": "complex",
+      "main_benefits": [
+        "기억력 유지에 도움이 돼요",
+        "집중력 회복을 도와줘요",
+        "노화 관련 인지 변화 완화에 좋아요"
+      ],
+      "personalized_reasons": {
+        "elderly": "기억력 변화가 느껴지는 시기에 좋아요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "지방과 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 100, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 200, "unit": "mg"},
+        "upper_limit": 600
+      },
+      "good_combinations": [
+        {"with": "오메가3", "reason": "두뇌 건강 관리에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "항응고제", "interaction": "출혈 경향이 늘 수 있어요"}
+      ],
+      "food_alternatives": ["대두", "달걀 노른자"],
+      "effect_timeline": "12주 이상 꾸준히 복용해야 효과를 느껴요"
+    },
+    {
+      "id": "s072",
+      "korean_name": "CLA",
+      "english_name": "Conjugated Linoleic Acid",
+      "category": "weight",
+      "main_benefits": [
+        "체지방 균형 유지에 도움이 돼요",
+        "근육량 유지에 도움이 돼요",
+        "에너지 대사를 도와줘요"
+      ],
+      "personalized_reasons": {},
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "지방과 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 3000, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 3000, "unit": "mg"},
+        "upper_limit": 6000
+      },
+      "good_combinations": [],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["풀먹인 소고기", "유제품"],
+      "effect_timeline": "12주 이상 꾸준히 복용해야 효과를 느껴요"
+    },
+    {
+      "id": "s073",
+      "korean_name": "그린티카테킨",
+      "english_name": "Green Tea Catechin (EGCG)",
+      "category": "weight",
+      "main_benefits": [
+        "활성산소로부터 세포를 보호해요",
+        "에너지 대사를 도와줘요",
+        "체지방 균형 유지에 도움이 돼요"
+      ],
+      "personalized_reasons": {
+        "smoker": "산화 스트레스 완화에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "before_meal",
+        "reason": "공복에 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 500, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 250, "unit": "mg"},
+        "elderly_60plus": {"amount": 500, "unit": "mg"},
+        "upper_limit": 800
+      },
+      "good_combinations": [],
+      "bad_combinations": [
+        {"with": "철분", "reason": "흡수를 방해할 수 있어요", "severity": "caution", "solution": "2시간 간격을 두고 드세요"}
+      ],
+      "drug_interactions": [
+        {"drug_category": "간 영향 약물", "interaction": "고용량 시 간 부담이 늘 수 있어요"}
+      ],
+      "food_alternatives": ["녹차", "말차"],
+      "effect_timeline": "8주 이상 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s074",
+      "korean_name": "그린커피빈",
+      "english_name": "Green Coffee Bean",
+      "category": "weight",
+      "main_benefits": [
+        "활성산소로부터 세포를 보호해요",
+        "에너지 대사를 도와줘요",
+        "체지방 균형 유지에 도움이 돼요"
+      ],
+      "personalized_reasons": {},
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "before_meal",
+        "reason": "공복에 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 400, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 400, "unit": "mg"},
+        "upper_limit": 800
+      },
+      "good_combinations": [],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "혈압약", "interaction": "혈압 변동에 주의가 필요해요"}
+      ],
+      "food_alternatives": ["커피"],
+      "effect_timeline": "8주 이상 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s075",
+      "korean_name": "키토산",
+      "english_name": "Chitosan",
+      "category": "weight",
+      "main_benefits": [
+        "지방 흡수 균형 유지에 도움이 돼요",
+        "포만감 유지에 도움이 돼요",
+        "콜레스테롤 균형 유지에 좋아요"
+      ],
+      "personalized_reasons": {},
+      "timing": {
+        "best_time": "before_meal",
+        "meal_relation": "before_meal",
+        "reason": "식전 복용 시 효과가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 1000, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 1000, "unit": "mg"},
+        "upper_limit": 3000
+      },
+      "good_combinations": [],
+      "bad_combinations": [
+        {"with": "지용성 비타민", "reason": "흡수를 방해할 수 있어요", "severity": "caution", "solution": "2시간 간격을 두고 드세요"}
+      ],
+      "drug_interactions": [
+        {"drug_category": "항응고제", "interaction": "출혈 경향에 주의가 필요해요"}
+      ],
+      "food_alternatives": ["버섯", "갑각류"],
+      "effect_timeline": "8주 이상 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s076",
+      "korean_name": "단백질(프로틴)",
+      "english_name": "Protein",
+      "category": "protein",
+      "main_benefits": [
+        "근육 회복과 성장에 도움이 돼요",
+        "포만감 유지에 도움이 돼요",
+        "에너지 균형 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "elderly": "근감소 예방에 도움이 돼요",
+        "vegetarian": "단백질 부족을 채우는 데 좋아요"
+      },
+      "timing": {
+        "best_time": "anytime",
+        "meal_relation": "anytime",
+        "reason": "운동 전후 또는 끼니 대용으로 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 25, "unit": "g"},
+        "child_7_12": {"amount": 10, "unit": "g"},
+        "teen_13_18": {"amount": 20, "unit": "g"},
+        "elderly_60plus": {"amount": 25, "unit": "g"},
+        "upper_limit": 60
+      },
+      "good_combinations": [
+        {"with": "BCAA", "reason": "근육 회복에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["닭가슴살", "달걀", "콩"],
+      "effect_timeline": "꾸준한 운동과 함께 1-2개월에 변화를 느껴요"
+    },
+    {
+      "id": "s077",
+      "korean_name": "글루타민",
+      "english_name": "Glutamine",
+      "category": "performance",
+      "main_benefits": [
+        "근육 회복을 도와줘요",
+        "장 점막 건강 유지에 좋아요",
+        "면역 균형 유지에 도움이 돼요"
+      ],
+      "personalized_reasons": {
+        "elderly": "회복력이 떨어진 시기에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "evening",
+        "meal_relation": "anytime",
+        "reason": "운동 후 회복 시간에 잘 맞아요"
+      },
+      "dosage": {
+        "adult": {"amount": 5000, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 2500, "unit": "mg"},
+        "elderly_60plus": {"amount": 5000, "unit": "mg"},
+        "upper_limit": 14000
+      },
+      "good_combinations": [
+        {"with": "BCAA", "reason": "근육 회복에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["고기", "달걀", "콩"],
+      "effect_timeline": "4-8주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s078",
+      "korean_name": "베타알라닌",
+      "english_name": "Beta-Alanine",
+      "category": "performance",
+      "main_benefits": [
+        "운동 시 피로 누적을 늦춰줘요",
+        "근지구력 유지에 도움이 돼요",
+        "고강도 운동 회복을 도와요"
+      ],
+      "personalized_reasons": {},
+      "timing": {
+        "best_time": "afternoon",
+        "meal_relation": "with_food",
+        "reason": "운동 전 복용이 효과적이에요"
+      },
+      "dosage": {
+        "adult": {"amount": 3000, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 0, "unit": "mg"},
+        "upper_limit": 6000
+      },
+      "good_combinations": [
+        {"with": "크레아틴", "reason": "근지구력 유지에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["가금류", "소고기"],
+      "effect_timeline": "4-8주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s079",
+      "korean_name": "시트룰린",
+      "english_name": "Citrulline",
+      "category": "performance",
+      "main_benefits": [
+        "운동 중 피로 회복에 도움이 돼요",
+        "혈류 흐름 유지에 좋아요",
+        "근육 회복을 도와줘요"
+      ],
+      "personalized_reasons": {},
+      "timing": {
+        "best_time": "afternoon",
+        "meal_relation": "before_meal",
+        "reason": "운동 전 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 6000, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 0, "unit": "mg"},
+        "upper_limit": 10000
+      },
+      "good_combinations": [
+        {"with": "L-아르기닌", "reason": "혈류 유지에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "혈압약", "interaction": "혈압 변동에 주의가 필요해요"}
+      ],
+      "food_alternatives": ["수박", "오이"],
+      "effect_timeline": "2-4주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s080",
+      "korean_name": "L-테아닌",
+      "english_name": "L-Theanine",
+      "category": "sleep",
+      "main_benefits": [
+        "긴장을 가라앉히는 데 도움이 돼요",
+        "집중력 유지에 도움이 돼요",
+        "잠들기 편안한 상태를 도와줘요"
+      ],
+      "personalized_reasons": {},
+      "timing": {
+        "best_time": "before_sleep",
+        "meal_relation": "anytime",
+        "reason": "취침 전 안정에 도움돼요"
+      },
+      "dosage": {
+        "adult": {"amount": 200, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 100, "unit": "mg"},
+        "elderly_60plus": {"amount": 200, "unit": "mg"},
+        "upper_limit": 600
+      },
+      "good_combinations": [
+        {"with": "GABA", "reason": "이완에 함께 도움돼요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "혈압약", "interaction": "혈압 변동에 주의가 필요해요"}
+      ],
+      "food_alternatives": ["녹차"],
+      "effect_timeline": "수일 내 차분함을 느낄 수 있어요"
+    },
+    {
+      "id": "s081",
+      "korean_name": "발레리안",
+      "english_name": "Valerian",
+      "category": "sleep",
+      "main_benefits": [
+        "잠들기까지의 시간 단축에 도움돼요",
+        "야간 각성 횟수를 줄이는 데 도움돼요",
+        "긴장 완화에 좋아요"
+      ],
+      "personalized_reasons": {
+        "elderly": "수면 유지가 어려운 시기에 좋아요"
+      },
+      "timing": {
+        "best_time": "before_sleep",
+        "meal_relation": "anytime",
+        "reason": "취침 30-60분 전 복용이 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 400, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 400, "unit": "mg"},
+        "upper_limit": 900
+      },
+      "good_combinations": [
+        {"with": "L-테아닌", "reason": "수면 안정에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "수면제", "interaction": "졸음이 과해질 수 있어요"}
+      ],
+      "food_alternatives": [],
+      "effect_timeline": "2-4주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s082",
+      "korean_name": "마그네슘 글리시네이트",
+      "english_name": "Magnesium Glycinate",
+      "category": "sleep",
+      "main_benefits": [
+        "근육 이완을 도와줘요",
+        "잠들기 편안한 상태를 도와줘요",
+        "신경 안정 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "elderly": "근육 경련을 줄이는 데 도움돼요",
+        "female_30s": "생리 전 긴장 완화에 도움돼요"
+      },
+      "timing": {
+        "best_time": "before_sleep",
+        "meal_relation": "anytime",
+        "reason": "취침 전 이완에 도움돼요"
+      },
+      "dosage": {
+        "adult": {"amount": 200, "unit": "mg"},
+        "child_7_12": {"amount": 100, "unit": "mg"},
+        "teen_13_18": {"amount": 150, "unit": "mg"},
+        "elderly_60plus": {"amount": 200, "unit": "mg"},
+        "upper_limit": 350
+      },
+      "good_combinations": [
+        {"with": "비타민D", "reason": "활성화에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["견과류", "녹색잎채소"],
+      "effect_timeline": "2-4주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s083",
+      "korean_name": "트립토판",
+      "english_name": "Tryptophan",
+      "category": "sleep",
+      "main_benefits": [
+        "수면 호르몬 합성에 관여해요",
+        "기분 안정 유지에 도움이 돼요",
+        "잠들기 편안한 상태를 도와줘요"
+      ],
+      "personalized_reasons": {
+        "vegetarian": "동물성 단백질 부족 시 도움돼요"
+      },
+      "timing": {
+        "best_time": "before_sleep",
+        "meal_relation": "before_meal",
+        "reason": "공복에 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 500, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 250, "unit": "mg"},
+        "elderly_60plus": {"amount": 500, "unit": "mg"},
+        "upper_limit": 2000
+      },
+      "good_combinations": [
+        {"with": "비타민B6", "reason": "수면 호르몬 합성에 함께 도움돼요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "항우울제(SSRI)", "interaction": "세로토닌 과다 위험이 있어요"}
+      ],
+      "food_alternatives": ["우유", "달걀", "바나나"],
+      "effect_timeline": "2-4주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s084",
+      "korean_name": "베타글루칸",
+      "english_name": "Beta-Glucan",
+      "category": "complex",
+      "main_benefits": [
+        "면역 세포 활성에 도움이 돼요",
+        "콜레스테롤 균형 유지에 좋아요",
+        "장 환경 균형 유지에 도움돼요"
+      ],
+      "personalized_reasons": {
+        "elderly": "면역력이 떨어지는 시기에 좋아요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "before_meal",
+        "reason": "공복에 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 250, "unit": "mg"},
+        "child_7_12": {"amount": 100, "unit": "mg"},
+        "teen_13_18": {"amount": 150, "unit": "mg"},
+        "elderly_60plus": {"amount": 250, "unit": "mg"},
+        "upper_limit": 1500
+      },
+      "good_combinations": [
+        {"with": "비타민C 고함량", "reason": "면역 균형 유지에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "면역억제제", "interaction": "효과를 약하게 할 수 있어요"}
+      ],
+      "food_alternatives": ["귀리", "보리", "버섯"],
+      "effect_timeline": "4-8주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s085",
+      "korean_name": "에키네시아",
+      "english_name": "Echinacea",
+      "category": "complex",
+      "main_benefits": [
+        "면역 균형 유지에 도움이 돼요",
+        "감기 초기 회복을 도와줘요",
+        "환절기 컨디션 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "smoker": "기관지 건강 유지에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 부담이 적어요"
+      },
+      "dosage": {
+        "adult": {"amount": 400, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 200, "unit": "mg"},
+        "elderly_60plus": {"amount": 400, "unit": "mg"},
+        "upper_limit": 1200
+      },
+      "good_combinations": [
+        {"with": "엘더베리", "reason": "면역 균형에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "면역억제제", "interaction": "효과를 약하게 할 수 있어요"}
+      ],
+      "food_alternatives": [],
+      "effect_timeline": "수일 내 변화를 느낄 수 있어요"
+    },
+    {
+      "id": "s086",
+      "korean_name": "엘더베리",
+      "english_name": "Elderberry",
+      "category": "complex",
+      "main_benefits": [
+        "면역 균형 유지에 도움이 돼요",
+        "감기 회복을 도와줘요",
+        "환절기 컨디션 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "child": "어린이 면역 관리에도 좋아요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "anytime",
+        "reason": "시간 영향이 적은 편이에요"
+      },
+      "dosage": {
+        "adult": {"amount": 300, "unit": "mg"},
+        "child_7_12": {"amount": 150, "unit": "mg"},
+        "teen_13_18": {"amount": 200, "unit": "mg"},
+        "elderly_60plus": {"amount": 300, "unit": "mg"},
+        "upper_limit": 1000
+      },
+      "good_combinations": [
+        {"with": "비타민C 고함량", "reason": "면역 관리에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["베리류"],
+      "effect_timeline": "수일 내 변화를 느낄 수 있어요"
+    },
+    {
+      "id": "s087",
+      "korean_name": "아연 글루코네이트",
+      "english_name": "Zinc Gluconate",
+      "category": "mineral",
+      "main_benefits": [
+        "면역 세포 활성에 도움이 돼요",
+        "감기 회복을 도와줘요",
+        "피부 건강 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "smoker": "흡연으로 부족해진 아연을 보충해요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 부담이 적어요"
+      },
+      "dosage": {
+        "adult": {"amount": 15, "unit": "mg"},
+        "child_7_12": {"amount": 5, "unit": "mg"},
+        "teen_13_18": {"amount": 11, "unit": "mg"},
+        "elderly_60plus": {"amount": 15, "unit": "mg"},
+        "upper_limit": 40
+      },
+      "good_combinations": [
+        {"with": "비타민C 고함량", "reason": "면역 관리에 함께 좋아요"}
+      ],
+      "bad_combinations": [
+        {"with": "철분", "reason": "흡수 경쟁이 있어요", "severity": "caution", "solution": "2시간 간격을 두고 드세요"},
+        {"with": "칼슘", "reason": "흡수 경쟁이 있어요", "severity": "caution", "solution": "2시간 간격을 두고 드세요"}
+      ],
+      "drug_interactions": [],
+      "food_alternatives": ["굴", "소고기", "호박씨"],
+      "effect_timeline": "2-4주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s088",
+      "korean_name": "비타민C 고함량",
+      "english_name": "High-Dose Vitamin C",
+      "category": "water_soluble_vitamin",
+      "main_benefits": [
+        "면역 세포가 제대로 일하도록 도와요",
+        "활성산소로부터 세포를 보호해요",
+        "피부와 혈관 건강 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "smoker": "흡연으로 더 빨리 소모되는 비타민C를 보충해요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 위장 부담이 적어요"
+      },
+      "dosage": {
+        "adult": {"amount": 1000, "unit": "mg"},
+        "child_7_12": {"amount": 250, "unit": "mg"},
+        "teen_13_18": {"amount": 500, "unit": "mg"},
+        "elderly_60plus": {"amount": 1000, "unit": "mg"},
+        "upper_limit": 2000
+      },
+      "good_combinations": [
+        {"with": "철분", "reason": "흡수율을 높여줘요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "항응고제", "interaction": "고용량 시 효과에 영향을 줄 수 있어요"}
+      ],
+      "food_alternatives": ["감귤류", "키위", "딸기"],
+      "effect_timeline": "수일 내 컨디션 변화를 느낄 수 있어요"
+    },
+    {
+      "id": "s089",
+      "korean_name": "스피루리나",
+      "english_name": "Spirulina",
+      "category": "complex",
+      "main_benefits": [
+        "단백질과 미네랄이 풍부해요",
+        "활성산소로부터 세포를 보호해요",
+        "면역 균형 유지에 도움이 돼요"
+      ],
+      "personalized_reasons": {
+        "vegetarian": "식물성 단백질 보충에 좋아요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 흡수가 안정적이에요"
+      },
+      "dosage": {
+        "adult": {"amount": 3000, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 1500, "unit": "mg"},
+        "elderly_60plus": {"amount": 3000, "unit": "mg"},
+        "upper_limit": 10000
+      },
+      "good_combinations": [],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "면역억제제", "interaction": "효과를 약하게 할 수 있어요"}
+      ],
+      "food_alternatives": ["해조류", "녹색 채소"],
+      "effect_timeline": "4-8주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s090",
+      "korean_name": "이브닝프림로즈오일",
+      "english_name": "Evening Primrose Oil",
+      "category": "essential_fatty_acid",
+      "main_benefits": [
+        "월경 전 불편 완화에 도움이 돼요",
+        "피부 건강 유지에 좋아요",
+        "호르몬 균형 유지에 도움이 돼요"
+      ],
+      "personalized_reasons": {
+        "female_30s": "생리 전 불편 완화에 도움돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "지방과 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 1300, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 500, "unit": "mg"},
+        "elderly_60plus": {"amount": 1300, "unit": "mg"},
+        "upper_limit": 4000
+      },
+      "good_combinations": [
+        {"with": "오메가3", "reason": "피부 건강 관리에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "항응고제", "interaction": "출혈 경향이 늘 수 있어요"}
+      ],
+      "food_alternatives": ["견과류", "들기름"],
+      "effect_timeline": "8-12주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s091",
+      "korean_name": "크랜베리",
+      "english_name": "Cranberry",
+      "category": "antioxidant",
+      "main_benefits": [
+        "요로 건강 유지에 도움이 돼요",
+        "활성산소로부터 세포를 보호해요",
+        "방광 건강 관리에 좋아요"
+      ],
+      "personalized_reasons": {
+        "female_30s": "요로 건강 유지에 도움이 돼요",
+        "elderly": "재발성 요로 불편 완화에 도움돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 부담이 적어요"
+      },
+      "dosage": {
+        "adult": {"amount": 500, "unit": "mg"},
+        "child_7_12": {"amount": 250, "unit": "mg"},
+        "teen_13_18": {"amount": 500, "unit": "mg"},
+        "elderly_60plus": {"amount": 500, "unit": "mg"},
+        "upper_limit": 1500
+      },
+      "good_combinations": [],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "항응고제", "interaction": "효과에 영향을 줄 수 있어요"}
+      ],
+      "food_alternatives": ["크랜베리 주스(무가당)"],
+      "effect_timeline": "4-8주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s092",
+      "korean_name": "이소플라본",
+      "english_name": "Isoflavones",
+      "category": "complex",
+      "main_benefits": [
+        "갱년기 불편 완화에 도움이 돼요",
+        "골밀도 유지에 도움이 돼요",
+        "혈관 건강 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "female_30s": "여성 호르몬 균형 유지에 도움돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 50, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 50, "unit": "mg"},
+        "upper_limit": 100
+      },
+      "good_combinations": [
+        {"with": "칼슘", "reason": "골밀도 유지에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "갑상선약", "interaction": "흡수에 영향을 줄 수 있어요"}
+      ],
+      "food_alternatives": ["콩", "두부", "된장"],
+      "effect_timeline": "8-12주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s093",
+      "korean_name": "매카뿌리",
+      "english_name": "Maca Root",
+      "category": "complex",
+      "main_benefits": [
+        "활력 유지에 도움이 돼요",
+        "호르몬 균형 유지에 도움이 돼요",
+        "스트레스 적응을 도와줘요"
+      ],
+      "personalized_reasons": {
+        "female_30s": "갱년기 컨디션 변화에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 부담이 적어요"
+      },
+      "dosage": {
+        "adult": {"amount": 1500, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 1500, "unit": "mg"},
+        "upper_limit": 3000
+      },
+      "good_combinations": [],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "갑상선약", "interaction": "갑상선 기능에 영향을 줄 수 있어요"}
+      ],
+      "food_alternatives": [],
+      "effect_timeline": "4-8주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s094",
+      "korean_name": "블랙코호시",
+      "english_name": "Black Cohosh",
+      "category": "complex",
+      "main_benefits": [
+        "갱년기 불편 완화에 도움이 돼요",
+        "수면 안정에 도움이 돼요",
+        "기분 균형 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "female_30s": "갱년기 변화 완화에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "evening",
+        "meal_relation": "with_food",
+        "reason": "취침 전 안정에 도움돼요"
+      },
+      "dosage": {
+        "adult": {"amount": 40, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 40, "unit": "mg"},
+        "upper_limit": 80
+      },
+      "good_combinations": [],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "간 영향 약물", "interaction": "간 부담이 늘 수 있어요"}
+      ],
+      "food_alternatives": [],
+      "effect_timeline": "4-8주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s095",
+      "korean_name": "톱풀",
+      "english_name": "Saw Palmetto",
+      "category": "complex",
+      "main_benefits": [
+        "전립선 건강 유지에 도움이 돼요",
+        "배뇨 흐름 유지에 도움이 돼요",
+        "남성 호르몬 균형 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "elderly": "전립선 건강 유지에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "지방과 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 320, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 320, "unit": "mg"},
+        "upper_limit": 640
+      },
+      "good_combinations": [
+        {"with": "아연 픽콜리네이트", "reason": "전립선 건강에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "전립선 약물", "interaction": "효과가 겹칠 수 있어요"}
+      ],
+      "food_alternatives": [],
+      "effect_timeline": "8-12주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s096",
+      "korean_name": "마카",
+      "english_name": "Maca",
+      "category": "complex",
+      "main_benefits": [
+        "활력 유지에 도움이 돼요",
+        "호르몬 균형 유지에 도움이 돼요",
+        "스트레스 적응을 도와줘요"
+      ],
+      "personalized_reasons": {
+        "elderly": "활력이 떨어지는 시기에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 부담이 적어요"
+      },
+      "dosage": {
+        "adult": {"amount": 1500, "unit": "mg"},
+        "child_7_12": {"amount": 0, "unit": "mg"},
+        "teen_13_18": {"amount": 0, "unit": "mg"},
+        "elderly_60plus": {"amount": 1500, "unit": "mg"},
+        "upper_limit": 3000
+      },
+      "good_combinations": [],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "갑상선약", "interaction": "갑상선 기능에 영향을 줄 수 있어요"}
+      ],
+      "food_alternatives": [],
+      "effect_timeline": "4-8주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s097",
+      "korean_name": "아연 픽콜리네이트",
+      "english_name": "Zinc Picolinate",
+      "category": "mineral",
+      "main_benefits": [
+        "면역 세포 활성에 도움이 돼요",
+        "남성 호르몬 균형 유지에 도움돼요",
+        "피부 건강 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "elderly": "전립선과 면역 관리에 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 부담이 적어요"
+      },
+      "dosage": {
+        "adult": {"amount": 22, "unit": "mg"},
+        "child_7_12": {"amount": 5, "unit": "mg"},
+        "teen_13_18": {"amount": 11, "unit": "mg"},
+        "elderly_60plus": {"amount": 22, "unit": "mg"},
+        "upper_limit": 40
+      },
+      "good_combinations": [
+        {"with": "톱풀", "reason": "전립선 건강에 함께 좋아요"}
+      ],
+      "bad_combinations": [
+        {"with": "철분", "reason": "흡수 경쟁이 있어요", "severity": "caution", "solution": "2시간 간격을 두고 드세요"},
+        {"with": "칼슘", "reason": "흡수 경쟁이 있어요", "severity": "caution", "solution": "2시간 간격을 두고 드세요"}
+      ],
+      "drug_interactions": [],
+      "food_alternatives": ["굴", "소고기", "호박씨"],
+      "effect_timeline": "2-4주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s098",
+      "korean_name": "어린이 종합비타민",
+      "english_name": "Children's Multivitamin",
+      "category": "complex",
+      "main_benefits": [
+        "성장기 영양 균형 유지에 도움돼요",
+        "편식하는 아이의 부족을 채워줘요",
+        "면역 균형 유지에 도움이 돼요"
+      ],
+      "personalized_reasons": {
+        "child": "편식이 많은 시기에 균형을 도와요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "식사와 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 0, "unit": "정"},
+        "child_7_12": {"amount": 1, "unit": "정"},
+        "teen_13_18": {"amount": 1, "unit": "정"},
+        "elderly_60plus": {"amount": 0, "unit": "정"},
+        "upper_limit": 1
+      },
+      "good_combinations": [],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["다양한 채소·과일·곡물"],
+      "effect_timeline": "장기적으로 균형 유지에 도움이 돼요"
+    },
+    {
+      "id": "s099",
+      "korean_name": "어린이 DHA",
+      "english_name": "Children's DHA",
+      "category": "essential_fatty_acid",
+      "main_benefits": [
+        "두뇌 발달기에 도움이 돼요",
+        "집중력 유지에 도움이 돼요",
+        "눈 건강 유지에 좋아요"
+      ],
+      "personalized_reasons": {
+        "child": "두뇌 발달기에 추가 보충에 좋아요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "with_food",
+        "reason": "지방과 함께 흡수가 좋아요"
+      },
+      "dosage": {
+        "adult": {"amount": 0, "unit": "mg"},
+        "child_7_12": {"amount": 250, "unit": "mg"},
+        "teen_13_18": {"amount": 500, "unit": "mg"},
+        "elderly_60plus": {"amount": 0, "unit": "mg"},
+        "upper_limit": 1000
+      },
+      "good_combinations": [
+        {"with": "비타민D", "reason": "성장기에 함께 좋아요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [],
+      "food_alternatives": ["연어", "고등어", "달걀"],
+      "effect_timeline": "8-12주 꾸준히 복용해야 변화를 느껴요"
+    },
+    {
+      "id": "s100",
+      "korean_name": "어린이 유산균",
+      "english_name": "Children's Probiotics",
+      "category": "probiotic",
+      "main_benefits": [
+        "장 환경 균형 유지에 도움이 돼요",
+        "면역 균형 유지에 도움이 돼요",
+        "변비·설사 빈도 감소에 좋아요"
+      ],
+      "personalized_reasons": {
+        "child": "장 건강 관리에 매일 도움이 돼요"
+      },
+      "timing": {
+        "best_time": "morning",
+        "meal_relation": "before_meal",
+        "reason": "공복에 잘 살아남아요"
+      },
+      "dosage": {
+        "adult": {"amount": 0, "unit": "포"},
+        "child_7_12": {"amount": 1, "unit": "포"},
+        "teen_13_18": {"amount": 1, "unit": "포"},
+        "elderly_60plus": {"amount": 0, "unit": "포"},
+        "upper_limit": 2
+      },
+      "good_combinations": [
+        {"with": "프리바이오틱스", "reason": "유산균 정착에 함께 도움돼요"}
+      ],
+      "bad_combinations": [],
+      "drug_interactions": [
+        {"drug_category": "항생제", "interaction": "복용 후 2시간 이상 간격을 두세요"}
+      ],
+      "food_alternatives": ["요거트", "발효식품"],
+      "effect_timeline": "2-4주 꾸준히 복용해야 변화를 느껴요"
     }
   ]
 }
