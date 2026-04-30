@@ -107,7 +107,7 @@ class ProductRepository {
     }
 
     combos.sort((a, b) {
-      final cmpCoverage = b.totalCoverage.compareTo(a.totalCoverage);
+      final cmpCoverage = b.averageCoverage.compareTo(a.averageCoverage);
       if (cmpCoverage != 0) return cmpCoverage;
       final cmpCount = a.productCount.compareTo(b.productCount);
       if (cmpCount != 0) return cmpCount;
@@ -127,7 +127,7 @@ class ProductRepository {
   double _findBestCoverage(List<ProductCombo> combos) {
     var best = 0.0;
     for (final c in combos) {
-      if (c.totalCoverage > best) best = c.totalCoverage;
+      if (c.averageCoverage > best) best = c.averageCoverage;
     }
     return best;
   }
@@ -146,26 +146,26 @@ class ProductRepository {
       });
     }
 
-    var nutrientsCovered = 0;
+    final perNutrient = <String, double>{};
     final missing = <String>[];
+    var sum = 0.0;
     gap.forEach((nutrient, needed) {
       final got = supplied[nutrient] ?? 0;
-      if (got >= needed * 0.7) {
-        nutrientsCovered++;
-      } else {
-        missing.add(nutrient);
-      }
+      final ratio = needed > 0 ? (got / needed).clamp(0.0, 1.5) : 0.0;
+      perNutrient[nutrient] = ratio;
+      sum += ratio.clamp(0.0, 1.0);
+      if (got < needed * 0.7) missing.add(nutrient);
     });
 
-    final coverage =
-        gap.isEmpty ? 0.0 : nutrientsCovered / gap.length;
+    final average = gap.isEmpty ? 0.0 : sum / gap.length;
 
     return ProductCombo(
       products: List.unmodifiable(products),
-      totalCoverage: coverage,
+      totalCoverage: Map.unmodifiable(perNutrient),
       missingNutrients: List.unmodifiable(missing),
       totalDailyCostKrw: dailyCost,
       productCount: products.length,
+      averageCoverage: average,
     );
   }
 }

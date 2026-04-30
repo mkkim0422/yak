@@ -124,14 +124,3 @@ class ClaudeApi {
 
   void dispose() => _client.close();
 }
-
-/// 식약처 (MFDS) public API placeholder.
-/// Real endpoint integration is added in Phase 2 once the key is provisioned.
-class MfdsApi {
-  MfdsApi._();
-
-  static bool get isConfigured => EnvConfig.hasMfdsKey;
-
-  /// Returns null until the API key is available.
-  static Future<Map<String, dynamic>?> lookupProduct(String _) async => null;
-}

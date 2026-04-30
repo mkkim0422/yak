@@ -51,4 +51,5 @@ flutter:
     - assets/data/symptom_guide.json
     - assets/data/age_group_recommendations.json
     - assets/data/combination_optimizer.json
+    - assets/data/products.json
     - assets/images/
