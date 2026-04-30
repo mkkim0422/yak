@@ -31,4 +31,32 @@ class SecureStorage {
       _instance.containsKey(key: key);
 
   static Future<void> deleteAll() => _instance.deleteAll();
+
+  /// 100% wipe used on logout / 30-day session expiry.
+  static Future<void> wipe() => _instance.deleteAll();
+}
+
+/// Centralized secure-storage key namespace.
+class SecureKeys {
+  SecureKeys._();
+
+  static const String privacyConsent = 'alyak.privacyConsent';
+  static const String onboardingComplete = 'alyak.onboardingComplete';
+  static const String familyDraftsIndex = 'alyak.familyDrafts.index';
+  static const String familyOrder = 'alyak.familyOrder';
+
+  static const String notificationSettings = 'alyak.notification.settings';
+
+  static const String streakCount = 'alyak.streak.count';
+  static const String streakLastDate = 'alyak.streak.lastDate';
+  static const String streakBest = 'alyak.streak.best';
+
+  static const String reorderDate = 'alyak.reorder.date';
+  static const String sessionLastActive = 'alyak.session.lastActive';
+
+  static String familyDraft(String memberId) => 'alyak.family.draft.$memberId';
+  static String checkin(String memberId, String yyyymmdd) =>
+      'alyak.checkin.$memberId.$yyyymmdd';
+  static String aiComment(String memberId, String yyyymmdd) =>
+      'ai_comment.$memberId.$yyyymmdd';
 }

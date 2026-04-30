@@ -6,10 +6,12 @@ class AppStrings {
   // App
   static const String appName = '알약';
   static const String appTagline = '우리 가족 건강한 영양제 습관';
+  static const String appNameSubtitle = '우리 가족 영양제 케어';
 
   // Common
   static const String next = '다음';
   static const String prev = '이전';
+  static const String back = '뒤로';
   static const String done = '완료';
   static const String save = '저장';
   static const String cancel = '취소';
@@ -20,11 +22,35 @@ class AppStrings {
   static const String add = '추가';
   static const String skip = '건너뛰기';
   static const String start = '시작하기';
+  static const String startNow = '시작하기';
+  static const String later = '나중에';
   static const String more = '더보기';
   static const String search = '검색';
   static const String retry = '다시 시도';
   static const String yes = '네';
   static const String no = '아니요';
+
+  // Disclaimer (used app-wide)
+  static const String disclaimerText =
+      '본 앱은 의사·약사의 전문 진단을 대체하지 않습니다';
+  static const String disclaimerNutrient =
+      '영양제 복용은 본인의 건강 상태에 맞게 결정해주세요';
+
+  // Welcome
+  static const String welcomeMessage1 = '우리 가족의 건강을 위해 💚';
+  static const String welcomeMessage2 = '가장 중요한 분을 먼저 등록해요';
+  static const String welcomeMessage3 = '바로 사용자님이에요 😊';
+  static const String welcomeButtonOwn = '나부터 등록할게요';
+  static const String welcomeButtonFamily = '가족 먼저 등록할게요';
+
+  // Privacy consent
+  static const String privacyConsentTitle = '개인정보 수집·이용 동의';
+  static const String privacyAgreeButton = '동의하고 시작하기';
+
+  // Empty/error states
+  static const String loadingText = '잠시만요...';
+  static const String emptyFamily = '가족을 추가해보세요';
+  static const String addFamily = '가족 추가하기';
 
   // Navigation
   static const String navHome = '홈';

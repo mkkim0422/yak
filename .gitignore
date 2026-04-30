@@ -47,10 +47,16 @@ app.*.map.json
 
 # Secrets / signing
 .env
+.env.local
+.env.*.local
 .env.*
-google-services.json
+**/google-services.json
 GoogleService-Info.plist
-*.keystore
-*.jks
+**/*.keystore
+**/*.jks
 key.properties
 android/key.properties
+
+# Tooling caches
+.claude/
+android/build/
