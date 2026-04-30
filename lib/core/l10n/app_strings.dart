@@ -153,4 +153,14 @@ class AppStrings {
   static const String errorGeneric = '문제가 발생했어요. 다시 시도해주세요';
   static const String errorNetwork = '네트워크 연결을 확인해주세요';
   static const String errorLoadingData = '데이터를 불러오지 못했어요';
+
+  // Shop / affiliate
+  static const String affiliateDisclosure =
+      '본 앱은 일부 구매 링크에서 수수료를 받을 수 있어요';
+  static const String affiliateNoteShort = '구매 시 수수료를 받아요';
+  static const String shopNaver = '네이버 쇼핑';
+  static const String shopCoupang = '쿠팡';
+  static const String shopIherb = 'iHerb';
+  static const String compareSearchPrice = '가격 비교';
+  static const String buyHere = '구매하기';
 }
