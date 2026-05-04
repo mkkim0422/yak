@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
@@ -234,11 +233,6 @@ class _LargeCardLayout extends StatelessWidget {
           '💊 현재 복용: ${analysis.currentProductCount}개',
           style: AppTypography.body2,
         ),
-        const SizedBox(height: 4),
-        Text(
-          '📅 ${_lastCheckupLine(analysis.lastCheckupDate)}',
-          style: AppTypography.body2,
-        ),
         const SizedBox(height: 12),
         Align(
           alignment: Alignment.centerRight,
@@ -254,12 +248,6 @@ class _LargeCardLayout extends StatelessWidget {
       ],
     );
   }
-}
-
-String _lastCheckupLine(DateTime? date) {
-  if (date == null) return AppStrings.cardNoCheckup;
-  final formatted = DateFormat('yyyy년 M월', 'ko').format(date);
-  return AppStrings.cardLastCheckupTemplate.replaceFirst('%s', formatted);
 }
 
 void _showQuickActions(
@@ -294,13 +282,6 @@ void _showQuickActions(
                 () {
                   Navigator.of(sheetContext).pop();
                   context.push('/current-check/${member.id}');
-                },
-              ),
-              _quickActionTile(
-                AppStrings.quickActionCheckup,
-                () {
-                  Navigator.of(sheetContext).pop();
-                  context.push('/health-checkup/${member.id}');
                 },
               ),
               _quickActionTile(

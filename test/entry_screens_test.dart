@@ -96,13 +96,14 @@ FamilyMember _member({
   String id = 'm1',
   String name = '홍길동',
   Relationship relationship = Relationship.self,
+  int age = 40,
 }) {
   final now = DateTime(2026, 1, 1);
   return FamilyMember(
     id: id,
     name: name,
     relationship: relationship,
-    age: 40,
+    birthYear: DateTime.now().year - age,
     sex: Sex.male,
     createdAt: now,
     updatedAt: now,

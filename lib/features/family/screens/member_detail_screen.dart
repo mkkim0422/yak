@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
@@ -67,9 +66,6 @@ class _ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final genderLabel = member.sex.label;
-    final lastCheckup = analysis.lastCheckupDate != null
-        ? DateFormat('yyyy년 M월', 'ko').format(analysis.lastCheckupDate!)
-        : '없음';
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -89,13 +85,13 @@ class _ProfileHeader extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 4),
-          Text('${member.age}세 $genderLabel · ${member.relationship.label}',
+          Text(
+              '${member.ageLabel} $genderLabel · ${member.relationship.label}',
               style: AppTypography.body2),
           const SizedBox(height: 12),
           _summaryLine('⚠️', '${analysis.deficits.length}개 영양소 부족'),
           _summaryLine('✅', '${analysis.sufficientCount}개 충분히 챙기시는 중'),
           _summaryLine('💊', '${analysis.currentProductCount}개 영양제 복용 중'),
-          _summaryLine('📅', '검진: $lastCheckup'),
         ],
       ),
     );
@@ -140,10 +136,6 @@ class _QuickActionsCard extends StatelessWidget {
           _ActionButton(
             label: '⚠️ 지금 먹는 것 점검',
             onTap: () => context.push('/current-check/$memberId'),
-          ),
-          _ActionButton(
-            label: '🔍 검진 결과 보기/수정',
-            onTap: () => context.push('/health-checkup/$memberId'),
           ),
           _ActionButton(
             label: '💊 현재 복용 영양제 관리',

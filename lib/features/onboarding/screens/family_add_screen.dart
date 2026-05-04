@@ -3,16 +3,23 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/notifications/notification_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../family/models/family_member.dart';
 import '../../family/providers/family_provider.dart';
 import '../widgets/chat_message.dart';
 
-/// Toss-style 16-step chat to register a new family member.
+/// Toss-style chat to register a new family member.
+/// Steps (max 17, but most users see fewer because of age/sex skips):
+///  1 relationship · 2 name · 3 birthYear · 4 sex
+///  5 medical disclaimer (only when age < 4)
+///  6 height/weight · 7 pregnancy · 8 breastfeeding
+///  9 smoking · 10 drinking · 11 diet · 12 sleep · 13 stress
+///  14 allergies · 15 medications · 16 products intent · 17 complete
 class FamilyAddScreen extends ConsumerStatefulWidget {
-  /// Optional preset relationship (e.g. when entering from the welcome
-  /// screen's "나부터 등록하기" CTA we skip step 1).
+  /// Optional preset relationship — when entering from the welcome
+  /// screen's "나부터 등록하기" CTA we skip step 1.
   final Relationship? presetRelationship;
   const FamilyAddScreen({super.key, this.presetRelationship});
 
@@ -24,7 +31,7 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
   final _scrollCtrl = ScrollController();
   final _draft = _Draft();
   int _step = 1;
-  static const int _totalSteps = 16;
+  static const int _totalSteps = 17;
 
   @override
   void initState() {
@@ -57,28 +64,21 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
     });
   }
 
-  /// Whether [step] is applicable to the current draft (age + sex).
-  /// The `_totalSteps` constant still describes the maximum number of
-  /// steps any user may see; users with younger profiles short-circuit.
   bool shouldShowStep(int step) => _shouldShow(step, _draft);
 
   void _next({String? answer}) {
     if (answer != null) _draft.answers.add(_AnsweredEntry(_step, answer));
     var next = _step + 1;
-    while (next < _totalSteps && !shouldShowStepAt(next)) {
+    while (next < _totalSteps && !shouldShowStep(next)) {
       next++;
     }
     setState(() => _step = next);
     _scrollToEnd();
   }
 
-  /// Variant used by the build callback that doesn't rely on the
-  /// instance `_step` (avoids re-entrant setState).
-  bool shouldShowStepAt(int step) => _shouldShow(step, _draft);
-
   void _back() {
     var prev = _step - 1;
-    while (prev >= 1 && !shouldShowStepAt(prev)) {
+    while (prev >= 1 && !shouldShowStep(prev)) {
       prev--;
     }
     if (prev < 1) {
@@ -106,7 +106,7 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
         ),
         centerTitle: true,
         actions: [
-          if (_step < _totalSteps)
+          if (_step < _totalSteps && _step != 5)
             TextButton(
               onPressed: () => _next(answer: null),
               child: const Text('건너뛰기'),
@@ -118,7 +118,8 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
           Expanded(
             child: ListView(
               controller: _scrollCtrl,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               children: _renderHistory(),
             ),
           ),
@@ -138,6 +139,7 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
   List<Widget> _renderHistory() {
     final widgets = <Widget>[];
     for (var i = 1; i <= _step; i++) {
+      if (!shouldShowStep(i) && i != _step) continue;
       widgets.add(ChatMessage(text: _botPrompt(i), fromUser: false));
       final answered = _draft.answers.where((a) => a.step == i).toList();
       for (final a in answered) {
@@ -154,30 +156,39 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
       case 2:
         return '${_draft.relationship?.label ?? '가족'}의 이름을 알려주세요';
       case 3:
-        return '${_draft.name}님의 나이를 알려주세요';
+        return '${_draft.name}님의 출생년도를 알려주세요';
       case 4:
         return '성별이 어떻게 되세요?';
       case 5:
-        return '키와 몸무게를 알려주세요 (선택)';
+        if (_draft.age < 1) {
+          return '⚠️ 잠깐, 알려드릴게요\n'
+              '영아 영양제는 반드시 소아과 상담을 받으세요.\n'
+              '이 앱은 정보 참고용이며 의학적 진단을 대체하지 않습니다.';
+        }
+        return '⚠️ 알려드릴게요\n'
+            '이 시기는 정상 식단으로 충분한 경우가 많아요.\n'
+            '영양제 필요 여부는 소아과와 상담하세요.';
       case 6:
-        return '혹시 임신 또는 수유 중이신가요?';
+        return '키와 몸무게를 알려주세요 (선택)';
       case 7:
-        return '흡연하시나요?';
+        return '혹시 임신 또는 수유 중이신가요?';
       case 8:
-        return '음주는 어떠세요?';
+        return '수유 중이신가요?';
       case 9:
-        return '평소 식단은 어떠신가요?';
+        return '흡연하시나요?';
       case 10:
-        return '보통 몇 시간 주무세요?';
+        return '음주는 어떠세요?';
       case 11:
-        return '스트레스 정도는?';
+        return '평소 식단은 어떠신가요?';
       case 12:
-        return '알레르기 있으시나요? (선택)';
+        return '보통 몇 시간 주무세요?';
       case 13:
-        return '현재 복용 중인 약이 있나요? (선택)';
+        return '스트레스 정도는?';
       case 14:
-        return '최근 받으신 검진 결과 입력하시겠어요? (선택)';
+        return '알레르기 있으시나요? (선택)';
       case 15:
+        return '현재 복용 중인 약이 있나요? (선택)';
+      case 16:
         return '현재 드시는 영양제가 있나요? (선택)';
       default:
         return '${_draft.name}님 등록 완료! 🎉';
@@ -185,7 +196,9 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
   }
 
   Future<void> _save() async {
-    if (_draft.relationship == null || _draft.name.isEmpty || _draft.age <= 0) {
+    if (_draft.relationship == null ||
+        _draft.name.isEmpty ||
+        _draft.birthYear <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('필수 정보를 입력해주세요')),
       );
@@ -197,7 +210,7 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
       id: id,
       name: _draft.name,
       relationship: _draft.relationship!,
-      age: _draft.age,
+      birthYear: _draft.birthYear,
       sex: _draft.sex,
       heightCm: _draft.heightCm,
       weightKg: _draft.weightKg,
@@ -216,32 +229,24 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
     final controller = ref.read(familyControllerProvider);
     final wasFirst = controller.members.isEmpty;
     await controller.addMember(member);
-    if (!mounted) return;
 
-    // Branch by post-save intent. Order: products first (immediate
-    // value), then checkup, then notification setup (first run only),
-    // then home.
-    String fallback;
-    if (wasFirst) {
-      fallback = '/onboarding/notification';
-    } else if (GoRouter.of(context).canPop()) {
-      fallback = '_pop_';
-    } else {
-      fallback = '/home';
-    }
+    // Annual checkup nudge — informational only, no data entry.
+    await ref
+        .read(notificationServiceProvider)
+        .scheduleAnnualCheckupReminder(memberId: member.id);
+
+    if (!mounted) return;
 
     if (_draft.wantsProducts) {
       context.go('/family/${member.id}/products');
       return;
     }
-    if (_draft.wantsCheckup) {
-      context.go('/health-checkup/${member.id}');
-      return;
-    }
-    if (fallback == '_pop_') {
+    if (wasFirst) {
+      context.go('/onboarding/notification');
+    } else if (GoRouter.of(context).canPop()) {
       context.pop();
     } else {
-      context.go(fallback);
+      context.go('/home');
     }
   }
 }
@@ -249,7 +254,7 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
 class _Draft {
   Relationship? relationship;
   String name = '';
-  int age = 0;
+  int birthYear = DateTime.now().year - 30;
   Sex sex = Sex.male;
   double? heightCm;
   double? weightKg;
@@ -264,42 +269,45 @@ class _Draft {
   final List<String> medications = [];
   final List<_AnsweredEntry> answers = [];
 
-  /// Set on step 14/15 to chain post-save navigation.
-  bool wantsCheckup = false;
   bool wantsProducts = false;
+
+  /// Live age = currentYear - birthYear.
+  int get age => DateTime.now().year - birthYear;
 
   void set(void Function(_Draft) f) => f(this);
 }
 
 /// Single source of truth for whether a chat step applies to the
-/// person being added. Foundation steps (1-5) are always shown; the
-/// rest gate on age/sex.
-///
-/// Step ids:
-///   1 relationship · 2 name · 3 age · 4 sex · 5 height/weight
-///   6 pregnancy · 7 smoking · 8 drinking · 9 diet · 10 sleep
-///   11 stress · 12 allergies · 13 medications · 14 checkup intent
-///   15 products intent · 16 complete
+/// person being added. Foundation steps (1-4) and final steps (16-17)
+/// are always shown; the rest gate on age/sex.
 bool _shouldShow(int step, _Draft d) {
-  if (step <= 5 || step >= 16) return true;
   switch (step) {
-    case 6: // pregnancy / breastfeeding
-      return d.sex == Sex.female && d.age >= 15 && d.age < 55;
-    case 7: // smoking
-    case 8: // drinking
-      return d.age >= 19;
-    case 9: // diet
-    case 11: // stress
-      return d.age >= 13;
-    case 10: // sleep
-      return d.age >= 3;
-    case 12: // allergies
+    case 1:
+    case 2:
+    case 3:
+    case 4:
       return true;
-    case 13: // medications
-      return d.age >= 3;
-    case 14: // checkup intent
+    case 5: // medical disclaimer
+      return d.age < 4;
+    case 6: // height/weight
+      return true;
+    case 7: // pregnancy
+    case 8: // breastfeeding
+      return d.sex == Sex.female && d.age >= 15 && d.age <= 49;
+    case 9: // smoking
+    case 10: // drinking
+      return d.age >= 19;
+    case 11: // diet
+    case 12: // sleep
+      return d.age >= 4;
+    case 13: // stress
       return d.age >= 13;
-    case 15: // products intent
+    case 14: // allergies
+      return true;
+    case 15: // medications
+      return d.age >= 1;
+    case 16: // products intent
+    case 17: // complete
       return true;
     default:
       return true;
@@ -343,8 +351,7 @@ class _StepInput extends StatelessWidget {
                   r == Relationship.father ||
                   r == Relationship.son) {
                 d.sex = Sex.male;
-              }
-              if (r == Relationship.wife ||
+              } else if (r == Relationship.wife ||
                   r == Relationship.mother ||
                   r == Relationship.daughter) {
                 d.sex = Sex.female;
@@ -364,10 +371,12 @@ class _StepInput extends StatelessWidget {
         );
         break;
       case 3:
-        child = _AgeInput(onSubmit: (age) {
-          onSubmitDraft((d) => d.age = age);
-          onAnswer('$age세');
-        });
+        child = _BirthYearInput(
+          onSubmit: (year) {
+            onSubmitDraft((d) => d.birthYear = year);
+            onAnswer('$year년생 (만 ${DateTime.now().year - year}세)');
+          },
+        );
         break;
       case 4:
         child = _ChoiceRow(
@@ -379,6 +388,15 @@ class _StepInput extends StatelessWidget {
         );
         break;
       case 5:
+        child = SizedBox(
+          width: double.infinity,
+          child: FilledButton(
+            onPressed: () => onAnswer('확인했어요'),
+            child: const Text('확인했어요'),
+          ),
+        );
+        break;
+      case 6:
         child = _HeightWeightInput(
           onSubmit: (h, w) {
             onSubmitDraft((d) {
@@ -392,23 +410,31 @@ class _StepInput extends StatelessWidget {
           },
         );
         break;
-      case 6:
+      case 7:
         child = _ChoiceRow(
           options: const [
             ('임신 중', _PregState.pregnant),
-            ('수유 중', _PregState.breastfeeding),
             ('해당 없음', _PregState.none),
           ],
           onPick: (label, value) {
-            onSubmitDraft((d) {
-              d.isPregnant = value == _PregState.pregnant;
-              d.isBreastfeeding = value == _PregState.breastfeeding;
-            });
+            onSubmitDraft((d) => d.isPregnant = value == _PregState.pregnant);
             onAnswer(label);
           },
         );
         break;
-      case 7:
+      case 8:
+        child = _ChoiceRow(
+          options: const [
+            ('수유 중', true),
+            ('해당 없음', false),
+          ],
+          onPick: (label, value) {
+            onSubmitDraft((d) => d.isBreastfeeding = value);
+            onAnswer(label);
+          },
+        );
+        break;
+      case 9:
         child = _ChoiceRow(
           options: const [
             ('안 함', SmokingStatus.never),
@@ -421,7 +447,7 @@ class _StepInput extends StatelessWidget {
           },
         );
         break;
-      case 8:
+      case 10:
         child = _ChoiceRow(
           options: const [
             ('안 함', DrinkingFrequency.never),
@@ -434,7 +460,7 @@ class _StepInput extends StatelessWidget {
           },
         );
         break;
-      case 9:
+      case 11:
         child = _ChoiceRow(
           options: const [
             ('좋음 (균형)', DietQuality.good),
@@ -447,7 +473,7 @@ class _StepInput extends StatelessWidget {
           },
         );
         break;
-      case 10:
+      case 12:
         child = _ChoiceRow(
           options: const [
             ('5h 미만', SleepHours.less5),
@@ -461,7 +487,7 @@ class _StepInput extends StatelessWidget {
           },
         );
         break;
-      case 11:
+      case 13:
         child = _ChoiceRow(
           options: const [
             ('낮음', StressLevel.low),
@@ -474,7 +500,7 @@ class _StepInput extends StatelessWidget {
           },
         );
         break;
-      case 12:
+      case 14:
         child = _MultiSelect(
           options: const ['우유', '갑각류', '생선', '대두', '효모', '땅콩', '밀', '기타'],
           initial: draft.allergies,
@@ -489,7 +515,7 @@ class _StepInput extends StatelessWidget {
           },
         );
         break;
-      case 13:
+      case 15:
         child = _MultiSelect(
           options: const [
             '혈압약', '당뇨약', '고지혈증약', '항응고제', '갑상선약', '기타',
@@ -506,32 +532,7 @@ class _StepInput extends StatelessWidget {
           },
         );
         break;
-      case 14:
-        child = Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () {
-                  onSubmitDraft((d) => d.wantsCheckup = false);
-                  onSkip();
-                },
-                child: const Text('건너뛰기'),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: FilledButton(
-                onPressed: () {
-                  onSubmitDraft((d) => d.wantsCheckup = true);
-                  onAnswer('저장 후 검진 입력');
-                },
-                child: const Text('검진 입력하기'),
-              ),
-            ),
-          ],
-        );
-        break;
-      case 15:
+      case 16:
         child = _ProductIntentInput(
           draft: draft,
           onSubmitDraft: onSubmitDraft,
@@ -644,9 +645,6 @@ class _NameInputState extends State<_NameInput> {
         Expanded(
           child: TextField(
             controller: _ctrl,
-            // Disable IME suggestions/autocorrect — otherwise the
-            // pre-filled name gets echoed back as a keyboard hint
-            // which confuses users (Galaxy keyboard repro).
             autocorrect: false,
             enableSuggestions: false,
             keyboardType: TextInputType.text,
@@ -673,6 +671,207 @@ class _NameInputState extends State<_NameInput> {
     widget.onSubmit(trimmed);
   }
 }
+
+class _BirthYearInput extends StatefulWidget {
+  final void Function(int year) onSubmit;
+  const _BirthYearInput({required this.onSubmit});
+
+  @override
+  State<_BirthYearInput> createState() => _BirthYearInputState();
+}
+
+class _BirthYearInputState extends State<_BirthYearInput> {
+  final _ctrl = TextEditingController();
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final now = DateTime.now().year;
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: _ctrl,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+              LengthLimitingTextInputFormatter(4),
+            ],
+            decoration: InputDecoration(
+              hintText: '출생년도 (예: 1990)',
+              helperText: '올해는 $now년',
+              border: const OutlineInputBorder(),
+            ),
+            onSubmitted: (_) => _submit(),
+          ),
+        ),
+        const SizedBox(width: 8),
+        FilledButton(onPressed: _submit, child: const Text('다음')),
+      ],
+    );
+  }
+
+  void _submit() {
+    final year = int.tryParse(_ctrl.text);
+    final now = DateTime.now().year;
+    if (year == null || year < (now - 120) || year > now) return;
+    widget.onSubmit(year);
+  }
+}
+
+class _ChoiceRow<T> extends StatelessWidget {
+  final List<(String, T)> options;
+  final void Function(String label, T value) onPick;
+  const _ChoiceRow({required this.options, required this.onPick});
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        for (final o in options)
+          OutlinedButton(
+            onPressed: () => onPick(o.$1, o.$2),
+            child: Text(o.$1),
+          ),
+      ],
+    );
+  }
+}
+
+class _HeightWeightInput extends StatefulWidget {
+  final void Function(double? heightCm, double? weightKg) onSubmit;
+  const _HeightWeightInput({required this.onSubmit});
+
+  @override
+  State<_HeightWeightInput> createState() => _HeightWeightInputState();
+}
+
+class _HeightWeightInputState extends State<_HeightWeightInput> {
+  final _h = TextEditingController();
+  final _w = TextEditingController();
+
+  @override
+  void dispose() {
+    _h.dispose();
+    _w.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: _h,
+            keyboardType:
+                const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+            ],
+            decoration: const InputDecoration(
+              labelText: '키 cm',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: TextField(
+            controller: _w,
+            keyboardType:
+                const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+            ],
+            decoration: const InputDecoration(
+              labelText: '몸무게 kg',
+              border: OutlineInputBorder(),
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        FilledButton(
+          onPressed: () => widget.onSubmit(
+            double.tryParse(_h.text),
+            double.tryParse(_w.text),
+          ),
+          child: const Text('다음'),
+        ),
+      ],
+    );
+  }
+}
+
+class _MultiSelect extends StatefulWidget {
+  final List<String> options;
+  final List<String> initial;
+  final String noneLabel;
+  final void Function(List<String>) onSubmit;
+  const _MultiSelect({
+    required this.options,
+    required this.initial,
+    required this.noneLabel,
+    required this.onSubmit,
+  });
+
+  @override
+  State<_MultiSelect> createState() => _MultiSelectState();
+}
+
+class _MultiSelectState extends State<_MultiSelect> {
+  late final Set<String> _selected = {...widget.initial};
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: [
+            for (final opt in widget.options)
+              FilterChip(
+                label: Text(opt),
+                selected: _selected.contains(opt),
+                onSelected: (v) => setState(() {
+                  v ? _selected.add(opt) : _selected.remove(opt);
+                }),
+              ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () => widget.onSubmit(const []),
+                child: Text(widget.noneLabel),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: FilledButton(
+                onPressed: () => widget.onSubmit(_selected.toList()),
+                child: const Text('다음'),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+enum _PregState { pregnant, none }
 
 class _ProductIntentInput extends StatelessWidget {
   final _Draft draft;
@@ -759,196 +958,3 @@ class _ProductIntentInput extends StatelessWidget {
     );
   }
 }
-
-class _AgeInput extends StatefulWidget {
-  final void Function(int) onSubmit;
-  const _AgeInput({required this.onSubmit});
-
-  @override
-  State<_AgeInput> createState() => _AgeInputState();
-}
-
-class _AgeInputState extends State<_AgeInput> {
-  final _ctrl = TextEditingController();
-
-  @override
-  void dispose() {
-    _ctrl.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: _ctrl,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: const InputDecoration(
-              hintText: '나이 (0–120)',
-              border: OutlineInputBorder(),
-            ),
-            onSubmitted: (_) => _submit(),
-          ),
-        ),
-        const SizedBox(width: 8),
-        FilledButton(onPressed: _submit, child: const Text('다음')),
-      ],
-    );
-  }
-
-  void _submit() {
-    final age = int.tryParse(_ctrl.text);
-    if (age == null || age < 0 || age > 120) return;
-    widget.onSubmit(age);
-  }
-}
-
-class _ChoiceRow<T> extends StatelessWidget {
-  final List<(String, T)> options;
-  final void Function(String label, T value) onPick;
-  const _ChoiceRow({required this.options, required this.onPick});
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        for (final o in options)
-          OutlinedButton(
-            onPressed: () => onPick(o.$1, o.$2),
-            child: Text(o.$1),
-          ),
-      ],
-    );
-  }
-}
-
-class _HeightWeightInput extends StatefulWidget {
-  final void Function(double? heightCm, double? weightKg) onSubmit;
-  const _HeightWeightInput({required this.onSubmit});
-
-  @override
-  State<_HeightWeightInput> createState() => _HeightWeightInputState();
-}
-
-class _HeightWeightInputState extends State<_HeightWeightInput> {
-  final _h = TextEditingController();
-  final _w = TextEditingController();
-
-  @override
-  void dispose() {
-    _h.dispose();
-    _w.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: TextField(
-            controller: _h,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
-            ],
-            decoration: const InputDecoration(
-              labelText: '키 cm',
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: TextField(
-            controller: _w,
-            keyboardType: const TextInputType.numberWithOptions(decimal: true),
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
-            ],
-            decoration: const InputDecoration(
-              labelText: '몸무게 kg',
-              border: OutlineInputBorder(),
-            ),
-          ),
-        ),
-        const SizedBox(width: 8),
-        FilledButton(
-          onPressed: () => widget.onSubmit(
-            double.tryParse(_h.text),
-            double.tryParse(_w.text),
-          ),
-          child: const Text('다음'),
-        ),
-      ],
-    );
-  }
-}
-
-class _MultiSelect extends StatefulWidget {
-  final List<String> options;
-  final List<String> initial;
-  final String noneLabel;
-  final void Function(List<String>) onSubmit;
-  const _MultiSelect({
-    required this.options,
-    required this.initial,
-    required this.noneLabel,
-    required this.onSubmit,
-  });
-
-  @override
-  State<_MultiSelect> createState() => _MultiSelectState();
-}
-
-class _MultiSelectState extends State<_MultiSelect> {
-  late final Set<String> _selected = {...widget.initial};
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Wrap(
-          spacing: 6,
-          runSpacing: 6,
-          children: [
-            for (final opt in widget.options)
-              FilterChip(
-                label: Text(opt),
-                selected: _selected.contains(opt),
-                onSelected: (v) => setState(() {
-                  v ? _selected.add(opt) : _selected.remove(opt);
-                }),
-              ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () => widget.onSubmit(const []),
-                child: Text(widget.noneLabel),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: FilledButton(
-                onPressed: () => widget.onSubmit(_selected.toList()),
-                child: const Text('다음'),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-enum _PregState { pregnant, breastfeeding, none }

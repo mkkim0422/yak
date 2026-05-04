@@ -1,4 +1,3 @@
-import 'health_checkup_model.dart';
 import 'product_model.dart';
 import '../product_repository.dart';
 
@@ -85,10 +84,12 @@ class FamilyInput {
   final bool? digestiveIssues;
   final bool? takingMedications;
 
+  final bool isPregnant;
+  final bool isBreastfeeding;
+
   final List<String> currentSupplements;
   final List<String> currentProductIds;
   final List<String> symptomIds;
-  final HealthCheckup? lastCheckup;
 
   const FamilyInput({
     required this.name,
@@ -117,10 +118,11 @@ class FamilyInput {
     this.eatsFish,
     this.digestiveIssues,
     this.takingMedications,
+    this.isPregnant = false,
+    this.isBreastfeeding = false,
     this.currentSupplements = const [],
     this.currentProductIds = const [],
     this.symptomIds = const [],
-    this.lastCheckup,
   });
 
   /// Returns total daily nutrient intake from all currently-taken products.

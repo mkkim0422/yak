@@ -134,8 +134,8 @@ class SupplementRepository {
 
     _applyLifestyleBoosts(input, mustTake, highly, consider);
     _applySymptomBoosts(input, mustTake, highly, consider);
-    _applyCheckupBoosts(input, mustTake, highly, consider);
     _applyChildrenFocus(input, mustTake, highly, consider);
+    _applyPregnancyBoosts(input, mustTake, highly, consider);
     _applyRegionAdjustments(mustTake, highly);
     _resolvePersonalizedReasons(input, mustTake);
     _resolvePersonalizedReasons(input, highly);
@@ -268,6 +268,10 @@ class SupplementRepository {
     if (input.smoker == true) {
       _ensure(highly, '비타민C', '흡연으로 손상된 항산화 시스템 회복에 좋아요',
           RecommendationCategory.highlyRecommended, 2);
+      _ensure(highly, '비타민E', '항산화 보강에 좋아요',
+          RecommendationCategory.highlyRecommended, 2);
+      _ensure(consider, '베타카로틴', '폐 점막 보호에 도움이 돼요',
+          RecommendationCategory.considerIf, 3);
       _ensure(consider, 'NAC', '호흡기 점액 정화에 도움이 돼요',
           RecommendationCategory.considerIf, 3);
     }
@@ -277,8 +281,15 @@ class SupplementRepository {
       _ensure(highly, '비타민B군 종합', '음주로 손실된 B군 보충에 좋아요',
           RecommendationCategory.highlyRecommended, 2);
     }
+    // Poor diet → bring a multivitamin into the mix.
+    if (input.diet == Diet.western) {
+      _ensure(must, '종합비타민', '식단 보완에 도움이 돼요',
+          RecommendationCategory.mustTake, 1);
+    }
     if (input.isHighStress) {
       _ensure(highly, '마그네슘', '스트레스 완화에 좋아요',
+          RecommendationCategory.highlyRecommended, 2);
+      _ensure(highly, '비타민B군 종합', '스트레스 시 B군 소모 증가',
           RecommendationCategory.highlyRecommended, 2);
       _ensure(consider, 'L-테아닌', '긴장 완화에 도움이 돼요',
           RecommendationCategory.considerIf, 3);
@@ -317,49 +328,29 @@ class SupplementRepository {
     }
   }
 
-  void _applyCheckupBoosts(
+  /// Stage 5 (no-checkup) compensation: when the user is pregnant or
+  /// breastfeeding, several supplements move into 꼭 챙겨야 해요.
+  void _applyPregnancyBoosts(
     FamilyInput input,
     List<RecommendedSupplement> must,
     List<RecommendedSupplement> highly,
     List<RecommendedSupplement> consider,
   ) {
-    final checkup = input.lastCheckup;
-    if (checkup == null) return;
-
-    if ((checkup.cholesterolLdl ?? 0) > 130) {
-      _ensure(highly, '오메가3', 'LDL 관리에 좋아요',
-          RecommendationCategory.highlyRecommended, 2);
-    }
-    if ((checkup.bloodSugar ?? 0) > 100) {
-      _ensure(highly, '마그네슘', '혈당 안정에 도움이 돼요',
-          RecommendationCategory.highlyRecommended, 2);
-      _ensure(consider, '크롬', '혈당 안정에 도움이 돼요',
-          RecommendationCategory.considerIf, 3);
-    }
-
-    final hgbThreshold = input.gender == Gender.female ? 12.0 : 13.0;
-    if ((checkup.hemoglobin ?? double.infinity) < hgbThreshold) {
-      _ensure(must, '철분', '빈혈 회복에 좋아요',
+    if (input.isPregnant) {
+      _ensure(must, '엽산', '임신 중 신경관 발달에 필수예요',
+          RecommendationCategory.mustTake, 1);
+      _ensure(must, '철분', '임신 중 빈혈 예방에 좋아요',
+          RecommendationCategory.mustTake, 1);
+      _ensure(must, 'DHA', '태아 두뇌 발달에 도움이 돼요',
           RecommendationCategory.mustTake, 1);
     }
-
-    if ((checkup.alt ?? 0) > 40 || (checkup.ast ?? 0) > 40) {
-      _ensure(highly, '밀크씨슬', '간 수치 관리에 좋아요',
-          RecommendationCategory.highlyRecommended, 2);
-      _ensure(consider, 'NAC', '간 보호에 도움이 돼요',
-          RecommendationCategory.considerIf, 3);
-    }
-
-    if ((checkup.vitaminD ?? double.infinity) < 30) {
-      _ensure(must, '비타민D', '비타민D 결핍 회복에 좋아요',
+    if (input.isBreastfeeding) {
+      _ensure(must, '칼슘', '수유 중 뼈 건강에 좋아요',
           RecommendationCategory.mustTake, 1);
-    }
-
-    if ((checkup.bloodPressureSystolic ?? 0) > 140) {
-      _ensure(highly, '오메가3', '혈압 관리에 좋아요',
-          RecommendationCategory.highlyRecommended, 2);
-      _ensure(consider, '코엔자임Q10', '혈관 건강에 도움이 돼요',
-          RecommendationCategory.considerIf, 3);
+      _ensure(must, '비타민D', '수유 중 칼슘 흡수에 좋아요',
+          RecommendationCategory.mustTake, 1);
+      _ensure(must, '오메가3', '수유 중 모유 영양에 좋아요',
+          RecommendationCategory.mustTake, 1);
     }
   }
 

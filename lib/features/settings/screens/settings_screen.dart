@@ -196,8 +196,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               },
             ),
           SwitchListTile(
-            title: const Text('검진 알림'),
-            subtitle: const Text('검진 후 1년'),
+            title: const Text('연 1회 건강검진 알림'),
+            subtitle: const Text('가족별 1년에 한 번 알림'),
             value: _checkupEnabled,
             onChanged: (v) async {
               setState(() => _checkupEnabled = v);

@@ -12,7 +12,8 @@ FamilyMember _member({
   Sex sex = Sex.male,
   SmokingStatus smoking = SmokingStatus.never,
   StressLevel stress = StressLevel.low,
-  HealthCheckup? checkup,
+  bool isPregnant = false,
+  bool isBreastfeeding = false,
   List<String> productIds = const [],
 }) {
   final now = DateTime(2026, 5, 4);
@@ -20,39 +21,49 @@ FamilyMember _member({
     id: 'm1',
     name: '테스트',
     relationship: Relationship.self,
-    age: age,
+    birthYear: DateTime.now().year - age,
     sex: sex,
     smokingStatus: smoking,
     stressLevel: stress,
-    lastCheckup: checkup,
+    isPregnant: isPregnant,
+    isBreastfeeding: isBreastfeeding,
     currentProductIds: productIds,
     createdAt: now,
     updatedAt: now,
   );
 }
 
-// Re-implement the family_add _shouldShow logic so tests can exercise
-// the branching contract without depending on the private widget state.
+/// Re-implementation of the family_add `_shouldShow` logic so we can
+/// exercise the contract from outside the widget. Mirror this list when
+/// editing the production rules.
 bool shouldShowStep(int step, {required int age, required Sex sex}) {
-  if (step <= 5 || step >= 16) return true;
   switch (step) {
-    case 6: // pregnancy
-      return sex == Sex.female && age >= 15 && age < 55;
-    case 7: // smoking
-    case 8: // drinking
-      return age >= 19;
-    case 9: // diet
-    case 11: // stress
-      return age >= 13;
-    case 10: // sleep
-      return age >= 3;
-    case 12: // allergies
+    case 1:
+    case 2:
+    case 3:
+    case 4:
       return true;
-    case 13: // medications
-      return age >= 3;
-    case 14: // checkup
+    case 5: // medical disclaimer
+      return age < 4;
+    case 6: // height/weight
+      return true;
+    case 7: // pregnancy
+    case 8: // breastfeeding
+      return sex == Sex.female && age >= 15 && age <= 49;
+    case 9: // smoking
+    case 10: // drinking
+      return age >= 19;
+    case 11: // diet
+    case 12: // sleep
+      return age >= 4;
+    case 13: // stress
       return age >= 13;
-    case 15: // products
+    case 14: // allergies
+      return true;
+    case 15: // medications
+      return age >= 1;
+    case 16:
+    case 17:
       return true;
     default:
       return true;
@@ -60,66 +71,64 @@ bool shouldShowStep(int step, {required int age, required Sex sex}) {
 }
 
 void main() {
-  group('FIX1 - age/sex step branching', () {
-    test('newborn (0세): only foundation + allergies + products', () {
-      const a = 0, s = Sex.male;
-      // foundation 1-5
-      for (var i = 1; i <= 5; i++) {
-        expect(shouldShowStep(i, age: a, sex: s), true, reason: 'step $i');
-      }
-      // gated steps 6-14: all should be hidden except allergies (12)
-      expect(shouldShowStep(6, age: a, sex: s), false);
-      expect(shouldShowStep(7, age: a, sex: s), false);
-      expect(shouldShowStep(8, age: a, sex: s), false);
+  group('H3 - precise step branching', () {
+    test('1세 영아: medical disclaimer + minimal steps only', () {
+      const a = 1, s = Sex.male;
+      expect(shouldShowStep(5, age: a, sex: s), true,
+          reason: 'medical disclaimer for under 4');
+      expect(shouldShowStep(11, age: a, sex: s), false, reason: 'no diet');
+      expect(shouldShowStep(12, age: a, sex: s), false, reason: 'no sleep');
+      expect(shouldShowStep(13, age: a, sex: s), false, reason: 'no stress');
+      expect(shouldShowStep(9, age: a, sex: s), false, reason: 'no smoking');
+      expect(shouldShowStep(10, age: a, sex: s), false, reason: 'no drinking');
+      expect(shouldShowStep(7, age: a, sex: s), false, reason: 'no pregnancy');
+      expect(shouldShowStep(15, age: a, sex: s), true, reason: 'meds ok at >=1');
+    });
+
+    test('7세 child: skips smoking/drinking/pregnancy/stress', () {
+      const a = 7, s = Sex.male;
+      expect(shouldShowStep(5, age: a, sex: s), false,
+          reason: 'no medical disclaimer');
       expect(shouldShowStep(9, age: a, sex: s), false);
       expect(shouldShowStep(10, age: a, sex: s), false);
-      expect(shouldShowStep(11, age: a, sex: s), false);
-      expect(shouldShowStep(12, age: a, sex: s), true);
       expect(shouldShowStep(13, age: a, sex: s), false);
-      expect(shouldShowStep(14, age: a, sex: s), false);
-      expect(shouldShowStep(15, age: a, sex: s), true);
-      expect(shouldShowStep(16, age: a, sex: s), true);
-    });
-
-    test('3세 child: + sleep + medications', () {
-      const a = 3, s = Sex.female;
-      expect(shouldShowStep(7, age: a, sex: s), false, reason: 'no smoking');
-      expect(shouldShowStep(8, age: a, sex: s), false, reason: 'no drinking');
-      expect(shouldShowStep(10, age: a, sex: s), true, reason: 'sleep ok');
-      expect(shouldShowStep(13, age: a, sex: s), true, reason: 'meds ok');
-      expect(shouldShowStep(6, age: a, sex: s), false, reason: 'no pregnancy');
-    });
-
-    test('17세 teen: + diet/sleep/stress/checkup, no smoking/drinking', () {
-      const a = 17, s = Sex.male;
       expect(shouldShowStep(7, age: a, sex: s), false);
-      expect(shouldShowStep(8, age: a, sex: s), false);
-      expect(shouldShowStep(9, age: a, sex: s), true);
-      expect(shouldShowStep(10, age: a, sex: s), true);
-      expect(shouldShowStep(11, age: a, sex: s), true);
-      expect(shouldShowStep(14, age: a, sex: s), true);
-      expect(shouldShowStep(6, age: a, sex: s), false);
+      expect(shouldShowStep(11, age: a, sex: s), true, reason: 'diet ok at >=4');
+      expect(shouldShowStep(12, age: a, sex: s), true,
+          reason: 'sleep ok at >=4');
     });
 
-    test('30세 woman: pregnancy step shown', () {
-      expect(
-          shouldShowStep(6, age: 30, sex: Sex.female), true);
+    test('17세 teen female: no smoking/drinking, has stress/diet/pregnancy', () {
+      const a = 17, s = Sex.female;
+      expect(shouldShowStep(7, age: a, sex: s), true, reason: 'pregnancy 15+');
+      expect(shouldShowStep(9, age: a, sex: s), false);
+      expect(shouldShowStep(10, age: a, sex: s), false);
+      expect(shouldShowStep(13, age: a, sex: s), true);
     });
 
-    test('30세 man: pregnancy step skipped', () {
-      expect(shouldShowStep(6, age: 30, sex: Sex.male), false);
+    test('35세 male: pregnancy/breastfeeding skipped', () {
+      const a = 35;
+      expect(shouldShowStep(7, age: a, sex: Sex.male), false);
+      expect(shouldShowStep(8, age: a, sex: Sex.male), false);
+      expect(shouldShowStep(9, age: a, sex: Sex.male), true);
     });
 
-    test('70세 elderly: everything except pregnancy', () {
+    test('35세 female: pregnancy AND breastfeeding both shown', () {
+      const a = 35;
+      expect(shouldShowStep(7, age: a, sex: Sex.female), true);
+      expect(shouldShowStep(8, age: a, sex: Sex.female), true);
+    });
+
+    test('70세 elderly: no pregnancy, everything else applies', () {
       const a = 70;
-      expect(shouldShowStep(6, age: a, sex: Sex.female), false,
+      expect(shouldShowStep(7, age: a, sex: Sex.female), false,
           reason: 'past child-bearing age');
-      expect(shouldShowStep(7, age: a, sex: Sex.male), true);
+      expect(shouldShowStep(9, age: a, sex: Sex.male), true);
       expect(shouldShowStep(13, age: a, sex: Sex.male), true);
     });
   });
 
-  group('FIX5 - product DB shape + count', () {
+  group('H8 - product DB shape + count', () {
     final json = jsonDecode(
       File('assets/data/products.json').readAsStringSync(),
     ) as Map<String, dynamic>;
@@ -161,11 +170,10 @@ void main() {
     });
   });
 
-  group('FIX6 - tier-based nutrient grouping', () {
-    // Empty repo → no products found → every RDI is a 0% deficit.
+  group('H9 - tier-based nutrient grouping (no checkup)', () {
     final emptyRepo = ProductRepository();
 
-    test('priority is at most 3, secondary holds the rest', () {
+    test('priority capped at 3, secondary holds the rest', () {
       final analysis = analyzeMember(_member(), emptyRepo);
       expect(analysis.priority.length, lessThanOrEqualTo(3));
       expect(
@@ -174,38 +182,65 @@ void main() {
       );
     });
 
-    test('checkup vitamin D < 30 boosts vitamin D into priority', () {
-      final analysis = analyzeMember(
-        _member(
-          checkup: HealthCheckup(
-            checkupDate: DateTime(2025, 11, 1),
-            vitaminD: 22,
-          ),
-        ),
-        emptyRepo,
-      );
-      final vd = analysis.priority
-          .where((s) => s.deficit.nutrient == 'vitamin_d_iu')
-          .toList();
-      expect(vd, isNotEmpty,
-          reason: 'vitamin D should be promoted to priority');
-      expect(
-        vd.first.reasons.any((r) => r.contains('검진 결과')),
-        true,
-      );
-    });
-
-    test('current smoker boosts vitamin C reasons', () {
+    test('current smoker → vitamin C / E reasons mention 흡연', () {
       final analysis = analyzeMember(
         _member(smoking: SmokingStatus.current),
         emptyRepo,
       );
       final all = [...analysis.priority, ...analysis.secondary];
       final c = all
-          .where((s) => s.deficit.nutrient == 'vitamin_c_mg')
+          .where((s) =>
+              s.deficit.nutrient == 'vitamin_c_mg' ||
+              s.deficit.nutrient == 'vitamin_e_mg')
           .toList();
       expect(c, isNotEmpty);
       expect(c.first.reasons.any((r) => r.contains('흡연')), true);
+    });
+
+    test('pregnant member → folate boosted into priority', () {
+      final analysis = analyzeMember(
+        _member(sex: Sex.female, isPregnant: true),
+        emptyRepo,
+      );
+      final hits = analysis.priority
+          .where((s) => s.deficit.nutrient == 'vitamin_b9_mcg')
+          .toList();
+      expect(hits, isNotEmpty,
+          reason: 'folate should be top-3 for pregnant members');
+      expect(hits.first.reasons.any((r) => r.contains('임신')), true);
+    });
+  });
+
+  group('H1 - birthYear → age computed', () {
+    test('age = currentYear - birthYear', () {
+      final m = _member(age: 25);
+      expect(m.age, 25);
+      expect(m.birthYear, DateTime.now().year - 25);
+    });
+
+    test('ageLabel formatted as 만 X세', () {
+      final m = _member(age: 42);
+      expect(m.ageLabel, '만 42세');
+    });
+  });
+
+  group('H2 - HealthCheckup is gone', () {
+    test('no source file references HealthCheckup or lastCheckup', () {
+      final libRoot = Directory('lib');
+      final offenders = <String>[];
+      for (final f in libRoot
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((f) => f.path.endsWith('.dart'))) {
+        final text = f.readAsStringSync();
+        if (text.contains('HealthCheckup') ||
+            text.contains('lastCheckup') ||
+            text.contains('health_checkup_input_screen')) {
+          offenders.add(f.path);
+        }
+      }
+      expect(offenders, isEmpty,
+          reason: 'still references HealthCheckup: $offenders');
     });
   });
 }

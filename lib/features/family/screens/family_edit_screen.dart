@@ -26,7 +26,7 @@ class FamilyEditScreen extends ConsumerStatefulWidget {
 
 class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
   late final TextEditingController _name;
-  late final TextEditingController _age;
+  late final TextEditingController _birthYear;
   late final TextEditingController _height;
   late final TextEditingController _weight;
   Sex _sex = Sex.male;
@@ -45,7 +45,7 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
   void initState() {
     super.initState();
     _name = TextEditingController();
-    _age = TextEditingController();
+    _birthYear = TextEditingController();
     _height = TextEditingController();
     _weight = TextEditingController();
     _allergies = <String>{};
@@ -55,7 +55,7 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
   @override
   void dispose() {
     _name.dispose();
-    _age.dispose();
+    _birthYear.dispose();
     _height.dispose();
     _weight.dispose();
     super.dispose();
@@ -65,7 +65,7 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
     if (_initialized) return;
     _initialized = true;
     _name.text = m.name;
-    _age.text = m.age.toString();
+    _birthYear.text = m.birthYear.toString();
     _height.text = m.heightCm?.toStringAsFixed(0) ?? '';
     _weight.text = m.weightKg?.toStringAsFixed(0) ?? '';
     _sex = m.sex;
@@ -82,16 +82,20 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
 
   Future<void> _save(FamilyMember original) async {
     final name = _name.text.trim();
-    final age = int.tryParse(_age.text);
-    if (name.isEmpty || age == null || age < 0 || age > 120) {
+    final year = int.tryParse(_birthYear.text);
+    final now = DateTime.now().year;
+    if (name.isEmpty ||
+        year == null ||
+        year < (now - 120) ||
+        year > now) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('이름과 나이를 확인해주세요')),
+        const SnackBar(content: Text('이름과 출생년도를 확인해주세요')),
       );
       return;
     }
     final updated = original.copyWith(
       name: name,
-      age: age,
+      birthYear: year,
       sex: _sex,
       heightCm: double.tryParse(_height.text),
       weightKg: double.tryParse(_weight.text),
@@ -115,7 +119,7 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
       context: context,
       builder: (dctx) => AlertDialog(
         title: Text('${m.name}님을 삭제하시겠어요?'),
-        content: const Text('영양제, 검진 기록도 함께 삭제돼요.'),
+        content: const Text('영양제 기록도 함께 삭제돼요.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dctx).pop(false),
@@ -145,7 +149,9 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
       );
     }
     _hydrate(member);
-    final isAdultWoman = (int.tryParse(_age.text) ?? 0) >= 19 && _sex == Sex.female;
+    final yearNow = DateTime.now().year;
+    final ageFromForm = yearNow - (int.tryParse(_birthYear.text) ?? yearNow);
+    final isAdultWoman = ageFromForm >= 19 && _sex == Sex.female;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -174,14 +180,16 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _label('나이 *'),
+                    _label('출생년도 *'),
                     TextField(
-                      controller: _age,
+                      controller: _birthYear,
                       keyboardType: TextInputType.number,
                       inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly
+                        FilteringTextInputFormatter.digitsOnly,
+                        LengthLimitingTextInputFormatter(4),
                       ],
                       decoration: const InputDecoration(
+                          hintText: '예: 1990',
                           border: OutlineInputBorder()),
                       onChanged: (_) => setState(() {}),
                     ),

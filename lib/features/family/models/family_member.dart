@@ -1,5 +1,4 @@
 import '../../../core/data/models/family_input.dart' as input_model;
-import '../../../core/data/models/health_checkup_model.dart' as legacy_checkup;
 
 /// Relationship of a family member to the primary user.
 enum Relationship {
@@ -55,7 +54,7 @@ extension SexX on Sex {
       raw == 'female' ? Sex.female : Sex.male;
 }
 
-enum AgeGroup { newborn, toddler, child, teen, adult, elderly }
+enum AgeGroup { newborn, toddler, child, teen, adult, middleAged, elderly }
 
 enum SmokingStatus { never, former, current }
 
@@ -73,91 +72,6 @@ T _enumByName<T extends Enum>(List<T> values, Object? raw, T fallback) {
     if (v.name == raw) return v;
   }
   return fallback;
-}
-
-class HealthCheckup {
-  final DateTime checkupDate;
-  final double? totalCholesterol;
-  final double? ldl;
-  final double? hdl;
-  final double? triglycerides;
-  final double? fastingGlucose;
-  final double? hba1c;
-  final double? hemoglobin;
-  final double? alt;
-  final double? ast;
-  final double? vitaminD;
-  final int? systolicBp;
-  final int? diastolicBp;
-  final bool importedFromHealthApp;
-
-  const HealthCheckup({
-    required this.checkupDate,
-    this.totalCholesterol,
-    this.ldl,
-    this.hdl,
-    this.triglycerides,
-    this.fastingGlucose,
-    this.hba1c,
-    this.hemoglobin,
-    this.alt,
-    this.ast,
-    this.vitaminD,
-    this.systolicBp,
-    this.diastolicBp,
-    this.importedFromHealthApp = false,
-  });
-
-  Map<String, dynamic> toJson() => {
-        'checkup_date': checkupDate.toIso8601String(),
-        'total_cholesterol': totalCholesterol,
-        'ldl': ldl,
-        'hdl': hdl,
-        'triglycerides': triglycerides,
-        'fasting_glucose': fastingGlucose,
-        'hba1c': hba1c,
-        'hemoglobin': hemoglobin,
-        'alt': alt,
-        'ast': ast,
-        'vitamin_d': vitaminD,
-        'systolic_bp': systolicBp,
-        'diastolic_bp': diastolicBp,
-        'imported_from_health_app': importedFromHealthApp,
-      };
-
-  factory HealthCheckup.fromJson(Map<String, dynamic> json) => HealthCheckup(
-        checkupDate: DateTime.parse(json['checkup_date'] as String),
-        totalCholesterol: (json['total_cholesterol'] as num?)?.toDouble(),
-        ldl: (json['ldl'] as num?)?.toDouble(),
-        hdl: (json['hdl'] as num?)?.toDouble(),
-        triglycerides: (json['triglycerides'] as num?)?.toDouble(),
-        fastingGlucose: (json['fasting_glucose'] as num?)?.toDouble(),
-        hba1c: (json['hba1c'] as num?)?.toDouble(),
-        hemoglobin: (json['hemoglobin'] as num?)?.toDouble(),
-        alt: (json['alt'] as num?)?.toDouble(),
-        ast: (json['ast'] as num?)?.toDouble(),
-        vitaminD: (json['vitamin_d'] as num?)?.toDouble(),
-        systolicBp: (json['systolic_bp'] as num?)?.toInt(),
-        diastolicBp: (json['diastolic_bp'] as num?)?.toInt(),
-        importedFromHealthApp:
-            (json['imported_from_health_app'] as bool?) ?? false,
-      );
-
-  /// Bridge to the legacy [legacy_checkup.HealthCheckup] used by the
-  /// recommendation engine.
-  legacy_checkup.HealthCheckup toLegacy() => legacy_checkup.HealthCheckup(
-        checkupDate: checkupDate,
-        cholesterolTotal: totalCholesterol,
-        cholesterolLdl: ldl,
-        cholesterolHdl: hdl,
-        bloodSugar: fastingGlucose,
-        hemoglobin: hemoglobin,
-        alt: alt,
-        ast: ast,
-        vitaminD: vitaminD,
-        bloodPressureSystolic: systolicBp?.toDouble(),
-        bloodPressureDiastolic: diastolicBp?.toDouble(),
-      );
 }
 
 class ManualProductEntry {
@@ -245,7 +159,11 @@ class FamilyMember {
   final String id;
   final String name;
   final Relationship relationship;
-  final int age;
+
+  /// Birth year (e.g. 1990). Persistent — `age` is derived from this on
+  /// every read so the value auto-increments each calendar year without
+  /// any background job.
+  final int birthYear;
   final Sex sex;
   final double? heightCm;
   final double? weightKg;
@@ -267,9 +185,6 @@ class FamilyMember {
   final List<String> currentProductIds;
   final List<ManualProductEntry> manualProducts;
 
-  // Checkup
-  final HealthCheckup? lastCheckup;
-
   // Symptoms
   final List<String> activeSymptomIds;
 
@@ -281,7 +196,7 @@ class FamilyMember {
     required this.id,
     required this.name,
     required this.relationship,
-    required this.age,
+    required this.birthYear,
     required this.sex,
     this.heightCm,
     this.weightKg,
@@ -296,16 +211,20 @@ class FamilyMember {
     this.isBreastfeeding = false,
     this.currentProductIds = const [],
     this.manualProducts = const [],
-    this.lastCheckup,
     this.activeSymptomIds = const [],
     required this.createdAt,
     required this.updatedAt,
   });
 
-  /// Convenience: `lastCheckup?.checkupDate`.
-  DateTime? get lastCheckupDate => lastCheckup?.checkupDate;
+  /// "Korean age" in the simple "current year - birth year" form, which
+  /// matches how the spec asks us to display 만 X세 throughout the UI.
+  int get age => DateTime.now().year - birthYear;
+
+  /// Convenience formatter ("만 X세").
+  String get ageLabel => '만 $age세';
 
   String get avatarEmoji {
+    final a = age;
     switch (relationship) {
       case Relationship.self:
         return '👤';
@@ -314,24 +233,26 @@ class FamilyMember {
       case Relationship.wife:
         return '👩';
       case Relationship.son:
-        return age < 13 ? '👦' : '🧑';
+        return a < 13 ? '👦' : '🧑';
       case Relationship.daughter:
-        return age < 13 ? '👧' : '🧑';
+        return a < 13 ? '👧' : '🧑';
       case Relationship.father:
-        return age >= 65 ? '👴' : '👨';
+        return a >= 65 ? '👴' : '👨';
       case Relationship.mother:
-        return age >= 65 ? '👵' : '👩';
+        return a >= 65 ? '👵' : '👩';
       case Relationship.other:
         return '🙂';
     }
   }
 
   AgeGroup get ageGroup {
-    if (age < 1) return AgeGroup.newborn;
-    if (age < 3) return AgeGroup.toddler;
-    if (age < 13) return AgeGroup.child;
-    if (age < 19) return AgeGroup.teen;
-    if (age < 65) return AgeGroup.adult;
+    final a = age;
+    if (a < 1) return AgeGroup.newborn;
+    if (a < 4) return AgeGroup.toddler;
+    if (a < 13) return AgeGroup.child;
+    if (a < 19) return AgeGroup.teen;
+    if (a < 50) return AgeGroup.adult;
+    if (a < 65) return AgeGroup.middleAged;
     return AgeGroup.elderly;
   }
 
@@ -372,10 +293,11 @@ class FamilyMember {
       heightCm: heightCm,
       weightKg: weightKg,
       takingMedications: medications.isNotEmpty,
+      isPregnant: isPregnant,
+      isBreastfeeding: isBreastfeeding,
       currentSupplements: medications,
       currentProductIds: currentProductIds,
       symptomIds: activeSymptomIds,
-      lastCheckup: lastCheckup?.toLegacy(),
     );
   }
 
@@ -391,6 +313,8 @@ class FamilyMember {
         return input_model.AgeGroup.teen;
       case AgeGroup.adult:
         return input_model.AgeGroup.adult;
+      case AgeGroup.middleAged:
+        return input_model.AgeGroup.adult;
       case AgeGroup.elderly:
         return input_model.AgeGroup.elderly;
     }
@@ -400,7 +324,7 @@ class FamilyMember {
         'id': id,
         'name': name,
         'relationship': relationship.name,
-        'age': age,
+        'birth_year': birthYear,
         'sex': sex.name,
         'height_cm': heightCm,
         'weight_kg': weightKg,
@@ -415,7 +339,6 @@ class FamilyMember {
         'is_breastfeeding': isBreastfeeding,
         'current_product_ids': currentProductIds,
         'manual_products': manualProducts.map((p) => p.toJson()).toList(),
-        'last_checkup': lastCheckup?.toJson(),
         'active_symptom_ids': activeSymptomIds,
         'created_at': createdAt.toIso8601String(),
         'updated_at': updatedAt.toIso8601String(),
@@ -423,11 +346,24 @@ class FamilyMember {
 
   factory FamilyMember.fromJson(Map<String, dynamic> json) {
     final manuals = (json['manual_products'] as List?) ?? const [];
+
+    // Migration: old payloads stored 'age' instead of 'birth_year'. Map
+    // it to a synthetic birthYear (currentYear - age) so existing rosters
+    // survive the schema change.
+    int birthYear;
+    final byRaw = json['birth_year'];
+    if (byRaw is num) {
+      birthYear = byRaw.toInt();
+    } else {
+      final ageRaw = (json['age'] as num?)?.toInt() ?? 0;
+      birthYear = DateTime.now().year - ageRaw;
+    }
+
     return FamilyMember(
       id: json['id'] as String,
       name: (json['name'] as String?) ?? '',
       relationship: RelationshipX.fromJson(json['relationship']),
-      age: (json['age'] as num?)?.toInt() ?? 0,
+      birthYear: birthYear,
       sex: SexX.fromJson(json['sex']),
       heightCm: (json['height_cm'] as num?)?.toDouble(),
       weightKg: (json['weight_kg'] as num?)?.toDouble(),
@@ -455,10 +391,6 @@ class FamilyMember {
       manualProducts: manuals
           .map((e) => ManualProductEntry.fromJson(e as Map<String, dynamic>))
           .toList(),
-      lastCheckup: json['last_checkup'] == null
-          ? null
-          : HealthCheckup.fromJson(
-              json['last_checkup'] as Map<String, dynamic>),
       activeSymptomIds: ((json['active_symptom_ids'] as List?) ?? const [])
           .map((e) => e.toString())
           .toList(),
@@ -470,7 +402,7 @@ class FamilyMember {
   FamilyMember copyWith({
     String? name,
     Relationship? relationship,
-    int? age,
+    int? birthYear,
     Sex? sex,
     double? heightCm,
     double? weightKg,
@@ -485,8 +417,6 @@ class FamilyMember {
     bool? isBreastfeeding,
     List<String>? currentProductIds,
     List<ManualProductEntry>? manualProducts,
-    HealthCheckup? lastCheckup,
-    bool clearLastCheckup = false,
     List<String>? activeSymptomIds,
     DateTime? updatedAt,
   }) =>
@@ -494,7 +424,7 @@ class FamilyMember {
         id: id,
         name: name ?? this.name,
         relationship: relationship ?? this.relationship,
-        age: age ?? this.age,
+        birthYear: birthYear ?? this.birthYear,
         sex: sex ?? this.sex,
         heightCm: heightCm ?? this.heightCm,
         weightKg: weightKg ?? this.weightKg,
@@ -509,7 +439,6 @@ class FamilyMember {
         isBreastfeeding: isBreastfeeding ?? this.isBreastfeeding,
         currentProductIds: currentProductIds ?? this.currentProductIds,
         manualProducts: manualProducts ?? this.manualProducts,
-        lastCheckup: clearLastCheckup ? null : (lastCheckup ?? this.lastCheckup),
         activeSymptomIds: activeSymptomIds ?? this.activeSymptomIds,
         createdAt: createdAt,
         updatedAt: updatedAt ?? DateTime.now(),

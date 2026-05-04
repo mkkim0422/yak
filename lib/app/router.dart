@@ -13,7 +13,6 @@ import '../features/family/providers/family_provider.dart';
 import '../features/family/screens/family_edit_screen.dart';
 import '../features/family/screens/family_management_screen.dart';
 import '../features/family/screens/family_products_screen.dart';
-import '../features/family/screens/health_checkup_input_screen.dart';
 import '../features/family/screens/manual_supplement_input_screen.dart';
 import '../features/family/screens/member_detail_screen.dart';
 import '../features/family/screens/recommendation_detail_screen.dart';
@@ -157,12 +156,6 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/symptom-search',
         builder: (context, state) => const SymptomSearchScreen(),
-      ),
-      GoRoute(
-        path: '/health-checkup/:memberId',
-        builder: (context, state) => HealthCheckupInputScreen(
-          memberId: state.pathParameters['memberId']!,
-        ),
       ),
       GoRoute(
         path: '/settings',

@@ -21,7 +21,7 @@ FamilyMember member(
   return FamilyMember(
     id: id,
     name: name,
-    age: age,
+    birthYear: DateTime.now().year - age,
     sex: sex,
     relationship: relationship,
     createdAt: now,
@@ -167,7 +167,7 @@ void main() {
         ],
         sufficient: const [],
         currentProductCount: 0,
-        lastCheckupDate: null,
+
       );
       await tester.pumpWidget(
         _wrap(
@@ -194,7 +194,7 @@ void main() {
         deficits: [],
         sufficient: [],
         currentProductCount: 0,
-        lastCheckupDate: null,
+
       );
       expect(a.statusText, '충분히 챙기시는 중');
       expect(a.statusEmoji, '✅');
@@ -214,7 +214,7 @@ void main() {
         ],
         sufficient: const [],
         currentProductCount: 0,
-        lastCheckupDate: null,
+
       );
       expect(a.statusEmoji, '⚠️');
       expect(a.statusText, '2개 부족');
@@ -234,7 +234,7 @@ void main() {
         ],
         sufficient: const [],
         currentProductCount: 0,
-        lastCheckupDate: null,
+
       );
       expect(a.statusEmoji, '🟠');
     });

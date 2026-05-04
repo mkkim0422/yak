@@ -65,10 +65,6 @@ class _HelpSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final entries = <_HelpEntry>[
       _HelpEntry(
-        AppStrings.entryCheckup,
-        () => context.push('/health-checkup/select'),
-      ),
-      _HelpEntry(
         AppStrings.entryBuySupplements,
         () => context.push('/recommendation/select'),
       ),

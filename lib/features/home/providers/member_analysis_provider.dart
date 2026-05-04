@@ -45,7 +45,6 @@ class MemberAnalysis {
   final List<NutrientDeficit> deficits;
   final List<NutrientDeficit> sufficient;
   final int currentProductCount;
-  final DateTime? lastCheckupDate;
 
   /// Top-3 deficits with reasons, ready to render in the priority card.
   final List<NutrientStatus> priority;
@@ -57,7 +56,6 @@ class MemberAnalysis {
     required this.deficits,
     required this.sufficient,
     required this.currentProductCount,
-    required this.lastCheckupDate,
     this.priority = const [],
     this.secondary = const [],
   });
@@ -66,7 +64,6 @@ class MemberAnalysis {
         deficits: [],
         sufficient: [],
         currentProductCount: 0,
-        lastCheckupDate: null,
       );
 
   bool get hasDeficits => deficits.isNotEmpty;
@@ -109,6 +106,8 @@ double _ageScale(AgeGroup g) {
     case AgeGroup.teen:
       return 0.85;
     case AgeGroup.adult:
+      return 1.0;
+    case AgeGroup.middleAged:
       return 1.0;
     case AgeGroup.elderly:
       return 0.95;
@@ -194,57 +193,72 @@ MemberAnalysis analyzeMember(FamilyMember member, ProductRepository repo) {
       score += 40;
     }
 
-    final checkup = member.lastCheckup;
-    if (checkup != null) {
-      if (d.nutrient == 'vitamin_d_iu' &&
-          checkup.vitaminD != null &&
-          checkup.vitaminD! < 30) {
-        score += 80;
-        reasons.add('검진 결과 ${checkup.vitaminD!.toStringAsFixed(0)}ng/mL (부족)');
-      }
-      if (d.nutrient == 'iron_mg' && checkup.hemoglobin != null) {
-        final hgbMin = member.sex == Sex.female ? 12.0 : 13.0;
-        if (checkup.hemoglobin! < hgbMin) {
-          score += 80;
-          reasons.add('헤모글로빈 ${checkup.hemoglobin}g/dL — 권장 미만');
-        }
-      }
-      if (d.nutrient == 'omega3_total_mg' &&
-          checkup.ldl != null &&
-          checkup.ldl! > 130) {
-        score += 60;
-        reasons.add('LDL ${checkup.ldl!.toStringAsFixed(0)}mg/dL — 관리 필요');
-      }
-      if (d.nutrient == 'magnesium_mg' &&
-          checkup.fastingGlucose != null &&
-          checkup.fastingGlucose! > 100) {
-        score += 50;
-        reasons.add('공복혈당 ${checkup.fastingGlucose!.toStringAsFixed(0)}mg/dL');
-      }
-    }
-
+    // Lifestyle boosts (no checkup data — we removed that feature).
     if (member.smokingStatus == SmokingStatus.current) {
-      if (d.nutrient == 'vitamin_c_mg') {
-        score += 40;
+      if (d.nutrient == 'vitamin_c_mg' || d.nutrient == 'vitamin_e_mg') {
+        score += 30;
         reasons.add('흡연으로 항산화 영양소 손실');
       }
     }
     if (member.drinkingFrequency == DrinkingFrequency.daily) {
       if (d.nutrient == 'vitamin_b12_mcg' ||
-          d.nutrient == 'vitamin_b9_mcg') {
-        score += 30;
+          d.nutrient == 'vitamin_b9_mcg' ||
+          d.nutrient == 'vitamin_b1_mg') {
+        score += 25;
         reasons.add('잦은 음주로 B군 손실');
       }
     }
-    if (member.stressLevel == StressLevel.high &&
-        d.nutrient == 'magnesium_mg') {
-      score += 30;
-      reasons.add('스트레스 시 마그네슘 소모 증가');
+    if (member.dietQuality == DietQuality.poor) {
+      if (d.nutrient == 'vitamin_b9_mcg' ||
+          d.nutrient == 'iron_mg' ||
+          d.nutrient == 'calcium_mg' ||
+          d.nutrient == 'zinc_mg') {
+        score += 30;
+        reasons.add('식단 부족으로 보충 필요');
+      }
+    }
+    if (member.stressLevel == StressLevel.high) {
+      if (d.nutrient == 'magnesium_mg' ||
+          d.nutrient == 'vitamin_b1_mg' ||
+          d.nutrient == 'vitamin_b9_mcg') {
+        score += 20;
+        reasons.add('스트레스 시 영양소 소모 증가');
+      }
     }
     if (member.sleepHours == SleepHours.less5 &&
         d.nutrient == 'magnesium_mg') {
       score += 20;
       reasons.add('수면 부족 — 근육 이완에 도움');
+    }
+    // Pregnancy / breastfeeding: very strong boost.
+    if (member.isPregnant) {
+      if (d.nutrient == 'vitamin_b9_mcg' ||
+          d.nutrient == 'iron_mg' ||
+          d.nutrient == 'omega3_total_mg') {
+        score += 80;
+        reasons.add('임신 중 — 꼭 보충해야 해요');
+      }
+    }
+    if (member.isBreastfeeding) {
+      if (d.nutrient == 'calcium_mg' ||
+          d.nutrient == 'vitamin_d_iu' ||
+          d.nutrient == 'omega3_total_mg') {
+        score += 80;
+        reasons.add('수유 중 — 모유 영양에 도움');
+      }
+    }
+    // Age-based boosts.
+    if (member.age >= 50) {
+      if (d.nutrient == 'calcium_mg' || d.nutrient == 'vitamin_d_iu') {
+        score += 25;
+        reasons.add('50세 이상 — 골 건강 우선');
+      }
+    }
+    if (member.age < 13) {
+      if (d.nutrient == 'vitamin_d_iu' || d.nutrient == 'iron_mg') {
+        score += 25;
+        reasons.add('성장기 — 우선 보충');
+      }
     }
     if (d.current == 0) {
       reasons.add('지금 안 드시는 영양소');
@@ -262,7 +276,6 @@ MemberAnalysis analyzeMember(FamilyMember member, ProductRepository repo) {
     sufficient: sufficient,
     currentProductCount:
         member.currentProductIds.length + member.manualProducts.length,
-    lastCheckupDate: member.lastCheckupDate,
     priority: priority,
     secondary: secondary,
   );

@@ -170,15 +170,18 @@ class NotificationService {
     );
   }
 
-  /// Reminds the user to redo a checkup one year after the supplied date.
-  Future<void> scheduleCheckupReminder({
+  /// Annual "you should get a checkup" nudge — informational only;
+  /// the app no longer asks the user to enter checkup numbers.
+  /// Scheduled 1 year out from [from] (defaults to now).
+  Future<void> scheduleAnnualCheckupReminder({
     required String memberId,
-    required DateTime checkupDate,
+    DateTime? from,
   }) async {
     await ensureInitialized();
-    final id = _idFor(memberId, _checkupIdBase, 'checkup');
+    final id = _idFor(memberId, _checkupIdBase, 'annual_checkup');
+    final base = from ?? DateTime.now();
     var fireAt = tz.TZDateTime.from(
-      checkupDate.add(const Duration(days: 365)),
+      base.add(const Duration(days: 365)),
       tz.local,
     );
     final now = tz.TZDateTime.now(tz.local);
@@ -187,20 +190,20 @@ class NotificationService {
     }
     await _plugin.zonedSchedule(
       id,
-      '검진 1년이 됐어요',
-      '새 검진 결과를 입력하면 추천이 더 정확해져요',
+      '1년에 한 번 건강검진 받으세요',
+      '국가 건강검진을 챙겨보세요',
       fireAt,
       _details(),
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
-      payload: 'checkup:$memberId',
+      payload: 'annual_checkup:$memberId',
     );
   }
 
-  Future<void> cancelCheckupReminder(String memberId) async {
+  Future<void> cancelAnnualCheckupReminder(String memberId) async {
     await ensureInitialized();
-    await _plugin.cancel(_idFor(memberId, _checkupIdBase, 'checkup'));
+    await _plugin.cancel(_idFor(memberId, _checkupIdBase, 'annual_checkup'));
   }
 
   /// Cancels every member-scoped notification, regardless of payload.
@@ -215,8 +218,7 @@ class NotificationService {
         await _plugin.cancel(p.id);
       }
     }
-    // Also cancel checkup reminder which is keyed by id+suffix
-    await cancelCheckupReminder(memberId);
+    await cancelAnnualCheckupReminder(memberId);
   }
 
   Future<void> cancelAll() async {

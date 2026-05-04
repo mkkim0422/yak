@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -88,9 +87,6 @@ class _MemberRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final productCount =
         member.currentProductIds.length + member.manualProducts.length;
-    final lastCheckup = member.lastCheckupDate == null
-        ? '검진 없음'
-        : '검진 ${DateFormat('yyyy-MM').format(member.lastCheckupDate!)}';
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
@@ -115,11 +111,10 @@ class _MemberRow extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 4),
-          Text('${member.age}세 ${member.sex.label}',
+          Text('${member.ageLabel} ${member.sex.label}',
               style: AppTypography.body2),
           const SizedBox(height: 2),
-          Text('영양제 $productCount개 · $lastCheckup',
-              style: AppTypography.caption),
+          Text('영양제 $productCount개', style: AppTypography.caption),
           const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,

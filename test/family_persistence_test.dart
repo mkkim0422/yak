@@ -11,7 +11,7 @@ FamilyMember _member(String id, {String name = 'A'}) {
     id: id,
     name: name,
     relationship: Relationship.self,
-    age: 35,
+    birthYear: DateTime.now().year - 35,
     sex: Sex.female,
     heightCm: 165,
     weightKg: 55,
@@ -38,14 +38,6 @@ FamilyMember _member(String id, {String name = 'A'}) {
         startedAt: DateTime(2026, 1, 1),
       ),
     ],
-    lastCheckup: HealthCheckup(
-      checkupDate: DateTime(2025, 11, 12),
-      ldl: 110,
-      fastingGlucose: 95,
-      vitaminD: 22.5,
-      systolicBp: 120,
-      diastolicBp: 78,
-    ),
     activeSymptomIds: const ['fatigue'],
     createdAt: now,
     updatedAt: now,
@@ -72,20 +64,22 @@ void main() {
       expect(decoded.manualProducts.length, 1);
       expect(decoded.manualProducts.first.id, 'manual_1');
       expect(decoded.manualProducts.first.ingredients['vitamin_d_iu'], 1000);
-      expect(decoded.lastCheckup?.ldl, 110);
-      expect(decoded.lastCheckup?.systolicBp, 120);
       expect(decoded.activeSymptomIds, ['fatigue']);
     });
 
-    test('HealthCheckup roundtrip preserves importedFromHealthApp', () {
-      final original = HealthCheckup(
-        checkupDate: DateTime(2025, 8, 1),
-        importedFromHealthApp: true,
-      );
-      final decoded = HealthCheckup.fromJson(
-        jsonDecode(jsonEncode(original.toJson())) as Map<String, dynamic>,
-      );
-      expect(decoded.importedFromHealthApp, true);
+    test('Migration: legacy "age" field maps to birthYear', () {
+      final legacy = {
+        'id': 'm_legacy',
+        'name': '구버전',
+        'relationship': 'self',
+        'age': 30,
+        'sex': 'female',
+        'created_at': DateTime(2024, 1, 1).toIso8601String(),
+        'updated_at': DateTime(2024, 1, 1).toIso8601String(),
+      };
+      final decoded = FamilyMember.fromJson(legacy);
+      expect(decoded.birthYear, DateTime.now().year - 30);
+      expect(decoded.age, 30);
     });
   });
 
