@@ -4870,6 +4870,132 @@
       "notes": "물에 녹여 마시는 발포정. 7종 B군 고함량",
       "data_source": "https://www.bayer.com/sites/default/files/2020-11/255-5.pdf",
       "verified_date": "2026-05-04"
+    },
+    {
+      "id": "ckd_vit_d_2000",
+      "name": "종근당 비타민D 2000IU",
+      "english_name": "CKD Vitamin D 2000IU",
+      "brand": "종근당건강",
+      "brand_type": "brand",
+      "category": "vitamin_d",
+      "unit": "캡슐",
+      "daily_dose": 1,
+      "package_size": 90,
+      "ingredients": {
+        "vitamin_d_iu": 2000,
+        "zinc_mg": 8.5
+      },
+      "good_for": ["고함량 D + 아연", "면역"],
+      "alternatives": ["now_vit_d3_2000", "cenovis_vit_d_2000"],
+      "popularity_rank": 237,
+      "notes": "1캡슐 D 2000IU + 아연 8.5mg",
+      "data_source": "https://prod.danawa.com/info/?pcode=6278995",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "ckd_vit_d_1000",
+      "name": "종근당 비타민D 1000IU",
+      "english_name": "CKD Vitamin D 1000IU",
+      "brand": "종근당건강",
+      "brand_type": "brand",
+      "category": "vitamin_d",
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 90,
+      "ingredients": {
+        "vitamin_d_iu": 1000
+      },
+      "good_for": ["뼈 건강", "면역"],
+      "alternatives": ["ckd_vit_d_2000", "now_vit_d3_2000"],
+      "popularity_rank": 238,
+      "notes": "1정 400mg = 비타민D 25mcg (1000IU). 3개월분",
+      "data_source": "https://www.dongwonmall.com/product/detail.do?productId=000777658",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "ckd_coq10_99",
+      "name": "종근당 코엔자임Q10",
+      "english_name": "CKD Coenzyme Q10",
+      "brand": "종근당건강",
+      "brand_type": "brand",
+      "category": "antioxidant",
+      "unit": "캡슐",
+      "daily_dose": 1,
+      "package_size": 30,
+      "ingredients": {
+        "coq10_mg": 99
+      },
+      "good_for": ["항산화", "심장 건강"],
+      "alternatives": ["solgar_coq10_100"],
+      "popularity_rank": 239,
+      "notes": "1캡슐 Q10 99mg (식약처 일일권장량 100mg에 근접)",
+      "data_source": "https://ckdmall.co.kr/category/%ED%98%88%EC%95%95%EA%B1%B4%EA%B0%95%EC%BD%94%EC%97%94%EC%9E%90%EC%9E%84q10/615/",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "vitalbeautie_probio_gold",
+      "name": "바이탈뷰티 프로바이오틱스 골드",
+      "english_name": "Vitalbeautie Probiotics Gold",
+      "brand": "바이탈뷰티",
+      "brand_type": "brand",
+      "category": "probiotics",
+      "unit": "포",
+      "daily_dose": 1,
+      "package_size": 30,
+      "ingredients": {
+        "probiotics_billion_cfu": 10
+      },
+      "good_for": ["10종 복합 유산균", "장 건강"],
+      "alternatives": ["lactofit_gold", "desimone_capsule"],
+      "popularity_rank": 240,
+      "notes": "1포 1.4g = 10종 복합 100억 CFU. 아모레퍼시픽",
+      "data_source": "https://www.vitalbeautie.com/kr/ko/products/probiotics-gold.html",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "kwangdong_vita500_stick",
+      "name": "광동 비타500 데일리 스틱",
+      "english_name": "Kwangdong Vita500 Daily Stick",
+      "brand": "광동제약",
+      "brand_type": "brand",
+      "category": "vitamin_c",
+      "unit": "포",
+      "daily_dose": 1,
+      "package_size": 70,
+      "ingredients": {
+        "vitamin_c_mg": 500,
+        "vitamin_b1_mg": 0.36,
+        "vitamin_b2_mg": 0.42,
+        "vitamin_b6_mg": 0.45,
+        "vitamin_b12_mcg": 0.72
+      },
+      "good_for": ["비타민C 500mg", "B군 30%"],
+      "alternatives": ["eundan_vit_c_1000", "ckd_vit_c_1000"],
+      "popularity_rank": 241,
+      "notes": "1포 2g 분말. 비타500의 분말 버전",
+      "data_source": "https://www.ekdp.com/product/items_view.do?s=649",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "donga_dicamax_d",
+      "name": "디카맥스디정",
+      "english_name": "Dicamax D Tab",
+      "brand": "다림바이오텍",
+      "brand_type": "brand",
+      "category": "vitamin_d",
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 30,
+      "ingredients": {
+        "calcium_mg": 100,
+        "vitamin_d_iu": 1000
+      },
+      "good_for": ["뼈 발육", "구루병 예방", "임신/수유기"],
+      "alternatives": ["dicamax_1000", "ckd_vit_d_1000"],
+      "popularity_rank": 242,
+      "notes": "1정 = 칼슘 100mg + D 1000IU. 일반의약품",
+      "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=A11AKP08F0265",
+      "verified_date": "2026-05-04"
     }
   ]
 }
