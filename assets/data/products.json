@@ -3657,6 +3657,66 @@
       "notes": "루테인+지아잔틴+종합비타민. 안국약품",
       "data_source": "https://prod.danawa.com/info/?pcode=27895013",
       "verified_date": "2026-05-04"
+    },
+    {
+      "id": "drbest_high_abs_mg_200",
+      "name": "닥터스베스트 고흡수 마그네슘",
+      "english_name": "Doctor's Best High Absorption Magnesium 200mg",
+      "brand": "Doctor's Best",
+      "brand_type": "brand",
+      "category": "magnesium",
+      "unit": "정",
+      "daily_dose": 2,
+      "package_size": 240,
+      "ingredients": {
+        "magnesium_mg": 200
+      },
+      "good_for": ["근육 이완", "수면", "고흡수 킬레이트"],
+      "alternatives": ["solgar_camg_citrate", "ckd_mg_plus"],
+      "popularity_rank": 187,
+      "notes": "리시네이트 글리시네이트 킬레이트 (Albion). 1정당 100mg, 2정 = 200mg",
+      "data_source": "https://drchostore.com/products/doctors-best-high-absorption-magnesium-200mg-240-tab",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "ckd_mg_plus",
+      "name": "종근당 마그네슘 플러스",
+      "english_name": "CKD Magnesium Plus",
+      "brand": "종근당건강",
+      "brand_type": "brand",
+      "category": "magnesium",
+      "unit": "정",
+      "daily_dose": 2,
+      "package_size": 90,
+      "ingredients": {
+        "magnesium_mg": 95
+      },
+      "good_for": ["근육 안정", "수면 질", "PMS 완화"],
+      "alternatives": ["drbest_high_abs_mg_200", "solgar_camg_citrate"],
+      "popularity_rank": 188,
+      "notes": "1정 95mg. 1일 2정 = 190mg",
+      "data_source": "https://www.pillyze.com/products/21610/%EB%A7%88%EA%B7%B8%EB%84%A4%EC%8A%98-%ED%94%8C%EB%9F%AC%EC%8A%A4",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "bblab_low_collagen_5000",
+      "name": "비비랩 저분자 콜라겐 5000",
+      "english_name": "BB Lab Low Molecular Collagen 5000",
+      "brand": "비비랩",
+      "brand_type": "brand",
+      "category": "collagen",
+      "unit": "포",
+      "daily_dose": 1,
+      "package_size": 15,
+      "ingredients": {
+        "collagen_mg": 5000
+      },
+      "good_for": ["고함량 콜라겐", "피부 탄력"],
+      "alternatives": ["bblab_collagen_biotin", "everycoll"],
+      "popularity_rank": 189,
+      "notes": "1포 5000mg 저분자 피쉬 콜라겐. 15일분",
+      "data_source": "https://www.nutrione.co.kr/item/dtl/1000391528",
+      "verified_date": "2026-05-04"
     }
   ]
 }
