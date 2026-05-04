@@ -3308,6 +3308,68 @@
       "notes": "딸기맛. 만 5세 이상 섭취 가능",
       "data_source": "https://www.ople.com/m/shop/item.php?it_id=1201761903",
       "verified_date": "2026-05-04"
+    },
+    {
+      "id": "ckd_ca_mg_d_zn_v2",
+      "name": "종근당 칼슘 앤 마그네슘 비타민D 아연 (1000mg)",
+      "english_name": "CKD Calcium & Magnesium D Zinc 1000mg",
+      "brand": "종근당건강",
+      "brand_type": "brand",
+      "category": "calcium",
+      "unit": "정",
+      "daily_dose": 2,
+      "package_size": 180,
+      "ingredients": {
+        "calcium_mg": 150,
+        "magnesium_mg": 75,
+        "zinc_mg": 4.25,
+        "vitamin_d_iu": 100
+      },
+      "good_for": ["뼈+근육+면역 종합", "갱년기 추천"],
+      "alternatives": ["ckd_ca_mg_d_zn"],
+      "popularity_rank": 173,
+      "notes": "1일 2정 = Ca 300+Mg 150+Zn 8.5+D 200IU. 1정 1000mg",
+      "data_source": "https://prod.danawa.com/info/?pcode=5985606",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "orthomol_immun",
+      "name": "오쏘몰 이뮨 (동아제약)",
+      "english_name": "Orthomol Immun",
+      "brand": "동아제약 / Orthomol",
+      "brand_type": "brand",
+      "category": "multivitamin",
+      "unit": "포",
+      "daily_dose": 1,
+      "package_size": 7,
+      "ingredients": {
+        "vitamin_c_mg": 1000,
+        "vitamin_b9_mcg": 800
+      },
+      "good_for": ["면역", "고함량 종합비타민 (액상+정제 이중제형)"],
+      "alternatives": ["centrum_woman", "atomy_proactamin"],
+      "popularity_rank": 174,
+      "notes": "1포 = 액상 + 흰정 + 노란정. 18종 영양소. 1일 1회 아침 식후",
+      "data_source": "https://www.dapharm.com/ko/brand/product/IMN",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "ckd_allatme_303_lcarnitine",
+      "name": "종근당건강 올앳미 303 L-카르니틴 다이어트",
+      "english_name": "CKD All At Me 303 L-Carnitine Diet",
+      "brand": "종근당건강",
+      "brand_type": "brand",
+      "category": "weight",
+      "unit": "포",
+      "daily_dose": 1,
+      "package_size": 30,
+      "ingredients": {"l_carnitine_mg": 2000},
+      "good_for": ["체지방 감소"],
+      "alternatives": ["lcarnitine_2000", "iherb_lcarnitine"],
+      "popularity_rank": 175,
+      "notes": "분말 1포 L-카르니틴 2000mg. 식약처 인정",
+      "data_source": "https://prod.danawa.com/info/?pcode=17060804",
+      "verified_date": "2026-05-04"
     }
   ]
 }
