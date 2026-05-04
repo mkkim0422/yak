@@ -4627,6 +4627,125 @@
       "notes": "1정 = C 1000mg + D 25mcg (1000IU)",
       "data_source": "https://prod.danawa.com/info/?pcode=14043326",
       "verified_date": "2026-05-04"
+    },
+    {
+      "id": "now_magtein",
+      "name": "NOW 마그테인 마그네슘 L-트레오네이트",
+      "english_name": "NOW Magtein Magnesium L-Threonate",
+      "brand": "NOW Foods",
+      "brand_type": "brand",
+      "category": "magnesium",
+      "unit": "캡슐",
+      "daily_dose": 3,
+      "package_size": 90,
+      "ingredients": {
+        "magnesium_mg": 144
+      },
+      "good_for": ["기억력/학습", "수면", "뇌 건강 (BBB 통과)"],
+      "alternatives": ["drbest_high_abs_mg_200"],
+      "popularity_rank": 226,
+      "notes": "1캡슐 Magtein 667mg = 마그네슘 48mg. 1일 3캡슐 = 144mg",
+      "data_source": "https://prod.danawa.com/info/?pcode=68556524",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "atomy_megavit_c_2000",
+      "name": "애터미 바이탈 메가비타민C 2000",
+      "english_name": "Atomy Vital Mega Vitamin C 2000",
+      "brand": "애터미",
+      "brand_type": "brand",
+      "category": "vitamin_c",
+      "unit": "포",
+      "daily_dose": 1,
+      "package_size": 90,
+      "ingredients": {
+        "vitamin_c_mg": 2000
+      },
+      "good_for": ["고함량 비타민C", "면역"],
+      "alternatives": ["eundan_vit_c_1000", "ckd_vit_c_1000"],
+      "popularity_rank": 227,
+      "notes": "1포 3g = 비타민C 2000mg. 분말형",
+      "data_source": "https://kr.atomy.com/product/004030",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "atomy_color_multi",
+      "name": "애터미 컬러푸드 멀티비타민",
+      "english_name": "Atomy Color Food Multivitamin",
+      "brand": "애터미",
+      "brand_type": "brand",
+      "category": "multivitamin",
+      "unit": "정",
+      "daily_dose": 4,
+      "package_size": 240,
+      "ingredients": {
+        "vitamin_c_mg": 200,
+        "vitamin_d_iu": 200
+      },
+      "good_for": ["종합비타민 + 컬러푸드", "1일 4정"],
+      "alternatives": ["centrum_silver"],
+      "popularity_rank": 228,
+      "notes": "1일 2회×2정 = 비타민C 200mg + D 5mcg. 다른 영양은 비공개",
+      "data_source": "https://kr.atomy.com/product/000181",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "desimone_capsule",
+      "name": "드시모네 캡슐",
+      "english_name": "DeSimone Capsule (Visbiome)",
+      "brand": "바이오일레븐",
+      "brand_type": "brand",
+      "category": "probiotics",
+      "unit": "캡슐",
+      "daily_dose": 1,
+      "package_size": 60,
+      "ingredients": {
+        "probiotics_billion_cfu": 1125
+      },
+      "good_for": ["고함량 프로바이오틱스", "장 면역 조절", "8종 균"],
+      "alternatives": ["lactofit_gold", "huons_menolacto"],
+      "popularity_rank": 229,
+      "notes": "보장균수 1125억 CFU. 식약처 개별인정 장 면역",
+      "data_source": "https://prod.danawa.com/info/?pcode=5386405",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "cenovis_vit_d_2000",
+      "name": "세노비스 비타민D 2000IU",
+      "english_name": "Cenovis Vitamin D 2000IU",
+      "brand": "세노비스",
+      "brand_type": "brand",
+      "category": "vitamin_d",
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 60,
+      "ingredients": {
+        "vitamin_d_iu": 2000
+      },
+      "good_for": ["고함량 D3", "뼈 + 면역"],
+      "alternatives": ["now_vit_d3_2000", "naturebon_vit_d_5000"],
+      "popularity_rank": 230,
+      "notes": "1정 D 2000IU (50mcg). 일일권장량 500%",
+      "data_source": "https://www.medifonews.com/mobile/article.html?no=204544",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "ckd_imbita_high_b",
+      "name": "아임비타 고함량 비타민B 컴플렉스",
+      "english_name": "I'mVita High-Potency Vitamin B Complex",
+      "brand": "종근당건강",
+      "brand_type": "brand",
+      "category": "vitamin_b",
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 60,
+      "ingredients": {},
+      "good_for": ["고함량 8종 B군"],
+      "alternatives": ["ckd_active_vit_b_plus", "thorne_basic_b"],
+      "popularity_rank": 231,
+      "notes": "1박스 60일분. 종근당건강몰. 정확 mg 비공개",
+      "data_source": "https://ckdhcmall.co.kr/prdView.do?prdCode=G2303161200_0079",
+      "verified_date": "2026-05-04"
     }
   ]
 }
