@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:alyak/core/data/product_repository.dart';
 import 'package:alyak/core/theme/app_colors.dart';
 import 'package:alyak/features/family/models/family_member.dart';
 import 'package:alyak/features/family/providers/family_provider.dart';
@@ -69,6 +70,7 @@ Widget _wrap(
 }) {
   return ProviderScope(
     overrides: [
+      productRepositoryProvider.overrideWithValue(ProductRepository()),
       familyMembersProvider.overrideWith((ref) => _notifierFor(members)),
       for (final entry in analysisOverrides.entries)
         memberNutrientAnalysisProvider(entry.key)

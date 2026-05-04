@@ -165,11 +165,7 @@ class ProductRepository {
 }
 
 final productRepositoryProvider = Provider<ProductRepository>((ref) {
-  return ProductRepository();
-});
-
-final productRepositoryLoaderProvider = FutureProvider<ProductRepository>((ref) async {
-  final repo = ref.watch(productRepositoryProvider);
-  await repo.load();
-  return repo;
+  throw UnimplementedError(
+    'productRepositoryProvider must be overridden in main() with a loaded instance.',
+  );
 });
