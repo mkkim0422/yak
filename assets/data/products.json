@@ -4285,6 +4285,82 @@
       "notes": "호주 세노비스. 마그네슘+칼슘+철 강화",
       "data_source": "https://prod.danawa.com/info/?pcode=1748345",
       "verified_date": "2026-05-04"
+    },
+    {
+      "id": "thorne_basic_b",
+      "name": "쏜리서치 베이직 B 컴플렉스",
+      "english_name": "Thorne Basic B Complex",
+      "brand": "Thorne Research",
+      "brand_type": "brand",
+      "category": "vitamin_b",
+      "unit": "캡슐",
+      "daily_dose": 1,
+      "package_size": 60,
+      "ingredients": {
+        "vitamin_b1_mg": 110,
+        "vitamin_b2_mg": 10,
+        "vitamin_b6_mg": 10,
+        "vitamin_b12_mcg": 400,
+        "vitamin_b3_mg": 140,
+        "biotin_mcg": 400,
+        "vitamin_b5_mg": 110,
+        "vitamin_b9_mcg": 667,
+        "choline_mg": 28
+      },
+      "good_for": ["활성형 비타민B군", "메틸화 + 콜린"],
+      "alternatives": ["solgar_b_complex_100", "lifeextension_bcomplex"],
+      "popularity_rank": 212,
+      "notes": "활성형 (P5P, 메틸코발라민, 5-MTHF) + 콜린 28mg",
+      "data_source": "https://prod.danawa.com/info/?pcode=11522594",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "lifeextension_bcomplex",
+      "name": "라이프익스텐션 바이오액티브 컴플리트 B-컴플렉스",
+      "english_name": "Life Extension BioActive Complete B-Complex",
+      "brand": "Life Extension",
+      "brand_type": "brand",
+      "category": "vitamin_b",
+      "unit": "캡슐",
+      "daily_dose": 1,
+      "package_size": 60,
+      "ingredients": {
+        "vitamin_b1_mg": 100,
+        "vitamin_b2_mg": 75,
+        "vitamin_b3_mg": 100,
+        "vitamin_b5_mg": 500,
+        "vitamin_b6_mg": 100,
+        "vitamin_b9_mcg": 680,
+        "biotin_mcg": 1000,
+        "vitamin_b12_mcg": 300,
+        "inositol_mg": 100
+      },
+      "good_for": ["고함량 활성형 B군", "심혈관/뇌"],
+      "alternatives": ["thorne_basic_b", "solgar_b_complex_100"],
+      "popularity_rank": 213,
+      "notes": "5-MTHF + 메틸코발라민. 1정에 모든 B군 + 이노시톨/PABA",
+      "data_source": "https://www.lifeextension.com/vitamins-supplements/item01945/bioactive-complete-b-complex",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "naturebon_vit_d_5000",
+      "name": "네이처본 비타민D 5000IU",
+      "english_name": "NatureBon Vitamin D 5000IU",
+      "brand": "네이처본",
+      "brand_type": "brand",
+      "category": "vitamin_d",
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 60,
+      "ingredients": {
+        "vitamin_d_iu": 5000
+      },
+      "good_for": ["고함량 D3 (125mcg)", "뼈 건강"],
+      "alternatives": ["now_vit_d3_2000", "ckd_vit_d_2000"],
+      "popularity_rank": 214,
+      "notes": "1정 5000IU (125mcg). 상한섭취량 4000IU 초과 시 전문가 상담",
+      "data_source": "https://www.pillyze.com/products/26206",
+      "verified_date": "2026-05-04"
     }
   ]
 }
