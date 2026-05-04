@@ -4503,6 +4503,65 @@
       "notes": "국내 정식. 1일 1정. 철분 6mg 강화",
       "data_source": "https://prod.danawa.com/info/?pcode=5252010",
       "verified_date": "2026-05-04"
+    },
+    {
+      "id": "huons_menolacto",
+      "name": "엘루비 메노락토 프로바이오틱스",
+      "english_name": "Huons Eluvi Menolacto Probiotics",
+      "brand": "휴온스",
+      "brand_type": "brand",
+      "category": "probiotics",
+      "unit": "캡슐",
+      "daily_dose": 1,
+      "package_size": 30,
+      "ingredients": {},
+      "good_for": ["여성 갱년기", "락토바실러스 YT1"],
+      "alternatives": ["lactofit_gold", "atomy_propolis_gummy"],
+      "popularity_rank": 220,
+      "notes": "국내 최초 갱년기 기능성 인정. YT1 균수 비공개로 ingredients 비움",
+      "data_source": "https://www.huonsmall.com/goods/goods_view.php?goodsNo=1000000027",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "ckd_promega_triple",
+      "name": "프로메가 오메가3 트리플",
+      "english_name": "CKD Promega Omega-3 Triple",
+      "brand": "종근당건강",
+      "brand_type": "brand",
+      "category": "omega3",
+      "unit": "캡슐",
+      "daily_dose": 2,
+      "package_size": 60,
+      "ingredients": {
+        "epa_mg": 250,
+        "dha_mg": 200,
+        "omega3_mg": 450,
+        "vitamin_e_mg": 5.5
+      },
+      "good_for": ["혈행 개선", "안구 건조 개선", "중성지방"],
+      "alternatives": ["solgar_omega3_950"],
+      "popularity_rank": 221,
+      "notes": "1캡슐 654mg. 1일 2캡슐 = EPA+DHA 900mg + 비타민E 11mg",
+      "data_source": "https://prod.danawa.com/info/?pcode=14368739",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "centrum_woman_double_up",
+      "name": "센트룸 우먼 더블업",
+      "english_name": "Centrum For Women Double Up",
+      "brand": "센트룸",
+      "brand_type": "brand",
+      "category": "multivitamin",
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 50,
+      "ingredients": {},
+      "good_for": ["여성 23종 영양", "더블 강화"],
+      "alternatives": ["centrum_woman", "solgar_women_multi"],
+      "popularity_rank": 222,
+      "notes": "1일 1정 23종 비타민/미네랄. 정확 함량 비공개",
+      "data_source": "https://www.kurly.com/goods/5097881",
+      "verified_date": "2026-05-04"
     }
   ]
 }
