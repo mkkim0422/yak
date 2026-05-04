@@ -4562,6 +4562,71 @@
       "notes": "1일 1정 23종 비타민/미네랄. 정확 함량 비공개",
       "data_source": "https://www.kurly.com/goods/5097881",
       "verified_date": "2026-05-04"
+    },
+    {
+      "id": "ckd_iron_folate_d",
+      "name": "종근당 철분 엽산 비타민D 플러스",
+      "english_name": "CKD Iron Folate Vitamin D Plus",
+      "brand": "종근당건강",
+      "brand_type": "brand",
+      "category": "iron",
+      "unit": "캡슐",
+      "daily_dose": 1,
+      "package_size": 60,
+      "ingredients": {
+        "iron_mg": 12,
+        "vitamin_d_iu": 400,
+        "vitamin_b12_mcg": 4.5,
+        "vitamin_b9_mcg": 680,
+        "copper_mg": 0.8
+      },
+      "good_for": ["철분 결핍", "임산부", "5중 복합기능성"],
+      "alternatives": ["elenew_1", "elevit_pregnancy"],
+      "popularity_rank": 223,
+      "notes": "1일 1캡슐 500mg. 임산부/수유부 보충",
+      "data_source": "https://www.dongwonmall.com/product/detail.do?productId=000933835",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "bnr17_bienalsin_pro",
+      "name": "BNR17 다이어트 유산균 비에날씬 프로",
+      "english_name": "BNR17 Diet Probiotics Bienalsin Pro",
+      "brand": "에이스바이옴",
+      "brand_type": "brand",
+      "category": "probiotics",
+      "unit": "캡슐",
+      "daily_dose": 1,
+      "package_size": 30,
+      "ingredients": {
+        "probiotics_billion_cfu": 10
+      },
+      "good_for": ["체지방 감소", "BNR17 (모유유산균)"],
+      "alternatives": ["lactofit_gold", "huons_menolacto"],
+      "popularity_rank": 224,
+      "notes": "락토바실러스 가세리 BNR17 보장균수 100억 CFU",
+      "data_source": "https://prod.danawa.com/info/?pcode=11071221",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "eundan_vit_c_easy_d",
+      "name": "고려은단 비타민C 1000 이지 + 비타민D",
+      "english_name": "Korea Eundan Vitamin C 1000 Easy + D",
+      "brand": "고려은단",
+      "brand_type": "brand",
+      "category": "vitamin_c",
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 180,
+      "ingredients": {
+        "vitamin_c_mg": 1000,
+        "vitamin_d_iu": 1000
+      },
+      "good_for": ["면역", "비타민C+D 복합"],
+      "alternatives": ["eundan_vit_c_gold_plus", "eundan_vit_c_1000"],
+      "popularity_rank": 225,
+      "notes": "1정 = C 1000mg + D 25mcg (1000IU)",
+      "data_source": "https://prod.danawa.com/info/?pcode=14043326",
+      "verified_date": "2026-05-04"
     }
   ]
 }
