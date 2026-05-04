@@ -73,11 +73,57 @@ class AppStrings {
   static const String onboardingDesc3 = '건강검진 결과까지 반영한 맞춤 추천이에요';
 
   // Home
-  static const String homeGreeting = '안녕하세요';
+  static const String homeGreeting = '안녕하세요 👋';
+  static const String homeFamilyTitle = '우리 가족 영양제';
+  static const String homeHelpTitle = '🎯 무엇을 도와드릴까요?';
   static const String homeTodaySchedule = '오늘의 복용 일정';
   static const String homeStreak = '연속 복용';
   static const String homeAddFamily = '가족 추가하기';
   static const String homeStartRecommendation = '추천 받기';
+
+  // Home entry points
+  static const String entryCheckup = '🔍 검진 결과';
+  static const String entryBuySupplements = '🛒 영양제 새로 사기';
+  static const String entryCurrentCheck = '⚠️ 지금 점검';
+  static const String entrySymptomSearch = '🩺 증상 검색';
+  static const String entryFamilyManage = '👨‍👩‍👧 가족 관리';
+
+  // Home notifications
+  static const String homeNotificationsTitle = '🔔 알림';
+
+  // Empty state
+  static const String emptyFamilyTitle = '아직 등록된 가족이 없어요';
+  static const String emptyFamilyDescription =
+      '가족을 추가하면 영양제 관리를 시작할 수 있어요';
+  static const String addFamilyButton = '+ 가족 추가하기';
+
+  // Card status
+  static const String cardStatusEnough = '충분히 챙기시는 중';
+  static const String cardStatusFewDeficitTemplate = '%d개 부족';
+  static const String cardCurrentlyTakingTemplate = '%d개 복용 중';
+  static const String cardLastCheckupTemplate = '검진: %s';
+  static const String cardNoCheckup = '검진 정보 없음';
+  static const String cardSeeDetail = '상세 보기 →';
+  static const String moreItemsCountTemplate = '+%d개 더';
+  static const String cardDeficientNutrients = '부족한 영양소';
+  static const String cardSufficientNutrients = '잘 챙기는 것';
+
+  // Quick actions
+  static const String quickActionRecommend = '💊 영양제 새로 추천받기';
+  static const String quickActionCheck = '⚠️ 지금 먹는 것 점검';
+  static const String quickActionCheckup = '🔍 검진 결과 입력/보기';
+  static const String quickActionEdit = '📝 정보 수정';
+  static const String quickActionRemove = '🗑️ 가족에서 제거';
+  static const String quickActionManageProducts = '💊 현재 복용 영양제 관리';
+
+  // Member detail
+  static const String memberDetailQuickActions = '📋 빠른 액션';
+  static const String memberDetailNutritionStatus = '📊 영양 상태 상세';
+  static const String memberDetailDeficient = '❌ 부족한 영양소';
+  static const String memberDetailSufficient = '✅ 충분히 챙기는 것';
+  static const String memberDetailNoData = '아직 분석 데이터가 없어요';
+  static const String coveragePercentTemplate = '%d%% 충족';
+  static const String coverageNotTakingLabel = '안 드심';
 
   // Family
   static const String familyTitle = '우리 가족';

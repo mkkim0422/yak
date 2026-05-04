@@ -10,7 +10,14 @@ class AppColors {
   static const Color surface = Color(0xFFFFFFFF);
   static const Color textPrimary = Color(0xFF1A1A2E);
   static const Color textSecondary = Color(0xFF6B7280);
+
+  // Status colors (used for family card health state)
+  static const Color success = Color(0xFF4CAF50);
+  static const Color successLight = Color(0xFFE8F5E9);
   static const Color warning = Color(0xFFF59E0B);
+  static const Color warningLight = Color(0xFFFFF8E1);
+  static const Color attention = Color(0xFFFB8C00);
+  static const Color attentionLight = Color(0xFFFFF3E0);
   static const Color error = Color(0xFFEF4444);
 
   static const List<Color> familyMemberColors = [

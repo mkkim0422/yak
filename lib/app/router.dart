@@ -6,6 +6,8 @@ import '../core/l10n/app_strings.dart';
 import '../core/security/secure_storage.dart';
 import '../core/security/session_guard.dart';
 import '../core/theme/app_colors.dart';
+import '../features/family/screens/member_detail_screen.dart';
+import '../features/home/screens/home_screen.dart';
 
 /// Result of the boot-time routing check.
 class _BootDecision {
@@ -63,7 +65,27 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/home',
-        builder: (context, state) => const _Placeholder(title: '홈'),
+        builder: (context, state) => const HomeScreen(),
+      ),
+      GoRoute(
+        path: '/family/:id',
+        builder: (context, state) =>
+            MemberDetailScreen(memberId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: '/family/:id/edit',
+        builder: (context, state) =>
+            const _Placeholder(title: '가족 정보 수정'),
+      ),
+      GoRoute(
+        path: '/family/:id/products',
+        builder: (context, state) =>
+            const _Placeholder(title: '복용 영양제 관리'),
+      ),
+      GoRoute(
+        path: '/current-check/:id',
+        builder: (context, state) =>
+            const _Placeholder(title: '지금 먹는 것 점검'),
       ),
       GoRoute(
         path: '/family-management',
