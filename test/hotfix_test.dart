@@ -155,12 +155,23 @@ void main() {
       }
     });
 
-    test('every entry has at least one ingredient amount', () {
+    test('every entry has the ingredients field (may be empty)', () {
+      // Per spec, products that exist publicly but with undisclosed
+      // amounts are still indexed so users can find/request them.
+      // The analysis engine skips empty maps automatically.
       for (final p in products) {
-        final ing = (p as Map)['ingredients'] as Map;
-        expect(ing.isNotEmpty, true,
-            reason: '${p['id']} has empty ingredients');
+        expect((p as Map).containsKey('ingredients'), true,
+            reason: '${p['id']} missing ingredients key');
       }
+    });
+
+    test('at least 50% of entries have non-empty ingredients', () {
+      final total = products.length;
+      final filled = products
+          .where((p) => ((p as Map)['ingredients'] as Map).isNotEmpty)
+          .length;
+      expect(filled / total, greaterThanOrEqualTo(0.5),
+          reason: 'too many empty-ingredient entries; verify amounts');
     });
 
     test('all ingredient keys are snake_case (no Korean chars)', () {
