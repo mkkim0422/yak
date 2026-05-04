@@ -3370,6 +3370,56 @@
       "notes": "분말 1포 L-카르니틴 2000mg. 식약처 인정",
       "data_source": "https://prod.danawa.com/info/?pcode=17060804",
       "verified_date": "2026-05-04"
+    },
+    {
+      "id": "imp_power_a_plus",
+      "name": "임팩타민 파워 에이플러스",
+      "english_name": "Impactamin Power A Plus",
+      "brand": "대웅제약",
+      "brand_type": "brand",
+      "category": "vitamin_b",
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 60,
+      "ingredients": {
+        "vitamin_b1_mg": 50,
+        "vitamin_b2_mg": 50,
+        "vitamin_b3_mg": 50,
+        "vitamin_b5_mg": 50,
+        "vitamin_b6_mg": 50,
+        "vitamin_b12_mcg": 50,
+        "vitamin_b9_mcg": 200,
+        "biotin_mcg": 250,
+        "vitamin_a_mcg": 2100,
+        "vitamin_d_iu": 200,
+        "magnesium_mg": 25,
+        "calcium_mg": 50,
+        "zinc_mg": 15
+      },
+      "good_for": ["고함량 B군 + 미네랄"],
+      "alternatives": ["imp_premium", "solgar_b_complex_100"],
+      "popularity_rank": 176,
+      "notes": "벤포티아민(B1) 50mg + 종합 미네랄. 약학정보원 함량 공개",
+      "data_source": "https://www.daewoong.co.kr/kr/product/product-detail?idx=185",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "yuhan_vit_cd",
+      "name": "유한 비타민C·D정",
+      "english_name": "Yuhan Vitamin C·D Tab",
+      "brand": "유한양행",
+      "brand_type": "brand",
+      "category": "vitamin_c",
+      "unit": "정",
+      "daily_dose": 2,
+      "package_size": 60,
+      "ingredients": {"vitamin_c_mg": 500, "vitamin_d_iu": 500},
+      "good_for": ["비타민C+D 복합", "면역+뼈"],
+      "alternatives": ["yuhan_vit_c_1000", "ckd_vit_c_1000"],
+      "popularity_rank": 177,
+      "notes": "일반의약품. 1일 2정 = C 1000mg + D 1000IU",
+      "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=2019103100014",
+      "verified_date": "2026-05-04"
     }
   ]
 }
