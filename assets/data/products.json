@@ -3420,6 +3420,77 @@
       "notes": "일반의약품. 1일 2정 = C 1000mg + D 1000IU",
       "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=2019103100014",
       "verified_date": "2026-05-04"
+    },
+    {
+      "id": "ckd_active_vit_b_plus",
+      "name": "종근당 활력 비타민B 플러스",
+      "english_name": "CKD Active Vitamin B Plus",
+      "brand": "종근당건강",
+      "brand_type": "brand",
+      "category": "vitamin_b",
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 60,
+      "ingredients": {
+        "vitamin_b1_mg": 50,
+        "vitamin_b2_mg": 40,
+        "vitamin_b6_mg": 50,
+        "vitamin_b12_mcg": 50,
+        "vitamin_b5_mg": 50,
+        "vitamin_b3_mg": 50,
+        "vitamin_b9_mcg": 800,
+        "biotin_mcg": 300
+      },
+      "good_for": ["8종 비타민B 복합", "에너지 대사", "피부 건강"],
+      "alternatives": ["imp_power_a_plus", "solgar_b_complex_100"],
+      "popularity_rank": 178,
+      "notes": "1정 800mg, 2개월분 60정. 다나와 가격비교 함량 공개",
+      "data_source": "https://prod.danawa.com/info/?pcode=6748234",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "denps_truvitamin",
+      "name": "덴프스 트루바이타민",
+      "english_name": "Denps TruVitamin",
+      "brand": "덴프스",
+      "brand_type": "brand",
+      "category": "multivitamin",
+      "unit": "포",
+      "daily_dose": 1,
+      "package_size": 30,
+      "ingredients": {
+        "vitamin_b1_mg": 48,
+        "vitamin_b2_mg": 56,
+        "vitamin_b6_mg": 60,
+        "vitamin_c_mg": 500,
+        "vitamin_a_mcg": 700,
+        "vitamin_d_iu": 200,
+        "vitamin_e_mg": 11
+      },
+      "good_for": ["스틱형 종합비타민", "고함량 B+C"],
+      "alternatives": ["centrum_silver", "ckd_imbita_daily"],
+      "popularity_rank": 179,
+      "notes": "유럽 원료. 30포(30일분) 스틱형 분말",
+      "data_source": "https://www.denps.com/kor/vitamin.php",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "ckd_imbita_daily",
+      "name": "아임비타 멀티비타민 데일리",
+      "english_name": "I'mVita Multivitamin Daily",
+      "brand": "종근당건강",
+      "brand_type": "brand",
+      "category": "multivitamin",
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 60,
+      "ingredients": {},
+      "good_for": ["하루 1정 종합비타민", "B군 고함량"],
+      "alternatives": ["centrum_woman", "denps_truvitamin"],
+      "popularity_rank": 180,
+      "notes": "1정 850mg, B군 일일권장량 300%까지. 정확 mg 비공개로 ingredients 비움",
+      "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000208",
+      "verified_date": "2026-05-04"
     }
   ]
 }
