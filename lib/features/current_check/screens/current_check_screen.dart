@@ -10,6 +10,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../family/providers/family_provider.dart';
 import '../../home/providers/member_analysis_provider.dart';
+import '../../home/widgets/nutrient_status_widgets.dart';
 
 class CurrentCheckScreen extends ConsumerWidget {
   final String memberId;
@@ -82,16 +83,20 @@ class CurrentCheckScreen extends ConsumerWidget {
               ),
           const SizedBox(height: 20),
           _section('❌ 추가로 필요해요'),
-          if (analysis.deficits.isEmpty)
-            Text('부족한 영양소가 없어요', style: AppTypography.body2)
-          else ...[
-            for (final d in analysis.deficits.take(3))
-              _NutrientLine(
-                name: d.displayName,
-                detail: '권장 ${d.recommended.toStringAsFixed(0)} 중 '
-                    '${d.percentage}%',
-              ),
-            const SizedBox(height: 8),
+          NutrientPriorityCard(items: analysis.priority),
+          if (analysis.secondary.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            NutrientCollapsibleSection(
+              title: '🟡 추가로 챙기시면 좋아요',
+              count: analysis.secondary.length,
+              items: [
+                for (final s in analysis.secondary)
+                  ' · ${s.deficit.displayName}  ${s.deficit.percentage}%',
+              ],
+            ),
+          ],
+          if (analysis.priority.isNotEmpty) ...[
+            const SizedBox(height: 12),
             FilledButton(
               onPressed: () => context.push('/recommendation/$memberId'),
               child: const Text('영양제 새로 추천받기 →'),

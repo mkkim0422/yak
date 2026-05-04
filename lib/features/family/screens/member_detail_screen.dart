@@ -7,6 +7,7 @@ import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../home/providers/member_analysis_provider.dart';
+import '../../home/widgets/nutrient_status_widgets.dart';
 import '../models/family_member.dart';
 import '../providers/family_provider.dart';
 
@@ -205,32 +206,28 @@ class _NutritionStatusCard extends StatelessWidget {
           Text(AppStrings.memberDetailNutritionStatus,
               style: AppTypography.heading3),
           const SizedBox(height: 12),
-          Text(AppStrings.memberDetailDeficient, style: AppTypography.heading3),
-          const SizedBox(height: 6),
-          if (analysis.deficits.isEmpty)
-            Text('부족한 영양소가 없어요', style: AppTypography.body2)
-          else
-            for (final d in analysis.deficits) _nutrientLine(d),
-          const SizedBox(height: 12),
-          Text(AppStrings.memberDetailSufficient, style: AppTypography.heading3),
-          const SizedBox(height: 6),
-          if (analysis.sufficient.isEmpty)
-            Text(AppStrings.memberDetailNoData, style: AppTypography.body2)
-          else
-            for (final d in analysis.sufficient.take(8)) _nutrientLine(d),
+          NutrientPriorityCard(items: analysis.priority),
+          if (analysis.secondary.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            NutrientCollapsibleSection(
+              title: '🟡 추가로 챙기시면 좋아요',
+              count: analysis.secondary.length,
+              items: analysis.secondary.map(formatSecondaryLine).toList(),
+            ),
+          ],
+          if (analysis.sufficient.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            NutrientCollapsibleSection(
+              title: '✅ 잘 챙기시는 영양소',
+              count: analysis.sufficient.length,
+              items: analysis.sufficient
+                  .take(8)
+                  .map(formatSufficientLine)
+                  .toList(),
+            ),
+          ],
         ],
       ),
     );
   }
-}
-
-Widget _nutrientLine(NutrientDeficit d) {
-  final pctLabel = d.current == 0
-      ? AppStrings.coverageNotTakingLabel
-      : AppStrings.coveragePercentTemplate
-          .replaceFirst('%d', d.percentage.toString());
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 4),
-    child: Text(' · ${d.displayName} ($pctLabel)', style: AppTypography.body1),
-  );
 }

@@ -220,6 +220,9 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
                       controller: _height,
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                      ],
                       decoration: const InputDecoration(
                           border: OutlineInputBorder()),
                     ),
@@ -236,6 +239,9 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
                       controller: _weight,
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                      ],
                       decoration: const InputDecoration(
                           border: OutlineInputBorder()),
                     ),

@@ -57,52 +57,42 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
     });
   }
 
+  /// Whether [step] is applicable to the current draft (age + sex).
+  /// The `_totalSteps` constant still describes the maximum number of
+  /// steps any user may see; users with younger profiles short-circuit.
+  bool shouldShowStep(int step) => _shouldShow(step, _draft);
+
   void _next({String? answer}) {
     if (answer != null) _draft.answers.add(_AnsweredEntry(_step, answer));
-    setState(() => _step = _step + 1);
+    var next = _step + 1;
+    while (next < _totalSteps && !shouldShowStepAt(next)) {
+      next++;
+    }
+    setState(() => _step = next);
     _scrollToEnd();
   }
 
+  /// Variant used by the build callback that doesn't rely on the
+  /// instance `_step` (avoids re-entrant setState).
+  bool shouldShowStepAt(int step) => _shouldShow(step, _draft);
+
   void _back() {
-    if (_step <= 1) {
+    var prev = _step - 1;
+    while (prev >= 1 && !shouldShowStepAt(prev)) {
+      prev--;
+    }
+    if (prev < 1) {
       context.pop();
       return;
     }
     setState(() {
-      _step = _step - 1;
+      _step = prev;
       _draft.answers.removeWhere((a) => a.step >= _step);
     });
   }
 
-  bool get _isAdult => _draft.age >= 19;
-  bool get _isAdultWoman => _isAdult && _draft.sex == Sex.female;
-
-  /// Skip steps that don't apply (e.g. pregnancy for males or kids).
-  void _autoAdvanceIfNeeded() {
-    if (_step == 6 && !_isAdultWoman) {
-      _draft.isPregnant = false;
-      _draft.isBreastfeeding = false;
-      _next();
-      return;
-    }
-    if (_step == 7 && !_isAdult) {
-      _draft.smokingStatus = SmokingStatus.never;
-      _next();
-      return;
-    }
-    if (_step == 8 && !_isAdult) {
-      _draft.drinkingFrequency = DrinkingFrequency.never;
-      _next();
-      return;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _autoAdvanceIfNeeded();
-    });
-
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -139,7 +129,6 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
             onSubmitDraft: _draft.set,
             onComplete: _save,
             onSkip: () => _next(answer: null),
-            onAutoSkipNeeded: _autoAdvanceIfNeeded,
           ),
         ],
       ),
@@ -228,13 +217,31 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
     final wasFirst = controller.members.isEmpty;
     await controller.addMember(member);
     if (!mounted) return;
+
+    // Branch by post-save intent. Order: products first (immediate
+    // value), then checkup, then notification setup (first run only),
+    // then home.
+    String fallback;
     if (wasFirst) {
-      // First-ever member onboarding -> wire notification preferences next.
-      context.go('/onboarding/notification');
+      fallback = '/onboarding/notification';
     } else if (GoRouter.of(context).canPop()) {
+      fallback = '_pop_';
+    } else {
+      fallback = '/home';
+    }
+
+    if (_draft.wantsProducts) {
+      context.go('/family/${member.id}/products');
+      return;
+    }
+    if (_draft.wantsCheckup) {
+      context.go('/health-checkup/${member.id}');
+      return;
+    }
+    if (fallback == '_pop_') {
       context.pop();
     } else {
-      context.go('/home');
+      context.go(fallback);
     }
   }
 }
@@ -257,7 +264,46 @@ class _Draft {
   final List<String> medications = [];
   final List<_AnsweredEntry> answers = [];
 
+  /// Set on step 14/15 to chain post-save navigation.
+  bool wantsCheckup = false;
+  bool wantsProducts = false;
+
   void set(void Function(_Draft) f) => f(this);
+}
+
+/// Single source of truth for whether a chat step applies to the
+/// person being added. Foundation steps (1-5) are always shown; the
+/// rest gate on age/sex.
+///
+/// Step ids:
+///   1 relationship · 2 name · 3 age · 4 sex · 5 height/weight
+///   6 pregnancy · 7 smoking · 8 drinking · 9 diet · 10 sleep
+///   11 stress · 12 allergies · 13 medications · 14 checkup intent
+///   15 products intent · 16 complete
+bool _shouldShow(int step, _Draft d) {
+  if (step <= 5 || step >= 16) return true;
+  switch (step) {
+    case 6: // pregnancy / breastfeeding
+      return d.sex == Sex.female && d.age >= 15 && d.age < 55;
+    case 7: // smoking
+    case 8: // drinking
+      return d.age >= 19;
+    case 9: // diet
+    case 11: // stress
+      return d.age >= 13;
+    case 10: // sleep
+      return d.age >= 3;
+    case 12: // allergies
+      return true;
+    case 13: // medications
+      return d.age >= 3;
+    case 14: // checkup intent
+      return d.age >= 13;
+    case 15: // products intent
+      return true;
+    default:
+      return true;
+  }
 }
 
 class _AnsweredEntry {
@@ -273,7 +319,6 @@ class _StepInput extends StatelessWidget {
   final void Function(void Function(_Draft)) onSubmitDraft;
   final VoidCallback onComplete;
   final VoidCallback onSkip;
-  final VoidCallback onAutoSkipNeeded;
 
   const _StepInput({
     required this.step,
@@ -282,7 +327,6 @@ class _StepInput extends StatelessWidget {
     required this.onSubmitDraft,
     required this.onComplete,
     required this.onSkip,
-    required this.onAutoSkipNeeded,
   });
 
   @override
@@ -463,23 +507,36 @@ class _StepInput extends StatelessWidget {
         );
         break;
       case 14:
-      case 15:
         child = Row(
           children: [
             Expanded(
               child: OutlinedButton(
-                onPressed: onSkip,
+                onPressed: () {
+                  onSubmitDraft((d) => d.wantsCheckup = false);
+                  onSkip();
+                },
                 child: const Text('건너뛰기'),
               ),
             ),
             const SizedBox(width: 8),
             Expanded(
               child: FilledButton(
-                onPressed: () => onAnswer(step == 14 ? '입력하기' : '추가하기'),
-                child: Text(step == 14 ? '검진 입력' : '영양제 추가'),
+                onPressed: () {
+                  onSubmitDraft((d) => d.wantsCheckup = true);
+                  onAnswer('저장 후 검진 입력');
+                },
+                child: const Text('검진 입력하기'),
               ),
             ),
           ],
+        );
+        break;
+      case 15:
+        child = _ProductIntentInput(
+          draft: draft,
+          onSubmitDraft: onSubmitDraft,
+          onAnswer: onAnswer,
+          onSkip: onSkip,
         );
         break;
       default:
@@ -567,6 +624,11 @@ class _NameInputState extends State<_NameInput> {
   void initState() {
     super.initState();
     _ctrl = TextEditingController(text: widget.presetName);
+    if (widget.presetName.isNotEmpty) {
+      _ctrl.selection = TextSelection.fromPosition(
+        TextPosition(offset: widget.presetName.length),
+      );
+    }
   }
 
   @override
@@ -582,11 +644,18 @@ class _NameInputState extends State<_NameInput> {
         Expanded(
           child: TextField(
             controller: _ctrl,
+            // Disable IME suggestions/autocorrect — otherwise the
+            // pre-filled name gets echoed back as a keyboard hint
+            // which confuses users (Galaxy keyboard repro).
+            autocorrect: false,
+            enableSuggestions: false,
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.done,
             decoration: const InputDecoration(
-              hintText: '이름',
+              hintText: '이름을 입력해주세요',
               border: OutlineInputBorder(),
             ),
-            onSubmitted: (v) => _submit(v),
+            onSubmitted: _submit,
           ),
         ),
         const SizedBox(width: 8),
@@ -602,6 +671,92 @@ class _NameInputState extends State<_NameInput> {
     final trimmed = value.trim();
     if (trimmed.isEmpty) return;
     widget.onSubmit(trimmed);
+  }
+}
+
+class _ProductIntentInput extends StatelessWidget {
+  final _Draft draft;
+  final void Function(void Function(_Draft)) onSubmitDraft;
+  final void Function(String label) onAnswer;
+  final VoidCallback onSkip;
+
+  const _ProductIntentInput({
+    required this.draft,
+    required this.onSubmitDraft,
+    required this.onAnswer,
+    required this.onSkip,
+  });
+
+  void _openSheet(BuildContext context) {
+    showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      builder: (sheetCtx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: Text('영양제 추가', style: AppTypography.heading3),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.search),
+                  title: const Text('🔍 검색해서 추가'),
+                  subtitle: const Text('인기 영양제에서 찾기'),
+                  onTap: () {
+                    onSubmitDraft((d) => d.wantsProducts = true);
+                    Navigator.of(sheetCtx).pop();
+                    onAnswer('저장 후 영양제 검색');
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.edit_note),
+                  title: const Text('📝 직접 입력하기'),
+                  subtitle: const Text('라벨 보고 직접 입력'),
+                  onTap: () {
+                    onSubmitDraft((d) => d.wantsProducts = true);
+                    Navigator.of(sheetCtx).pop();
+                    onAnswer('저장 후 직접 입력');
+                  },
+                ),
+                const SizedBox(height: 8),
+                TextButton(
+                  onPressed: () => Navigator.of(sheetCtx).pop(),
+                  child: const Text('취소'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton(
+            onPressed: () {
+              onSubmitDraft((d) => d.wantsProducts = false);
+              onSkip();
+            },
+            child: const Text('없음'),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: FilledButton(
+            onPressed: () => _openSheet(context),
+            child: const Text('영양제 추가'),
+          ),
+        ),
+      ],
+    );
   }
 }
 
@@ -699,6 +854,9 @@ class _HeightWeightInputState extends State<_HeightWeightInput> {
           child: TextField(
             controller: _h,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+            ],
             decoration: const InputDecoration(
               labelText: '키 cm',
               border: OutlineInputBorder(),
@@ -710,6 +868,9 @@ class _HeightWeightInputState extends State<_HeightWeightInput> {
           child: TextField(
             controller: _w,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+            ],
             decoration: const InputDecoration(
               labelText: '몸무게 kg',
               border: OutlineInputBorder(),

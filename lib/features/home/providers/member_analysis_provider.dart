@@ -23,17 +23,43 @@ class NutrientDeficit {
   });
 }
 
+class NutrientStatus {
+  /// Original deficit/sufficient row.
+  final NutrientDeficit deficit;
+
+  /// Why this nutrient was prioritised — used to render bullets under
+  /// the priority card (e.g. "검진 결과 부족", "흡연으로 손실 큼").
+  final List<String> reasons;
+
+  /// Higher == more urgent. Useful only inside a single analysis.
+  final int priorityScore;
+
+  const NutrientStatus({
+    required this.deficit,
+    this.reasons = const [],
+    this.priorityScore = 0,
+  });
+}
+
 class MemberAnalysis {
   final List<NutrientDeficit> deficits;
   final List<NutrientDeficit> sufficient;
   final int currentProductCount;
   final DateTime? lastCheckupDate;
 
+  /// Top-3 deficits with reasons, ready to render in the priority card.
+  final List<NutrientStatus> priority;
+
+  /// Next 4-5 deficits, shown collapsed by default.
+  final List<NutrientStatus> secondary;
+
   const MemberAnalysis({
     required this.deficits,
     required this.sufficient,
     required this.currentProductCount,
     required this.lastCheckupDate,
+    this.priority = const [],
+    this.secondary = const [],
   });
 
   factory MemberAnalysis.empty() => const MemberAnalysis(
@@ -155,12 +181,90 @@ MemberAnalysis analyzeMember(FamilyMember member, ProductRepository repo) {
   deficits.sort((a, b) => a.percentage.compareTo(b.percentage));
   sufficient.sort((a, b) => b.percentage.compareTo(a.percentage));
 
+  // Score deficits by urgency for priority/secondary split.
+  final scored = deficits.map((d) {
+    final reasons = <String>[];
+    var score = 0;
+
+    if (d.percentage < 30) {
+      score += 100;
+    } else if (d.percentage < 50) {
+      score += 70;
+    } else {
+      score += 40;
+    }
+
+    final checkup = member.lastCheckup;
+    if (checkup != null) {
+      if (d.nutrient == 'vitamin_d_iu' &&
+          checkup.vitaminD != null &&
+          checkup.vitaminD! < 30) {
+        score += 80;
+        reasons.add('검진 결과 ${checkup.vitaminD!.toStringAsFixed(0)}ng/mL (부족)');
+      }
+      if (d.nutrient == 'iron_mg' && checkup.hemoglobin != null) {
+        final hgbMin = member.sex == Sex.female ? 12.0 : 13.0;
+        if (checkup.hemoglobin! < hgbMin) {
+          score += 80;
+          reasons.add('헤모글로빈 ${checkup.hemoglobin}g/dL — 권장 미만');
+        }
+      }
+      if (d.nutrient == 'omega3_total_mg' &&
+          checkup.ldl != null &&
+          checkup.ldl! > 130) {
+        score += 60;
+        reasons.add('LDL ${checkup.ldl!.toStringAsFixed(0)}mg/dL — 관리 필요');
+      }
+      if (d.nutrient == 'magnesium_mg' &&
+          checkup.fastingGlucose != null &&
+          checkup.fastingGlucose! > 100) {
+        score += 50;
+        reasons.add('공복혈당 ${checkup.fastingGlucose!.toStringAsFixed(0)}mg/dL');
+      }
+    }
+
+    if (member.smokingStatus == SmokingStatus.current) {
+      if (d.nutrient == 'vitamin_c_mg') {
+        score += 40;
+        reasons.add('흡연으로 항산화 영양소 손실');
+      }
+    }
+    if (member.drinkingFrequency == DrinkingFrequency.daily) {
+      if (d.nutrient == 'vitamin_b12_mcg' ||
+          d.nutrient == 'vitamin_b9_mcg') {
+        score += 30;
+        reasons.add('잦은 음주로 B군 손실');
+      }
+    }
+    if (member.stressLevel == StressLevel.high &&
+        d.nutrient == 'magnesium_mg') {
+      score += 30;
+      reasons.add('스트레스 시 마그네슘 소모 증가');
+    }
+    if (member.sleepHours == SleepHours.less5 &&
+        d.nutrient == 'magnesium_mg') {
+      score += 20;
+      reasons.add('수면 부족 — 근육 이완에 도움');
+    }
+    if (d.current == 0) {
+      reasons.add('지금 안 드시는 영양소');
+    }
+
+    return NutrientStatus(deficit: d, reasons: reasons, priorityScore: score);
+  }).toList();
+
+  scored.sort((a, b) => b.priorityScore.compareTo(a.priorityScore));
+  final priority = scored.take(3).toList();
+  final secondary = scored.skip(3).toList();
+
   return MemberAnalysis(
     deficits: deficits,
     sufficient: sufficient,
     currentProductCount:
         member.currentProductIds.length + member.manualProducts.length,
     lastCheckupDate: member.lastCheckupDate,
+    priority: priority,
+    secondary: secondary,
   );
 }
 

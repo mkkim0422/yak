@@ -220,6 +220,9 @@ class _ManualSupplementInputScreenState
                       controller: f.value,
                       keyboardType:
                           const TextInputType.numberWithOptions(decimal: true),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
+                      ],
                       decoration: const InputDecoration(
                         labelText: '함량',
                         border: OutlineInputBorder(),
