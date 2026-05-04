@@ -3747,9 +3747,9 @@
       "verified_date": "2026-05-04"
     },
     {
-      "id": "gnm_milk_thistle",
-      "name": "GNM 건강한 간 밀크씨슬",
-      "english_name": "GNM Healthy Liver Milk Thistle",
+      "id": "gnm_milk_thistle_full",
+      "name": "GNM 건강한 간 밀크씨슬 (풀 패널)",
+      "english_name": "GNM Healthy Liver Milk Thistle (full panel)",
       "brand": "GNM자연의품격",
       "brand_type": "brand",
       "category": "liver",
@@ -3764,8 +3764,8 @@
         "vitamin_b3_mg": 13.5,
         "vitamin_b5_mg": 4.6
       },
-      "good_for": ["간 건강", "실리마린 130mg"],
-      "alternatives": ["milk_thistle_basic"],
+      "good_for": ["간 건강", "실리마린 130mg + B군"],
+      "alternatives": ["gnm_milk_thistle"],
       "popularity_rank": 191,
       "notes": "1정 900mg, 식약처 일일권장량 130mg 충족. 조정석 광고",
       "data_source": "https://gnmlife.com/product/%EA%B1%B4%EA%B0%95%ED%95%9C-%EA%B0%84-%EB%B0%80%ED%81%AC%EC%94%A8%EC%8A%AC/81/",
@@ -3924,9 +3924,9 @@
       "verified_date": "2026-05-04"
     },
     {
-      "id": "atomy_hemohim",
-      "name": "애터미 헤모힘",
-      "english_name": "Atomy HemoHIM",
+      "id": "atomy_hemohim_v2",
+      "name": "애터미 헤모힘 (v2)",
+      "english_name": "Atomy HemoHIM (variant)",
       "brand": "애터미",
       "brand_type": "brand",
       "category": "immune",
@@ -3935,16 +3935,16 @@
       "package_size": 60,
       "ingredients": {},
       "good_for": ["면역 기능 개선", "피로 개선", "당귀 등 혼합 추출물"],
-      "alternatives": ["ckd_imbita_immune"],
+      "alternatives": ["atomy_hemohim"],
       "popularity_rank": 197,
       "notes": "당귀+천궁+백작약 추출물. 식약처 개별인정형 1호. 정확 mg 비공개",
       "data_source": "https://kr.atomy.com/product/000011",
       "verified_date": "2026-05-04"
     },
     {
-      "id": "lactofit_kids",
-      "name": "락토핏 생유산균 키즈",
-      "english_name": "Lactofit Kids",
+      "id": "lactofit_kids_v2",
+      "name": "락토핏 생유산균 키즈 (v2)",
+      "english_name": "Lactofit Kids (variant)",
       "brand": "종근당건강",
       "brand_type": "brand",
       "category": "probiotics",
@@ -3957,9 +3957,9 @@
         "zinc_mg": 2.55
       },
       "good_for": ["어린이 유산균", "면역 + 뼈 건강"],
-      "alternatives": ["lactofit_gold", "centrum_kids"],
+      "alternatives": ["lactofit_kids"],
       "popularity_rank": 198,
-      "notes": "1포 10억 보장균수. 요구르트맛 분말",
+      "notes": "1포 10억 보장균수. 요구르트맛 분말 (D 함량 풀패널)",
       "data_source": "https://prod.danawa.com/info/?pcode=4112583",
       "verified_date": "2026-05-04"
     },
@@ -3997,9 +3997,9 @@
       "verified_date": "2026-05-04"
     },
     {
-      "id": "elenew_1",
-      "name": "엘레뉴 1단계",
-      "english_name": "Elenew Stage 1",
+      "id": "elenew_1_full",
+      "name": "엘레뉴 1단계 (풀 패널)",
+      "english_name": "Elenew Stage 1 (full panel)",
       "brand": "바이엘",
       "brand_type": "brand",
       "category": "pregnancy",
@@ -4024,7 +4024,7 @@
         "copper_mg": 1
       },
       "good_for": ["임신준비-12주", "엽산 800mcg", "17종 영양"],
-      "alternatives": ["elevit_pregnancy"],
+      "alternatives": ["elenew_1", "elevit_pregnancy"],
       "popularity_rank": 200,
       "notes": "임신 1단계 (준비기-12주) 맞춤. 비타민A는 의도적 비함유",
       "data_source": "https://www.elenew.co.kr/product-range/elenew1",
@@ -4137,9 +4137,9 @@
       "verified_date": "2026-05-04"
     },
     {
-      "id": "evercollagen_time",
-      "name": "에버콜라겐 타임",
-      "english_name": "EverCollagen Time",
+      "id": "evercollagen_time_full",
+      "name": "에버콜라겐 타임 (풀 패널)",
+      "english_name": "EverCollagen Time (full panel)",
       "brand": "뉴트리",
       "brand_type": "brand",
       "category": "collagen",
@@ -4153,7 +4153,7 @@
         "selenium_mcg": 27.5
       },
       "good_for": ["피부 보습", "자외선 보호 2중 기능성"],
-      "alternatives": ["bblab_low_collagen_5000"],
+      "alternatives": ["evercollagen_time", "bblab_low_collagen_5000"],
       "popularity_rank": 206,
       "notes": "저분자 콜라겐 1000mg + 비오틴/아연/셀렌. 식약처 인증",
       "data_source": "https://www.kurly.com/goods/1000269933",
@@ -4398,9 +4398,9 @@
       "verified_date": "2026-05-04"
     },
     {
-      "id": "ckd_vit_c_1000",
-      "name": "종근당 비타민C 1000",
-      "english_name": "CKD Vitamin C 1000mg",
+      "id": "ckd_vit_c_1000_v2",
+      "name": "종근당 비타민C 1000 (v2)",
+      "english_name": "CKD Vitamin C 1000mg (variant)",
       "brand": "종근당건강",
       "brand_type": "brand",
       "category": "vitamin_c",
@@ -4411,16 +4411,16 @@
         "vitamin_c_mg": 1000
       },
       "good_for": ["면역", "항산화", "고함량 단일 C"],
-      "alternatives": ["eundan_vit_c_1000", "yuhan_vit_c_1000"],
+      "alternatives": ["ckd_vit_c_1000", "eundan_vit_c_1000"],
       "popularity_rank": 216,
-      "notes": "1정 1000mg 단일 성분. 코스트코 베스트셀러",
+      "notes": "1정 1000mg 단일 성분. 600정 대용량 (코스트코)",
       "data_source": "https://prod.danawa.com/info/?pcode=4280991",
       "verified_date": "2026-05-04"
     },
     {
-      "id": "atomy_propolis_gummy",
-      "name": "애터미 그린 프로폴리스 면역 구미",
-      "english_name": "Atomy Green Propolis Immune Gummy",
+      "id": "atomy_propolis_gummy_v2",
+      "name": "애터미 그린 프로폴리스 면역 구미 (v2)",
+      "english_name": "Atomy Green Propolis Immune Gummy (variant)",
       "brand": "애터미",
       "brand_type": "brand",
       "category": "immune",
@@ -4432,7 +4432,7 @@
         "zinc_mg": 2.55
       },
       "good_for": ["프로폴리스", "면역", "구강 항균"],
-      "alternatives": ["centrum_silver"],
+      "alternatives": ["atomy_propolis_gummy"],
       "popularity_rank": 217,
       "notes": "1구미 1g = 플라보노이드 0.3mg + 아연. 4개월분",
       "data_source": "https://kr.atomy.com/product/004028",
@@ -4872,9 +4872,9 @@
       "verified_date": "2026-05-04"
     },
     {
-      "id": "ckd_vit_d_2000",
-      "name": "종근당 비타민D 2000IU",
-      "english_name": "CKD Vitamin D 2000IU",
+      "id": "ckd_vit_d_2000_zn",
+      "name": "종근당 비타민D 2000IU + 아연",
+      "english_name": "CKD Vitamin D 2000IU + Zinc",
       "brand": "종근당건강",
       "brand_type": "brand",
       "category": "vitamin_d",
@@ -4886,16 +4886,16 @@
         "zinc_mg": 8.5
       },
       "good_for": ["고함량 D + 아연", "면역"],
-      "alternatives": ["now_vit_d3_2000", "cenovis_vit_d_2000"],
+      "alternatives": ["ckd_vit_d_2000", "now_vit_d3_2000"],
       "popularity_rank": 237,
-      "notes": "1캡슐 D 2000IU + 아연 8.5mg",
+      "notes": "1캡슐 D 2000IU + 아연 8.5mg (아연 추가 변형)",
       "data_source": "https://prod.danawa.com/info/?pcode=6278995",
       "verified_date": "2026-05-04"
     },
     {
-      "id": "ckd_vit_d_1000",
-      "name": "종근당 비타민D 1000IU",
-      "english_name": "CKD Vitamin D 1000IU",
+      "id": "ckd_vit_d_1000_v2",
+      "name": "종근당 비타민D 1000IU (v2)",
+      "english_name": "CKD Vitamin D 1000IU (variant)",
       "brand": "종근당건강",
       "brand_type": "brand",
       "category": "vitamin_d",
@@ -4906,7 +4906,7 @@
         "vitamin_d_iu": 1000
       },
       "good_for": ["뼈 건강", "면역"],
-      "alternatives": ["ckd_vit_d_2000", "now_vit_d3_2000"],
+      "alternatives": ["ckd_vit_d_1000", "ckd_vit_d_2000_zn", "now_vit_d3_2000"],
       "popularity_rank": 238,
       "notes": "1정 400mg = 비타민D 25mcg (1000IU). 3개월분",
       "data_source": "https://www.dongwonmall.com/product/detail.do?productId=000777658",
@@ -5163,6 +5163,51 @@
       "popularity_rank": 248,
       "notes": "토코페롤아세테이트2배산 100mg = 비타민E 50mg. 14가지 성분",
       "data_source": "https://www.asiae.co.kr/article/2016112810284761818",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "ckd_imbita_allinone",
+      "name": "아임비타 멀티비타민미네랄 올인원",
+      "english_name": "I'mVita Multivitamin Mineral All-in-One",
+      "brand": "종근당건강",
+      "brand_type": "brand",
+      "category": "multivitamin",
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 30,
+      "ingredients": {},
+      "good_for": ["하루 1정 종합비타민+미네랄", "23종 영양"],
+      "alternatives": ["ckd_imbita_daily", "centrum_woman"],
+      "popularity_rank": 249,
+      "notes": "1정 1450mg. 비타민 12종 + 미네랄 11종. 정확 mg 비공개",
+      "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000218",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "solgar_b_complex_100_v2",
+      "name": "솔가 비타민B 컴플렉스 100 (정확 패널)",
+      "english_name": "Solgar B-Complex 100 (verified panel)",
+      "brand": "Solgar",
+      "brand_type": "brand",
+      "category": "vitamin_b",
+      "unit": "캡슐",
+      "daily_dose": 1,
+      "package_size": 100,
+      "ingredients": {
+        "vitamin_b1_mg": 100,
+        "vitamin_b2_mg": 100,
+        "vitamin_b3_mg": 100,
+        "vitamin_b6_mg": 100,
+        "vitamin_b9_mcg": 400,
+        "vitamin_b12_mcg": 100,
+        "biotin_mcg": 100,
+        "vitamin_b5_mg": 100
+      },
+      "good_for": ["고함량 B군 100mg", "신경계", "에너지"],
+      "alternatives": ["solgar_b_complex_100", "thorne_basic_b", "lifeextension_bcomplex"],
+      "popularity_rank": 250,
+      "notes": "1캡슐 = 모든 B군 100mg/100mcg 균등 함량. 솔가 대표 B 컴플렉스 (정확 함량 검증)",
+      "data_source": "https://prod.danawa.com/info/?pcode=6065528",
       "verified_date": "2026-05-04"
     }
   ]
