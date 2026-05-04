@@ -11,7 +11,10 @@ import '../widgets/chat_message.dart';
 
 /// Toss-style 16-step chat to register a new family member.
 class FamilyAddScreen extends ConsumerStatefulWidget {
-  const FamilyAddScreen({super.key});
+  /// Optional preset relationship (e.g. when entering from the welcome
+  /// screen's "나부터 등록하기" CTA we skip step 1).
+  final Relationship? presetRelationship;
+  const FamilyAddScreen({super.key, this.presetRelationship});
 
   @override
   ConsumerState<FamilyAddScreen> createState() => _FamilyAddScreenState();
@@ -22,6 +25,26 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
   final _draft = _Draft();
   int _step = 1;
   static const int _totalSteps = 16;
+
+  @override
+  void initState() {
+    super.initState();
+    final preset = widget.presetRelationship;
+    if (preset != null) {
+      _draft.relationship = preset;
+      if (preset == Relationship.husband ||
+          preset == Relationship.father ||
+          preset == Relationship.son) {
+        _draft.sex = Sex.male;
+      } else if (preset == Relationship.wife ||
+          preset == Relationship.mother ||
+          preset == Relationship.daughter) {
+        _draft.sex = Sex.female;
+      }
+      _draft.answers.add(_AnsweredEntry(1, preset.label));
+      _step = 2;
+    }
+  }
 
   void _scrollToEnd() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -201,9 +224,14 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
       createdAt: now,
       updatedAt: now,
     );
-    await ref.read(familyControllerProvider).addMember(member);
+    final controller = ref.read(familyControllerProvider);
+    final wasFirst = controller.members.isEmpty;
+    await controller.addMember(member);
     if (!mounted) return;
-    if (GoRouter.of(context).canPop()) {
+    if (wasFirst) {
+      // First-ever member onboarding -> wire notification preferences next.
+      context.go('/onboarding/notification');
+    } else if (GoRouter.of(context).canPop()) {
       context.pop();
     } else {
       context.go('/home');

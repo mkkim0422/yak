@@ -88,6 +88,11 @@ class FamilyMembersNotifier extends StateNotifier<List<FamilyMember>> {
     return null;
   }
 
+  /// Public read-only snapshot for callers outside the notifier.
+  /// Reaches across the StateNotifier `state` boundary safely because the
+  /// returned list is unmodifiable.
+  List<FamilyMember> get members => List.unmodifiable(state);
+
   Future<void> addMember(FamilyMember member) async {
     state = [...state, member];
     await _persistMember(member);
