@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/notifications/notification_provider.dart';
+import '../../../core/security/secure_storage.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
 import '../models/family_member.dart';
@@ -23,6 +24,10 @@ const List<String> _categories = [
   '기타',
 ];
 
+/// SecureStorage key for the local "정보 등록 요청" queue. Stored locally
+/// only — the queue is read by Settings → admin → export later.
+const String kProductRegistrationRequestsKey = 'product.registration.requests';
+
 class ManualSupplementInputScreen extends ConsumerStatefulWidget {
   final String memberId;
   const ManualSupplementInputScreen({super.key, required this.memberId});
@@ -38,8 +43,6 @@ class _ManualSupplementInputScreenState
   final _brand = TextEditingController();
   final _dose = TextEditingController(text: '1');
   final _packageSize = TextEditingController(text: '60');
-  final _price = TextEditingController();
-  final List<_IngredientField> _ingredientFields = [];
   String _category = _categories.first;
 
   @override
@@ -48,15 +51,7 @@ class _ManualSupplementInputScreenState
     _brand.dispose();
     _dose.dispose();
     _packageSize.dispose();
-    _price.dispose();
-    for (final f in _ingredientFields) {
-      f.dispose();
-    }
     super.dispose();
-  }
-
-  void _addIngredient() {
-    setState(() => _ingredientFields.add(_IngredientField()));
   }
 
   Future<void> _save() async {
@@ -71,14 +66,6 @@ class _ManualSupplementInputScreenState
       return;
     }
 
-    final ingredients = <String, double>{};
-    for (final f in _ingredientFields) {
-      final key = f.key.text.trim();
-      final amount = double.tryParse(f.value.text) ?? 0;
-      if (key.isEmpty || amount <= 0) continue;
-      ingredients[key] = amount;
-    }
-
     final manual = ManualProductEntry(
       id: 'manual_${DateTime.now().microsecondsSinceEpoch}',
       name: name,
@@ -86,8 +73,7 @@ class _ManualSupplementInputScreenState
       category: _category,
       dailyDose: dose,
       packageSize: packageSize,
-      priceKrw: int.tryParse(_price.text),
-      ingredients: ingredients,
+      ingredients: const {},
       startedAt: DateTime.now(),
     );
 
@@ -110,6 +96,65 @@ class _ManualSupplementInputScreenState
     context.pop();
   }
 
+  Future<void> _requestRegistration() async {
+    final ctrl = TextEditingController(text: _name.text.trim());
+    final brandCtrl = TextEditingController(text: _brand.text.trim());
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (dctx) => AlertDialog(
+        title: const Text('정보 등록 요청'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              '제품명/브랜드를 알려주세요. 검토 후 정확한 함량 데이터로 추가합니다.',
+              style: TextStyle(fontSize: 13),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: ctrl,
+              decoration: const InputDecoration(
+                labelText: '제품명',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: brandCtrl,
+              decoration: const InputDecoration(
+                labelText: '브랜드 (선택)',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dctx).pop(false),
+            child: const Text('취소'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dctx).pop(true),
+            child: const Text('보내기'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    final entry =
+        '${DateTime.now().toIso8601String()}|${ctrl.text.trim()}|${brandCtrl.text.trim()}';
+    final existing = await SecureStorage.read(kProductRegistrationRequestsKey);
+    final next = existing == null || existing.isEmpty
+        ? entry
+        : '$existing\n$entry';
+    await SecureStorage.write(kProductRegistrationRequestsKey, next);
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('등록 요청을 받았어요')),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -123,10 +168,18 @@ class _ManualSupplementInputScreenState
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text(
-            '라벨을 보고 입력해주세요\n'
-            '성분을 입력하지 않으면 영양 분석이 정확하지 않을 수 있어요',
-            style: AppTypography.body2,
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: AppColors.warningLight,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              '함량 정보는 입력하지 않습니다.\n'
+              '재구매 알림과 가족별 복용 기록 용도로만 저장돼요.\n'
+              '정확한 영양 분석을 원하시면 아래 "정보 등록 요청"을 눌러주세요.',
+              style: AppTypography.body2,
+            ),
           ),
           const SizedBox(height: 16),
           _label('제품명 *'),
@@ -142,7 +195,8 @@ class _ManualSupplementInputScreenState
               for (final c in _categories)
                 DropdownMenuItem(value: c, child: Text(c)),
             ],
-            onChanged: (v) => setState(() => _category = v ?? _categories.first),
+            onChanged: (v) =>
+                setState(() => _category = v ?? _categories.first),
             decoration: const InputDecoration(border: OutlineInputBorder()),
           ),
           const SizedBox(height: 12),
@@ -156,7 +210,9 @@ class _ManualSupplementInputScreenState
                     TextField(
                       controller: _dose,
                       keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                       ),
@@ -173,7 +229,9 @@ class _ManualSupplementInputScreenState
                     TextField(
                       controller: _packageSize,
                       keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                       ),
@@ -189,55 +247,13 @@ class _ManualSupplementInputScreenState
             controller: _brand,
             decoration: const InputDecoration(border: OutlineInputBorder()),
           ),
-          const SizedBox(height: 12),
-          _label('가격 원 (선택)'),
-          TextField(
-            controller: _price,
-            keyboardType: TextInputType.number,
-            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: const InputDecoration(border: OutlineInputBorder()),
-          ),
-          const SizedBox(height: 16),
-          _label('영양 성분 (선택, 반복 가능)'),
-          for (final f in _ingredientFields)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: f.key,
-                      decoration: const InputDecoration(
-                        labelText: '성분 키 (예: vitamin_d_iu)',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  SizedBox(
-                    width: 110,
-                    child: TextField(
-                      controller: f.value,
-                      keyboardType:
-                          const TextInputType.numberWithOptions(decimal: true),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp(r'[0-9.]')),
-                      ],
-                      decoration: const InputDecoration(
-                        labelText: '함량',
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          OutlinedButton.icon(
-            icon: const Icon(Icons.add),
-            label: const Text('성분 추가'),
-            onPressed: _addIngredient,
-          ),
           const SizedBox(height: 24),
+          OutlinedButton.icon(
+            icon: const Icon(Icons.send_outlined),
+            label: const Text('정보 등록 요청 (정확한 함량 데이터 추가)'),
+            onPressed: _requestRegistration,
+          ),
+          const SizedBox(height: 12),
           FilledButton(
             onPressed: _save,
             child: const Text('저장'),
@@ -252,12 +268,3 @@ Widget _label(String text) => Padding(
       padding: const EdgeInsets.only(bottom: 4),
       child: Text(text, style: AppTypography.body2),
     );
-
-class _IngredientField {
-  final TextEditingController key = TextEditingController();
-  final TextEditingController value = TextEditingController();
-  void dispose() {
-    key.dispose();
-    value.dispose();
-  }
-}

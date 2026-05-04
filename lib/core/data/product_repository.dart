@@ -51,9 +51,8 @@ class ProductRepository {
     final candidates = _products
         .where((p) => p.id != productId && p.category == base.category)
         .toList(growable: true);
-    candidates.sort(
-      (a, b) => a.pricePerUnitKrw.compareTo(b.pricePerUnitKrw),
-    );
+    candidates.sort((a, b) =>
+        (a.popularityRank ?? 999).compareTo(b.popularityRank ?? 999));
     return List.unmodifiable(candidates);
   }
 
@@ -109,9 +108,7 @@ class ProductRepository {
     combos.sort((a, b) {
       final cmpCoverage = b.averageCoverage.compareTo(a.averageCoverage);
       if (cmpCoverage != 0) return cmpCoverage;
-      final cmpCount = a.productCount.compareTo(b.productCount);
-      if (cmpCount != 0) return cmpCount;
-      return a.totalDailyCostKrw.compareTo(b.totalDailyCostKrw);
+      return a.productCount.compareTo(b.productCount);
     });
 
     final seen = <String>{};
@@ -134,9 +131,7 @@ class ProductRepository {
 
   ProductCombo _buildCombo(List<Product> products, Map<String, double> gap) {
     final supplied = <String, double>{};
-    var dailyCost = 0;
     for (final p in products) {
-      dailyCost += p.dailyCostKrw;
       p.ingredients.forEach((nutrient, amount) {
         supplied.update(
           nutrient,
@@ -163,7 +158,6 @@ class ProductRepository {
       products: List.unmodifiable(products),
       totalCoverage: Map.unmodifiable(perNutrient),
       missingNutrients: List.unmodifiable(missing),
-      totalDailyCostKrw: dailyCost,
       productCount: products.length,
       averageCoverage: average,
     );

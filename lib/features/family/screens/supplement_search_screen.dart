@@ -133,8 +133,7 @@ class _ResultCard extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   '${product.dailyDose}${product.unit}/일 · '
-                  '${product.packageSize}${product.unit} · '
-                  '${product.packagePriceKrw.toString()}원',
+                  '${product.packageSize}${product.unit}',
                   style: AppTypography.caption,
                 ),
                 if (ingredients.isNotEmpty)
@@ -162,8 +161,14 @@ class _Empty extends StatelessWidget {
           const Text('🔍', style: TextStyle(fontSize: 32)),
           const SizedBox(height: 8),
           Text('검색 결과가 없어요', style: AppTypography.body1),
+          const SizedBox(height: 4),
+          Text(
+            '직접 추가하거나 정확한 함량 데이터 등록을 요청할 수 있어요',
+            style: AppTypography.caption,
+            textAlign: TextAlign.center,
+          ),
           const SizedBox(height: 12),
-          OutlinedButton(
+          FilledButton(
             onPressed: () =>
                 context.go('/supplement/manual?member=$memberId'),
             child: const Text('직접 추가하기 →'),

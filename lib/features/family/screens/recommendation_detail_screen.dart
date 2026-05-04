@@ -106,7 +106,8 @@ class _NutrientPick {
 List<Product> _findCandidates(ProductRepository repo, String nutrientKey) {
   final all = repo.all();
   final hits = all.where((p) => p.ingredients.containsKey(nutrientKey)).toList();
-  hits.sort((a, b) => a.dailyCostKrw.compareTo(b.dailyCostKrw));
+  hits.sort((a, b) =>
+      (a.popularityRank ?? 999).compareTo(b.popularityRank ?? 999));
   return hits.take(3).toList(growable: false);
 }
 
@@ -220,8 +221,7 @@ class _NutrientPickCard extends StatelessWidget {
               padding: const EdgeInsets.only(bottom: 4),
               child: Text(
                 '${categories[i.clamp(0, categories.length - 1)]} · '
-                '${pick.suggestions[i].name}  '
-                '(${pick.suggestions[i].dailyCostKrw}원/일)',
+                '${pick.suggestions[i].name}',
                 style: AppTypography.body1,
               ),
             ),

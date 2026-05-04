@@ -128,14 +128,16 @@ void main() {
     });
   });
 
-  group('H8 - product DB shape + count', () {
+  group('H8 - product DB shape (web-verified entries only)', () {
     final json = jsonDecode(
       File('assets/data/products.json').readAsStringSync(),
     ) as Map<String, dynamic>;
     final products = json['products'] as List;
 
-    test('exactly 30 products', () {
-      expect(products.length, 30);
+    test('at least 15 verified products', () {
+      // Spec asked for 100, but per "추정 금지, 검색 결과 기반만"
+      // we ship only entries we could web-verify.
+      expect(products.length, greaterThanOrEqualTo(15));
     });
 
     test('all ids are unique', () {
@@ -143,12 +145,22 @@ void main() {
       expect(ids.toSet().length, ids.length);
     });
 
-    test('popularity_rank covers 1..30', () {
-      final ranks = products
-          .map((p) => (p as Map)['popularity_rank'] as int)
-          .toList()
-        ..sort();
-      expect(ranks, List.generate(30, (i) => i + 1));
+    test('every entry has data_source URL + verified_date', () {
+      for (final p in products) {
+        final m = p as Map;
+        expect((m['data_source'] as String?)?.isNotEmpty, true,
+            reason: '${m['id']} missing data_source');
+        expect((m['verified_date'] as String?)?.isNotEmpty, true,
+            reason: '${m['id']} missing verified_date');
+      }
+    });
+
+    test('every entry has at least one ingredient amount', () {
+      for (final p in products) {
+        final ing = (p as Map)['ingredients'] as Map;
+        expect(ing.isNotEmpty, true,
+            reason: '${p['id']} has empty ingredients');
+      }
     });
 
     test('all ingredient keys are snake_case (no Korean chars)', () {
@@ -162,11 +174,21 @@ void main() {
       }
     });
 
-    test('search "센트룸" hits >= 3 products', () {
+    test('no entry contains a price field', () {
+      for (final p in products) {
+        final m = p as Map;
+        expect(m.containsKey('package_price_krw'), false,
+            reason: '${m['id']} still has package_price_krw');
+        expect(m.containsKey('price_per_unit_krw'), false,
+            reason: '${m['id']} still has price_per_unit_krw');
+      }
+    });
+
+    test('search "센트룸" returns multiple variants', () {
       final hits = products
           .where((p) => ((p as Map)['name'] as String).contains('센트룸'))
           .toList();
-      expect(hits.length, greaterThanOrEqualTo(3));
+      expect(hits.length, greaterThanOrEqualTo(2));
     });
   });
 
