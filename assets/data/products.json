@@ -4050,6 +4050,132 @@
       "notes": "1일 2정 = A 420mcg + D 3mcg. 나머지 mg 비공개",
       "data_source": "https://www.cenovismall.co.kr/goods/goods_view.php?goodsNo=100012",
       "verified_date": "2026-05-04"
+    },
+    {
+      "id": "now_vit_d3_2000",
+      "name": "NOW 비타민 D3 2000IU",
+      "english_name": "NOW Vitamin D-3 High Potency 2000 IU",
+      "brand": "NOW Foods",
+      "brand_type": "brand",
+      "category": "vitamin_d",
+      "unit": "소프트젤",
+      "daily_dose": 1,
+      "package_size": 240,
+      "ingredients": {
+        "vitamin_d_iu": 2000
+      },
+      "good_for": ["뼈 건강", "면역", "고함량 D3"],
+      "alternatives": ["nature_made_d3", "ckd_vit_d_2000"],
+      "popularity_rank": 202,
+      "notes": "1정 D3 50mcg = 2000IU 단일 성분",
+      "data_source": "https://kr.iherb.com/r/now-foods-vitamin-d-3-high-potency-2-000-iu-240-softgels/16272",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "now_biotin_5000",
+      "name": "NOW 비오틴 5000mcg",
+      "english_name": "NOW Biotin 5000 mcg",
+      "brand": "NOW Foods",
+      "brand_type": "brand",
+      "category": "biotin",
+      "unit": "캡슐",
+      "daily_dose": 1,
+      "package_size": 120,
+      "ingredients": {
+        "biotin_mcg": 5000
+      },
+      "good_for": ["모발", "피부 건강", "탈모 보조"],
+      "alternatives": ["solgar_biotin"],
+      "popularity_rank": 203,
+      "notes": "1캡슐 5000mcg 단일 성분. 베지캡슐",
+      "data_source": "https://www.iherb.com/pr/now-foods-biotin-5-000-mcg-120-veg-capsules/3319",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "solgar_omega3_950",
+      "name": "솔가 오메가3 EPA & DHA 950",
+      "english_name": "Solgar Triple Strength Omega-3 950mg",
+      "brand": "Solgar",
+      "brand_type": "brand",
+      "category": "omega3",
+      "unit": "소프트젤",
+      "daily_dose": 1,
+      "package_size": 100,
+      "ingredients": {
+        "epa_mg": 504,
+        "dha_mg": 378,
+        "omega3_mg": 950
+      },
+      "good_for": ["고순도 (76%)", "혈중 중성지질 개선", "심혈관"],
+      "alternatives": ["solgar_omega3_700", "ckd_omega3"],
+      "popularity_rank": 204,
+      "notes": "1캡슐 1250mg / EPA+DHA 950mg. EPA:DHA = 약 4:3 (Solgar 표준)",
+      "data_source": "https://prod.danawa.com/info/?pcode=62786573",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "ckd_camgd_zn_v2",
+      "name": "종근당 칼슘 앤 마그네슘 비타민D 아연",
+      "english_name": "CKD Calcium & Magnesium Vitamin D Zinc",
+      "brand": "종근당건강",
+      "brand_type": "brand",
+      "category": "calcium",
+      "unit": "정",
+      "daily_dose": 2,
+      "package_size": 180,
+      "ingredients": {
+        "calcium_mg": 150,
+        "magnesium_mg": 75,
+        "zinc_mg": 4.25,
+        "vitamin_d_iu": 100
+      },
+      "good_for": ["뼈 + 치아 건강", "갱년기 여성"],
+      "alternatives": ["centrum_woman", "solgar_camg_citrate"],
+      "popularity_rank": 205,
+      "notes": "1일 2정 = 칼슘 300+마그네슘 150+아연 8.5+D 5mcg",
+      "data_source": "https://prod.danawa.com/info/?pcode=5985606",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "evercollagen_time",
+      "name": "에버콜라겐 타임",
+      "english_name": "EverCollagen Time",
+      "brand": "뉴트리",
+      "brand_type": "brand",
+      "category": "collagen",
+      "unit": "포",
+      "daily_dose": 1,
+      "package_size": 30,
+      "ingredients": {
+        "collagen_mg": 1000,
+        "biotin_mcg": 30,
+        "zinc_mg": 4.25,
+        "selenium_mcg": 27.5
+      },
+      "good_for": ["피부 보습", "자외선 보호 2중 기능성"],
+      "alternatives": ["bblab_low_collagen_5000"],
+      "popularity_rank": 206,
+      "notes": "저분자 콜라겐 1000mg + 비오틴/아연/셀렌. 식약처 인증",
+      "data_source": "https://www.kurly.com/goods/1000269933",
+      "verified_date": "2026-05-04"
+    },
+    {
+      "id": "centrum_advance_50plus",
+      "name": "센트룸 어드밴스 50+",
+      "english_name": "Centrum Advance 50+",
+      "brand": "센트룸",
+      "brand_type": "brand",
+      "category": "multivitamin",
+      "unit": "정",
+      "daily_dose": 1,
+      "package_size": 100,
+      "ingredients": {},
+      "good_for": ["50세 이상 종합비타민", "노화/항산화"],
+      "alternatives": ["centrum_silver", "gnc_megamen"],
+      "popularity_rank": 207,
+      "notes": "해외 직구 제품. 정확 mg 비공개",
+      "data_source": "https://prod.danawa.com/info/?pcode=6068750",
+      "verified_date": "2026-05-04"
     }
   ]
 }
