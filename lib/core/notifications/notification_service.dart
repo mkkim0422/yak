@@ -20,6 +20,14 @@ class NotificationService {
   static const int _morningId = 1001;
   static const int _eveningId = 1002;
   static const int _reorderIdBase = 2000;
+  static const int _checkupIdBase = 3000;
+
+  /// Stable id derived from the member id, used to scope per-member
+  /// schedules so we can cancel them all when the member is removed.
+  static int _idFor(String memberId, int base, [String? suffix]) {
+    final key = suffix == null ? memberId : '$memberId#$suffix';
+    return base + key.hashCode.abs() % 999;
+  }
 
   final FlutterLocalNotificationsPlugin _plugin =
       FlutterLocalNotificationsPlugin();
@@ -120,9 +128,25 @@ class NotificationService {
     String memberId, {
     int daysFromNow = 25,
   }) async {
+    await scheduleProductReorderReminder(
+      memberId: memberId,
+      productId: 'default',
+      daysFromNow: daysFromNow,
+    );
+  }
+
+  /// Per-product reorder reminder. Lets us cancel a single product's
+  /// reminder when the user removes that product without disturbing the
+  /// rest of the member's schedules.
+  Future<void> scheduleProductReorderReminder({
+    required String memberId,
+    required String productId,
+    int daysFromNow = 25,
+  }) async {
     await ensureInitialized();
-    final id = _reorderIdBase + memberId.hashCode.abs() % 1000;
-    final fireAt = tz.TZDateTime.now(tz.local).add(Duration(days: daysFromNow));
+    final id = _idFor(memberId, _reorderIdBase, 'reorder:$productId');
+    final fireAt =
+        tz.TZDateTime.now(tz.local).add(Duration(days: daysFromNow));
     await _plugin.zonedSchedule(
       id,
       '영양제 재구매 시점이 다가왔어요',
@@ -132,8 +156,67 @@ class NotificationService {
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
-      payload: 'reorder:$memberId',
+      payload: 'reorder:$memberId:$productId',
     );
+  }
+
+  Future<void> cancelReorderReminder({
+    required String memberId,
+    required String productId,
+  }) async {
+    await ensureInitialized();
+    await _plugin.cancel(
+      _idFor(memberId, _reorderIdBase, 'reorder:$productId'),
+    );
+  }
+
+  /// Reminds the user to redo a checkup one year after the supplied date.
+  Future<void> scheduleCheckupReminder({
+    required String memberId,
+    required DateTime checkupDate,
+  }) async {
+    await ensureInitialized();
+    final id = _idFor(memberId, _checkupIdBase, 'checkup');
+    var fireAt = tz.TZDateTime.from(
+      checkupDate.add(const Duration(days: 365)),
+      tz.local,
+    );
+    final now = tz.TZDateTime.now(tz.local);
+    if (!fireAt.isAfter(now)) {
+      fireAt = now.add(const Duration(days: 1));
+    }
+    await _plugin.zonedSchedule(
+      id,
+      '검진 1년이 됐어요',
+      '새 검진 결과를 입력하면 추천이 더 정확해져요',
+      fireAt,
+      _details(),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      payload: 'checkup:$memberId',
+    );
+  }
+
+  Future<void> cancelCheckupReminder(String memberId) async {
+    await ensureInitialized();
+    await _plugin.cancel(_idFor(memberId, _checkupIdBase, 'checkup'));
+  }
+
+  /// Cancels every member-scoped notification, regardless of payload.
+  /// Used when a family member is removed.
+  Future<void> cancelAllForMember(String memberId) async {
+    await ensureInitialized();
+    final pending = await _plugin.pendingNotificationRequests();
+    final prefix = ':$memberId';
+    for (final p in pending) {
+      final payload = p.payload ?? '';
+      if (payload.contains(prefix) || payload.endsWith(memberId)) {
+        await _plugin.cancel(p.id);
+      }
+    }
+    // Also cancel checkup reminder which is keyed by id+suffix
+    await cancelCheckupReminder(memberId);
   }
 
   Future<void> cancelAll() async {

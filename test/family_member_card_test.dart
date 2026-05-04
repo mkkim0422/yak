@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:alyak/core/data/models/family_input.dart';
 import 'package:alyak/core/theme/app_colors.dart';
 import 'package:alyak/features/family/models/family_member.dart';
 import 'package:alyak/features/family/providers/family_provider.dart';
@@ -11,22 +10,22 @@ import 'package:alyak/features/home/providers/member_analysis_provider.dart';
 import 'package:alyak/features/home/widgets/family_cards_section.dart';
 import 'package:alyak/features/home/widgets/family_member_card.dart';
 
-FamilyMember _member(
+FamilyMember member(
   String id, {
   String name = '홍길동',
   int age = 40,
-  Gender gender = Gender.male,
-  FamilyRelationship relationship = FamilyRelationship.self,
+  Sex sex = Sex.male,
+  Relationship relationship = Relationship.self,
 }) {
+  final now = DateTime(2026, 1, 1);
   return FamilyMember(
     id: id,
+    name: name,
+    age: age,
+    sex: sex,
     relationship: relationship,
-    input: FamilyInput(
-      name: name,
-      age: age,
-      gender: gender,
-      ageGroup: ageGroupFromAge(age),
-    ),
+    createdAt: now,
+    updatedAt: now,
   );
 }
 
@@ -54,12 +53,26 @@ GoRouter _router(Widget child) {
   );
 }
 
-Widget _wrap(List<FamilyMember> members, Widget child) {
+FamilyMembersNotifier _notifierFor(List<FamilyMember> members) {
+  final notifier = FamilyMembersNotifier(
+    InMemoryFamilyStorage(),
+    onMemberRemoved: noopMemberRemoved,
+  );
+  notifier.debugReplace(members);
+  return notifier;
+}
+
+Widget _wrap(
+  List<FamilyMember> members,
+  Widget child, {
+  Map<String, MemberAnalysis> analysisOverrides = const {},
+}) {
   return ProviderScope(
     overrides: [
-      familyProvider.overrideWith(
-        (ref) => FamilyMembersNotifier()..setMembers(members),
-      ),
+      familyMembersProvider.overrideWith((ref) => _notifierFor(members)),
+      for (final entry in analysisOverrides.entries)
+        memberNutrientAnalysisProvider(entry.key)
+            .overrideWithValue(entry.value),
     ],
     child: MaterialApp.router(routerConfig: _router(child)),
   );
@@ -76,7 +89,7 @@ void main() {
 
     testWidgets('count == 1 → large card with relationship label',
         (tester) async {
-      final m = _member('m1', name: '김민기');
+      final m = member('m1', name: '김민기');
       await tester.pumpWidget(_wrap([m], const FamilyCardsSection()));
       await tester.pump();
       expect(find.textContaining('김민기'), findsWidgets);
@@ -84,7 +97,7 @@ void main() {
     });
 
     testWidgets('count == 2 → two compact cards', (tester) async {
-      final members = [_member('m1', name: 'A'), _member('m2', name: 'B')];
+      final members = [member('m1', name: 'A'), member('m2', name: 'B')];
       await tester.pumpWidget(_wrap(members, const FamilyCardsSection()));
       await tester.pump();
       expect(find.byType(FamilyMemberCard), findsNWidgets(2));
@@ -92,9 +105,9 @@ void main() {
 
     testWidgets('count == 3 → 1 main + 2 compact', (tester) async {
       final members = [
-        _member('m1', name: 'A'),
-        _member('m2', name: 'B'),
-        _member('m3', name: 'C'),
+        member('m1', name: 'A'),
+        member('m2', name: 'B'),
+        member('m3', name: 'C'),
       ];
       await tester.pumpWidget(_wrap(members, const FamilyCardsSection()));
       await tester.pump();
@@ -102,16 +115,16 @@ void main() {
     });
 
     testWidgets('count == 4 → 2x2 grid', (tester) async {
-      final members = List.generate(
-          4, (i) => _member('m$i', name: 'M$i'));
+      final members =
+          List.generate(4, (i) => member('m$i', name: 'M$i'));
       await tester.pumpWidget(_wrap(members, const FamilyCardsSection()));
       await tester.pump();
       expect(find.byType(FamilyMemberCard), findsNWidgets(4));
     });
 
     testWidgets('count == 5 → grid renders 5 cards', (tester) async {
-      final members = List.generate(
-          5, (i) => _member('m$i', name: 'M$i'));
+      final members =
+          List.generate(5, (i) => member('m$i', name: 'M$i'));
       await tester.pumpWidget(_wrap(members, const FamilyCardsSection()));
       await tester.pump();
       expect(find.byType(FamilyMemberCard), findsNWidgets(5));
@@ -120,22 +133,12 @@ void main() {
 
   group('Card color coding by deficit count', () {
     testWidgets('zero deficits → success palette', (tester) async {
-      final m = _member('m1');
+      final m = member('m1');
       await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            familyProvider.overrideWith(
-              (ref) => FamilyMembersNotifier()..setMembers([m]),
-            ),
-            memberNutrientAnalysisProvider(m.id).overrideWithValue(
-              MemberAnalysis.empty(),
-            ),
-          ],
-          child: MaterialApp.router(
-            routerConfig: _router(
-              FamilyMemberCard(member: m),
-            ),
-          ),
+        _wrap(
+          [m],
+          FamilyMemberCard(member: m),
+          analysisOverrides: {m.id: MemberAnalysis.empty()},
         ),
       );
       await tester.pump();
@@ -150,7 +153,7 @@ void main() {
     });
 
     testWidgets('three deficits → attention palette', (tester) async {
-      final m = _member('m1');
+      final m = member('m1');
       final analysis = MemberAnalysis(
         deficits: [
           for (int i = 0; i < 3; i++)
@@ -167,16 +170,10 @@ void main() {
         lastCheckupDate: null,
       );
       await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            familyProvider.overrideWith(
-              (ref) => FamilyMembersNotifier()..setMembers([m]),
-            ),
-            memberNutrientAnalysisProvider(m.id).overrideWithValue(analysis),
-          ],
-          child: MaterialApp.router(
-            routerConfig: _router(FamilyMemberCard(member: m)),
-          ),
+        _wrap(
+          [m],
+          FamilyMemberCard(member: m),
+          analysisOverrides: {m.id: analysis},
         ),
       );
       await tester.pump();
@@ -245,23 +242,18 @@ void main() {
 
   group('FamilyMember avatar emoji', () {
     test('relationship + age picks correct emoji', () {
-      expect(_member('m', relationship: FamilyRelationship.self).avatarEmoji,
-          '👤');
+      expect(member('m', relationship: Relationship.self).avatarEmoji, '👤');
       expect(
-          _member('m', relationship: FamilyRelationship.childSon, age: 8)
-              .avatarEmoji,
+          member('m', relationship: Relationship.son, age: 8).avatarEmoji,
           '👦');
       expect(
-          _member('m', relationship: FamilyRelationship.childSon, age: 16)
-              .avatarEmoji,
+          member('m', relationship: Relationship.son, age: 16).avatarEmoji,
           '🧑');
       expect(
-          _member('m', relationship: FamilyRelationship.parentMother, age: 70)
-              .avatarEmoji,
+          member('m', relationship: Relationship.mother, age: 70).avatarEmoji,
           '👵');
       expect(
-          _member('m', relationship: FamilyRelationship.parentFather, age: 50)
-              .avatarEmoji,
+          member('m', relationship: Relationship.father, age: 50).avatarEmoji,
           '👨');
     });
   });

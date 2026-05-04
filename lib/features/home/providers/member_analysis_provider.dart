@@ -1,18 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/data/models/family_input.dart';
 import '../../../core/data/models/product_model.dart';
 import '../../../core/data/product_repository.dart';
 import '../../family/models/family_member.dart';
 import '../../family/providers/family_provider.dart';
 
-/// Per-nutrient deficit detail used to render card content.
 class NutrientDeficit {
-  final String nutrient; // canonical key, e.g. 'vitamin_d_iu'
-  final String displayName; // Korean label
+  final String nutrient;
+  final String displayName;
   final double current;
   final double recommended;
   final int percentage; // 0..200, clamped
+  final List<String> sourceProductNames;
 
   const NutrientDeficit({
     required this.nutrient,
@@ -20,6 +19,7 @@ class NutrientDeficit {
     required this.current,
     required this.recommended,
     required this.percentage,
+    this.sourceProductNames = const [],
   });
 }
 
@@ -58,8 +58,6 @@ class MemberAnalysis {
   }
 }
 
-/// Recommended daily intake (RDI) targets used for deficit detection.
-/// Conservative adult targets; scaled down for younger age groups.
 const Map<String, ({double amount, String label})> _baseRdi = {
   'vitamin_d_iu': (amount: 800, label: '비타민D'),
   'magnesium_mg': (amount: 320, label: '마그네슘'),
@@ -99,34 +97,43 @@ Map<String, double> _recommendedFor(FamilyMember member) {
   };
 }
 
-Map<String, double> _aggregateIntake(
-  List<String> currentProductIds,
-  ProductRepository repo,
-) {
-  final totals = <String, double>{};
-  for (final id in currentProductIds) {
+class _IntakeBreakdown {
+  final Map<String, double> totals = <String, double>{};
+  final Map<String, List<String>> sources = <String, List<String>>{};
+
+  void add(String nutrient, double amount, String sourceName) {
+    if (amount <= 0) return;
+    totals.update(nutrient, (e) => e + amount, ifAbsent: () => amount);
+    sources.putIfAbsent(nutrient, () => <String>[]).add(sourceName);
+  }
+}
+
+_IntakeBreakdown _aggregate(FamilyMember member, ProductRepository repo) {
+  final breakdown = _IntakeBreakdown();
+  for (final id in member.currentProductIds) {
     final Product? product = repo.getById(id);
     if (product == null) continue;
     product.ingredients.forEach((nutrient, amount) {
-      totals.update(
-        nutrient,
-        (existing) => existing + amount * product.dailyDose,
-        ifAbsent: () => amount * product.dailyDose,
-      );
+      breakdown.add(nutrient, amount * product.dailyDose, product.name);
     });
   }
-  return totals;
+  for (final manual in member.manualProducts) {
+    manual.ingredients.forEach((nutrient, amount) {
+      breakdown.add(nutrient, amount * manual.dailyDose, manual.name);
+    });
+  }
+  return breakdown;
 }
 
 MemberAnalysis analyzeMember(FamilyMember member, ProductRepository repo) {
-  final intake = _aggregateIntake(member.currentProductIds, repo);
+  final intake = _aggregate(member, repo);
   final recommendations = _recommendedFor(member);
 
   final deficits = <NutrientDeficit>[];
   final sufficient = <NutrientDeficit>[];
 
   recommendations.forEach((nutrient, recommended) {
-    final current = intake[nutrient] ?? 0;
+    final current = intake.totals[nutrient] ?? 0;
     final pctRaw = recommended <= 0 ? 0.0 : (current / recommended * 100);
     final pct = pctRaw.clamp(0, 200).toInt();
     final entry = NutrientDeficit(
@@ -135,6 +142,8 @@ MemberAnalysis analyzeMember(FamilyMember member, ProductRepository repo) {
       current: current,
       recommended: recommended,
       percentage: pct,
+      sourceProductNames:
+          List.unmodifiable(intake.sources[nutrient] ?? const <String>[]),
     );
     if (pct < 70) {
       deficits.add(entry);
@@ -149,13 +158,12 @@ MemberAnalysis analyzeMember(FamilyMember member, ProductRepository repo) {
   return MemberAnalysis(
     deficits: deficits,
     sufficient: sufficient,
-    currentProductCount: member.currentProductIds.length,
+    currentProductCount:
+        member.currentProductIds.length + member.manualProducts.length,
     lastCheckupDate: member.lastCheckupDate,
   );
 }
 
-/// Sync provider — analysis is pure, so we don't need FutureProvider here.
-/// (Analyzer handles repo loading at app boot via productRepositoryLoaderProvider.)
 final memberNutrientAnalysisProvider =
     Provider.family<MemberAnalysis, String>((ref, memberId) {
   final member = ref.watch(familyProvider).getMember(memberId);

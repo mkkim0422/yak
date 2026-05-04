@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'app/app.dart';
+import 'core/notifications/notification_provider.dart';
 import 'core/notifications/notification_service.dart';
+import 'core/security/encryption_provider.dart';
 import 'core/security/encryption_service.dart';
 
 Future<void> main() async {
@@ -24,11 +26,3 @@ Future<void> main() async {
     ),
   );
 }
-
-final encryptionServiceProvider = Provider<EncryptionService>(
-  (ref) => throw UnimplementedError('main() must override this provider'),
-);
-
-final notificationServiceProvider = Provider<NotificationService>(
-  (ref) => throw UnimplementedError('main() must override this provider'),
-);

@@ -6,10 +6,17 @@ import '../core/l10n/app_strings.dart';
 import '../core/security/secure_storage.dart';
 import '../core/security/session_guard.dart';
 import '../core/theme/app_colors.dart';
+import '../features/current_check/screens/current_check_screen.dart';
+import '../features/family/providers/family_provider.dart';
+import '../features/family/screens/family_products_screen.dart';
+import '../features/family/screens/health_checkup_input_screen.dart';
+import '../features/family/screens/manual_supplement_input_screen.dart';
 import '../features/family/screens/member_detail_screen.dart';
+import '../features/family/screens/recommendation_detail_screen.dart';
+import '../features/family/screens/supplement_search_screen.dart';
 import '../features/home/screens/home_screen.dart';
+import '../features/onboarding/screens/family_add_screen.dart';
 
-/// Result of the boot-time routing check.
 class _BootDecision {
   const _BootDecision(this.target);
   final String target;
@@ -25,8 +32,10 @@ Future<_BootDecision> _decideBootRoute() async {
   final consent = await SecureStorage.read(SecureKeys.privacyConsent);
   if (consent != '1') return const _BootDecision('/privacy-consent');
 
-  final familyIndex = await SecureStorage.read(SecureKeys.familyDraftsIndex);
-  final hasFamily = familyIndex != null && familyIndex.trim().isNotEmpty;
+  // Stage 3 recovery: family roster lives under family.members.list now.
+  final familyIndex = await SecureStorage.read(kFamilyMembersListKey);
+  final hasFamily = familyIndex != null && familyIndex.trim().isNotEmpty &&
+      familyIndex.trim() != '[]';
   if (!hasFamily) return const _BootDecision('/onboarding/welcome');
 
   await guard.touch();
@@ -55,8 +64,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/onboarding/family-add',
-        builder: (context, state) =>
-            const _Placeholder(title: '가족 추가'),
+        builder: (context, state) => const FamilyAddScreen(),
       ),
       GoRoute(
         path: '/onboarding/notification',
@@ -80,12 +88,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/family/:id/products',
         builder: (context, state) =>
-            const _Placeholder(title: '복용 영양제 관리'),
+            FamilyProductsScreen(memberId: state.pathParameters['id']!),
       ),
       GoRoute(
-        path: '/current-check/:id',
+        path: '/current-check/:memberId',
         builder: (context, state) =>
-            const _Placeholder(title: '지금 먹는 것 점검'),
+            CurrentCheckScreen(memberId: state.pathParameters['memberId']!),
       ),
       GoRoute(
         path: '/family-management',
@@ -94,8 +102,23 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/recommendation/:memberId',
-        builder: (context, state) =>
-            const _Placeholder(title: '맞춤 추천'),
+        builder: (context, state) => RecommendationDetailScreen(
+          memberId: state.pathParameters['memberId']!,
+        ),
+      ),
+      GoRoute(
+        path: '/supplement/search',
+        builder: (context, state) {
+          final memberId = state.uri.queryParameters['member'] ?? '';
+          return SupplementSearchScreen(memberId: memberId);
+        },
+      ),
+      GoRoute(
+        path: '/supplement/manual',
+        builder: (context, state) {
+          final memberId = state.uri.queryParameters['member'] ?? '';
+          return ManualSupplementInputScreen(memberId: memberId);
+        },
       ),
       GoRoute(
         path: '/supplement-guide/:supplementId',
@@ -109,8 +132,9 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/health-checkup/:memberId',
-        builder: (context, state) =>
-            const _Placeholder(title: '건강검진 결과'),
+        builder: (context, state) => HealthCheckupInputScreen(
+          memberId: state.pathParameters['memberId']!,
+        ),
       ),
       GoRoute(
         path: '/settings',

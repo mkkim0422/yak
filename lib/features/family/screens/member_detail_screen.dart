@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/data/models/family_input.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -66,7 +65,7 @@ class _ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final genderLabel = member.gender == Gender.male ? '남' : '여';
+    final genderLabel = member.sex.label;
     final lastCheckup = analysis.lastCheckupDate != null
         ? DateFormat('yyyy년 M월', 'ko').format(analysis.lastCheckupDate!)
         : '없음';

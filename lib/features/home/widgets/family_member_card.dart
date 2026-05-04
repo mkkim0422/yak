@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../../../core/data/models/family_input.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
@@ -80,7 +79,7 @@ _CardPalette _paletteFor(int deficitCount) {
   );
 }
 
-String _genderLabel(Gender g) => g == Gender.male ? '남' : '여';
+String _genderLabel(Sex s) => s.label;
 
 class _CompactCardLayout extends StatelessWidget {
   final FamilyMember member;
@@ -115,7 +114,7 @@ class _CompactCardLayout extends StatelessWidget {
           ],
         ),
         Text(
-          '${member.age}세 ${_genderLabel(member.gender)}',
+          '${member.age}세 ${_genderLabel(member.sex)}',
           style: AppTypography.caption,
         ),
         const SizedBox(height: 6),
@@ -198,7 +197,7 @@ class _LargeCardLayout extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          '${member.age}세 ${_genderLabel(member.gender)}',
+          '${member.age}세 ${_genderLabel(member.sex)}',
           style: AppTypography.body2,
         ),
         const Padding(
@@ -316,7 +315,7 @@ void _showQuickActions(
                 AppStrings.quickActionRemove,
                 () {
                   Navigator.of(sheetContext).pop();
-                  ref.read(familyProvider.notifier).removeMember(member.id);
+                  ref.read(familyControllerProvider).removeMember(member.id);
                 },
                 destructive: true,
               ),
