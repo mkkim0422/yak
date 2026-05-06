@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/data/models/product_model.dart';
+import '../../../core/data/nutrient_labels.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/notifications/notification_provider.dart';
 import '../../../core/theme/app_colors.dart';
@@ -124,7 +125,7 @@ class _ProfileHero extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        AvatarBadge(emoji: member.avatarEmoji, status: status, size: 72),
+        AvatarBadge(emoji: member.avatarEmoji, size: 72),
         const SizedBox(width: 14),
         Expanded(
           child: Column(
@@ -559,101 +560,13 @@ class _SourceBadge extends StatelessWidget {
   }
 }
 
-const _knownUnitSuffixes = <String>[
-  'billion_cfu',
-  'mcg',
-  'mg',
-  'iu',
-  'g',
-];
-
-(String base, String unit) _splitNutrientKey(String key) {
-  for (final u in _knownUnitSuffixes) {
-    if (key.endsWith('_$u')) {
-      return (key.substring(0, key.length - u.length - 1), _unitDisplay(u));
-    }
-  }
-  return (key, '');
-}
-
-String _unitDisplay(String raw) {
-  switch (raw) {
-    case 'iu':
-      return 'IU';
-    case 'billion_cfu':
-      return '억CFU';
-    default:
-      return raw;
-  }
-}
-
-String _formatAmount(double amount) {
-  if (amount >= 100 || amount == amount.roundToDouble()) {
-    return amount.toStringAsFixed(0);
-  }
-  if (amount >= 10) return amount.toStringAsFixed(1);
-  return amount.toStringAsFixed(2);
-}
-
-const Map<String, String> _nutrientShortLabels = {
-  'vitamin_a': '비타민A',
-  'vitamin_b1': '비타민B1',
-  'vitamin_b2': '비타민B2',
-  'vitamin_b3': '비타민B3',
-  'vitamin_b5': '비타민B5',
-  'vitamin_b6': '비타민B6',
-  'vitamin_b7': '비오틴',
-  'vitamin_b9': '엽산',
-  'vitamin_b12': '비타민B12',
-  'vitamin_c': '비타민C',
-  'vitamin_d': '비타민D',
-  'vitamin_e': '비타민E',
-  'vitamin_k': '비타민K',
-  'calcium': '칼슘',
-  'magnesium': '마그네슘',
-  'iron': '철분',
-  'zinc': '아연',
-  'omega3_total': '오메가3',
-  'omega3_epa': 'EPA',
-  'omega3_dha': 'DHA',
-  'probiotics': '유산균',
-  'coenzyme_q10': '코엔자임Q10',
-  'lutein': '루테인',
-  'zeaxanthin': '지아잔틴',
-  'milk_thistle': '밀크씨슬',
-  'collagen': '콜라겐',
-  'curcumin': '커큐민',
-  'selenium': '셀레늄',
-  'biotin': '비오틴',
-  'folate': '엽산',
-  'choline': '콜린',
-  'taurine': '타우린',
-  'arginine': '아르기닌',
-  'theanine': '테아닌',
-  'creatine': '크레아틴',
-  'protein': '단백질',
-  'fiber': '식이섬유',
-  'glucosamine': '글루코사민',
-  'chondroitin': '콘드로이친',
-  'astaxanthin': '아스타잔틴',
-  'resveratrol': '레스베라트롤',
-  'red_ginseng': '홍삼',
-};
-
 List<String> _allIngredientLines(Map<String, double> ingredients) {
   if (ingredients.isEmpty) return const [];
   final entries =
       ingredients.entries.where((e) => e.value > 0).toList(growable: false);
   return [
-    for (final e in entries) _formatIngredientLine(e.key, e.value),
+    for (final e in entries) formatIngredientLine(e.key, e.value),
   ];
-}
-
-String _formatIngredientLine(String key, double value) {
-  final (base, unit) = _splitNutrientKey(key);
-  final label = _nutrientShortLabels[base] ?? base;
-  final amount = _formatAmount(value);
-  return unit.isEmpty ? '$label $amount' : '$label $amount$unit';
 }
 
 Future<void> _confirmDelete(
@@ -695,33 +608,11 @@ class _NutritionStatusSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasSecondary = analysis.secondary.isNotEmpty;
-    final hasSufficient = analysis.sufficient.isNotEmpty;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SectionHeader(title: '보충 필요 영양소'),
         NutrientPriorityCard(items: analysis.priority),
-        if (hasSecondary) ...[
-          const SizedBox(height: 12),
-          NutrientCollapsibleSection(
-            title: '추가로 챙기시면 좋아요',
-            count: analysis.secondary.length,
-            items: analysis.secondary.map(formatSecondaryLine).toList(),
-          ),
-        ],
-        if (hasSufficient) ...[
-          const SizedBox(height: 12),
-          NutrientCollapsibleSection(
-            title: '잘 챙기시는 영양소',
-            count: analysis.sufficient.length,
-            items: analysis.sufficient
-                .take(8)
-                .map(formatSufficientLine)
-                .toList(),
-          ),
-        ],
       ],
     );
   }

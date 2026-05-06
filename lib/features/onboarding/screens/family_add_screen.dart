@@ -3,22 +3,29 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/data/models/product_model.dart';
+import '../../../core/data/product_repository.dart';
 import '../../../core/notifications/notification_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/alyak_buttons.dart';
+import '../../../core/widgets/alyak_card.dart';
+import '../../../core/widgets/product_image.dart';
 import '../../../core/widgets/step_indicator.dart';
 import '../../family/models/family_member.dart';
 import '../../family/providers/family_provider.dart';
 import '../widgets/chat_message.dart';
 
 /// Toss-style chat to register a new family member.
-/// Steps (max 17, but most users see fewer because of age/sex skips):
-///  1 relationship · 2 name · 3 birthYear · 4 sex
-///  5 medical disclaimer (only when age < 4)
-///  6 height/weight · 7 pregnancy · 8 breastfeeding
-///  9 smoking · 10 drinking · 11 diet · 12 sleep · 13 stress
-///  14 allergies · 15 medications · 16 products intent · 17 complete
+/// Steps (max 17 — most users see fewer because of age/sex skips):
+///   1 relationship · 2 name · 3 birthYear · 4 sex (only when relationship
+///   doesn't imply it) · 5 medical disclaimer (only when age < 4) ·
+///   6 height/weight · 7 pregnancy/lactation (combined, female 20–50) ·
+///   8 (no-op, retained for back-compat in the step counter) ·
+///   9 smoking · 10 drinking (both 19+) · 11 diet · 12 sleep (both 4+) ·
+///   13 stress (13+) · 14 allergies · 15 medications (1+) ·
+///   16 products (opens inline picker sheet) · 17 complete.
 class FamilyAddScreen extends ConsumerStatefulWidget {
   /// Optional preset relationship — when entering from the welcome
   /// screen's "나부터 등록하기" CTA we skip step 1.
@@ -41,15 +48,8 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
     final preset = widget.presetRelationship;
     if (preset != null) {
       _draft.relationship = preset;
-      if (preset == Relationship.husband ||
-          preset == Relationship.father ||
-          preset == Relationship.son) {
-        _draft.sex = Sex.male;
-      } else if (preset == Relationship.wife ||
-          preset == Relationship.mother ||
-          preset == Relationship.daughter) {
-        _draft.sex = Sex.female;
-      }
+      final implied = _impliedSex(preset);
+      if (implied != null) _draft.sex = implied;
       _draft.answers.add(_AnsweredEntry(1, preset.label));
       _step = 2;
     }
@@ -84,7 +84,7 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
       prev--;
     }
     if (prev < 1) {
-      context.pop();
+      _confirmCancel();
       return;
     }
     setState(() {
@@ -93,58 +93,118 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
     });
   }
 
+  Future<void> _confirmCancel() async {
+    if (_draft.answers.isEmpty) {
+      if (mounted) context.pop();
+      return;
+    }
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (dctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r20),
+        ),
+        title: const Text('가족 등록을 취소하시겠어요?'),
+        content: const Text('입력한 정보는 저장되지 않습니다'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dctx).pop(false),
+            child: const Text('계속 작성'),
+          ),
+          TextButton(
+            style: TextButton.styleFrom(foregroundColor: AppColors.danger),
+            onPressed: () => Navigator.of(dctx).pop(true),
+            child: const Text('취소'),
+          ),
+        ],
+      ),
+    );
+    if (ok == true && mounted) context.pop();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _confirmCancel();
+      },
+      child: Scaffold(
         backgroundColor: AppColors.background,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
-          onPressed: _back,
-        ),
-        title: StepIndicator(step: _step, total: _totalSteps),
-        centerTitle: true,
-        actions: [
-          if (_step < _totalSteps && _step != 5)
-            Padding(
-              padding: const EdgeInsets.only(right: 4),
-              child: TextButton(
-                onPressed: () => _next(answer: null),
-                style: TextButton.styleFrom(
-                  foregroundColor: AppColors.muted,
-                  textStyle: const TextStyle(
-                    fontFamily: AppTypography.family,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w600,
+        appBar: AppBar(
+          backgroundColor: AppColors.background,
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+            onPressed: _back,
+          ),
+          title: StepIndicator(step: _step, total: _totalSteps),
+          centerTitle: true,
+          actions: [
+            if (_step < _totalSteps && _step != 5)
+              Padding(
+                padding: const EdgeInsets.only(right: 4),
+                child: TextButton(
+                  onPressed: () => _next(answer: null),
+                  style: TextButton.styleFrom(
+                    foregroundColor: AppColors.muted,
+                    textStyle: const TextStyle(
+                      fontFamily: AppTypography.family,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
+                  child: const Text('건너뛰기'),
                 ),
-                child: const Text('건너뛰기'),
+              ),
+          ],
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                controller: _scrollCtrl,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                children: _renderHistory(),
               ),
             ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              controller: _scrollCtrl,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              children: _renderHistory(),
+            _StepInput(
+              step: _step,
+              draft: _draft,
+              onAnswer: (label) => _next(answer: label),
+              onSubmitDraft: _draft.set,
+              onComplete: _save,
+              onSkip: () => _next(answer: null),
+              onOpenProductSheet: _openProductSheet,
             ),
-          ),
-          _StepInput(
-            step: _step,
-            draft: _draft,
-            onAnswer: (label) => _next(answer: label),
-            onSubmitDraft: _draft.set,
-            onComplete: _save,
-            onSkip: () => _next(answer: null),
-          ),
-        ],
+          ],
+        ),
       ),
+    );
+  }
+
+  Future<void> _openProductSheet() async {
+    final picked = await showModalBottomSheet<List<String>>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (_) => _ProductPickerSheet(
+        initial: _draft.pendingCuratedProductIds,
+      ),
+    );
+    if (picked == null) return;
+    if (!mounted) return;
+    _draft.pendingCuratedProductIds = picked;
+    _next(
+      answer: picked.isEmpty
+          ? '없음'
+          : '${picked.length}개 영양제 추가',
     );
   }
 
@@ -183,9 +243,8 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
       case 6:
         return '키와 몸무게를 알려주세요 (선택)';
       case 7:
-        return '혹시 임신 또는 수유 중이신가요?';
-      case 8:
-        return '수유 중이신가요?';
+        return '임신 또는 수유 중이신가요?';
+      // step 8 is intentionally a no-op (kept for step-counter back-compat).
       case 9:
         return '흡연하시나요?';
       case 10:
@@ -235,12 +294,33 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
       medications: List.unmodifiable(_draft.medications),
       isPregnant: _draft.isPregnant,
       isBreastfeeding: _draft.isBreastfeeding,
+      currentProductIds: List.unmodifiable(_draft.pendingCuratedProductIds),
       createdAt: now,
       updatedAt: now,
     );
     final controller = ref.read(familyControllerProvider);
     final wasFirst = controller.members.isEmpty;
     await controller.addMember(member);
+
+    // Schedule re-order reminders for any inline-picked supplements.
+    for (final pid in _draft.pendingCuratedProductIds) {
+      try {
+        final p = ref.read(productRepositoryProvider).getById(pid);
+        if (p == null) continue;
+        final dailyDose = p.dailyDose <= 0 ? 1 : p.dailyDose;
+        final daysOfStock = p.packageSize ~/ dailyDose;
+        final remind = (daysOfStock - 5).clamp(7, 365);
+        await ref
+            .read(notificationServiceProvider)
+            .scheduleProductReorderReminder(
+              memberId: member.id,
+              productId: pid,
+              daysFromNow: remind,
+            );
+      } catch (_) {
+        // Reminder scheduling is best-effort — do not block sign-up.
+      }
+    }
 
     // Annual checkup nudge — informational only, no data entry.
     await ref
@@ -249,10 +329,6 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
 
     if (!mounted) return;
 
-    if (_draft.wantsProducts) {
-      context.go('/family/${member.id}/products');
-      return;
-    }
     if (wasFirst) {
       context.go('/onboarding/notification');
     } else if (GoRouter.of(context).canPop()) {
@@ -260,6 +336,24 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
     } else {
       context.go('/home');
     }
+  }
+}
+
+/// Returns the implied biological sex for a relationship, if obvious.
+/// `null` means "ask the user" (self / other).
+Sex? _impliedSex(Relationship r) {
+  switch (r) {
+    case Relationship.husband:
+    case Relationship.father:
+    case Relationship.son:
+      return Sex.male;
+    case Relationship.wife:
+    case Relationship.mother:
+    case Relationship.daughter:
+      return Sex.female;
+    case Relationship.self:
+    case Relationship.other:
+      return null;
   }
 }
 
@@ -281,7 +375,9 @@ class _Draft {
   final List<String> medications = [];
   final List<_AnsweredEntry> answers = [];
 
-  bool wantsProducts = false;
+  /// Curated 250-DB product ids that the user picked in the chat-end product
+  /// sheet. Applied to `member.currentProductIds` on save.
+  List<String> pendingCuratedProductIds = const [];
 
   /// Live age = currentYear - birthYear.
   int get age => DateTime.now().year - birthYear;
@@ -289,37 +385,68 @@ class _Draft {
   void set(void Function(_Draft) f) => f(this);
 }
 
+/// Test-only handle on the persona-aware step gating, so persona
+/// scenarios can be asserted without driving the full chat UI.
+@visibleForTesting
+bool debugShouldShowStep({
+  required int step,
+  required Relationship relationship,
+  required Sex sex,
+  required int age,
+}) {
+  final draft = _Draft()
+    ..relationship = relationship
+    ..sex = sex
+    ..birthYear = DateTime.now().year - age;
+  return _shouldShow(step, draft);
+}
+
+/// Test-only handle on the relationship → implied-sex map.
+@visibleForTesting
+Sex? debugImpliedSex(Relationship r) => _impliedSex(r);
+
 /// Single source of truth for whether a chat step applies to the
-/// person being added. Foundation steps (1-4) and final steps (16-17)
-/// are always shown; the rest gate on age/sex.
+/// person being added. Persona-driven gates:
+///   * Step 4 (sex): only when the relationship doesn't imply it (self/other).
+///   * Step 7 (pregnancy + lactation, combined): female 20–50.
+///   * Step 8: deprecated no-op (kept so the step counter stays at 17 in
+///     existing UX dialogs).
+///   * Step 9, 10 (smoking/drinking): 19+ (Korean legal age).
+///   * Step 11, 12 (diet, sleep): 4+.
+///   * Step 13 (stress): 13+.
+///   * Step 15 (medications): 1+.
 bool _shouldShow(int step, _Draft d) {
   switch (step) {
     case 1:
     case 2:
     case 3:
-    case 4:
       return true;
+    case 4:
+      // Skip when relationship implies sex.
+      final r = d.relationship;
+      return r == null || _impliedSex(r) == null;
     case 5: // medical disclaimer
       return d.age < 4;
     case 6: // height/weight
       return true;
-    case 7: // pregnancy
-    case 8: // breastfeeding
-      return d.sex == Sex.female && d.age >= 15 && d.age <= 49;
-    case 9: // smoking
-    case 10: // drinking
+    case 7: // combined pregnancy + lactation
+      return d.sex == Sex.female && d.age >= 20 && d.age <= 50;
+    case 8: // deprecated — was separate "lactation" question
+      return false;
+    case 9:
+    case 10:
       return d.age >= 19;
-    case 11: // diet
-    case 12: // sleep
+    case 11:
+    case 12:
       return d.age >= 4;
-    case 13: // stress
+    case 13:
       return d.age >= 13;
-    case 14: // allergies
+    case 14:
       return true;
-    case 15: // medications
+    case 15:
       return d.age >= 1;
-    case 16: // products intent
-    case 17: // complete
+    case 16:
+    case 17:
       return true;
     default:
       return true;
@@ -339,6 +466,7 @@ class _StepInput extends StatelessWidget {
   final void Function(void Function(_Draft)) onSubmitDraft;
   final VoidCallback onComplete;
   final VoidCallback onSkip;
+  final VoidCallback onOpenProductSheet;
 
   const _StepInput({
     required this.step,
@@ -347,6 +475,7 @@ class _StepInput extends StatelessWidget {
     required this.onSubmitDraft,
     required this.onComplete,
     required this.onSkip,
+    required this.onOpenProductSheet,
   });
 
   @override
@@ -359,15 +488,8 @@ class _StepInput extends StatelessWidget {
           onPicked: (r) {
             onSubmitDraft((d) {
               d.relationship = r;
-              if (r == Relationship.husband ||
-                  r == Relationship.father ||
-                  r == Relationship.son) {
-                d.sex = Sex.male;
-              } else if (r == Relationship.wife ||
-                  r == Relationship.mother ||
-                  r == Relationship.daughter) {
-                d.sex = Sex.female;
-              }
+              final implied = _impliedSex(r);
+              if (implied != null) d.sex = implied;
             });
             onAnswer(r.label);
           },
@@ -425,23 +547,18 @@ class _StepInput extends StatelessWidget {
       case 7:
         child = _ChoiceRow(
           options: const [
-            ('임신 중', _PregState.pregnant),
-            ('해당 없음', _PregState.none),
+            ('임신 중', _PregLact.pregnant),
+            ('수유 중', _PregLact.lactating),
+            ('임신 + 수유', _PregLact.both),
+            ('해당 없음', _PregLact.none),
           ],
           onPick: (label, value) {
-            onSubmitDraft((d) => d.isPregnant = value == _PregState.pregnant);
-            onAnswer(label);
-          },
-        );
-        break;
-      case 8:
-        child = _ChoiceRow(
-          options: const [
-            ('수유 중', true),
-            ('해당 없음', false),
-          ],
-          onPick: (label, value) {
-            onSubmitDraft((d) => d.isBreastfeeding = value);
+            onSubmitDraft((d) {
+              d.isPregnant = value == _PregLact.pregnant ||
+                  value == _PregLact.both;
+              d.isBreastfeeding = value == _PregLact.lactating ||
+                  value == _PregLact.both;
+            });
             onAnswer(label);
           },
         );
@@ -545,11 +662,22 @@ class _StepInput extends StatelessWidget {
         );
         break;
       case 16:
-        child = _ProductIntentInput(
-          draft: draft,
-          onSubmitDraft: onSubmitDraft,
-          onAnswer: onAnswer,
-          onSkip: onSkip,
+        child = Row(
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () => onAnswer('없음'),
+                child: const Text('없음'),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: FilledButton(
+                onPressed: onOpenProductSheet,
+                child: const Text('영양제 등록하기'),
+              ),
+            ),
+          ],
         );
         break;
       default:
@@ -677,21 +805,28 @@ class _NameInput extends StatefulWidget {
 
 class _NameInputState extends State<_NameInput> {
   late final TextEditingController _ctrl;
+  final _focus = FocusNode();
 
   @override
   void initState() {
     super.initState();
     _ctrl = TextEditingController(text: widget.presetName);
     if (widget.presetName.isNotEmpty) {
-      _ctrl.selection = TextSelection.fromPosition(
-        TextPosition(offset: widget.presetName.length),
+      _ctrl.selection = TextSelection(
+        baseOffset: 0,
+        extentOffset: widget.presetName.length,
       );
     }
+    // Bring up the soft keyboard as soon as this step is shown.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _focus.requestFocus();
+    });
   }
 
   @override
   void dispose() {
     _ctrl.dispose();
+    _focus.dispose();
     super.dispose();
   }
 
@@ -702,6 +837,8 @@ class _NameInputState extends State<_NameInput> {
         Expanded(
           child: TextField(
             controller: _ctrl,
+            focusNode: _focus,
+            autofocus: true,
             autocorrect: false,
             enableSuggestions: false,
             keyboardType: TextInputType.text,
@@ -739,10 +876,20 @@ class _BirthYearInput extends StatefulWidget {
 
 class _BirthYearInputState extends State<_BirthYearInput> {
   final _ctrl = TextEditingController();
+  final _focus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _focus.requestFocus();
+    });
+  }
 
   @override
   void dispose() {
     _ctrl.dispose();
+    _focus.dispose();
     super.dispose();
   }
 
@@ -754,6 +901,8 @@ class _BirthYearInputState extends State<_BirthYearInput> {
         Expanded(
           child: TextField(
             controller: _ctrl,
+            focusNode: _focus,
+            autofocus: true,
             keyboardType: TextInputType.number,
             inputFormatters: [
               FilteringTextInputFormatter.digitsOnly,
@@ -948,90 +1097,320 @@ class _MultiSelectState extends State<_MultiSelect> {
   }
 }
 
-enum _PregState { pregnant, none }
+enum _PregLact { pregnant, lactating, both, none }
 
-class _ProductIntentInput extends StatelessWidget {
-  final _Draft draft;
-  final void Function(void Function(_Draft)) onSubmitDraft;
-  final void Function(String label) onAnswer;
-  final VoidCallback onSkip;
+/// Inline product picker shown at the end of the family-add chat. Lets the
+/// user search the curated 250-DB and pile up several products in one shot,
+/// then apply them to `member.currentProductIds` when the family member is
+/// finally saved. Pops with the picked id list (`null` = cancelled).
+class _ProductPickerSheet extends ConsumerStatefulWidget {
+  final List<String> initial;
+  const _ProductPickerSheet({required this.initial});
 
-  const _ProductIntentInput({
-    required this.draft,
-    required this.onSubmitDraft,
-    required this.onAnswer,
-    required this.onSkip,
-  });
+  @override
+  ConsumerState<_ProductPickerSheet> createState() =>
+      _ProductPickerSheetState();
+}
 
-  void _openSheet(BuildContext context) {
-    showModalBottomSheet<void>(
+class _ProductPickerSheetState extends ConsumerState<_ProductPickerSheet> {
+  final _searchCtrl = TextEditingController();
+  String _query = '';
+  late final List<String> _picked = [...widget.initial];
+
+  @override
+  void dispose() {
+    _searchCtrl.dispose();
+    super.dispose();
+  }
+
+  Future<void> _confirmCancel() async {
+    if (_picked.isEmpty) {
+      Navigator.of(context).pop<List<String>>(<String>[]);
+      return;
+    }
+    final ok = await showDialog<bool>(
       context: context,
-      showDragHandle: true,
-      builder: (sheetCtx) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text('영양제 추가', style: AppTypography.heading3),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.search),
-                  title: const Text('🔍 검색해서 추가'),
-                  subtitle: const Text('인기 영양제에서 찾기'),
-                  onTap: () {
-                    onSubmitDraft((d) => d.wantsProducts = true);
-                    Navigator.of(sheetCtx).pop();
-                    onAnswer('저장 후 영양제 검색');
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.edit_note),
-                  title: const Text('📝 직접 입력하기'),
-                  subtitle: const Text('라벨 보고 직접 입력'),
-                  onTap: () {
-                    onSubmitDraft((d) => d.wantsProducts = true);
-                    Navigator.of(sheetCtx).pop();
-                    onAnswer('저장 후 직접 입력');
-                  },
-                ),
-                const SizedBox(height: 8),
-                TextButton(
-                  onPressed: () => Navigator.of(sheetCtx).pop(),
-                  child: const Text('취소'),
-                ),
-              ],
-            ),
+      builder: (dctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r20),
+        ),
+        title: const Text('취소하시겠어요?'),
+        content: Text('선택한 영양제 ${_picked.length}개가 사라집니다'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dctx).pop(false),
+            child: const Text('계속 추가'),
           ),
-        );
-      },
+          TextButton(
+            style: TextButton.styleFrom(foregroundColor: AppColors.danger),
+            onPressed: () => Navigator.of(dctx).pop(true),
+            child: const Text('취소'),
+          ),
+        ],
+      ),
     );
+    if (ok == true && mounted) {
+      Navigator.of(context).pop<List<String>>(<String>[]);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton(
-            onPressed: () {
-              onSubmitDraft((d) => d.wantsProducts = false);
-              onSkip();
-            },
-            child: const Text('없음'),
+    final repo = ref.watch(productRepositoryProvider);
+    final results =
+        _query.trim().isEmpty ? const <Product>[] : repo.search(_query);
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _confirmCancel();
+      },
+      child: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.85,
+            child: Column(
+              children: [
+                _Header(onClose: _confirmCancel),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+                  child: TextField(
+                    controller: _searchCtrl,
+                    autofocus: true,
+                    decoration: InputDecoration(
+                      hintText: '영양제 이름이나 성분',
+                      prefixIcon: const Icon(Icons.search,
+                          size: 20, color: AppColors.muted),
+                      border: const OutlineInputBorder(),
+                    ),
+                    onChanged: (v) => setState(() => _query = v),
+                  ),
+                ),
+                Expanded(
+                  child: _query.trim().isEmpty
+                      ? const _SearchEmptyHint()
+                      : ListView(
+                          padding:
+                              const EdgeInsets.fromLTRB(20, 4, 20, 12),
+                          children: [
+                            for (final p in results)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(bottom: 8),
+                                child: _ResultRow(
+                                  product: p,
+                                  picked: _picked.contains(p.id),
+                                  onAdd: () => setState(
+                                      () => _picked.add(p.id)),
+                                  onRemove: () => setState(
+                                      () => _picked.remove(p.id)),
+                                ),
+                              ),
+                            if (results.isEmpty)
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 24),
+                                child: Text(
+                                  '검색 결과가 없어요',
+                                  style: AppTypography.body2,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                          ],
+                        ),
+                ),
+                if (_picked.isNotEmpty) _PickedSummary(
+                  ids: _picked,
+                  repo: repo,
+                  onRemove: (id) => setState(() => _picked.remove(id)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
+                  child: PrimaryButton(
+                    label: _picked.isEmpty
+                        ? '없이 계속하기'
+                        : '${_picked.length}개 등록 완료',
+                    full: true,
+                    onPressed: () =>
+                        Navigator.of(context).pop<List<String>>(_picked),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: FilledButton(
-            onPressed: () => _openSheet(context),
-            child: const Text('영양제 추가'),
+      ),
+    );
+  }
+}
+
+class _Header extends StatelessWidget {
+  final VoidCallback onClose;
+  const _Header({required this.onClose});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 14, 8, 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              '드시는 영양제 추가',
+              style: AppTypography.heading2.copyWith(fontSize: 17),
+            ),
           ),
+          IconButton(
+            icon: const Icon(Icons.close, size: 22),
+            onPressed: onClose,
+            tooltip: '닫기',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SearchEmptyHint extends StatelessWidget {
+  const _SearchEmptyHint();
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('💊', style: TextStyle(fontSize: 36)),
+            const SizedBox(height: 8),
+            Text(
+              '제품명, 성분, 브랜드로 검색해보세요',
+              style: AppTypography.caption.copyWith(fontSize: 13),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
-      ],
+      ),
+    );
+  }
+}
+
+class _ResultRow extends StatelessWidget {
+  final Product product;
+  final bool picked;
+  final VoidCallback onAdd;
+  final VoidCallback onRemove;
+
+  const _ResultRow({
+    required this.product,
+    required this.picked,
+    required this.onAdd,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlyakCard(
+      padding: const EdgeInsets.all(12),
+      onTap: picked ? onRemove : onAdd,
+      child: Row(
+        children: [
+          ProductImage(product: product, size: 56),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  product.name,
+                  style: AppTypography.title.copyWith(fontSize: 14),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  product.scheduleLabel,
+                  style: AppTypography.caption.copyWith(
+                    fontSize: 12,
+                    color: AppColors.ink2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            picked ? Icons.check_circle : Icons.add_circle_outline,
+            color: picked ? AppColors.primary : AppColors.faint,
+            size: 24,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _PickedSummary extends StatelessWidget {
+  final List<String> ids;
+  final ProductRepository repo;
+  final ValueChanged<String> onRemove;
+
+  const _PickedSummary({
+    required this.ids,
+    required this.repo,
+    required this.onRemove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+      decoration: const BoxDecoration(
+        color: AppColors.surfaceMuted,
+        border: Border(top: BorderSide(color: AppColors.divider)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '추가된 영양제 ${ids.length}개',
+            style: AppTypography.title.copyWith(
+              fontSize: 13,
+              color: AppColors.muted,
+            ),
+          ),
+          const SizedBox(height: 6),
+          for (final id in ids)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      '· ${repo.getById(id)?.name ?? id}',
+                      style: AppTypography.body2.copyWith(fontSize: 13),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.remove_circle_outline,
+                        size: 18, color: AppColors.muted),
+                    onPressed: () => onRemove(id),
+                    tooltip: '삭제',
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
     );
   }
 }
