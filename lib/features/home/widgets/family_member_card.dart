@@ -182,7 +182,7 @@ class _StatusBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final defs = analysis.deficits;
     final isOk = status == HealthStatus.ok;
-    final label = isOk ? '충분히 챙기시는 중' : '${defs.length}개 부족';
+    final label = isOk ? '잘 챙기시는 중' : '${defs.length}개 보충 필요';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
@@ -240,9 +240,7 @@ class _CompactBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defs = analysis.deficits;
-    final isOk = status == HealthStatus.ok;
-    final label = isOk ? '충분' : '${defs.length}개 부족';
+    final taking = analysis.currentProductCount;
     return Stack(
       children: [
         Positioned(
@@ -261,7 +259,6 @@ class _CompactBody extends StatelessWidget {
                 children: [
                   AvatarBadge(
                     emoji: member.avatarEmoji,
-                    status: status,
                     size: 40,
                   ),
                   const SizedBox(width: 10),
@@ -285,42 +282,20 @@ class _CompactBody extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 10),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 8, vertical: 6),
-                decoration: BoxDecoration(
-                  color: status.bg,
-                  borderRadius: BorderRadius.circular(AppRadius.r8),
-                ),
-                child: Text(
-                  label,
-                  textAlign: TextAlign.center,
-                  style: AppTypography.caption.copyWith(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: status.ink,
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  Text(
+                    '💊 $taking개 복용 중',
+                    style: AppTypography.body2.copyWith(
+                      fontSize: 13,
+                      color: AppColors.ink2,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-              ),
-              if (!isOk && defs.isNotEmpty) ...[
-                const SizedBox(height: 8),
-                Text(
-                  _topDeficits(defs),
-                  style: AppTypography.body2.copyWith(
-                    fontSize: 11.5,
-                    color: AppColors.ink2,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-              const SizedBox(height: 8),
-              Text(
-                '💊 ${analysis.currentProductCount}개 복용 중',
-                style: AppTypography.micro.copyWith(fontSize: 11),
+                  const Spacer(),
+                  _StatusDot(status: status, hasProducts: taking > 0),
+                ],
               ),
             ],
           ),
@@ -328,11 +303,28 @@ class _CompactBody extends StatelessWidget {
       ],
     );
   }
+}
 
-  static String _topDeficits(List<NutrientDeficit> defs) {
-    final top = defs.take(2).map((d) => d.displayName).join(', ');
-    final extra = defs.length - 2;
-    return extra > 0 ? '$top +$extra' : top;
+class _StatusDot extends StatelessWidget {
+  final HealthStatus status;
+  final bool hasProducts;
+  const _StatusDot({required this.status, required this.hasProducts});
+
+  @override
+  Widget build(BuildContext context) {
+    final color = !hasProducts
+        ? AppColors.faint
+        : status == HealthStatus.ok
+            ? AppColors.okBorder
+            : AppColors.warnBorder;
+    return Container(
+      width: 8,
+      height: 8,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+      ),
+    );
   }
 }
 

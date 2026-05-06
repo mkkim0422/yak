@@ -66,17 +66,16 @@ class MemberDetailScreen extends ConsumerWidget {
             status: status,
             onEdit: () => context.push('/family/$memberId/edit'),
           ),
-          const SizedBox(height: 16),
-          _StatusBanner(status: status, analysis: analysis),
-          const SizedBox(height: 16),
-          _QuickActions(memberId: memberId),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           _CurrentSupplementsSection(
             member: member,
             curatedProducts: curatedProducts,
           ),
-          const SizedBox(height: 16),
-          _NutritionStatusSection(analysis: analysis),
+          const SizedBox(height: 20),
+          _NutritionStatusSection(
+            analysis: analysis,
+            memberId: memberId,
+          ),
           const SizedBox(height: 12),
           const _IntakeSourceDisclaimer(),
           const DisclaimerFooter(),
@@ -161,100 +160,6 @@ class _ProfileHero extends StatelessWidget {
               child: const Icon(Icons.edit_outlined,
                   size: 18, color: AppColors.ink),
             ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _StatusBanner extends StatelessWidget {
-  final HealthStatus status;
-  final MemberAnalysis analysis;
-  const _StatusBanner({required this.status, required this.analysis});
-
-  @override
-  Widget build(BuildContext context) {
-    final isOk = status == HealthStatus.ok;
-    final title = isOk
-        ? '충분히 챙기시는 중'
-        : '${analysis.deficits.length}개의 영양소가 부족해요';
-    final sub =
-        isOk ? '권장 영양소 모두 섭취 중' : '오늘 추천을 확인해 보세요';
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: status.bg,
-        borderRadius: BorderRadius.circular(AppRadius.r16),
-        border: Border.all(color: status.border.withValues(alpha: 0.2), width: 1.5),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: AppColors.surface,
-              borderRadius: BorderRadius.circular(AppRadius.r12),
-            ),
-            child: Text(status.emoji, style: const TextStyle(fontSize: 20)),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  title,
-                  style: AppTypography.title.copyWith(
-                    fontSize: 15,
-                    color: status.ink,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  sub,
-                  style: AppTypography.caption.copyWith(
-                    fontSize: 12.5,
-                    color: AppColors.ink2,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _QuickActions extends StatelessWidget {
-  final String memberId;
-  const _QuickActions({required this.memberId});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: PrimaryButton(
-            label: '💊 영양제 새로 사기',
-            full: true,
-            size: AlyakButtonSize.md,
-            onPressed: () => context.push('/recommendation/$memberId'),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: SecondaryButton(
-            label: '⚠️ 지금 점검하기',
-            full: true,
-            size: AlyakButtonSize.md,
-            onPressed: () => context.push('/current-check/$memberId'),
           ),
         ),
       ],
@@ -380,16 +285,24 @@ void _toastDeleted(BuildContext context, String name) {
 
 /// Card for products from the curated 250-product DB.
 /// Shows scheduleLabel, "검증된 정보" badge, top ingredients.
-class _CuratedProductCard extends StatelessWidget {
+class _CuratedProductCard extends StatefulWidget {
   final Product product;
   final VoidCallback onRemove;
 
   const _CuratedProductCard({required this.product, required this.onRemove});
 
   @override
+  State<_CuratedProductCard> createState() => _CuratedProductCardState();
+}
+
+class _CuratedProductCardState extends State<_CuratedProductCard> {
+  bool _expanded = false;
+
+  @override
   Widget build(BuildContext context) {
-    final ingredientLines = _topIngredientLines(product.ingredients);
-    final extra = product.ingredients.length - ingredientLines.length;
+    final product = widget.product;
+    final allLines = _allIngredientLines(product.ingredients);
+    final ingredientCount = product.ingredients.length;
 
     return AlyakCard(
       padding: const EdgeInsets.all(14),
@@ -400,7 +313,7 @@ class _CuratedProductCard extends StatelessWidget {
             children: [
               ProductPhoto(
                 label: '제품',
-                verified: product.ingredients.isNotEmpty,
+                verified: ingredientCount > 0,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -436,52 +349,63 @@ class _CuratedProductCard extends StatelessWidget {
                 icon: const Icon(Icons.delete_outline, size: 20),
                 color: AppColors.muted,
                 onPressed: () =>
-                    _confirmDelete(context, product.name, onRemove),
+                    _confirmDelete(context, product.name, widget.onRemove),
                 tooltip: '삭제',
                 visualDensity: VisualDensity.compact,
               ),
             ],
           ),
-          if (ingredientLines.isNotEmpty) ...[
+          if (ingredientCount > 0) ...[
             const SizedBox(height: 10),
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-              decoration: BoxDecoration(
-                color: AppColors.surfaceMuted,
-                borderRadius: BorderRadius.circular(AppRadius.r10),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '채워주는 영양소 (${product.ingredients.length}종)',
-                    style: AppTypography.caption.copyWith(
-                      fontSize: 11.5,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.muted,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    ingredientLines.join(' · '),
-                    style: AppTypography.body2.copyWith(
-                      fontSize: 12,
-                      color: AppColors.ink2,
-                    ),
-                  ),
-                  if (extra > 0)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 2),
-                      child: Text(
-                        '+ 외 $extra종',
-                        style: AppTypography.micro.copyWith(
-                          fontSize: 11,
-                          color: AppColors.muted,
+            InkWell(
+              borderRadius: BorderRadius.circular(AppRadius.r10),
+              onTap: () => setState(() => _expanded = !_expanded),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 12, vertical: 10),
+                decoration: BoxDecoration(
+                  color: AppColors.surfaceMuted,
+                  borderRadius: BorderRadius.circular(AppRadius.r10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          '영양소 $ingredientCount종',
+                          style: AppTypography.caption.copyWith(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.ink2,
+                          ),
                         ),
-                      ),
+                        const Spacer(),
+                        Icon(
+                          _expanded
+                              ? Icons.keyboard_arrow_up
+                              : Icons.keyboard_arrow_down,
+                          color: AppColors.muted,
+                          size: 18,
+                        ),
+                      ],
                     ),
-                ],
+                    if (_expanded) ...[
+                      const SizedBox(height: 6),
+                      for (final line in allLines)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            '· $line',
+                            style: AppTypography.body2.copyWith(
+                              fontSize: 12,
+                              color: AppColors.ink2,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ],
+                ),
               ),
             ),
           ],
@@ -578,7 +502,7 @@ class _ManualProductCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '함량 정보 비공개',
+                        '정확한 함량 정보 없음',
                         style: AppTypography.caption.copyWith(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
@@ -716,20 +640,20 @@ const Map<String, String> _nutrientShortLabels = {
   'red_ginseng': '홍삼',
 };
 
-List<String> _topIngredientLines(Map<String, double> ingredients,
-    {int top = 4}) {
+List<String> _allIngredientLines(Map<String, double> ingredients) {
   if (ingredients.isEmpty) return const [];
   final entries =
       ingredients.entries.where((e) => e.value > 0).toList(growable: false);
-  if (entries.isEmpty) return const [];
-  final out = <String>[];
-  for (final entry in entries.take(top)) {
-    final (base, unit) = _splitNutrientKey(entry.key);
-    final label = _nutrientShortLabels[base] ?? base;
-    final amount = _formatAmount(entry.value);
-    out.add(unit.isEmpty ? '$label $amount' : '$label $amount$unit');
-  }
-  return out;
+  return [
+    for (final e in entries) _formatIngredientLine(e.key, e.value),
+  ];
+}
+
+String _formatIngredientLine(String key, double value) {
+  final (base, unit) = _splitNutrientKey(key);
+  final label = _nutrientShortLabels[base] ?? base;
+  final amount = _formatAmount(value);
+  return unit.isEmpty ? '$label $amount' : '$label $amount$unit';
 }
 
 Future<void> _confirmDelete(
@@ -763,25 +687,41 @@ Future<void> _confirmDelete(
 
 class _NutritionStatusSection extends StatelessWidget {
   final MemberAnalysis analysis;
-  const _NutritionStatusSection({required this.analysis});
+  final String memberId;
+  const _NutritionStatusSection({
+    required this.analysis,
+    required this.memberId,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final hasDeficits = analysis.priority.isNotEmpty;
+    final hasSecondary = analysis.secondary.isNotEmpty;
+    final hasSufficient = analysis.sufficient.isNotEmpty;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SectionHeader(title: '📊 영양 상태'),
         NutrientPriorityCard(items: analysis.priority),
-        if (analysis.secondary.isNotEmpty) ...[
+        if (hasDeficits) ...[
+          const SizedBox(height: 12),
+          PrimaryButton(
+            label: '추천 영양제 보기 →',
+            full: true,
+            size: AlyakButtonSize.md,
+            onPressed: () => context.push('/recommendation/$memberId'),
+          ),
+        ],
+        if (hasSecondary) ...[
           const SizedBox(height: 12),
           NutrientCollapsibleSection(
             title: '🟡 추가로 챙기시면 좋아요',
             count: analysis.secondary.length,
-            items:
-                analysis.secondary.map(formatSecondaryLine).toList(),
+            items: analysis.secondary.map(formatSecondaryLine).toList(),
           ),
         ],
-        if (analysis.sufficient.isNotEmpty) ...[
+        if (hasSufficient) ...[
           const SizedBox(height: 12),
           NutrientCollapsibleSection(
             title: '✅ 잘 챙기시는 영양소',

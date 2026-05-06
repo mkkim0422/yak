@@ -190,7 +190,7 @@ class _ResultCard extends StatelessWidget {
             fg: AppColors.okInk,
           )
         : const _Badge(
-            label: '⚠️ 함량 정보 비공개',
+            label: '📋 라벨 확인 필요',
             bg: AppColors.warnBg,
             fg: AppColors.warnInk,
           );
