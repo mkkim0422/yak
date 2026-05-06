@@ -142,7 +142,7 @@ class _LargeBody extends StatelessWidget {
               const Text('💊', style: TextStyle(fontSize: 14)),
               const SizedBox(width: 6),
               Text(
-                '챙기시는 영양제 ${analysis.currentProductCount}개',
+                '섭취중인 영양제 ${analysis.currentProductCount}개',
                 style: AppTypography.title.copyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
@@ -239,7 +239,7 @@ class _CompactBody extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    '💊 $taking개 복용 중',
+                    '💊 $taking개 섭취중',
                     style: AppTypography.body2.copyWith(
                       fontSize: 13,
                       color: AppColors.ink2,

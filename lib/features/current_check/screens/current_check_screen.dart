@@ -43,7 +43,7 @@ class CurrentCheckScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          _section('현재 복용 중 (${analysis.currentProductCount}개)'),
+          _section('섭취중 (${analysis.currentProductCount}개)'),
           if (analysis.currentProductCount == 0)
             _Empty(memberId: memberId)
           else ...[
@@ -61,7 +61,7 @@ class CurrentCheckScreen extends ConsumerWidget {
               ),
           ],
           const SizedBox(height: 20),
-          _section('✅ 충분히 챙기는 영양소'),
+          _section('✅ 잘 섭취중인 영양소'),
           if (analysis.sufficient.isEmpty)
             Text('아직 분석할 데이터가 없어요', style: AppTypography.body2)
           else
@@ -206,7 +206,7 @@ class _Empty extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Text('복용 중인 영양제가 없어요', style: AppTypography.body1),
+          Text('섭취중인 영양제가 없어요', style: AppTypography.body1),
           const SizedBox(height: 8),
           OutlinedButton(
             onPressed: () => context.push('/family/$memberId/products'),

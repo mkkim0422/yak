@@ -36,7 +36,7 @@ class FamilyProductsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          Text('현재 복용 중', style: AppTypography.heading3),
+          Text('섭취중', style: AppTypography.heading3),
           const SizedBox(height: 12),
           if (products.isEmpty && member.manualProducts.isEmpty)
             _EmptyState(onAdd: () => _openAddSheet(context, memberId))

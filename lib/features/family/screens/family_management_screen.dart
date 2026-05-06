@@ -86,7 +86,7 @@ class FamilyManagementScreen extends ConsumerWidget {
           style: AppTypography.heading2.copyWith(fontSize: 17),
         ),
         content: Text(
-          '복용 중인 영양제와 등록된 모든 정보가 함께 사라져요.\n되돌릴 수 없어요.',
+          '섭취중인 영양제와 등록된 모든 정보가 함께 사라져요.\n되돌릴 수 없어요.',
           style: AppTypography.body2.copyWith(fontSize: 13),
         ),
         actions: [

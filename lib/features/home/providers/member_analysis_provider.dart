@@ -76,7 +76,7 @@ class MemberAnalysis {
   }
 
   String get statusText {
-    if (deficits.isEmpty) return '충분히 챙기시는 중';
+    if (deficits.isEmpty) return '충분히 섭취중';
     return '${deficits.length}개 부족';
   }
 }

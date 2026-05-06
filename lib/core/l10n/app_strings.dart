@@ -98,15 +98,15 @@ class AppStrings {
   static const String addFamilyButton = '+ 가족 추가하기';
 
   // Card status
-  static const String cardStatusEnough = '충분히 챙기시는 중';
+  static const String cardStatusEnough = '충분히 섭취중';
   static const String cardStatusFewDeficitTemplate = '%d개 부족';
-  static const String cardCurrentlyTakingTemplate = '%d개 복용 중';
+  static const String cardCurrentlyTakingTemplate = '%d개 섭취중';
   static const String cardLastCheckupTemplate = '검진: %s';
   static const String cardNoCheckup = '검진 정보 없음';
   static const String cardSeeDetail = '상세 보기 →';
   static const String moreItemsCountTemplate = '+%d개 더';
   static const String cardDeficientNutrients = '부족한 영양소';
-  static const String cardSufficientNutrients = '잘 챙기는 것';
+  static const String cardSufficientNutrients = '잘 섭취중';
 
   // Quick actions
   static const String quickActionRecommend = '💊 영양제 새로 추천받기';
@@ -114,13 +114,13 @@ class AppStrings {
   static const String quickActionCheckup = '🔍 검진 결과 입력/보기';
   static const String quickActionEdit = '📝 정보 수정';
   static const String quickActionRemove = '🗑️ 가족에서 제거';
-  static const String quickActionManageProducts = '💊 현재 복용 영양제 관리';
+  static const String quickActionManageProducts = '💊 섭취중인 영양제 관리';
 
   // Member detail
   static const String memberDetailQuickActions = '📋 빠른 액션';
   static const String memberDetailNutritionStatus = '📊 영양 상태 상세';
   static const String memberDetailDeficient = '❌ 부족한 영양소';
-  static const String memberDetailSufficient = '✅ 충분히 챙기는 것';
+  static const String memberDetailSufficient = '✅ 잘 섭취중';
   static const String memberDetailNoData = '아직 분석 데이터가 없어요';
   static const String coveragePercentTemplate = '%d%% 충족';
   static const String coverageNotTakingLabel = '안 드심';
@@ -155,7 +155,7 @@ class AppStrings {
   static const String recoMustTake = '꼭 챙겨야 해요';
   static const String recoHighlyRecommended = '추천드려요';
   static const String recoConsiderIf = '필요하면 고려해보세요';
-  static const String recoAlreadyTaking = '이미 복용 중';
+  static const String recoAlreadyTaking = '이미 섭취중';
   static const String recoSchedule = '복용 시간표';
   static const String recoMorning = '아침';
   static const String recoLunch = '점심';

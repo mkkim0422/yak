@@ -285,10 +285,9 @@ class _PriceLinksSection extends StatelessWidget {
             children: [
               Expanded(
                 child: _PriceLinkCard(
-                  emoji: '🛒',
                   label: '네이버 쇼핑',
-                  bg: const Color(0xFF03C75A),
-                  fg: Colors.white,
+                  sub: '최저가 검색',
+                  brandColor: const Color(0xFF03C75A),
                   onTap: () => _openUrl(
                     context,
                     naverShoppingUrl(product.name),
@@ -298,10 +297,9 @@ class _PriceLinksSection extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: _PriceLinkCard(
-                  emoji: '🛒',
                   label: '쿠팡',
-                  bg: const Color(0xFFEE2C2C),
-                  fg: Colors.white,
+                  sub: '최저가 검색',
+                  brandColor: const Color(0xFFEE2E3E),
                   onTap: () => _openUrl(
                     context,
                     coupangSearchUrl(product.name),
@@ -316,42 +314,62 @@ class _PriceLinksSection extends StatelessWidget {
   }
 }
 
+/// Outline-only price-search button. White surface, branded 2px stroke,
+/// branded label — keeps the brand recognition without the heavy filled
+/// pill that read as a primary CTA.
 class _PriceLinkCard extends StatelessWidget {
-  final String emoji;
   final String label;
-  final Color bg;
-  final Color fg;
+  final String sub;
+  final Color brandColor;
   final VoidCallback onTap;
 
   const _PriceLinkCard({
-    required this.emoji,
     required this.label,
-    required this.bg,
-    required this.fg,
+    required this.sub,
+    required this.brandColor,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: bg,
+      color: AppColors.surface,
       borderRadius: BorderRadius.circular(AppRadius.r12),
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.r12),
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.r12),
+            border: Border.all(color: brandColor, width: 2),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(emoji, style: const TextStyle(fontSize: 18)),
-              const SizedBox(width: 6),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.shopping_cart_outlined,
+                      size: 16, color: brandColor),
+                  const SizedBox(width: 6),
+                  Text(
+                    label,
+                    style: AppTypography.title.copyWith(
+                      fontSize: 14,
+                      color: brandColor,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 2),
               Text(
-                label,
-                style: AppTypography.title.copyWith(
-                  fontSize: 14,
-                  color: fg,
-                  fontWeight: FontWeight.w800,
+                sub,
+                style: AppTypography.caption.copyWith(
+                  fontSize: 11.5,
+                  color: AppColors.muted,
                 ),
               ),
             ],

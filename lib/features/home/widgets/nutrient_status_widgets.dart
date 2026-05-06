@@ -6,9 +6,9 @@ import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
 import '../providers/member_analysis_provider.dart';
 
-/// Top deficits — flat grey bullet list. Tone is informational, never
-/// alarming. Detailed % / reasons are intentionally dropped from this card;
-/// they live on the recommendation screen the "💊 영양제 사러 가기" CTA opens.
+/// Top deficits — comma-joined single line. Tone is informational, never
+/// alarming. Detailed % / reasons live on the recommendation screen the
+/// "💊 영양제 사러 가기" CTA opens.
 class NutrientPriorityCard extends StatelessWidget {
   final List<NutrientStatus> items;
   const NutrientPriorityCard({super.key, required this.items});
@@ -25,6 +25,7 @@ class NutrientPriorityCard extends StatelessWidget {
       );
     }
 
+    final names = [for (final s in items) s.deficit.displayName];
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
@@ -32,27 +33,25 @@ class NutrientPriorityCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(AppRadius.r16),
         boxShadow: AppShadows.card,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          for (var i = 0; i < items.length; i++) ...[
-            if (i > 0) const SizedBox(height: 4),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 2),
-              child: Text(
-                '• ${items[i].deficit.displayName}',
-                style: AppTypography.body2.copyWith(
-                  fontSize: 14,
-                  color: AppColors.ink2,
-                ),
-              ),
-            ),
-          ],
-        ],
+      child: Text(
+        formatNutrientList(names),
+        style: AppTypography.body2.copyWith(
+          fontSize: 14,
+          height: 1.45,
+          color: AppColors.ink2,
+        ),
       ),
     );
   }
+}
+
+/// Joins a list of nutrient names into a single comma-separated string.
+/// Lists longer than 5 are truncated to "A, B, C 외 N개" so the line fits
+/// the calm, single-row treatment on the member screen.
+String formatNutrientList(List<String> names) {
+  if (names.isEmpty) return '';
+  if (names.length <= 5) return names.join(', ');
+  return '${names.take(3).join(', ')} 외 ${names.length - 3}개';
 }
 
 /// Tier 2 / 3: collapsible bullet list.

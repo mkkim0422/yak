@@ -117,7 +117,7 @@ void main() {
     // No "{N}개 부족" pill, no "충분" pill — just the takings count.
     expect(find.textContaining('개 부족'), findsNothing);
     expect(find.text('충분'), findsNothing);
-    expect(find.textContaining('💊 0개 복용 중'), findsNWidgets(2));
+    expect(find.textContaining('💊 0개 섭취중'), findsNWidgets(2));
   });
 
   test('alertBorder/alertInk resolve to the amber palette (not red)', () {

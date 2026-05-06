@@ -118,7 +118,7 @@ extension HealthStatusPalette on HealthStatus {
       };
 
   String get shortLabel => switch (this) {
-        HealthStatus.ok => '잘 챙기는 중',
+        HealthStatus.ok => '잘 섭취중',
         HealthStatus.warn => '보충 필요',
         HealthStatus.alert => '보충 필요',
       };

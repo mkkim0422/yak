@@ -212,7 +212,7 @@ class _CurrentSupplementsSection extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(
-          title: '💊 지금 챙기시는 영양제 · $taking개',
+          title: '💊 섭취중인 영양제 · $taking개',
           action: _AddPill(
             onTap: () => _openAddSheet(context, member.id),
           ),

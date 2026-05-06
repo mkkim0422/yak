@@ -204,7 +204,7 @@ void main() {
         currentProductCount: 0,
 
       );
-      expect(a.statusText, '충분히 챙기시는 중');
+      expect(a.statusText, '충분히 섭취중');
       expect(a.statusEmoji, '✅');
     });
 
