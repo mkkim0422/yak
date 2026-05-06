@@ -138,7 +138,7 @@ class _LargeBody extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          '${member.ageLabel} ${member.sex.label}',
+                          '${member.ageLabel} ${member.sex.label} · ${member.relationship.label}',
                           style:
                               AppTypography.caption.copyWith(fontSize: 12.5),
                         ),

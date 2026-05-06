@@ -5,7 +5,10 @@ import 'package:go_router/go_router.dart';
 import '../../../core/notifications/notification_provider.dart';
 import '../../../core/security/secure_storage.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/alyak_buttons.dart';
+import '../../../core/widgets/alyak_card.dart';
 
 const String kNotifMorningKey = 'notif.morning.time';
 const String kNotifEveningKey = 'notif.evening.time';
@@ -38,6 +41,9 @@ class _NotificationSetupScreenState
     extends ConsumerState<NotificationSetupScreen> {
   TimeOfDay _morning = const TimeOfDay(hour: 7, minute: 30);
   TimeOfDay _evening = const TimeOfDay(hour: 20, minute: 0);
+  bool _reorderEnabled = true;
+  bool _checkupEnabled = true;
+  bool _doseEnabled = false;
   bool _saving = false;
 
   Future<void> _pickTime(bool morning) async {
@@ -64,7 +70,9 @@ class _NotificationSetupScreenState
     if (enabled) {
       final svc = ref.read(notificationServiceProvider);
       await svc.requestPermission();
-      await svc.rescheduleDaily(morning: _morning, evening: _evening);
+      if (_doseEnabled) {
+        await svc.rescheduleDaily(morning: _morning, evening: _evening);
+      }
     }
     if (!mounted) return;
     context.go('/home');
@@ -75,66 +83,171 @@ class _NotificationSetupScreenState
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
           onPressed: () => _save(enabled: false),
         ),
-        title: const Text('알림 설정'),
-        actions: [
-          TextButton(
-            onPressed: _saving ? null : () => _save(enabled: false),
-            child: const Text('건너뛰기'),
-          ),
-        ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          const Text('📱 알림 설정',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 4),
-          Text('영양제 챙기실 시간을 알려드릴게요\n나중에 설정에서 바꿀 수 있어요',
-              style: AppTypography.body2),
-          const SizedBox(height: 20),
-          _TimeCard(
-            emoji: '🌅',
-            title: '아침',
-            subtitle: '출발 시간 (예: 출근, 등교)',
-            footer: '30분 전에 알려드려요',
-            time: _morning,
-            onTap: () => _pickTime(true),
-          ),
-          const SizedBox(height: 12),
-          _TimeCard(
-            emoji: '🌙',
-            title: '저녁',
-            subtitle: '저녁 영양제 시간',
-            footer: '',
-            time: _evening,
-            onTap: () => _pickTime(false),
-          ),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              onPressed: _saving ? null : () => _save(enabled: true),
-              style: FilledButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12)),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: ListView(
+                  padding: EdgeInsets.zero,
+                  children: [
+                    Text(
+                      '알림은 가볍게,\n꼭 필요한 것만 알려드려요',
+                      style: AppTypography.heading1.copyWith(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w800,
+                        height: 1.3,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      '매일 챙기라고 재촉하지 않아요.\n결정이 필요한 순간에만 살짝 알려드려요.',
+                      style: AppTypography.body1.copyWith(
+                        fontSize: 13.5,
+                        color: AppColors.muted,
+                        height: 1.5,
+                      ),
+                    ),
+                    const SizedBox(height: 28),
+                    _NotifToggle(
+                      emoji: '📦',
+                      title: '영양제가 곧 떨어질 때',
+                      sub: '3일 전쯤 한 번 알려드려요',
+                      value: _reorderEnabled,
+                      onChanged: (v) =>
+                          setState(() => _reorderEnabled = v),
+                    ),
+                    const SizedBox(height: 10),
+                    _NotifToggle(
+                      emoji: '🩺',
+                      title: '건강검진 때가 됐을 때',
+                      sub: '1년에 한 번',
+                      value: _checkupEnabled,
+                      onChanged: (v) =>
+                          setState(() => _checkupEnabled = v),
+                    ),
+                    const SizedBox(height: 10),
+                    _NotifToggle(
+                      emoji: '💊',
+                      title: '복용 시간 알림',
+                      sub: '편하실 때 챙기세요',
+                      value: _doseEnabled,
+                      onChanged: (v) => setState(() => _doseEnabled = v),
+                    ),
+                    if (_doseEnabled) ...[
+                      const SizedBox(height: 14),
+                      _TimeCard(
+                        emoji: '🌅',
+                        title: '아침',
+                        subtitle: '아침 영양제 시간',
+                        time: _morning,
+                        onTap: () => _pickTime(true),
+                      ),
+                      const SizedBox(height: 8),
+                      _TimeCard(
+                        emoji: '🌙',
+                        title: '저녁',
+                        subtitle: '저녁 영양제 시간',
+                        time: _evening,
+                        onTap: () => _pickTime(false),
+                      ),
+                    ],
+                  ],
+                ),
               ),
-              child: const Text('알림 켜기 + 시작하기',
-                  style:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              const SizedBox(height: 12),
+              PrimaryButton(
+                label: '알림 받을게요',
+                full: true,
+                onPressed: _saving ? null : () => _save(enabled: true),
+              ),
+              const SizedBox(height: 4),
+              Center(
+                child: TextButton(
+                  onPressed: _saving ? null : () => _save(enabled: false),
+                  child: Text(
+                    '나중에 설정할게요',
+                    style: AppTypography.title.copyWith(
+                      fontSize: 14,
+                      color: AppColors.muted,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NotifToggle extends StatelessWidget {
+  final String emoji;
+  final String title;
+  final String sub;
+  final bool value;
+  final ValueChanged<bool> onChanged;
+  const _NotifToggle({
+    required this.emoji,
+    required this.title,
+    required this.sub,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlyakCard(
+      padding: const EdgeInsets.all(14),
+      onTap: () => onChanged(!value),
+      child: Row(
+        children: [
+          Container(
+            width: 36,
+            height: 36,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: AppColors.surfaceMuted,
+              borderRadius: BorderRadius.circular(AppRadius.r10),
+            ),
+            child: Text(emoji, style: const TextStyle(fontSize: 18)),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: AppTypography.title.copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 1),
+                Text(sub, style: AppTypography.caption.copyWith(fontSize: 12)),
+              ],
             ),
           ),
-          const SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: TextButton(
-              onPressed: _saving ? null : () => _save(enabled: false),
-              child: const Text('건너뛰기 (나중에 설정)'),
-            ),
+          Switch(
+            value: value,
+            onChanged: onChanged,
+            activeThumbColor: Colors.white,
+            activeTrackColor: AppColors.primary,
+            inactiveThumbColor: Colors.white,
+            inactiveTrackColor: AppColors.hairline,
           ),
         ],
       ),
@@ -146,7 +259,6 @@ class _TimeCard extends StatelessWidget {
   final String emoji;
   final String title;
   final String subtitle;
-  final String footer;
   final TimeOfDay time;
   final VoidCallback onTap;
 
@@ -154,59 +266,49 @@ class _TimeCard extends StatelessWidget {
     required this.emoji,
     required this.title,
     required this.subtitle,
-    required this.footer,
     required this.time,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return AlyakCard(
+      padding: const EdgeInsets.all(14),
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.primary.withValues(alpha: 0.15)),
-        ),
-        child: Row(
-          children: [
-            Text(emoji, style: const TextStyle(fontSize: 28)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title,
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w600)),
-                  Text(subtitle, style: AppTypography.caption),
-                  if (footer.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 4),
-                      child: Text(footer, style: AppTypography.caption),
-                    ),
-                ],
+      child: Row(
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 24)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppTypography.title.copyWith(fontSize: 14),
+                ),
+                Text(subtitle,
+                    style: AppTypography.caption.copyWith(fontSize: 12)),
+              ],
+            ),
+          ),
+          Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.primarySoft,
+              borderRadius: BorderRadius.circular(AppRadius.r8),
+            ),
+            child: Text(
+              _formatTime(time),
+              style: AppTypography.title.copyWith(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: AppColors.primaryInk,
               ),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.primaryLight,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                _formatTime(time),
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600, color: AppColors.primary),
-              ),
-            ),
-            const SizedBox(width: 4),
-            const Icon(Icons.arrow_drop_down, color: AppColors.textSecondary),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

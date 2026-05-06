@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/notifications/notification_provider.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/step_indicator.dart';
 import '../../family/models/family_member.dart';
 import '../../family/providers/family_provider.dart';
 import '../widgets/chat_message.dart';
@@ -96,20 +98,30 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
           onPressed: _back,
         ),
-        title: Text(
-          '$_step / $_totalSteps',
-          style: AppTypography.body2,
-        ),
+        title: StepIndicator(step: _step, total: _totalSteps),
         centerTitle: true,
         actions: [
           if (_step < _totalSteps && _step != 5)
-            TextButton(
-              onPressed: () => _next(answer: null),
-              child: const Text('건너뛰기'),
+            Padding(
+              padding: const EdgeInsets.only(right: 4),
+              child: TextButton(
+                onPressed: () => _next(answer: null),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.muted,
+                  textStyle: const TextStyle(
+                    fontFamily: AppTypography.family,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                child: const Text('건너뛰기'),
+              ),
             ),
         ],
       ),
@@ -119,7 +131,7 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
             child: ListView(
               controller: _scrollCtrl,
               padding:
-                  const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               children: _renderHistory(),
             ),
           ),
@@ -550,7 +562,10 @@ class _StepInput extends StatelessWidget {
         );
     }
     return Container(
-      color: AppColors.surface,
+      decoration: const BoxDecoration(
+        color: AppColors.surface,
+        border: Border(top: BorderSide(color: AppColors.divider)),
+      ),
       padding: padding,
       child: SafeArea(top: false, child: child),
     );
@@ -582,29 +597,71 @@ class _RelationshipPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const entries = [
-      ('👤 본인', Relationship.self),
-      ('👨 남편', Relationship.husband),
-      ('👩 아내', Relationship.wife),
-      ('👦 아들', Relationship.son),
-      ('👧 딸', Relationship.daughter),
-      ('👴 아빠', Relationship.father),
-      ('👵 엄마', Relationship.mother),
-      ('👤 기타', Relationship.other),
+      ('👤', '본인', Relationship.self),
+      ('👨', '남편', Relationship.husband),
+      ('👩', '아내', Relationship.wife),
+      ('👦', '아들', Relationship.son),
+      ('👧', '딸', Relationship.daughter),
+      ('👴', '아빠', Relationship.father),
+      ('👵', '엄마', Relationship.mother),
+      ('🙂', '기타', Relationship.other),
     ];
     return GridView.count(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       crossAxisCount: 4,
-      childAspectRatio: 1.4,
+      childAspectRatio: 0.95,
       crossAxisSpacing: 8,
       mainAxisSpacing: 8,
       children: [
         for (final e in entries)
-          OutlinedButton(
-            onPressed: () => onPicked(e.$2),
-            child: Text(e.$1, textAlign: TextAlign.center),
+          _RelationTile(
+            emoji: e.$1,
+            label: e.$2,
+            onTap: () => onPicked(e.$3),
           ),
       ],
+    );
+  }
+}
+
+class _RelationTile extends StatelessWidget {
+  final String emoji;
+  final String label;
+  final VoidCallback onTap;
+  const _RelationTile({
+    required this.emoji,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppRadius.r14),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppRadius.r14),
+        child: Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.r14),
+            border: Border.all(color: AppColors.hairline, width: 1.5),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(emoji, style: const TextStyle(fontSize: 26)),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: AppTypography.title.copyWith(fontSize: 13),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
@@ -736,9 +793,29 @@ class _ChoiceRow<T> extends StatelessWidget {
       runSpacing: 8,
       children: [
         for (final o in options)
-          OutlinedButton(
-            onPressed: () => onPick(o.$1, o.$2),
-            child: Text(o.$1),
+          Material(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.r12),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(AppRadius.r12),
+              onTap: () => onPick(o.$1, o.$2),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 14, vertical: 12),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(AppRadius.r12),
+                  border: Border.all(color: AppColors.hairline, width: 1.5),
+                ),
+                child: Text(
+                  o.$1,
+                  style: AppTypography.title.copyWith(
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
           ),
       ],
     );

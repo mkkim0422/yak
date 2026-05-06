@@ -85,7 +85,7 @@ void main() {
     testWidgets('count == 0 → empty state', (tester) async {
       await tester.pumpWidget(_wrap(const [], const FamilyCardsSection()));
       await tester.pump();
-      expect(find.text('아직 등록된 가족이 없어요'), findsOneWidget);
+      expect(find.text('가족을 추가해 주세요'), findsOneWidget);
       expect(find.text('+ 가족 추가하기'), findsOneWidget);
     });
 
@@ -133,8 +133,10 @@ void main() {
     });
   });
 
+  // The redesigned cards use a white surface with a tinted border + status
+  // stripe, so we assert against the BORDER tint instead of the background.
   group('Card color coding by deficit count', () {
-    testWidgets('zero deficits → success palette', (tester) async {
+    testWidgets('zero deficits → ok status border', (tester) async {
       final m = member('m1');
       await tester.pumpWidget(
         _wrap(
@@ -151,10 +153,13 @@ void main() {
           )
           .first);
       final deco = container.decoration as BoxDecoration;
-      expect(deco.color, AppColors.successLight);
+      final border = deco.border as Border;
+      expect(border.top.color.r, AppColors.okBorder.r);
+      expect(border.top.color.g, AppColors.okBorder.g);
+      expect(border.top.color.b, AppColors.okBorder.b);
     });
 
-    testWidgets('three deficits → attention palette', (tester) async {
+    testWidgets('three deficits → alert status border', (tester) async {
       final m = member('m1');
       final analysis = MemberAnalysis(
         deficits: [
@@ -169,7 +174,6 @@ void main() {
         ],
         sufficient: const [],
         currentProductCount: 0,
-
       );
       await tester.pumpWidget(
         _wrap(
@@ -186,7 +190,10 @@ void main() {
           )
           .first);
       final deco = container.decoration as BoxDecoration;
-      expect(deco.color, AppColors.attentionLight);
+      final border = deco.border as Border;
+      expect(border.top.color.r, AppColors.alertBorder.r);
+      expect(border.top.color.g, AppColors.alertBorder.g);
+      expect(border.top.color.b, AppColors.alertBorder.b);
     });
   });
 
