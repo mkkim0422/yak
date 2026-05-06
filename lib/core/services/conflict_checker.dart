@@ -34,11 +34,41 @@ class _IntakeRow {
   final String displayName;
   final IntakeTiming timing;
   final Map<String, double> dailyAmounts; // ingredient_key -> amount * dailyDose
+
+  /// Whether this row is a multivitamin / multi-ingredient product. Used to
+  /// soften overdose detection — a multivitamin alone should never trigger
+  /// "비타민E 권장 초과" because its individual amounts are by design within
+  /// safe single-product limits. Overdose only fires when the same nutrient
+  /// stacks across products.
+  final bool isMultivitamin;
+
   const _IntakeRow({
     required this.displayName,
     required this.timing,
     required this.dailyAmounts,
+    this.isMultivitamin = false,
   });
+}
+
+bool _isMultivitaminCategory(String category) {
+  // Categories that count as "broad spectrum" — ignored for solo overdose.
+  const multi = {
+    'multivitamin',
+    'kids_multivitamin',
+    'prenatal',
+  };
+  return multi.contains(category);
+}
+
+bool _looksMultivitamin(Product p) {
+  if (_isMultivitaminCategory(p.category)) return true;
+  // 8+ distinct ingredients ≈ multivitamin even when category misclassified.
+  return p.ingredients.length >= 8;
+}
+
+bool _looksMultivitaminManual(ManualProductEntry m) {
+  if (_isMultivitaminCategory(m.category)) return true;
+  return m.ingredients.length >= 8;
 }
 
 _IntakeRow _rowFromProduct(Product p) => _IntakeRow(
@@ -48,6 +78,7 @@ _IntakeRow _rowFromProduct(Product p) => _IntakeRow(
         for (final entry in p.ingredients.entries)
           entry.key: entry.value * p.dailyDose,
       },
+      isMultivitamin: _looksMultivitamin(p),
     );
 
 _IntakeRow _rowFromManual(ManualProductEntry m) => _IntakeRow(
@@ -57,11 +88,16 @@ _IntakeRow _rowFromManual(ManualProductEntry m) => _IntakeRow(
         for (final entry in m.ingredients.entries)
           entry.key: entry.value * m.dailyDose,
       },
+      isMultivitamin: _looksMultivitaminManual(m),
     );
 
 /// Korean food-standard upper-tolerable-intake levels (UL). Pulls from the
 /// same nutrient-key vocabulary the rest of the app uses (`vitamin_d_iu`,
 /// `calcium_mg`, etc.) so we can compare totals directly without unit math.
+///
+/// Nutrients without a UL (B1/B2/B5/B7/B12 — water-soluble) are deliberately
+/// absent so they never trigger an overdose card. Magnesium UL applies to
+/// supplements only (not dietary intake).
 const Map<String, double> _kUpperLimits = {
   'vitamin_a_mcg': 3000,
   'vitamin_a_iu': 10000,
@@ -81,26 +117,9 @@ const Map<String, double> _kUpperLimits = {
   'zinc_mg': 35,
   'selenium_mcg': 400,
   'iodine_mcg': 2400,
+  'copper_mcg': 10000,
   'copper_mg': 10,
   'caffeine_mg': 400,
-};
-
-/// Loose RDI map — used for "권장량 초과 (정보)" detection. Mirrors the
-/// `_baseRdi` table in `member_analysis_provider.dart` so the checker
-/// agrees with the deficit analysis.
-const Map<String, double> _kRdi = {
-  'vitamin_d_iu': 800,
-  'magnesium_mg': 320,
-  'omega3_total_mg': 1000,
-  'calcium_mg': 800,
-  'iron_mg': 10,
-  'zinc_mg': 9,
-  'vitamin_b12_mcg': 2.4,
-  'vitamin_b9_mcg': 400,
-  'vitamin_c_mg': 90,
-  'vitamin_a_mcg': 800,
-  'vitamin_b6_mg': 1.4,
-  'vitamin_e_mg': 12,
 };
 
 /// Pregnancy / lactation thresholds. Anything not listed defers to UL or RDI.
@@ -212,53 +231,61 @@ class ConflictChecker {
   }
 }
 
-// ── Rule 1: nutrient overdose vs UL / 2× RDI ───────────────────────────
+// ── Rule 1: nutrient overdose vs UL only ────────────────────────────────
+//
+// Threshold: UL (Korean MFDS upper-tolerable). RDI×2 was removed after the
+// UX review — multivitamins routinely run at ~2× RDI by design and the old
+// rule was firing "주의" cards on perfectly safe products.
+//
+// Soft rule: a multivitamin contributing alone is *not* counted toward the
+// overdose total. The card only fires when a multivitamin stacks with a
+// single-nutrient product on top, OR when single-nutrient products stack
+// past UL on their own. In practice this means a user can take "센트룸
+// 우먼" without seeing a single warning unless they add an extra single-
+// nutrient bottle that pushes the combined total past UL.
 List<ConflictItem> _overdoseConflicts(List<_IntakeRow> rows) {
   final totals = <String, double>{};
   final sources = <String, List<String>>{};
+  // Track whether any single-nutrient product contributed to a key. If only
+  // multivitamins contribute, we skip the warning even when totals cross UL.
+  final hasNonMulti = <String, bool>{};
+
   for (final r in rows) {
     r.dailyAmounts.forEach((key, amount) {
       if (amount <= 0) return;
       totals.update(key, (e) => e + amount, ifAbsent: () => amount);
       sources.putIfAbsent(key, () => <String>[]).add(r.displayName);
+      if (!r.isMultivitamin) {
+        hasNonMulti[key] = true;
+      }
     });
   }
 
   final out = <ConflictItem>[];
   totals.forEach((key, total) {
     final ul = _kUpperLimits[key];
-    final rdi = _kRdi[key];
+    if (ul == null) return; // No UL → never warn (B12, K, B1/2/5/7 etc.)
+    if (total <= ul) return;
+
+    // Skip when only multivitamins contribute to this nutrient — by spec
+    // those are within safe per-product limits, even if a user happens to
+    // own multiple multis.
+    final stackedFromSingle = hasNonMulti[key] ?? false;
+    final productCount = sources[key]?.length ?? 0;
+    if (!stackedFromSingle && productCount <= 1) return;
+
     final label = nutrientLabel(key);
     final amountStr = _formatAmount(total);
     final unit = _displayUnit(key);
     final src = sources[key] ?? const [];
 
-    if (ul != null && total > ul) {
-      out.add(ConflictItem(
-        severity: ConflictSeverity.warning,
-        emoji: '⚠️',
-        title: '$label 과다',
-        message: '합산 $amountStr$unit (안전 상한 ${_formatAmount(ul)}$unit)',
-        sourceProductNames: src,
-      ));
-    } else if (rdi != null && total > rdi * 2) {
-      out.add(ConflictItem(
-        severity: ConflictSeverity.warning,
-        emoji: '⚠️',
-        title: '$label 권장 2배 초과',
-        message: '합산 $amountStr$unit (권장 ${_formatAmount(rdi)}$unit)',
-        sourceProductNames: src,
-      ));
-    } else if (rdi != null && total > rdi && (sources[key]?.length ?? 0) >= 2) {
-      // Multiple products contribute past RDI — informational nudge.
-      out.add(ConflictItem(
-        severity: ConflictSeverity.info,
-        emoji: 'ℹ️',
-        title: '$label 권장량 초과',
-        message: '합산 $amountStr$unit (권장 ${_formatAmount(rdi)}$unit)',
-        sourceProductNames: src,
-      ));
-    }
+    out.add(ConflictItem(
+      severity: ConflictSeverity.warning,
+      emoji: '⚠️',
+      title: '$label 과다',
+      message: '합산 $amountStr$unit (안전 상한 ${_formatAmount(ul)}$unit)',
+      sourceProductNames: src,
+    ));
   });
   return out;
 }

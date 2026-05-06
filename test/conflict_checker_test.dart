@@ -57,7 +57,7 @@ Product _product({
 
 void main() {
   group('Rule 1 — nutrient overdose', () {
-    test('vitamin C >> UL → warning', () {
+    test('vitamin C >> UL across 2 single-nutrient products → warning', () {
       final m = _member();
       // 1500mg + 1500mg = 3000mg (UL = 2000mg).
       final p1 = _product(
@@ -67,7 +67,7 @@ void main() {
       );
       final p2 = _product(
         id: 'b',
-        name: '멀티비타민',
+        name: '비타민C B',
         ingredients: const {'vitamin_c_mg': 1500},
       );
       final out = ConflictChecker.check(
@@ -81,8 +81,8 @@ void main() {
       expect(overdose.first.severity, ConflictSeverity.warning);
     });
 
-    test('calcium > 2× RDI from 2 products → warning', () {
-      // 800mg RDI; 1500 + 1000 = 2500mg.
+    test('calcium past UL across 2 products → warning', () {
+      // UL = 2500mg. 1500 + 1500 = 3000mg.
       final m = _member();
       final p1 = _product(
         id: 'c1',
@@ -91,21 +91,81 @@ void main() {
       );
       final p2 = _product(
         id: 'c2',
-        name: '칼슘1000',
-        ingredients: const {'calcium_mg': 1000},
+        name: '칼슘1500B',
+        ingredients: const {'calcium_mg': 1500},
       );
       final out = ConflictChecker.check(
         member: m,
         products: [p1, p2],
         manuals: const [],
       );
-      // 2500 > UL(2500)? not strictly. Falls into RDI*2 branch (1600).
       expect(
         out.any((c) =>
             c.title.contains('칼슘') &&
             c.severity == ConflictSeverity.warning),
         isTrue,
       );
+    });
+
+    test('multivitamin alone past RDI → no warning (only fires past UL)', () {
+      final m = _member();
+      // 8 ingredients → looks like a multivitamin. Vitamin C 1500mg (>RDI
+      // 90mg, well within UL 2000mg) → no card.
+      final p = _product(
+        id: 'mv',
+        name: '센트룸 우먼',
+        ingredients: const {
+          'vitamin_a_mcg': 700,
+          'vitamin_c_mg': 1500,
+          'vitamin_d_iu': 800,
+          'vitamin_e_mg': 30,
+          'vitamin_b6_mg': 5,
+          'calcium_mg': 200,
+          'magnesium_mg': 50,
+          'zinc_mg': 11,
+        },
+      );
+      final out = ConflictChecker.check(
+        member: m,
+        products: [p],
+        manuals: const [],
+      );
+      expect(out.where((c) => c.title.contains('비타민C')), isEmpty);
+      expect(out.where((c) => c.title.contains('비타민B6')), isEmpty);
+    });
+
+    test('multivitamin + single B6 100mg → warning past UL', () {
+      final m = _member();
+      final mv = _product(
+        id: 'mv',
+        name: '센트룸 우먼',
+        ingredients: const {
+          'vitamin_a_mcg': 700,
+          'vitamin_c_mg': 90,
+          'vitamin_d_iu': 800,
+          'vitamin_e_mg': 30,
+          'vitamin_b6_mg': 4.9,
+          'calcium_mg': 200,
+          'magnesium_mg': 50,
+          'zinc_mg': 11,
+        },
+      );
+      final solo = _product(
+        id: 'b6',
+        name: 'B6 100mg',
+        ingredients: const {'vitamin_b6_mg': 100},
+      );
+      final out = ConflictChecker.check(
+        member: m,
+        products: [mv, solo],
+        manuals: const [],
+      );
+      // 4.9 + 100 = 104.9 > UL(100)
+      final hit = out.where(
+        (c) => c.title.contains('비타민B6') &&
+            c.severity == ConflictSeverity.warning,
+      );
+      expect(hit, isNotEmpty);
     });
 
     test('within RDI single product → no overdose conflict', () {
