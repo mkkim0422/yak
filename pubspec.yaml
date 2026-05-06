@@ -53,3 +53,4 @@ flutter:
     - assets/data/combination_optimizer.json
     - assets/data/products.json
     - assets/images/
+    - assets/images/products/

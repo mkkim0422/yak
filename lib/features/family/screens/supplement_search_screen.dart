@@ -11,7 +11,7 @@ import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_buttons.dart';
 import '../../../core/widgets/alyak_card.dart';
-import '../../../core/widgets/product_photo.dart';
+import '../../../core/widgets/product_image.dart';
 import '../providers/family_provider.dart';
 
 /// Local-DB only supplement search. Future stages will layer 식약처 + Naver
@@ -198,7 +198,7 @@ class _ResultCard extends StatelessWidget {
       padding: const EdgeInsets.all(14),
       child: Row(
         children: [
-          ProductPhoto(label: '제품', verified: hasIngredients),
+          ProductImage(product: product, size: 64),
           const SizedBox(width: 12),
           Expanded(
             child: Column(

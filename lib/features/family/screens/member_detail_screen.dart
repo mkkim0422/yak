@@ -13,6 +13,7 @@ import '../../../core/widgets/alyak_buttons.dart';
 import '../../../core/widgets/alyak_card.dart';
 import '../../../core/widgets/avatar_badge.dart';
 import '../../../core/widgets/disclaimer_footer.dart';
+import '../../../core/widgets/product_image.dart';
 import '../../../core/widgets/product_photo.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../home/providers/member_analysis_provider.dart';
@@ -313,10 +314,7 @@ class _CuratedProductCardState extends State<_CuratedProductCard> {
         children: [
           Row(
             children: [
-              ProductPhoto(
-                label: '제품',
-                verified: ingredientCount > 0,
-              ),
+              ProductImage(product: product, size: 64),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(

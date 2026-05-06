@@ -112,7 +112,8 @@
       ],
       "popularity_rank": 3,
       "data_source": "https://www.pillyze.com/products/484/%EC%8B%A4%EB%B2%84-%EB%A7%A8-50+",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/EhSOgBMefR9SGGcNP63vGmItIqwJv1OEqVS6A46594I/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way83YTZjYzdmOC00ODQvMTAwMA"
     },
     {
       "id": "solgar_multi_woman",
@@ -152,7 +153,8 @@
       ],
       "popularity_rank": 4,
       "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=A000000150030",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://mstatic.oliveyoung.co.kr/mc-static-root/image/comm/noimg_550.gif"
     },
     {
       "id": "solgar_multi_man",
@@ -191,7 +193,8 @@
       ],
       "popularity_rank": 5,
       "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=A000000150031",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://mstatic.oliveyoung.co.kr/mc-static-root/image/comm/noimg_550.gif"
     },
     {
       "id": "imp_premium",
@@ -279,7 +282,8 @@
       "popularity_rank": 8,
       "notes": "일반의약품. 만 8세 이상 1일 1정",
       "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=A11AOOOOO6432",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://common.health.kr/shared/images/sb_photo/big3/A11AOOOOO643201.jpg"
     },
     {
       "id": "dikamax_d",
@@ -306,7 +310,8 @@
       "popularity_rank": 9,
       "notes": "디카맥스 변종. 정확한 함량 별도 확인 필요",
       "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=A11AKP08F0265",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://common.health.kr/shared/images/sb_photo/big3/A11AKP08F026501.jpg"
     },
     {
       "id": "solgar_d3_1000",
@@ -335,7 +340,8 @@
       ],
       "popularity_rank": 10,
       "data_source": "https://www.greating.co.kr/market/marketDetail?itemId=147720",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.greating.co.kr/IL/item/202407/01/B_4BE3ADF4A3DB4F6FBEF963D81F0EC4E0.jpg"
     },
     {
       "id": "solgar_d3_chewable",
@@ -363,7 +369,8 @@
       ],
       "popularity_rank": 11,
       "data_source": "https://www.khan.co.kr/article/201602171619172",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.khan.co.kr/news/2016/02/17/khan_uD9kaP.jpg"
     },
     {
       "id": "solgar_d3_5000",
@@ -451,7 +458,8 @@
       "popularity_rank": 14,
       "notes": "라벨 100억 / 보장 20억 CFU. 분석 엔진은 보장균수 기준",
       "data_source": "https://www.pillyze.com/products/5951/(%EB%8B%A8%EC%A2%85)-%EB%9D%BD%ED%86%A0%ED%95%8F-%EC%83%9D%EC%9C%A0%EC%82%B0%EA%B7%A0-%EA%B3%A8%EB%93%9C",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/knIzps45R1xLzAtxqY4UyenA39xkqQ7Q0oYlvP_mNJk/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS81ay82YjhkNmM2ZC01OTUxLzEwMDA"
     },
     {
       "id": "lactofit_core",
@@ -480,7 +488,8 @@
       "popularity_rank": 15,
       "notes": "7종 균주, 보장균수 20억 CFU",
       "data_source": "https://www.pillyze.com/products/17969/%EB%9D%BD%ED%86%A0%ED%95%8F-%EC%83%9D%EC%9C%A0%EC%82%B0%EA%B7%A0-%EC%BD%94%EC%96%B4%EB%A7%A5%EC%8A%A4",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/FO4bpV3RbkU3COEgtmEmrn1hJZqUgQASiZxCi8aOans/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8xN2svZThhNDU0MzktMTc5NjkvMTAwMA"
     },
     {
       "id": "lactofit_kids",
@@ -511,7 +520,8 @@
       "popularity_rank": 16,
       "notes": "보장균수 10억 CFU. 비타민D 10mcg = 400IU",
       "data_source": "https://www.pillyze.com/products/5951/(%EB%8B%A8%EC%A2%85)-%EB%9D%BD%ED%86%A0%ED%95%8F-%EC%83%9D%EC%9C%A0%EC%82%B0%EA%B7%A0-%EA%B3%A8%EB%93%9C",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/knIzps45R1xLzAtxqY4UyenA39xkqQ7Q0oYlvP_mNJk/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS81ay82YjhkNmM2ZC01OTUxLzEwMDA"
     },
     {
       "id": "duolac_gold",
@@ -571,7 +581,8 @@
       "popularity_rank": 18,
       "notes": "함량 미공개. 750mg x 100정",
       "data_source": "https://www.duolac.co.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://www.duolac.co.kr/shopimages/cbtis/all_og__20260331131937phpTsKUU0.jpg"
     },
     {
       "id": "ckd_vit_c_1000",
@@ -656,7 +667,8 @@
       ],
       "popularity_rank": 21,
       "data_source": "https://www.pillyze.com/products/110/%EB%A9%94%EA%B0%80%EB%8F%84%EC%8A%A4C-3000",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/WgXAh2-ijxE93E0_PrGxO7NI3o21JmPhsraf6RRkDTg/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way83MjZiYTc4Yi0xMTAvMTAwMA"
     },
     {
       "id": "solgar_mg_citrate",
@@ -686,7 +698,8 @@
       "popularity_rank": 22,
       "notes": "1일 2정 권장 시 마그네슘 총 400mg/일",
       "data_source": "https://www.pillyze.com/products/9747/%EB%A7%88%EA%B7%B8%EB%84%A4%EC%8A%98-%EC%8B%9C%ED%8A%B8%EB%A0%88%EC%9D%B4%ED%8A%B8",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/nNfpNjJkpqkpy8jmPEIcT5a6GHFXx3irMTcvPITNxPQ/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS85ay84MDIzMmFiZi05NzQ3LzEwMDA"
     },
     {
       "id": "solgar_mg_b6",
@@ -712,7 +725,8 @@
       "popularity_rank": 23,
       "notes": "함량 별도 확인 필요",
       "data_source": "https://www.pillyze.com/products/9561/%EB%A7%88%EA%B7%B8%EB%84%A4%EC%8A%98-%EC%9C%84%EB%93%9C-%EB%B9%84%ED%83%80%EB%AF%BCB6-(%ED%95%B4%EC%99%B8)",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/iVeaZjqwVZlZWDEyZ8mQe_OjVM3MafMMSKnTIeghFKI/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS85ay9mNDU4MTA0ZC05NTYxLzEwMDA"
     },
     {
       "id": "oscal_calcium_d",
@@ -771,7 +785,8 @@
       "popularity_rank": 25,
       "notes": "1정당 EPA 650mg + DHA 450mg + 기타",
       "data_source": "https://www.nordic.com/products/ultimate-omega/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cdn.shopify.com/s/files/1/0511/3059/7560/files/ultimateomega_PLP.jpg?v=1758048047"
     },
     {
       "id": "nordic_omega3_basic",
@@ -799,7 +814,8 @@
       "popularity_rank": 26,
       "notes": "1정당 EPA 330 + DHA 220",
       "data_source": "https://www.pillyze.com/products/3575/%EC%98%A4%EB%A9%94%EA%B0%803",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/z1vBeZOlFK4sMK2Jn9in9LjgbM-66wAM3URCUsMMglM/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8zay81MzQ2OTc5Yy0zNTc1LzEwMDA"
     },
     {
       "id": "nordic_baby_dha",
@@ -942,7 +958,8 @@
       "popularity_rank": 31,
       "notes": "1일 2캡슐 1020mg = EPA+DHA 600mg",
       "data_source": "https://kr.atomy.com/product/004041",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.atomy.com/KR/goods/004041/a0c152bd-0da4-4701-b41b-be57be3048c9.jpg?w=720&h=720"
     },
     {
       "id": "hurum_lutein",
@@ -970,7 +987,8 @@
       ],
       "popularity_rank": 32,
       "data_source": "https://www.costco.co.kr/HealthSupplement/Other-Health-Supplement/Vision-Support-Supplements/Hurum-Lutein-Zeaxanthin-500mg-x-30-x-3/p/625438",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "http://www.costco.co.kr/medias/sys_master/images/h45/h28/16038599917598.jpg"
     },
     {
       "id": "ckd_lutein_zeaxanthin_astaxanthin",
@@ -1127,7 +1145,8 @@
       "popularity_rank": 37,
       "notes": "은행엽건조엑스 40mg / 1정. 1일 3회",
       "data_source": "https://health.kr/searchDrug/result_take.asp?drug_cd=A11ABBBBB1014",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://www.pharm.or.kr/images/sb_photo/big3/A11ABBBBB101401.jpg"
     },
     {
       "id": "ginexin_f_80",
@@ -1155,7 +1174,8 @@
       ],
       "popularity_rank": 38,
       "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=A11A1890B0008",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://common.health.kr/shared/images/sb_photo/big3/A11A1890B000802.jpg"
     },
     {
       "id": "ginexin_f_120",
@@ -1182,7 +1202,8 @@
       ],
       "popularity_rank": 39,
       "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=A11A1890B0008",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://common.health.kr/shared/images/sb_photo/big3/A11A1890B000802.jpg"
     },
     {
       "id": "atomy_hemohim",
@@ -1206,7 +1227,8 @@
       "popularity_rank": 40,
       "notes": "당귀등혼합추출물 (당귀+천궁+백작약). 1일 2포(40ml) 권장. 1포 20ml/10kcal. NK세포 활성도 인체적용시험 입증",
       "data_source": "https://kr.atomy.com/product/000011",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.atomy.com/KR/goods/000011/3a5181dc-4acf-4c69-98e2-14b5e9fb61d2.jpg?w=720&h=720"
     },
     {
       "id": "doctorlin_melavine",
@@ -1314,7 +1336,8 @@
       ],
       "popularity_rank": 44,
       "data_source": "https://www.pillyze.com/products/3/%ED%99%8D%EC%82%BC%EC%A0%95-%EC%97%90%EB%B8%8C%EB%A6%AC%ED%83%80%EC%9E%84-10ml",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/yJZCyASk56ase0GfoDgTOWwyD0g-OLZEcCFuCGadhA4/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way8xMmNiY2YyYS0zLzEwMDA"
     },
     {
       "id": "kidsten_multi",
@@ -1368,7 +1391,8 @@
       "popularity_rank": 46,
       "notes": "함량 비공개. 츄어블 형태",
       "data_source": "https://www.eundan.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://eundan.com/skin/basic_coordination_c/upload/happy_skin/1603094859_91031200.png"
     },
     {
       "id": "atomy_kids_gummy",
@@ -1394,7 +1418,8 @@
       "popularity_rank": 47,
       "notes": "함량 비공개",
       "data_source": "https://kr.atomy.com/product/004053",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.atomy.com/KR/goods/004053/org/661/250308000037661.jpg?w=720&h=720"
     },
     {
       "id": "imp_gold",
@@ -1422,7 +1447,8 @@
       "popularity_rank": 48,
       "notes": "함량 비공개",
       "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=63czqgejxdjwv",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://common.health.kr/shared/images/sb_photo/big3/63czqgejxdjwv02.jpg"
     },
     {
       "id": "imp_active",
@@ -1448,7 +1474,8 @@
       "popularity_rank": 49,
       "notes": "함량 비공개",
       "data_source": "https://www.impactamin.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "http://impactamin.kr/sns/images/sns_230919.jpg"
     },
     {
       "id": "ckd_milk_thistle",
@@ -1476,7 +1503,8 @@
       "popularity_rank": 50,
       "notes": "건강기능식품 일일섭취량 130mg 기준 (식약처 상한)",
       "data_source": "https://www.pillyze.com/columns/11",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cdn.pillyze.io/web/column/column-1-header.webp"
     },
     {
       "id": "gnm_milk_thistle",
@@ -1531,7 +1559,8 @@
       "popularity_rank": 52,
       "notes": "1일 2캡슐 = 240mg silymarin",
       "data_source": "https://www.pillyze.com/products/333/%EC%8B%A4%EB%A6%AC%EB%A7%88%EB%A6%B0-300mg",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/iWETj-_-UXqL9H18yqXBwUdkBrzC2NOKrgVwOln6gfU/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way84MjM5NWFhOC0zMzMvMTAwMA"
     },
     {
       "id": "ckd_coq10",
@@ -1558,7 +1587,8 @@
       "popularity_rank": 53,
       "notes": "1캡슐 99mg",
       "data_source": "https://www.pillyze.com/columns/13",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cdn.pillyze.io/web/column/column-16-header.webp"
     },
     {
       "id": "garcinia_general",
@@ -1584,7 +1614,8 @@
       "popularity_rank": 54,
       "notes": "식약처 권장 HCA 750-2800mg/일. 일반적 1정 500mg×3=1500mg",
       "data_source": "https://www.kpanews.co.kr/article/show.asp?category=H&idx=213882",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cdn.kpanews.co.kr/news/photo/202006/213882_95533_2024.jpg"
     },
     {
       "id": "astaxanthin_general",
@@ -1638,7 +1669,8 @@
       "popularity_rank": 56,
       "notes": "1일 권장 5g. 1g 단위 표기",
       "data_source": "https://www.kpanews.co.kr/news/articleView.html?idxno=526844",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cdn.kpanews.co.kr/news/photo/202509/526844_423136_2832.jpg"
     },
     {
       "id": "bblab_collagen_1500",
@@ -1695,7 +1727,8 @@
       "popularity_rank": 58,
       "notes": "저분자 콜라겐 펩타이드 1000mg/포",
       "data_source": "https://www.pillyze.com/products/5183/%EC%97%90%EB%B2%84%EC%BD%9C%EB%9D%BC%EA%B2%90-%ED%83%80%EC%9E%84",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/RW19JzwSKLLcCFLjz1-MGPNCxKaB5RuZoqtPk-nWAY8/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS81ay8zZmMwMWQ2Zi01MTgzLzEwMDA"
     },
     {
       "id": "evercollagen_time_biotin",
@@ -1726,7 +1759,8 @@
       "popularity_rank": 59,
       "notes": "콜라겐 1000mg + 비오틴/아연/셀렌",
       "data_source": "https://www.pillyze.com/products/191/%EC%97%90%EB%B2%84%EC%BD%9C%EB%9D%BC%EA%B2%90-%ED%83%80%EC%9E%84%EB%B9%84%EC%98%A4%ED%8B%B4",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/vLd7HgfftpliCVFYSvuM1XA6aJVEWvAeOWu99bx4Bc4/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way9mYjI0MDZkMi0xOTEvMTAwMA"
     },
     {
       "id": "solgar_b_complex_100",
@@ -1798,7 +1832,8 @@
       "popularity_rank": 61,
       "notes": "PABA, 콜린, 이노시톨 추가",
       "data_source": "https://www.iherb.com/pr/now-foods-b-50-100-veg-capsules/447",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now00471/s/62.jpg"
     },
     {
       "id": "gnc_megaman",
@@ -1979,7 +2014,8 @@
       "popularity_rank": 66,
       "notes": "1일 3정 권장 (Ca 1000 + Mg 400 + Zn 15)",
       "data_source": "https://www.pillyze.com/products/9512/%EC%B9%BC%EC%8A%98-%EB%A7%88%EA%B7%B8%EB%84%A4%EC%8A%98-%ED%94%8C%EB%9F%AC%EC%8A%A4-%EC%A7%95%ED%81%AC",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/COSLpoART6EcA8-XK9h0axzOz5NbW4C0bkDV5AjWIfY/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS85ay81YzU3MGI4NS05NTEyLzEwMDA"
     },
     {
       "id": "solgar_ca_mg_d3",
@@ -2097,7 +2133,8 @@
       "popularity_rank": 70,
       "notes": "1캡슐 400mg 스피루리나, 총 엽록소 약 10mg/g",
       "data_source": "https://kr.atomy.com/product/000178",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.atomy.com/KR/goods/000178/45bf343e-3129-4f85-8389-7bd87814777c.jpg?w=720&h=720"
     },
     {
       "id": "atomy_propolis_gummy",
@@ -2122,7 +2159,8 @@
       "popularity_rank": 71,
       "notes": "함량 비공개. 식약처 권장 플라보노이드 16-17mg 기준",
       "data_source": "https://kr.atomy.com/product/004028",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.atomy.com/KR/goods/004028/68df5436-915d-49cc-b786-d3be01ab6a58.jpg?w=720&h=720"
     },
     {
       "id": "ckd_boswellia_7days",
@@ -2181,7 +2219,8 @@
       "popularity_rank": 73,
       "notes": "BOSMAX 보스웰리아 250mg/정. 비타민D·K·망간 + B군 8종",
       "data_source": "https://m.esthermall.co.kr/goods/goods_view.php?goodsNo=15384",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://godomall.speedycdn.net/d38889e2d902ed3dcc124f1c31cbbf35/goods/15384/image/detail/15384_detail_039.jpg"
     },
     {
       "id": "frombio_joint_boswellia",
@@ -2209,7 +2248,8 @@
       "popularity_rank": 74,
       "notes": "1일 2정 = 1000mg",
       "data_source": "https://www.pillyze.com/products/106/%EA%B4%80%EC%A0%88%EC%97%B0%EA%B3%A8%EC%97%94-%EB%B3%B4%EC%8A%A4%EC%9B%B0%EB%A6%AC%EC%95%84",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/rcgvjqeU6DAvj09jTNdpE4S4TcU23fYlmLAnnQUJL6k/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way80YjI4NjYxZC0xMDYvMTAwMA"
     },
     {
       "id": "natures_way_evening_primrose_1300",
@@ -2239,7 +2279,8 @@
       "popularity_rank": 75,
       "notes": "달맞이꽃 오일 1300mg/정 + GLA 약 10% (130mg)",
       "data_source": "https://hilifevitamins.com/products/natures-way-033674154182",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "http://hilifevitamins.com/cdn/shop/files/Natures_20Way_033674154182.jpg?v=1759964203"
     },
     {
       "id": "black_maca_general",
@@ -2266,7 +2307,8 @@
       "popularity_rank": 76,
       "notes": "임상 1500-3000mg/일 검증. 1일 3정 권장 시 1500mg",
       "data_source": "https://doctornow.co.kr/content/magazine/6f0c7b479ca0479d91d2d3bff2f354d9",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://d2m9duoqjhyhsq.cloudfront.net/marketingContents/article/article429-01.jpg"
     },
     {
       "id": "gnc_zinc_30",
@@ -2322,7 +2364,8 @@
       ],
       "popularity_rank": 78,
       "data_source": "https://www.iherb.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/cms/my-account/account_v2.png"
     },
     {
       "id": "ckd_krill_oil",
@@ -2463,7 +2506,8 @@
       "popularity_rank": 83,
       "notes": "1일 1500-2000mg. 1정 750mg × 2정",
       "data_source": "https://gradium.co.kr/msm-benefits/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://gradium.co.kr/wp-content/uploads/msm.jpg"
     },
     {
       "id": "hanmi_mothers_general",
@@ -2490,7 +2534,8 @@
       "popularity_rank": 84,
       "notes": "함량 비공개",
       "data_source": "https://hanminutrition.com/c02170/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://hanminutrition.b-cdn.net/wp-content/uploads/2024/10/1000x1000_한미rtg.jpg"
     },
     {
       "id": "atomy_psyllium",
@@ -2517,7 +2562,8 @@
       "popularity_rank": 85,
       "notes": "1일 3포 = 식이섬유 6g (24%)",
       "data_source": "https://kr.atomy.com/product/004072",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.atomy.com/KR/goods/004072/fabdb6a5-07e4-47a1-90f2-9b642499e64f.jpg?w=720&h=720"
     },
     {
       "id": "meditree_psyllium",
@@ -2546,7 +2592,8 @@
       "popularity_rank": 86,
       "notes": "1일 2포 = 식이섬유 6g",
       "data_source": "https://www.meditree.kr/goods/goods_view.php?goodsNo=1000000600",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cdn-pro-web-251-108.cdn-nhncommerce.com/synergyint_godomall_com/data/goods/23/03/13/1000000600/1000000600_detail_0100.jpg"
     },
     {
       "id": "jks_everytime_balance",
@@ -2575,7 +2622,8 @@
       "popularity_rank": 87,
       "notes": "10ml/포. 진세노사이드 7mg/일 (저가 라인)",
       "data_source": "https://www.pillyze.com/products/3/%ED%99%8D%EC%82%BC%EC%A0%95-%EC%97%90%EB%B8%8C%EB%A6%AC%ED%83%80%EC%9E%84-10ml",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/yJZCyASk56ase0GfoDgTOWwyD0g-OLZEcCFuCGadhA4/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way8xMmNiY2YyYS0zLzEwMDA"
     },
     {
       "id": "jks_everytime_soft",
@@ -2603,7 +2651,8 @@
       ],
       "popularity_rank": 88,
       "data_source": "https://www.pillyze.com/products/3/%ED%99%8D%EC%82%BC%EC%A0%95-%EC%97%90%EB%B8%8C%EB%A6%AC%ED%83%80%EC%9E%84-10ml",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/yJZCyASk56ase0GfoDgTOWwyD0g-OLZEcCFuCGadhA4/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way8xMmNiY2YyYS0zLzEwMDA"
     },
     {
       "id": "solgar_selenium_200",
@@ -2659,7 +2708,8 @@
       ],
       "popularity_rank": 90,
       "data_source": "https://www.iherb.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/cms/my-account/account_v2.png"
     },
     {
       "id": "myprotein_the_whey",
@@ -2924,7 +2974,8 @@
       "popularity_rank": 99,
       "notes": "실리마린 300mg + 아티초크 + 민들레",
       "data_source": "https://www.pillyze.com/products/1676/%EB%B0%80%ED%81%AC%EC%94%A8%EC%8A%AC",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/Yk8EPKXLbz4v9G6DGFC5M3OkgKbqb5W-MZ9nqsEqHHo/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8xay9jYjgyOGM1MC0xNjc2LzEwMDA"
     },
     {
       "id": "movita_iron_chewable",
@@ -3011,7 +3062,8 @@
       "popularity_rank": 102,
       "notes": "보장균수 500억 CFU/일 (1캡슐). 트리플코어 포뮬러",
       "data_source": "https://cjwellcare.com/product/%EB%B0%94%EC%9D%B4%EC%98%A4%EC%BD%94%EC%96%B4-%EA%B1%B4%EA%B0%95%ED%95%9C-%EC%83%9D%EC%9C%A0%EC%82%B0%EA%B7%A0-500%EC%96%B5/775/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cjwellcare.com/web/product/big/202511/2ff799c3226cc6a5f141b77c267714cb.jpg"
     },
     {
       "id": "cj_byocore_100",
@@ -3067,7 +3119,8 @@
       ],
       "popularity_rank": 104,
       "data_source": "https://cjwellcare.com/product/%EB%B0%94%EC%9D%B4%EC%98%A4%EC%BD%94%EC%96%B4-%ED%94%BC%EB%B6%80%EB%A9%B4%EC%97%AD-%EC%9C%A0%EC%82%B0%EA%B7%A0-100%EC%96%B5-30%ED%8F%AC/761/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cjwellcare.com/web/product/big/202507/c3d5fe7da987af9e04e988c51d33ba96.jpg"
     },
     {
       "id": "bblab_zino_free_vag",
@@ -3130,7 +3183,8 @@
       "popularity_rank": 106,
       "notes": "1캡슐 450mg. 가성비 B군",
       "data_source": "https://kr.atomy.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.atomy.com/KR/goods/020170/org/856/260317000050856.jpg?w=260&h=260"
     },
     {
       "id": "atomy_proactamin",
@@ -3174,7 +3228,8 @@
       "popularity_rank": 107,
       "notes": "1일 2캡슐 1000mg. 표기 함량은 1캡슐 기준 (1일분 ÷ 2)",
       "data_source": "https://kr.atomy.com/product/004078",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.atomy.com/KR/goods/004078/4907cbc4-0855-406f-b4ac-08e089197977.jpg?w=720&h=720"
     },
     {
       "id": "atomy_vital_color",
@@ -3249,7 +3304,8 @@
       "popularity_rank": 109,
       "notes": "1병 20ml 액상. Gly-Pro-Val-Gly-Pro-Ser 펩타이드",
       "data_source": "https://kr.atomy.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.atomy.com/KR/goods/020170/org/856/260317000050856.jpg?w=260&h=260"
     },
     {
       "id": "nac_general",
@@ -3306,7 +3362,8 @@
       "popularity_rank": 111,
       "notes": "후추(피페린) 첨가로 흡수율↑. 임상 500-2000mg/일",
       "data_source": "https://gradium.co.kr/turmeric/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://gradium.co.kr/wp-content/uploads/turmeric-powder-1.jpg"
     },
     {
       "id": "resveratrol_general",
@@ -3394,7 +3451,8 @@
       "popularity_rank": 114,
       "notes": "1일 2캡슐 1100mg = 옥타코사놀 10mg",
       "data_source": "https://www.pillyze.com/products/16641/%ED%99%8D%EC%82%BC-%EC%98%A5%ED%83%80%EC%BD%94%EC%82%AC%EB%86%80",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/QgRAzqBL91q2C8dgyYppd_ESzExj-UFd_aO1G0rwyl0/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8xNmsvZmE5NjZkNTEtMTY2NDEvMTAwMA"
     },
     {
       "id": "selex_core_protein_pro",
@@ -3424,7 +3482,8 @@
       "popularity_rank": 115,
       "notes": "1포 38g = 165kcal, 단백질 20g",
       "data_source": "https://www.pillyze.com/products/17831/%EC%BD%94%EC%96%B4-%ED%94%84%EB%A1%9C%ED%8B%B4-%ED%94%84%EB%A1%9C",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/tI5THhHosa8DMNgzj8R2NwFKpYk3etWrmC2G_piIhdo/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8xN2svNTg3NGY2NmYtMTc4MzEvMTAwMA"
     },
     {
       "id": "selex_core_protein_plus",
@@ -3452,7 +3511,8 @@
       "popularity_rank": 116,
       "notes": "1포 125ml = 단백질 8g",
       "data_source": "https://www.maeil.com/brand/view_brand1.jsp?dpid=A0000467",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://www.maeil.com/upload/product/display/A0000467__202310050157489770.jpg"
     },
     {
       "id": "ckd_allatme_collagen_3270",
@@ -3540,7 +3600,8 @@
       "popularity_rank": 119,
       "notes": "분말. 진세노사이드 Rg1+Rb1+Rg3 7.0 mg/g",
       "data_source": "https://www.pillyze.com/products/3/%ED%99%8D%EC%82%BC%EC%A0%95-%EC%97%90%EB%B8%8C%EB%A6%AC%ED%83%80%EC%9E%84-10ml",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/yJZCyASk56ase0GfoDgTOWwyD0g-OLZEcCFuCGadhA4/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way8xMmNiY2YyYS0zLzEwMDA"
     },
     {
       "id": "atomy_chinaeng_lacto",
@@ -3569,7 +3630,8 @@
       "popularity_rank": 120,
       "notes": "보장균수 30억 CFU/포. 12종 유산균 (10 + 특허 2)",
       "data_source": "https://www.pillyze.com/products/132/%ED%94%84%EB%A1%9C%EB%B0%94%EC%9D%B4%EC%98%A4%ED%8B%B1%EC%8A%A4-10%ED%94%8C%EB%9F%AC%EC%8A%A4-%EC%B9%9C%EC%83%9D-%EC%9C%A0%EC%82%B0%EA%B7%A0",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/mZdICwU9ktXHyiy9KSTmB2MBzMCnuAkP2qQMc7Gd9C4/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way8zNDE2NDU1Yy0xMzIvMTAwMA"
     },
     {
       "id": "atomy_kids_probiotics",
@@ -3596,7 +3658,8 @@
       "popularity_rank": 121,
       "notes": "함량 비공개",
       "data_source": "https://kr.atomy.com/product/004052",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.atomy.com/KR/goods/004052/org/663/250308000037663.jpg?w=720&h=720"
     },
     {
       "id": "ckd_belderwell_omega3",
@@ -3654,7 +3717,8 @@
       "popularity_rank": 123,
       "notes": "1일 2캡슐 EPA+DHA 600mg + A·D·E 복합",
       "data_source": "https://www.pillyze.com/products/24278/%ED%98%88%ED%96%89%EA%B1%B4%EA%B0%95-%ED%94%84%EB%A1%9C%EB%A9%94%EA%B0%80-%EC%95%8C%ED%8B%B0%EC%A7%80-%EC%98%A4%EB%A9%94%EA%B0%803-%EB%93%80%EC%96%BC-%ED%94%8C%EB%9F%AC%EC%8A%A4",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/WXk-FuTRh_pwpIi0ku4XRlDYCWqE7O4gVVWvCuuP57I/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8yNGsvNDhkNDQ5ZDctMjQyNzgvMTAwMA"
     },
     {
       "id": "melatonin_general",
@@ -3682,7 +3746,8 @@
       "popularity_rank": 124,
       "notes": "직구 일반 3-10mg/정. 국내 처방제는 2mg 서방정. 1mg 부터 시작 권장",
       "data_source": "https://healthmap.co.kr/%EB%A9%9C%EB%9D%BC%ED%86%A0%EB%8B%8C-%EB%B3%B5%EC%9A%A9%EB%B2%95/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://healthmap.co.kr/wp-content/uploads/2025/04/Melatonin-Usage-Guide-Sleep-Time-and-Dosage-Complete-Guide.png"
     },
     {
       "id": "solgar_l_theanine_150",
@@ -3863,7 +3928,8 @@
       "popularity_rank": 130,
       "notes": "1포 4.4g = 단백질 3.8g (BCAA 1.58g + 글루타민 1g)",
       "data_source": "https://www.pillyze.com/products/21538/%EC%95%84%EB%AF%B8%EB%85%B8%EB%B0%94%EC%9D%B4%ED%83%88-%ED%94%84%EB%A1%9C-3800",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/RvrC38MKNugdmLCA-JnYEpMzY6Jq33pcA-1MgADff3g/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8yMWsvNzFmNGM3OTEtMjE1MzgvMTAwMA"
     },
     {
       "id": "bcaa_general",
@@ -3895,7 +3961,8 @@
       "popularity_rank": 131,
       "notes": "1일 5-10g 권장. 류신:이소류신:발린 = 2:1:1 표준",
       "data_source": "https://www.kpanews.co.kr/news/articleView.html?idxno=526836",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cdn.kpanews.co.kr/news/photo/202509/526836_423117_2829.jpg"
     },
     {
       "id": "now_psyllium_husk",
@@ -3925,7 +3992,8 @@
       "popularity_rank": 132,
       "notes": "1테이블스푼(약 6g) = 식이섬유 5g",
       "data_source": "https://www.iherb.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/cms/my-account/account_v2.png"
     },
     {
       "id": "5htp_general",
@@ -3956,7 +4024,8 @@
       "popularity_rank": 133,
       "notes": "공복 권장. 세로토닌 → 멜라토닌 전환 경로",
       "data_source": "https://health.kr/searchDrug/result_drug.asp?drug_cd=A11AIIIII0012",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://common.health.kr/shared/images/ext_images/pack_img/P_A11AIIIII0012_02.jpg"
     },
     {
       "id": "myprotein_citrulline_malate",
@@ -4136,7 +4205,8 @@
       "popularity_rank": 139,
       "notes": "철 24mg + 엽산 400mcg + D 20mcg",
       "data_source": "https://www.pillyze.com/products/620/%EC%B2%A0%EB%B6%84-%EC%97%BD%EC%82%B0-%EB%B9%84%ED%83%80%EB%AF%BCD-%ED%94%8C%EB%9F%AC%EC%8A%A4",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/ffRK9kMk97Wcs9ai_LH89PX9sf3F__Rv8jEZ5YEmFEU/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way83ZmMzYWJlNi02MjAvMTAwMA"
     },
     {
       "id": "ckd_bolgre_prenatal",
@@ -4193,7 +4263,8 @@
       "popularity_rank": 141,
       "notes": "20ml/포. 3세 이상. 단계 1-4 중 가장 인기",
       "data_source": "https://health-benefit.co.kr/%EC%A0%95%EA%B4%80%EC%9E%A5-%EC%96%B4%EB%A6%B0%EC%9D%B4-%ED%99%8D%EC%82%BC-%ED%99%8D%EC%9D%B4%EC%9E%A5%EA%B5%B0-%ED%9A%A8%EB%8A%A5-%EB%B0%8F-%EB%B6%80%EC%9E%91%EC%9A%A9-%ED%9B%84%EA%B8%B0-%EC%95%8C/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://health-benefit.co.kr/wp-content/uploads/2022/04/홍이장군_0.jpg"
     },
     {
       "id": "cla_general",
@@ -4222,7 +4293,8 @@
       "popularity_rank": 142,
       "notes": "1일 1.4-4.2g 권장. 식약처 인정. 1정 1000mg × 3정 = 3g",
       "data_source": "https://rpspharmacy.com/%EA%B3%B5%EC%95%A1-%EB%A6%AC%EB%86%80%EB%A0%88%EC%82%B0-%EC%B6%94%EC%B2%9C-%ED%9A%A8%EB%8A%A5-%EB%B6%80%EC%9E%91%EC%9A%A9-%EB%B3%B5%EC%9A%A9%EB%B2%95-cla/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://rpspharmacy.com/wp-content/uploads/2023/11/공액-리놀레산-추천.jpg"
     },
     {
       "id": "spirulina_powder_general",
@@ -4423,7 +4495,8 @@
       "popularity_rank": 149,
       "notes": "1캡슐 100mg",
       "data_source": "https://www.pillyze.com/columns/13",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cdn.pillyze.io/web/column/column-16-header.webp"
     },
     {
       "id": "hamsoa_kids_red_ginseng",
@@ -4512,7 +4585,8 @@
       "popularity_rank": 152,
       "notes": "타르트레이트 형태는 운동 수행에 유리. 1일 1-4.5g",
       "data_source": "https://gradium.co.kr/l-carnitine-benefits/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://gradium.co.kr/wp-content/uploads/supplements-1-1.jpg"
     },
     {
       "id": "yuhan_vit_c_1000",
@@ -4575,7 +4649,8 @@
       "popularity_rank": 154,
       "notes": "1일 2정 = Ca 460+Mg 190+D 220IU+Zn 8.5mg",
       "data_source": "https://www.pillyze.com/products/236/%EC%B9%BC%EC%8A%98-%EC%95%A4-%EB%A7%88%EA%B7%B8%EB%84%A4%EC%8A%98-%EB%B9%84%ED%83%80%EB%AF%BCD-%EC%95%84%EC%97%B0",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/9T_BHSVNVR-O0IijJpYGBOu3H5Utv7qPhEebUl9xKoc/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way9hMDdhZTQ1NS0yMzYvMTAwMA"
     },
     {
       "id": "gnc_selenium_100",
@@ -4663,7 +4738,8 @@
       "popularity_rank": 157,
       "notes": "1일 2-3정 권장. 비건 인증",
       "data_source": "https://2pharmacy.gr/en/amino-acid/17144-solgar-l-arginine-1000mg-90caps.html",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://2pharmacy.gr/20020-large_default/solgar-l-arginine-1000mg-90caps.jpg"
     },
     {
       "id": "now_arginine_1000",
@@ -4691,7 +4767,8 @@
       ],
       "popularity_rank": 158,
       "data_source": "https://www.iherb.com/pr/now-foods-l-arginine-1-000-mg-120-tablets/411",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now00035/s/32.jpg"
     },
     {
       "id": "ckd_joint_pain_quick",
@@ -4721,7 +4798,8 @@
       "popularity_rank": 159,
       "notes": "1일 3정 = 콘드로이친 1620mg (식약처 1200mg 기준 초과)",
       "data_source": "https://a.mansurkim.com/m/219",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img1.daumcdn.net/thumb/R800x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdna%2F2uCaq%2FbtrAJAY6y9D%2FAAAAAAAAAAAAAAAAAAAAAKfF0pWr3pMHMPNWqlsWft1Me5NWe3WQ-VeR6BK95EaI%2Fimg.jpg%3Fcredential%3DyqXZFxpELC7KVnFOS48ylbz2pIh7yKj8%26expires%3D1780239599%26allow_ip%3D%26allow_referer%3D%26signature%3DKPrKCVU9titonZmmrvFBE%252FhkFYE%253D"
     },
     {
       "id": "atomy_saw_palmetto",
@@ -4750,7 +4828,8 @@
       "popularity_rank": 160,
       "notes": "1캡슐 500mg. 로르산 89.6mg",
       "data_source": "https://kr.atomy.com/product/000171",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.atomy.com/KR/goods/000171/bf280ba3-3b1c-440d-91a6-cfdb65701cd5.jpg?w=720&h=720"
     },
     {
       "id": "gnc_saw_palmetto",
@@ -4960,7 +5039,8 @@
       "popularity_rank": 167,
       "notes": "1정 750mg. 1일 2정 = Gly-Pro-Hyp 30mg + 부원료 종합. 2중기능성 + 3중 개선",
       "data_source": "https://www.pillyze.com/products/5354/%EC%97%90%EB%B2%84%EC%BD%9C%EB%9D%BC%EA%B2%90-%EC%9D%B8%EC%95%A4%EC%97%85-%ED%94%8C%EB%9F%AC%EC%8A%A4",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/VQaSN489j29H0PHq0OU2moCFXlLGwDDUF_xP1Hkeda8/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS81ay81MmJhNzRjMy01MzU0LzEwMDA"
     },
     {
       "id": "solgar_collagen_hyaluronic",
@@ -5047,7 +5127,8 @@
       "popularity_rank": 170,
       "notes": "1정당 DHA 90 + EPA 60 (어린이용)",
       "data_source": "https://www.nordic.com/products/childrens-dha/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cdn.shopify.com/s/files/1/0511/3059/7560/files/DIG_AMZ_Newoldproduct__Childrens_DHA_Comparison_Thumb_crop_1000x1000_v4.jpg?v=1776461264"
     },
     {
       "id": "nordic_complete_junior",
@@ -5139,7 +5220,8 @@
       "popularity_rank": 173,
       "notes": "1일 2정 = Ca 300+Mg 150+Zn 8.5+D 200IU. 1정 1000mg",
       "data_source": "https://www.pillyze.com/products/236/%EC%B9%BC%EC%8A%98-%EC%95%A4-%EB%A7%88%EA%B7%B8%EB%84%A4%EC%8A%98-%EB%B9%84%ED%83%80%EB%AF%BCD-%EC%95%84%EC%97%B0",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/9T_BHSVNVR-O0IijJpYGBOu3H5Utv7qPhEebUl9xKoc/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way9hMDdhZTQ1NS0yMzYvMTAwMA"
     },
     {
       "id": "orthomol_immun",
@@ -5170,7 +5252,8 @@
       "popularity_rank": 174,
       "notes": "1포 = 액상 + 흰정 + 노란정. 18종 영양소. 1일 1회 아침 식후",
       "data_source": "https://www.pillyze.com/columns/40",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cdn.pillyze.io/assets/2022-09-20/column_40_header.webp"
     },
     {
       "id": "ckd_allatme_303_lcarnitine",
@@ -5240,7 +5323,8 @@
       "popularity_rank": 176,
       "notes": "벤포티아민(B1) 50mg + 종합 미네랄. 약학정보원 함량 공개",
       "data_source": "https://www.impactamin.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "http://impactamin.kr/sns/images/sns_230919.jpg"
     },
     {
       "id": "yuhan_vit_cd",
@@ -5271,7 +5355,8 @@
       "popularity_rank": 177,
       "notes": "일반의약품. 1일 2정 = C 1000mg + D 1000IU",
       "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=2019103100014",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://common.health.kr/shared/images/sb_photo/big3/201910310001402.jpg"
     },
     {
       "id": "ckd_active_vit_b_plus",
@@ -5345,7 +5430,8 @@
       "popularity_rank": 179,
       "notes": "유럽 원료. 30포(30일분) 스틱형 분말",
       "data_source": "https://www.pillyze.com/products/173/%ED%8A%B8%EB%A3%A8%EB%B0%94%EC%9D%B4%ED%83%80%EB%AF%BC",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/-B0NI3p671x4g-xFa0KkO-NSjnYuSOwNPDCBX27iSoU/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way9kMTBmMTI5YS0xNzMvMTAwMA"
     },
     {
       "id": "ckd_imbita_daily",
@@ -5406,7 +5492,8 @@
       "popularity_rank": 181,
       "notes": "1정 1000mg + D 400IU + 비오틴 + 아연. 4개월분",
       "data_source": "https://www.eundan.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://eundan.com/skin/basic_coordination_c/upload/happy_skin/1603094859_91031200.png"
     },
     {
       "id": "gnc_womens_ultramega",
@@ -5806,7 +5893,8 @@
       "popularity_rank": 192,
       "notes": "1정당 함량 (1일 2회 = 600+600 C 1200mg). 유한양행",
       "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=2012100400021",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://common.health.kr/shared/images/sb_photo/big3/201210040002102.jpg"
     },
     {
       "id": "aronamin_c_plus",
@@ -5881,7 +5969,8 @@
       "popularity_rank": 194,
       "notes": "푸르설티아민 50mg 활성형. 뇌까지 도달 B1",
       "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=A11A0340A0195",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://common.health.kr/shared/images/sb_photo/big3/A11A0340A019501.jpg"
     },
     {
       "id": "centrum_kids",
@@ -5998,7 +6087,8 @@
       "popularity_rank": 197,
       "notes": "당귀+천궁+백작약 추출물. 식약처 개별인정형 1호. 정확 mg 비공개",
       "data_source": "https://kr.atomy.com/product/000011",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.atomy.com/KR/goods/000011/3a5181dc-4acf-4c69-98e2-14b5e9fb61d2.jpg?w=720&h=720"
     },
     {
       "id": "lactofit_kids_v2",
@@ -6029,7 +6119,8 @@
       "popularity_rank": 198,
       "notes": "1포 10억 보장균수. 요구르트맛 분말 (D 함량 풀패널)",
       "data_source": "https://www.pillyze.com/products/5951/(%EB%8B%A8%EC%A2%85)-%EB%9D%BD%ED%86%A0%ED%95%8F-%EC%83%9D%EC%9C%A0%EC%82%B0%EA%B7%A0-%EA%B3%A8%EB%93%9C",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/knIzps45R1xLzAtxqY4UyenA39xkqQ7Q0oYlvP_mNJk/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS81ay82YjhkNmM2ZC01OTUxLzEwMDA"
     },
     {
       "id": "elevit_pregnancy",
@@ -6244,7 +6335,8 @@
       "popularity_rank": 204,
       "notes": "1캡슐 1250mg / EPA+DHA 950mg. EPA:DHA = 약 4:3 (Solgar 표준)",
       "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://mstatic.oliveyoung.co.kr/mc-static-root/image/comm/noimg_550.gif"
     },
     {
       "id": "ckd_camgd_zn_v2",
@@ -6277,7 +6369,8 @@
       "popularity_rank": 205,
       "notes": "1일 2정 = 칼슘 300+마그네슘 150+아연 8.5+D 5mcg",
       "data_source": "https://www.pillyze.com/products/236/%EC%B9%BC%EC%8A%98-%EC%95%A4-%EB%A7%88%EA%B7%B8%EB%84%A4%EC%8A%98-%EB%B9%84%ED%83%80%EB%AF%BCD-%EC%95%84%EC%97%B0",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/9T_BHSVNVR-O0IijJpYGBOu3H5Utv7qPhEebUl9xKoc/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way9hMDdhZTQ1NS0yMzYvMTAwMA"
     },
     {
       "id": "evercollagen_time_full",
@@ -6310,7 +6403,8 @@
       "popularity_rank": 206,
       "notes": "저분자 콜라겐 1000mg + 비오틴/아연/셀렌. 식약처 인증",
       "data_source": "https://www.pillyze.com/products/5183/%EC%97%90%EB%B2%84%EC%BD%9C%EB%9D%BC%EA%B2%90-%ED%83%80%EC%9E%84",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/RW19JzwSKLLcCFLjz1-MGPNCxKaB5RuZoqtPk-nWAY8/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS81ay8zZmMwMWQ2Zi01MTgzLzEwMDA"
     },
     {
       "id": "centrum_advance_50plus",
@@ -6367,7 +6461,8 @@
       "popularity_rank": 208,
       "notes": "1일 2정 = 보스웰리아 추출물 1000mg. 식약처 일일권장량 충족",
       "data_source": "https://www.pillyze.com/products/106/%EA%B4%80%EC%A0%88%EC%97%B0%EA%B3%A8%EC%97%94-%EB%B3%B4%EC%8A%A4%EC%9B%B0%EB%A6%AC%EC%95%84",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/rcgvjqeU6DAvj09jTNdpE4S4TcU23fYlmLAnnQUJL6k/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way80YjI4NjYxZC0xMDYvMTAwMA"
     },
     {
       "id": "ckd_glucosamine_premium",
@@ -6698,7 +6793,8 @@
       "popularity_rank": 217,
       "notes": "1구미 1g = 플라보노이드 0.3mg + 아연. 4개월분",
       "data_source": "https://kr.atomy.com/product/004028",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.atomy.com/KR/goods/004028/68df5436-915d-49cc-b786-d3be01ab6a58.jpg?w=720&h=720"
     },
     {
       "id": "solgar_men_multi",
@@ -6741,7 +6837,8 @@
       "popularity_rank": 218,
       "notes": "국내 정식. 1일 1정. 활성 비타민B군",
       "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=A000000150031",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://mstatic.oliveyoung.co.kr/mc-static-root/image/comm/noimg_550.gif"
     },
     {
       "id": "solgar_women_multi",
@@ -6784,7 +6881,8 @@
       "popularity_rank": 219,
       "notes": "국내 정식. 1일 1정. 철분 6mg 강화",
       "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=A000000150030",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://mstatic.oliveyoung.co.kr/mc-static-root/image/comm/noimg_550.gif"
     },
     {
       "id": "huons_menolacto",
@@ -6812,7 +6910,8 @@
       "popularity_rank": 220,
       "notes": "국내 최초 갱년기 기능성 인정. YT1 균수 비공개로 ingredients 비움",
       "data_source": "https://www.pillyze.com/products/1584/%EC%97%98%EB%A3%A8%EB%B9%84-%EB%A9%94%EB%85%B8%EB%9D%BD%ED%86%A0-%ED%94%84%EB%A1%9C%EB%B0%94%EC%9D%B4%EC%98%A4%ED%8B%B1%EC%8A%A4",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/YFla0MVRsECHIyn9QkNdaNJkHw_XnQvXQhW0h1wRdFg/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8xay9iZTA3ZDY5YS0xNTg0LzEwMDA"
     },
     {
       "id": "ckd_promega_triple",
@@ -6908,7 +7007,8 @@
       "popularity_rank": 223,
       "notes": "1일 1캡슐 500mg. 임산부/수유부 보충",
       "data_source": "https://www.pillyze.com/products/620/%EC%B2%A0%EB%B6%84-%EC%97%BD%EC%82%B0-%EB%B9%84%ED%83%80%EB%AF%BCD-%ED%94%8C%EB%9F%AC%EC%8A%A4",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/ffRK9kMk97Wcs9ai_LH89PX9sf3F__Rv8jEZ5YEmFEU/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8way83ZmMzYWJlNi02MjAvMTAwMA"
     },
     {
       "id": "bnr17_bienalsin_pro",
@@ -6969,7 +7069,8 @@
       "popularity_rank": 225,
       "notes": "1정 = C 1000mg + D 25mcg (1000IU)",
       "data_source": "https://www.eundan.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://eundan.com/skin/basic_coordination_c/upload/happy_skin/1603094859_91031200.png"
     },
     {
       "id": "now_magtein",
@@ -6999,7 +7100,8 @@
       "popularity_rank": 226,
       "notes": "1캡슐 Magtein 667mg = 마그네슘 48mg. 1일 3캡슐 = 144mg",
       "data_source": "https://kr.iherb.com/pr/now-foods-magtein-magnesium-l-threonate-90-veg-capsules/57577",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now02390/s/50.jpg"
     },
     {
       "id": "atomy_megavit_c_2000",
@@ -7029,7 +7131,8 @@
       "popularity_rank": 227,
       "notes": "1포 3g = 비타민C 2000mg. 분말형",
       "data_source": "https://kr.atomy.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://image.atomy.com/KR/goods/020170/org/856/260317000050856.jpg?w=260&h=260"
     },
     {
       "id": "atomy_color_multi",
@@ -7090,7 +7193,8 @@
       "popularity_rank": 229,
       "notes": "보장균수 1125억 CFU. 식약처 개별인정 장 면역",
       "data_source": "https://www.dapharm.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://www.dapharm.com/img/logo-0e5e5cf0cbc6bbcadf85530be2bad7e5.svg"
     },
     {
       "id": "cenovis_vit_d_2000",
@@ -7210,7 +7314,8 @@
       "popularity_rank": 233,
       "notes": "1캡슐 1250mg / EPA+DHA 1040mg. IFOS 인증",
       "data_source": "https://www.sportsresearch.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://images.ctfassets.net/y11jqjvj0alp/6VNPFQo5igWIIlNPea78m5/ca6c00f817ea0509b272fbaec3c7408a/Social_Sharing_Image_020525.png"
     },
     {
       "id": "trueen_rtg_omega3",
@@ -7507,7 +7612,8 @@
       "popularity_rank": 242,
       "notes": "1정 = 칼슘 100mg + D 1000IU. 일반의약품",
       "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=A11AKP08F0265",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://common.health.kr/shared/images/sb_photo/big3/A11AKP08F026501.jpg"
     },
     {
       "id": "orthomol_immun_kr",
@@ -7544,7 +7650,8 @@
       "popularity_rank": 243,
       "notes": "독일산. 액상+엽산정+요오드정 3종 1세트 / 일",
       "data_source": "https://www.dapharm.com/ko/brand/product/IMN",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://www.dapharm.com/img/logo-0e5e5cf0cbc6bbcadf85530be2bad7e5.svg"
     },
     {
       "id": "yakult_cuperz",
@@ -7573,7 +7680,8 @@
       "popularity_rank": 244,
       "notes": "1병 140ml = 헛개나무 열매 추출분말 2460mg. 식약처 인정",
       "data_source": "https://www.pillyze.com/products/19231/%EA%B0%84%EA%B1%B4%EA%B0%95-%EA%B0%84-%ED%94%BC%EB%A1%9C-%EC%BC%80%EC%96%B4-%EC%BF%A0%ED%8D%BC%EC%8A%A4",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://imgproxy.pillyze.io/0cTuPgbIzQVJRnmZ886hOTyUNzCgyObLPBYtBNOyDKQ/rs:fill:500:500/czM6Ly9waWxseXplLXByZC1pbWFnZS9wcm9kdWN0cy92MS8xOWsvNmQxYTE2Y2QtMTkyMzEvMTAwMA"
     },
     {
       "id": "atomy_vital_color_multi",

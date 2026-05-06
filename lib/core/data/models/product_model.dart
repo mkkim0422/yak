@@ -95,6 +95,12 @@ class Product {
   /// Free-text note for edge cases ("라벨 참조", 약사 권고 등).
   final String? intakeNote;
 
+  /// Source URL for the product photo (og:image / twitter:image extracted
+  /// from the product's `data_source` page). Mirrors the JSON `image_url`
+  /// field. Used by the build pipeline; runtime UI loads from
+  /// `assets/images/products/{id}.jpg` instead.
+  final String? imageUrl;
+
   const Product({
     required this.id,
     required this.name,
@@ -116,6 +122,7 @@ class Product {
     this.dosePerIntake = 1,
     this.intakesPerDay = 1,
     this.intakeNote,
+    this.imageUrl,
   });
 
   factory Product.fromJson(Map<String, dynamic> json) {
@@ -155,8 +162,13 @@ class Product {
       dosePerIntake: dosePerIntake < 1 ? 1 : dosePerIntake,
       intakesPerDay: intakesPerDay < 1 ? 1 : intakesPerDay,
       intakeNote: json['intake_note'] as String?,
+      imageUrl: json['image_url'] as String?,
     );
   }
+
+  /// Local asset path the runtime should try first. Pair with `Image.asset`
+  /// + `errorBuilder` so missing files fall back to a category emoji.
+  String get imageAssetPath => 'assets/images/products/$id.jpg';
 
   static DateTime? _parseDate(Object? raw) {
     if (raw is! String || raw.isEmpty) return null;
