@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=1440"/>
+<title>알약 (alyak) — 가족 영양제 결정 도우미</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #f0eee9; font-family: -apple-system, BlinkMacSystemFont, "Pretendard", sans-serif; }
+  body { overflow: hidden; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="android-frame.jsx"></script>
+<script type="text/babel" src="tokens.jsx"></script>
+<script type="text/babel" src="components.jsx"></script>
+<script type="text/babel" src="screens-home.jsx"></script>
+<script type="text/babel" src="screens-onboarding.jsx"></script>
+<script type="text/babel" src="screens-member.jsx"></script>
+<script type="text/babel" src="screens-supplement.jsx"></script>
+<script type="text/babel" src="screens-misc.jsx"></script>
+<script type="text/babel" src="screens-states.jsx"></script>
+
+<script type="text/babel" data-presets="react">
+function App() {
+  const F = window.FAMILY_DATA;
+  const fam1 = [F.self];
+  const fam2 = [F.self, F.husband];
+  const fam3 = [F.self, F.husband, F.son];
+  const fam4 = [F.self, F.husband, F.son, F.daughter];
+  const fam5 = [F.self, F.husband, F.son, F.daughter, F.mom];
+
+  return (
+    <DesignCanvas>
+      {/* ──────────────────── BRAND ──────────────────── */}
+      <DCSection id="brand" title="알약 (alyak)" subtitle="우리 가족 영양제 결정 도우미 — 17 screens, 25+ states. Original visual identity built around the 알약 (pill) wordmark.">
+        <DCArtboard id="brand-icon" label="App icon · 96 / 64 / 32" width={360} height={420}>
+          <div style={{
+            display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+            height:'100%', background:'#fff', padding: 24,
+            fontFamily: '"Pretendard Variable", system-ui, sans-serif',
+          }}>
+            <AppIcon size={120}/>
+            <div style={{ fontSize: 28, fontWeight: 800, letterSpacing:'-0.03em', marginTop: 20 }}>알약</div>
+            <div style={{ fontSize: 13, color: '#6B7280', marginTop: 4 }}>alyak</div>
+            <div style={{ display:'flex', gap: 16, alignItems:'center', marginTop: 28 }}>
+              <AppIcon size={64}/>
+              <AppIcon size={48}/>
+              <AppIcon size={32}/>
+            </div>
+          </div>
+        </DCArtboard>
+        <DCArtboard id="splash" label="Splash" width={360} height={760}><SplashScreen/></DCArtboard>
+      </DCSection>
+
+      {/* ──────────────────── ONBOARDING ──────────────────── */}
+      <DCSection id="onboarding" title="Onboarding" subtitle="4 screens · privacy → welcome → family add (chat, age/sex-branched) → notifications">
+        <DCArtboard id="ob-1" label="1 · Privacy consent" width={360} height={760}><PrivacyConsentScreen/></DCArtboard>
+        <DCArtboard id="ob-2" label="2 · Welcome (chat)" width={360} height={760}><WelcomeScreen/></DCArtboard>
+        <DCArtboard id="ob-3a" label="3a · Family add — relationship" width={360} height={760}><FamilyAddRelationshipScreen/></DCArtboard>
+        <DCArtboard id="ob-3b" label="3b · Family add — mid-flow (식습관)" width={360} height={760}><FamilyAddScreen/></DCArtboard>
+        <DCArtboard id="ob-4" label="4 · Notifications" width={360} height={760}><NotificationSetupScreen/></DCArtboard>
+      </DCSection>
+
+      {/* ──────────────────── HOME (FAMILY VARIANTS) ──────────────────── */}
+      <DCSection id="home" title="Home — family card variants" subtitle="Dynamic layout by member count. Status-coloured cards + 5 entry points.">
+        <DCArtboard id="home-0" label="0 members · Empty" width={360} height={760}><HomeScreen members={[]} showNotifs={false}/></DCArtboard>
+        <DCArtboard id="home-1" label="1 member · Large" width={360} height={760}><HomeScreen members={fam1}/></DCArtboard>
+        <DCArtboard id="home-2" label="2 members · Side by side" width={360} height={760}><HomeScreen members={fam2}/></DCArtboard>
+        <DCArtboard id="home-3" label="3 members · 1 main + 2" width={360} height={760}><HomeScreen members={fam3}/></DCArtboard>
+        <DCArtboard id="home-4" label="4 members · 2×2" width={360} height={760}><HomeScreen members={fam4}/></DCArtboard>
+        <DCArtboard id="home-5" label="5+ members · Grid + scroll" width={360} height={760}><HomeScreen members={fam5}/></DCArtboard>
+      </DCSection>
+
+      {/* ──────────────────── MEMBER ──────────────────── */}
+      <DCSection id="member" title="Member" subtitle="Detail, current-check (충돌·과다), recommendation (6 sections), edit form.">
+        <DCArtboard id="m-detail" label="Member detail" width={360} height={760}><MemberDetailScreen m={F.self}/></DCArtboard>
+        <DCArtboard id="m-empty" label="Member detail · Empty" width={360} height={760}><EmptyMemberDetailScreen/></DCArtboard>
+        <DCArtboard id="m-check" label="Current check (충돌·과다)" width={360} height={760}><CurrentCheckScreen/></DCArtboard>
+        <DCArtboard id="m-rec" label="Recommendation detail · 6 sections" width={360} height={760}><RecommendationDetailScreen/></DCArtboard>
+        <DCArtboard id="m-edit" label="Family edit form" width={360} height={760}><FamilyEditScreen/></DCArtboard>
+      </DCSection>
+
+      {/* ──────────────────── SUPPLEMENT ──────────────────── */}
+      <DCSection id="supplement" title="Supplement" subtitle="Search (2-tier results, photo), manual input (no ingredient input), guide.">
+        <DCArtboard id="s-search-empty" label="Search · empty" width={360} height={760}><SupplementSearchScreen state="empty"/></DCArtboard>
+        <DCArtboard id="s-search-results" label="Search · results (2 tiers)" width={360} height={760}><SupplementSearchScreen state="results"/></DCArtboard>
+        <DCArtboard id="s-search-noresults" label="Search · no results" width={360} height={760}><SupplementSearchScreen state="noresults"/></DCArtboard>
+        <DCArtboard id="s-manual" label="Manual input" width={360} height={760}><ManualSupplementInputScreen/></DCArtboard>
+        <DCArtboard id="s-guide" label="Guide (3-line + expand)" width={360} height={760}><SupplementGuideScreen/></DCArtboard>
+      </DCSection>
+
+      {/* ──────────────────── OTHERS ──────────────────── */}
+      <DCSection id="others" title="Others" subtitle="Symptom search, family management, settings, privacy, disclaimer.">
+        <DCArtboard id="symptom" label="Symptom search" width={360} height={760}><SymptomSearchScreen/></DCArtboard>
+        <DCArtboard id="family-mgmt" label="Family management" width={360} height={760}><FamilyManagementScreen/></DCArtboard>
+        <DCArtboard id="settings" label="Settings" width={360} height={760}><SettingsScreen/></DCArtboard>
+        <DCArtboard id="privacy" label="Privacy policy" width={360} height={760}><PrivacyPolicyScreen/></DCArtboard>
+        <DCArtboard id="disclaimer" label="Disclaimer" width={360} height={760}><DisclaimerScreen/></DCArtboard>
+      </DCSection>
+
+      {/* ──────────────────── STATES & MODALS ──────────────────── */}
+      <DCSection id="states" title="States, notifications, modals">
+        <DCArtboard id="loading" label="Loading state" width={360} height={760}><LoadingScreen/></DCArtboard>
+        <DCArtboard id="error" label="Error state" width={360} height={760}><ErrorScreen/></DCArtboard>
+        <DCArtboard id="push" label="Push notifications (lock screen)" width={360} height={760}><NotificationsScreen/></DCArtboard>
+        <DCArtboard id="quick-action" label="Quick-action sheet (long press)" width={360} height={760}><QuickActionSheet/></DCArtboard>
+        <DCArtboard id="add-supp" label="Add supplement sheet" width={360} height={760}><AddSupplementSheet/></DCArtboard>
+        <DCArtboard id="confirm-delete" label="Delete confirm modal" width={360} height={760}><DeleteConfirmModal/></DCArtboard>
+      </DCSection>
+
+      {/* ──────────────────── DESIGN SYSTEM ──────────────────── */}
+      <DCSection id="ds" title="Design system" subtitle="Tokens — colors, type, components.">
+        <DCArtboard id="ds-color" label="Color tokens" width={520} height={520}>
+          <div style={{ padding: 24, height:'100%', background:'#fff', fontFamily:'"Pretendard Variable", system-ui', overflow:'auto' }}>
+            <div style={{ fontSize: 18, fontWeight: 800, letterSpacing:'-0.025em', marginBottom: 16 }}>Color tokens</div>
+            {[
+              { l:'Primary · #3182F6', c:'#3182F6' },
+              { l:'Primary soft · #EAF2FE', c:'#EAF2FE' },
+              { l:'Sufficient border · #10B981', c:'#10B981' },
+              { l:'Sufficient bg · #E8F5E9', c:'#E8F5E9' },
+              { l:'Warn border · #F59E0B', c:'#F59E0B' },
+              { l:'Warn bg · #FFF8E1', c:'#FFF8E1' },
+              { l:'Alert border · #EF4444', c:'#EF4444' },
+              { l:'Alert bg · #FFF3E0', c:'#FFF3E0' },
+              { l:'Ink · #1F2937', c:'#1F2937' },
+              { l:'Ink2 · #4B5563', c:'#4B5563' },
+              { l:'Muted · #6B7280', c:'#6B7280' },
+              { l:'BG · #F7F8FA', c:'#F7F8FA' },
+            ].map((x,i)=>(
+              <div key={i} style={{ display:'flex', alignItems:'center', gap: 12, padding:'8px 0', borderBottom:'1px solid #EEF0F3' }}>
+                <div style={{ width: 36, height: 36, borderRadius: 8, background: x.c, border:'1px solid rgba(0,0,0,0.08)' }}/>
+                <div style={{ fontSize: 13, fontFamily:'"SF Mono", monospace', color:'#1F2937' }}>{x.l}</div>
+              </div>
+            ))}
+          </div>
+        </DCArtboard>
+
+        <DCArtboard id="ds-type" label="Typography" width={520} height={520}>
+          <div style={{ padding: 24, height:'100%', background:'#fff', fontFamily:'"Pretendard Variable", system-ui' }}>
+            <div style={{ fontSize: 18, fontWeight: 800, letterSpacing:'-0.025em', marginBottom: 20 }}>Typography (Pretendard Variable)</div>
+            <div style={{ fontSize: 24, fontWeight: 800, letterSpacing:'-0.03em' }}>Title · 24 / 800 — 우리 가족 영양제</div>
+            <div style={{ height: 12 }}/>
+            <div style={{ fontSize: 18, fontWeight: 700, letterSpacing:'-0.02em' }}>Section · 18 / 700 — 영양 상태 요약</div>
+            <div style={{ height: 12 }}/>
+            <div style={{ fontSize: 16, fontWeight: 700 }}>Card title · 16 / 700 — 김지원</div>
+            <div style={{ height: 8 }}/>
+            <div style={{ fontSize: 15 }}>Body · 15 / 400 — 충분히 챙기시는 중이에요. 권장 영양소를 모두 섭취하고 계세요.</div>
+            <div style={{ height: 8 }}/>
+            <div style={{ fontSize: 13, color:'#6B7280' }}>Subtitle · 13 / 400 — 만 35세 여 · 3개 복용 중</div>
+            <div style={{ height: 8 }}/>
+            <div style={{ fontSize: 12, color:'#6B7280' }}>Caption · 12 / 400 — 약 3일 후 예상</div>
+            <div style={{ height: 8 }}/>
+            <div style={{ fontSize: 11, color:'#9CA3AF' }}>Disclaimer · 11 / 300 — 본 앱은 의료 행위가 아닙니다</div>
+          </div>
+        </DCArtboard>
+
+        <DCArtboard id="ds-components" label="Status / buttons / pills" width={520} height={520}>
+          <div style={{ padding: 24, height:'100%', background:'#fff', fontFamily:'"Pretendard Variable", system-ui', overflow:'auto' }}>
+            <div style={{ fontSize: 18, fontWeight: 800, letterSpacing:'-0.025em', marginBottom: 16 }}>Status pills</div>
+            <div style={{ display:'flex', gap: 8, flexWrap:'wrap', marginBottom: 24 }}>
+              <StatusPill status="ok">✅ 충분</StatusPill>
+              <StatusPill status="warn">⚠️ 1-2개 부족</StatusPill>
+              <StatusPill status="alert">🟠 3+개 부족</StatusPill>
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 10 }}>Avatars</div>
+            <div style={{ display:'flex', gap: 10, marginBottom: 24 }}>
+              <AvatarBadge emoji="👤" status="ok"/>
+              <AvatarBadge emoji="👨" status="warn"/>
+              <AvatarBadge emoji="👦" status="alert"/>
+              <AvatarBadge emoji="👧"/>
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 10 }}>Buttons</div>
+            <div style={{ display:'flex', flexDirection:'column', gap: 8 }}>
+              <PrimaryButton full>Primary · 영양제 추가</PrimaryButton>
+              <SecondaryButton full>Secondary · 닫기</SecondaryButton>
+              <div style={{ display:'flex', gap: 8 }}>
+                <PrimaryButton size="md">Medium</PrimaryButton>
+                <PrimaryButton size="sm">Small</PrimaryButton>
+                <PrimaryButton size="md" disabled>Disabled</PrimaryButton>
+              </div>
+            </div>
+            <div style={{ fontSize: 14, fontWeight: 700, marginTop: 20, marginBottom: 10 }}>Coverage bars</div>
+            <div style={{ display:'flex', flexDirection:'column', gap: 10 }}>
+              <CoverageBar pct={20} status="alert"/>
+              <CoverageBar pct={62} status="warn"/>
+              <CoverageBar pct={100} status="ok"/>
+            </div>
+          </div>
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
