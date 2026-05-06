@@ -6,7 +6,12 @@ import '../../../core/data/models/product_model.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/notifications/notification_provider.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/alyak_buttons.dart';
+import '../../../core/widgets/alyak_card.dart';
+import '../../../core/widgets/product_photo.dart';
 import '../providers/family_provider.dart';
 
 /// Local-DB only supplement search. Future stages will layer 식약처 + Naver
@@ -39,40 +44,65 @@ class _SupplementSearchScreenState
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+          onPressed: () => context.pop(),
+        ),
         title: const Text('영양제 검색'),
-        actions: [
-          IconButton(icon: const Icon(Icons.close), onPressed: () => context.pop()),
-        ],
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(12),
-            child: TextField(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+            child: _SearchBar(
               controller: _ctrl,
-              decoration: const InputDecoration(
-                hintText: '제품명 또는 카테고리',
-                prefixIcon: Icon(Icons.search),
-                border: OutlineInputBorder(),
-              ),
               onChanged: (v) => setState(() => _query = v),
             ),
           ),
-          if (_query.isNotEmpty && results.isEmpty)
-            _Empty(memberId: widget.memberId)
+          if (_query.isEmpty)
+            Expanded(child: _SearchEmptyHint())
+          else if (results.isEmpty)
+            Expanded(child: _NoResults(memberId: widget.memberId))
           else
             Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                itemCount: results.length,
-                separatorBuilder: (_, _) => const SizedBox(height: 8),
-                itemBuilder: (context, i) {
-                  final p = results[i];
-                  return _ResultCard(
-                    product: p,
-                    onPick: () => _pick(p),
-                  );
-                },
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        '✅ 우리가 검증한 제품',
+                        style: AppTypography.title.copyWith(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        '${results.length}',
+                        style: AppTypography.caption.copyWith(
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  for (final p in results) ...[
+                    _ResultCard(product: p, onPick: () => _pick(p)),
+                    const SizedBox(height: 8),
+                  ],
+                  const SizedBox(height: 12),
+                  SecondaryButton(
+                    label: '+ 직접 추가하기',
+                    full: true,
+                    size: AlyakButtonSize.md,
+                    onPressed: () => context
+                        .go('/supplement/manual?member=${widget.memberId}'),
+                  ),
+                ],
               ),
             ),
         ],
@@ -107,6 +137,43 @@ class _SupplementSearchScreenState
   }
 }
 
+class _SearchBar extends StatelessWidget {
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  const _SearchBar({required this.controller, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.r14),
+        boxShadow: AppShadows.card,
+      ),
+      child: TextField(
+        controller: controller,
+        onChanged: onChanged,
+        style: AppTypography.body1.copyWith(fontSize: 14.5),
+        decoration: InputDecoration(
+          hintText: '영양제 이름이나 성분',
+          hintStyle: AppTypography.body1.copyWith(
+            fontSize: 14.5,
+            color: AppColors.faint,
+          ),
+          prefixIcon:
+              const Icon(Icons.search, size: 20, color: AppColors.muted),
+          border: const OutlineInputBorder(borderSide: BorderSide.none),
+          enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+          focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+          filled: true,
+          fillColor: Colors.transparent,
+          contentPadding: const EdgeInsets.symmetric(vertical: 12),
+        ),
+      ),
+    );
+  }
+}
+
 class _ResultCard extends StatelessWidget {
   final Product product;
   final VoidCallback onPick;
@@ -115,65 +182,132 @@ class _ResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ingredients = product.ingredients.keys.take(3).join(', ');
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-      ),
+    final meta = '${product.dailyDose}${product.unit}/일 · '
+        '${product.packageSize}${product.unit}';
+    return AlyakCard(
+      padding: const EdgeInsets.all(14),
       child: Row(
         children: [
+          const ProductPhoto(label: '제품', verified: true),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text('💊 ${product.name}',
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.w600)),
-                const SizedBox(height: 2),
                 Text(
-                  '${product.dailyDose}${product.unit}/일 · '
-                  '${product.packageSize}${product.unit}',
-                  style: AppTypography.caption,
+                  product.name,
+                  style: AppTypography.title.copyWith(fontSize: 14.5),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                if (ingredients.isNotEmpty)
-                  Text(ingredients, style: AppTypography.caption),
+                const SizedBox(height: 2),
+                Text(meta, style: AppTypography.caption.copyWith(fontSize: 12)),
+                if (ingredients.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Text(
+                    ingredients,
+                    style: AppTypography.body2.copyWith(
+                      fontSize: 12,
+                      color: AppColors.ink2,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+                const SizedBox(height: 6),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 7, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: AppColors.okBg,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    '✅ 정확 분석 가능',
+                    style: AppTypography.micro.copyWith(
+                      fontSize: 10.5,
+                      fontWeight: FontWeight.w700,
+                      color: AppColors.okInk,
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
-          FilledButton(onPressed: onPick, child: const Text('선택')),
+          const SizedBox(width: 8),
+          PrimaryButton(
+            label: '선택',
+            size: AlyakButtonSize.sm,
+            onPressed: onPick,
+          ),
         ],
       ),
     );
   }
 }
 
-class _Empty extends StatelessWidget {
+class _SearchEmptyHint extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('💊', style: TextStyle(fontSize: 44)),
+            const SizedBox(height: 16),
+            Text(
+              '어떤 영양제를 찾고 계세요?',
+              style: AppTypography.heading2.copyWith(fontSize: 17),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              '제품명, 성분, 브랜드로 검색할 수 있어요.',
+              style: AppTypography.caption.copyWith(fontSize: 13),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _NoResults extends StatelessWidget {
   final String memberId;
-  const _Empty({required this.memberId});
+  const _NoResults({required this.memberId});
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        children: [
-          const Text('🔍', style: TextStyle(fontSize: 32)),
-          const SizedBox(height: 8),
-          Text('검색 결과가 없어요', style: AppTypography.body1),
-          const SizedBox(height: 4),
-          Text(
-            '직접 추가하거나 정확한 함량 데이터 등록을 요청할 수 있어요',
-            style: AppTypography.caption,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 12),
-          FilledButton(
-            onPressed: () =>
-                context.go('/supplement/manual?member=$memberId'),
-            child: const Text('직접 추가하기 →'),
-          ),
-        ],
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('🔎', style: TextStyle(fontSize: 44)),
+            const SizedBox(height: 16),
+            Text(
+              '검색 결과가 없어요',
+              style: AppTypography.heading2.copyWith(fontSize: 17),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              '검증된 제품 데이터베이스에\n아직 등록되지 않은 영양제예요.',
+              style: AppTypography.caption.copyWith(fontSize: 13),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+            PrimaryButton(
+              label: '+ 직접 추가하기',
+              size: AlyakButtonSize.md,
+              onPressed: () =>
+                  context.go('/supplement/manual?member=$memberId'),
+            ),
+          ],
+        ),
       ),
     );
   }

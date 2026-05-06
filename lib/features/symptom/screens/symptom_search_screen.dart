@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/data/models/symptom_result.dart';
 import '../../../core/data/supplement_repository.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/alyak_card.dart';
+import '../../../core/widgets/disclaimer_footer.dart';
 
 class SymptomSearchScreen extends ConsumerStatefulWidget {
   const SymptomSearchScreen({super.key});
@@ -41,30 +46,45 @@ class _SymptomSearchScreenState extends ConsumerState<SymptomSearchScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text('증상 검색')),
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+          onPressed: () =>
+              context.canPop() ? context.pop() : context.go('/home'),
+        ),
+        title: const Text('증상에 맞는 영양제'),
+      ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
         children: [
-          Text('🤒 어떤 증상이 있으세요?', style: AppTypography.heading2),
-          const SizedBox(height: 12),
-          TextField(
-            controller: _ctrl,
-            decoration: const InputDecoration(
-              hintText: '증상 검색',
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(),
+          Text(
+            '어떤 증상이 있으세요?',
+            style: AppTypography.heading1.copyWith(
+              fontSize: 22,
+              fontWeight: FontWeight.w800,
             ),
-            onChanged: (v) => setState(() => _query = v.trim()),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '여러 개 선택할 수 있어요',
+            style: AppTypography.caption.copyWith(fontSize: 13),
           ),
           const SizedBox(height: 16),
+          _SearchBar(
+            controller: _ctrl,
+            onChanged: (v) => setState(() => _query = v.trim()),
+          ),
+          const SizedBox(height: 14),
           Wrap(
-            spacing: 6,
-            runSpacing: 6,
+            spacing: 8,
+            runSpacing: 8,
             children: [
               for (final s in filtered)
-                ActionChip(
-                  label: Text(s.symptom),
-                  onPressed: () => _showResult(context, s),
+                _SymptomTile(
+                  label: s.symptom,
+                  onTap: () => _showResult(context, s),
                 ),
             ],
           ),
@@ -72,22 +92,56 @@ class _SymptomSearchScreenState extends ConsumerState<SymptomSearchScreen> {
             const SizedBox(height: 12),
             TextButton(
               onPressed: () => setState(() => _showAll = true),
-              child: Text('전체 보기 (${all.length}개) →'),
+              child: Text(
+                '전체 보기 (${all.length}개) →',
+                style: AppTypography.title.copyWith(
+                  fontSize: 14,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
           ],
           if (filtered.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 24),
-              child: Text('검색 결과가 없어요',
-                  style: AppTypography.body2,
-                  textAlign: TextAlign.center),
+              child: Text(
+                '검색 결과가 없어요',
+                style: AppTypography.body2,
+                textAlign: TextAlign.center,
+              ),
             ),
-          const SizedBox(height: 24),
-          Text(
-            AppStrings.disclaimerNotMedicalAdvice,
-            style: AppTypography.caption,
-            textAlign: TextAlign.center,
+          const SizedBox(height: 16),
+          AlyakCard(
+            padding: const EdgeInsets.all(14),
+            background: AppColors.warnBg,
+            shadow: const [],
+            border: Border.all(
+                color: AppColors.warnBorder.withValues(alpha: 0.2)),
+            child: Text.rich(
+              TextSpan(
+                style: AppTypography.body2.copyWith(
+                  fontSize: 13,
+                  color: AppColors.ink2,
+                ),
+                children: [
+                  TextSpan(
+                    text: '⚠️ 잠깐  ',
+                    style: AppTypography.title.copyWith(
+                      fontSize: 13,
+                      color: AppColors.warnInk,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const TextSpan(
+                    text:
+                        '· 2주 이상 지속되거나 심한 증상은 병원 진료를 받으세요. 영양제는 보조 수단이에요.',
+                  ),
+                ],
+              ),
+            ),
           ),
+          const DisclaimerFooter(),
         ],
       ),
     );
@@ -97,6 +151,10 @@ class _SymptomSearchScreenState extends ConsumerState<SymptomSearchScreen> {
     showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
       showDragHandle: true,
       builder: (sheetCtx) => DraggableScrollableSheet(
         expand: false,
@@ -106,6 +164,77 @@ class _SymptomSearchScreenState extends ConsumerState<SymptomSearchScreen> {
         builder: (_, scrollCtrl) => _SymptomResultBody(
           symptom: symptom,
           scrollController: scrollCtrl,
+        ),
+      ),
+    );
+  }
+}
+
+class _SearchBar extends StatelessWidget {
+  final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  const _SearchBar({required this.controller, required this.onChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.r14),
+        boxShadow: AppShadows.card,
+      ),
+      child: TextField(
+        controller: controller,
+        onChanged: onChanged,
+        style: AppTypography.body1.copyWith(fontSize: 14.5),
+        decoration: InputDecoration(
+          hintText: '증상을 검색해 보세요',
+          hintStyle: AppTypography.body1.copyWith(
+            fontSize: 14.5,
+            color: AppColors.faint,
+          ),
+          prefixIcon:
+              const Icon(Icons.search, size: 20, color: AppColors.muted),
+          border: const OutlineInputBorder(borderSide: BorderSide.none),
+          enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+          focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+          filled: true,
+          fillColor: Colors.transparent,
+          contentPadding: const EdgeInsets.symmetric(vertical: 12),
+        ),
+      ),
+    );
+  }
+}
+
+class _SymptomTile extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+  const _SymptomTile({required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppRadius.r14),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.r14),
+        onTap: onTap,
+        child: Container(
+          padding:
+              const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.r14),
+            border: Border.all(color: AppColors.hairline, width: 1.5),
+          ),
+          child: Text(
+            label,
+            style: AppTypography.title.copyWith(
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
         ),
       ),
     );
@@ -127,7 +256,8 @@ class _SymptomResultBody extends StatelessWidget {
       controller: scrollController,
       padding: const EdgeInsets.all(20),
       children: [
-        Text(symptom.symptom, style: AppTypography.heading2),
+        Text(symptom.symptom,
+            style: AppTypography.heading2.copyWith(fontSize: 18)),
         const SizedBox(height: 8),
         if (isTypeB)
           _typeBBody(symptom)
@@ -186,12 +316,11 @@ Widget _typeBBody(SymptomResult symptom) {
       Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppColors.warningLight,
-          borderRadius: BorderRadius.circular(12),
+          color: AppColors.warnBg,
+          borderRadius: BorderRadius.circular(AppRadius.r12),
         ),
         child: Text(
-          symptom.medicalMessage ??
-              '이 증상은 영양제보다는 의사의 진단이 필요해요',
+          symptom.medicalMessage ?? '이 증상은 영양제보다는 의사의 진단이 필요해요',
           style: AppTypography.body1,
         ),
       ),

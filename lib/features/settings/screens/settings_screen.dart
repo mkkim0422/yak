@@ -5,7 +5,10 @@ import 'package:go_router/go_router.dart';
 import '../../../core/notifications/notification_provider.dart';
 import '../../../core/security/secure_storage.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/disclaimer_footer.dart';
 import '../../onboarding/screens/notification_setup_screen.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -76,6 +79,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final continueWipe = await showDialog<bool>(
       context: context,
       builder: (dctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r20),
+        ),
         title: const Text('정말로 삭제하시겠어요?'),
         content: const Text(
           '모든 가족 정보, 영양제, 검진 기록이 삭제됩니다.\n되돌릴 수 없어요.',
@@ -86,7 +93,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             child: const Text('취소'),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
+            style: FilledButton.styleFrom(backgroundColor: AppColors.alertInk),
             onPressed: () => Navigator.of(dctx).pop(true),
             child: const Text('계속'),
           ),
@@ -99,6 +106,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r20),
+        ),
         title: const Text('삭제 확인'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -122,7 +133,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             child: const Text('취소'),
           ),
           FilledButton(
-            style: FilledButton.styleFrom(backgroundColor: AppColors.error),
+            style: FilledButton.styleFrom(backgroundColor: AppColors.alertInk),
             onPressed: () => Navigator.of(dctx).pop(controller.text == '삭제'),
             child: const Text('삭제'),
           ),
@@ -141,121 +152,300 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     _load();
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text('설정')),
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+          onPressed: () =>
+              context.canPop() ? context.pop() : context.go('/home'),
+        ),
+        title: const Text('설정'),
+      ),
       body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
         children: [
-          _sectionTitle('알림'),
-          SwitchListTile(
-            title: const Text('매일 알림'),
-            value: _dailyEnabled,
-            onChanged: (v) async {
-              setState(() => _dailyEnabled = v);
-              await _persistDaily();
-            },
-          ),
-          if (_dailyEnabled) ...[
-            ListTile(
-              title: const Text('아침 시간'),
-              trailing: Text(formatTimeOfDay(_morning),
-                  style: AppTypography.body1),
-              onTap: () => _pickTime(true),
-            ),
-            ListTile(
-              title: const Text('저녁 시간'),
-              trailing: Text(formatTimeOfDay(_evening),
-                  style: AppTypography.body1),
-              onTap: () => _pickTime(false),
-            ),
-          ],
-          SwitchListTile(
-            title: const Text('재구매 알림'),
-            value: _reorderEnabled,
-            onChanged: (v) async {
-              setState(() => _reorderEnabled = v);
-              await SecureStorage.write(
-                  kReorderEnabledKey, v ? '1' : '0');
-            },
-          ),
-          if (_reorderEnabled)
-            ListTile(
-              title: const Text('며칠 전 알림'),
-              trailing: Text('$_reorderLeadDays일',
-                  style: AppTypography.body1),
-              onTap: () async {
-                final picked = await _pickInt(
-                  context: context,
+          _SectionLabel('알림'),
+          _SectionGroup(
+            children: [
+              _SettingItem(
+                emoji: '🔔',
+                title: '매일 영양제 알림',
+                trailing: Switch(
+                  value: _dailyEnabled,
+                  onChanged: (v) async {
+                    setState(() => _dailyEnabled = v);
+                    await _persistDaily();
+                  },
+                ),
+              ),
+              if (_dailyEnabled) ...[
+                _SettingItem(
+                  emoji: '🌅',
+                  title: '아침 시간',
+                  trailing: _TimePill(
+                    time: formatTimeOfDay(_morning),
+                    onTap: () => _pickTime(true),
+                  ),
+                ),
+                _SettingItem(
+                  emoji: '🌙',
+                  title: '저녁 시간',
+                  trailing: _TimePill(
+                    time: formatTimeOfDay(_evening),
+                    onTap: () => _pickTime(false),
+                  ),
+                ),
+              ],
+              _SettingItem(
+                emoji: '📦',
+                title: '영양제 떨어짐 알림',
+                trailing: Switch(
+                  value: _reorderEnabled,
+                  onChanged: (v) async {
+                    setState(() => _reorderEnabled = v);
+                    await SecureStorage.write(
+                        kReorderEnabledKey, v ? '1' : '0');
+                  },
+                ),
+              ),
+              if (_reorderEnabled)
+                _SettingItem(
+                  emoji: '📅',
                   title: '며칠 전 알림',
-                  options: const [1, 2, 3, 5, 7],
-                  initial: _reorderLeadDays,
-                );
-                if (picked == null) return;
-                setState(() => _reorderLeadDays = picked);
-                await SecureStorage.write(
-                    kReorderDaysKey, picked.toString());
-              },
+                  trailing: _TimePill(
+                    time: '$_reorderLeadDays일',
+                    onTap: () async {
+                      final picked = await _pickInt(
+                        context: context,
+                        title: '며칠 전 알림',
+                        options: const [1, 2, 3, 5, 7],
+                        initial: _reorderLeadDays,
+                      );
+                      if (picked == null) return;
+                      setState(() => _reorderLeadDays = picked);
+                      await SecureStorage.write(
+                          kReorderDaysKey, picked.toString());
+                    },
+                  ),
+                ),
+              _SettingItem(
+                emoji: '🩺',
+                title: '건강검진 알림',
+                sub: '가족별 1년에 한 번',
+                trailing: Switch(
+                  value: _checkupEnabled,
+                  onChanged: (v) async {
+                    setState(() => _checkupEnabled = v);
+                    await SecureStorage.write(
+                        kCheckupEnabledKey, v ? '1' : '0');
+                  },
+                ),
+              ),
+            ],
+          ),
+          _SectionLabel('가족'),
+          _SectionGroup(
+            children: [
+              _SettingItem(
+                emoji: '👨‍👩‍👧',
+                title: '가족 관리',
+                onTap: () => context.push('/family-management'),
+              ),
+              _SettingItem(
+                emoji: '➕',
+                title: '가족 추가',
+                onTap: () => context.push('/onboarding/family-add'),
+              ),
+            ],
+          ),
+          _SectionLabel('정보'),
+          _SectionGroup(
+            children: [
+              _SettingItem(
+                emoji: '🔒',
+                title: '개인정보 처리방침',
+                onTap: () => context.push('/privacy-policy'),
+              ),
+              _SettingItem(
+                emoji: '⚠️',
+                title: '면책 조항',
+                onTap: () => context.push('/disclaimer'),
+              ),
+              const _SettingItem(
+                emoji: 'ℹ️',
+                title: '앱 정보',
+                sub: '버전 1.0.0',
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: TextButton(
+              key: const Key('wipe-button'),
+              onPressed: _confirmWipe,
+              style: TextButton.styleFrom(
+                foregroundColor: AppColors.alertInk,
+                padding: EdgeInsets.zero,
+                alignment: Alignment.centerLeft,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Text(
+                '⚠️ 모든 데이터 삭제',
+                style: AppTypography.title.copyWith(
+                  fontSize: 13.5,
+                  color: AppColors.alertInk,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
-          SwitchListTile(
-            title: const Text('연 1회 건강검진 알림'),
-            subtitle: const Text('가족별 1년에 한 번 알림'),
-            value: _checkupEnabled,
-            onChanged: (v) async {
-              setState(() => _checkupEnabled = v);
-              await SecureStorage.write(
-                  kCheckupEnabledKey, v ? '1' : '0');
-            },
           ),
-          const Divider(height: 24),
-          _sectionTitle('가족'),
-          ListTile(
-            title: const Text('가족 관리'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.push('/family-management'),
-          ),
-          ListTile(
-            title: const Text('가족 추가'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.push('/onboarding/family-add'),
-          ),
-          const Divider(height: 24),
-          _sectionTitle('정보'),
-          ListTile(
-            title: const Text('개인정보 처리방침'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.push('/privacy-policy'),
-          ),
-          ListTile(
-            title: const Text('면책 조항'),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => context.push('/disclaimer'),
-          ),
-          const ListTile(
-            title: Text('버전'),
-            trailing: Text('1.0.0'),
-          ),
-          const Divider(height: 24),
-          _sectionTitle('데이터'),
-          ListTile(
-            key: const Key('wipe-button'),
-            title: const Text('⚠️ 모든 데이터 삭제',
-                style: TextStyle(color: AppColors.error)),
-            onTap: _confirmWipe,
-          ),
-          const SizedBox(height: 24),
+          const DisclaimerFooter(),
         ],
       ),
     );
   }
 }
 
-Widget _sectionTitle(String title) => Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-      child: Text(title,
-          style: const TextStyle(
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textSecondary)),
+class _SectionLabel extends StatelessWidget {
+  final String label;
+  const _SectionLabel(this.label);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 16, 4, 8),
+      child: Text(
+        label,
+        style: AppTypography.caption.copyWith(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
     );
+  }
+}
+
+class _SectionGroup extends StatelessWidget {
+  final List<Widget> children;
+  const _SectionGroup({required this.children});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.r16),
+        boxShadow: AppShadows.card,
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadius.r16),
+        child: Column(
+          children: [
+            for (var i = 0; i < children.length; i++) ...[
+              if (i > 0) const Divider(height: 1, color: AppColors.divider),
+              children[i],
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SettingItem extends StatelessWidget {
+  final String emoji;
+  final String title;
+  final String? sub;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+
+  const _SettingItem({
+    required this.emoji,
+    required this.title,
+    this.sub,
+    this.trailing,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final row = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: AppColors.surfaceMuted,
+              borderRadius: BorderRadius.circular(AppRadius.r8),
+            ),
+            child: Text(emoji, style: const TextStyle(fontSize: 16)),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: AppTypography.title.copyWith(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                if (sub != null) ...[
+                  const SizedBox(height: 2),
+                  Text(
+                    sub!,
+                    style: AppTypography.caption.copyWith(fontSize: 12),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          trailing ??
+              const Icon(Icons.chevron_right, color: AppColors.faint, size: 18),
+        ],
+      ),
+    );
+    if (onTap == null) return row;
+    return InkWell(onTap: onTap, child: row);
+  }
+}
+
+class _TimePill extends StatelessWidget {
+  final String time;
+  final VoidCallback onTap;
+  const _TimePill({required this.time, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppRadius.r8),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.primarySoft,
+          borderRadius: BorderRadius.circular(AppRadius.r8),
+        ),
+        child: Text(
+          time,
+          style: AppTypography.title.copyWith(
+            fontSize: 13,
+            color: AppColors.primaryInk,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 Future<int?> _pickInt({
   required BuildContext context,
@@ -266,6 +456,10 @@ Future<int?> _pickInt({
   return showDialog<int>(
     context: context,
     builder: (dctx) => AlertDialog(
+      backgroundColor: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.r20),
+      ),
       title: Text(title),
       content: SingleChildScrollView(
         child: Column(
