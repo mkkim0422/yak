@@ -281,9 +281,31 @@ MemberAnalysis analyzeMember(FamilyMember member, ProductRepository repo) {
   );
 }
 
+/// Per-member nutrient analysis with riverpod's auto-cache.
+///
+/// We `select` only the specific member out of the family list — without
+/// this, *any* change to *any* member would invalidate every other
+/// member's analysis (since [familyMembersProvider] holds a list that
+/// becomes a new instance on every mutation). Selecting narrows the
+/// dependency to the specific member, so editing member A leaves the
+/// cached analyses for B/C/D untouched.
+///
+/// Trivial mutations (e.g. profile-photo path change) still produce a
+/// new [FamilyMember] instance via copyWith and therefore re-run
+/// [analyzeMember] — that's correct, but it's only one analysis instead
+/// of N. A more aggressive optimization (skipping analysis when the
+/// nutrient-relevant subset hasn't changed) is not worth the complexity
+/// at family sizes ≤ 4.
 final memberNutrientAnalysisProvider =
     Provider.family<MemberAnalysis, String>((ref, memberId) {
-  final member = ref.watch(familyProvider).getMember(memberId);
+  final member = ref.watch(
+    familyMembersProvider.select<FamilyMember?>((list) {
+      for (final m in list) {
+        if (m.id == memberId) return m;
+      }
+      return null;
+    }),
+  );
   if (member == null) return MemberAnalysis.empty();
   final repo = ref.watch(productRepositoryProvider);
   return analyzeMember(member, repo);

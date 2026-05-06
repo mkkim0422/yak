@@ -23,6 +23,7 @@ import '../features/onboarding/screens/notification_setup_screen.dart';
 import '../features/onboarding/screens/privacy_consent_screen.dart';
 import '../features/onboarding/screens/welcome_screen.dart';
 import '../features/settings/screens/settings_screen.dart';
+import '../features/supplements/screens/product_detail_screen.dart';
 import '../features/supplements/screens/supplement_guide_screen.dart';
 import '../features/symptom/screens/symptom_search_screen.dart';
 
@@ -160,6 +161,12 @@ final routerProvider = Provider<GoRouter>((ref) {
             editEntryId: state.pathParameters['entryId'],
           );
         },
+      ),
+      GoRoute(
+        path: '/product/:productId',
+        builder: (context, state) => ProductDetailScreen(
+          productId: state.pathParameters['productId']!,
+        ),
       ),
       GoRoute(
         path: '/supplement-guide/:supplementId',

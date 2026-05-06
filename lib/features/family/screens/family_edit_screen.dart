@@ -239,7 +239,13 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final member = ref.watch(familyControllerProvider).getMember(widget.memberId);
+    // Watch the list itself (not the controller) so build() re-runs when
+    // the member is mutated — e.g. after a profile-photo change. The
+    // earlier `ref.watch(familyControllerProvider)` returned the notifier
+    // instance, which does not trigger rebuilds on state changes.
+    ref.watch(familyMembersProvider);
+    final member =
+        ref.read(familyControllerProvider).getMember(widget.memberId);
     if (member == null) {
       return Scaffold(
         appBar: AppBar(),

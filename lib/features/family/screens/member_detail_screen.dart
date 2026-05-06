@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/data/models/product_model.dart';
-import '../../../core/data/nutrient_labels.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/notifications/notification_provider.dart';
 import '../../../core/security/secure_storage.dart';
@@ -17,7 +16,6 @@ import '../../../core/widgets/alyak_card.dart';
 import '../../../core/widgets/conflict_section.dart';
 import '../../../core/widgets/disclaimer_footer.dart';
 import '../../../core/widgets/product_image.dart';
-import '../../../core/widgets/product_photo.dart';
 import '../../../core/widgets/profile_avatar.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../home/providers/member_analysis_provider.dart';
@@ -25,6 +23,7 @@ import '../../home/widgets/nutrient_status_widgets.dart';
 import '../../onboarding/screens/notification_setup_screen.dart';
 import '../models/family_member.dart';
 import '../providers/family_provider.dart';
+import '../services/intake_grouping.dart';
 
 class MemberDetailScreen extends ConsumerWidget {
   final String memberId;
@@ -204,12 +203,16 @@ class _CurrentSupplementsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final taking = curatedProducts.length + member.manualProducts.length;
+    final schedule = buildGroupedSchedule(
+      curatedProducts: curatedProducts,
+      manuals: member.manualProducts,
+    );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(
-          title: '💊 현재 복용 중 · $taking개',
+          title: '💊 지금 챙기시는 영양제 · $taking개',
           action: _AddPill(
             onTap: () => _openAddSheet(context, member.id),
           ),
@@ -220,32 +223,77 @@ class _CurrentSupplementsSection extends ConsumerWidget {
             onTap: () => _openAddSheet(context, member.id),
           )
         else ...[
-          for (final p in curatedProducts)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: _CuratedProductCard(
-                product: p,
-                onRemove: () => _removeCurated(context, ref, member, p),
-              ),
-            ),
-          for (final m in member.manualProducts)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: _ManualProductCard(
-                entry: m,
-                onEdit: () => context.push(
-                  '/supplement/manual/edit/${m.id}?member=${member.id}',
+          for (final slot in IntakeSlot.values) ...[
+            _SlotHeader(slot: slot, count: schedule.forSlot(slot).length),
+            const SizedBox(height: 6),
+            for (final occ in schedule.forSlot(slot))
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: _CompactSupplementCard(
+                  occurrence: occ,
+                  onTap: () => _openOccurrence(context, member.id, occ),
+                  onRemove: () =>
+                      _removeOccurrence(context, ref, member, occ),
                 ),
-                onRemove: () => _removeManual(context, ref, member, m),
               ),
-            ),
-          const SizedBox(height: 4),
+            const SizedBox(height: 10),
+          ],
           _AddSupplementCard(
             onTap: () => _openAddSheet(context, member.id),
           ),
         ],
       ],
     );
+  }
+
+  void _openOccurrence(
+    BuildContext context,
+    String memberId,
+    IntakeOccurrence occ,
+  ) {
+    if (occ.isCurated) {
+      context.push('/product/${occ.entryId}');
+    } else {
+      context.push(
+        '/supplement/manual/edit/${occ.entryId}?member=$memberId',
+      );
+    }
+  }
+
+  Future<void> _removeOccurrence(
+    BuildContext context,
+    WidgetRef ref,
+    FamilyMember member,
+    IntakeOccurrence occ,
+  ) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (dCtx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r20),
+        ),
+        title: const Text('이 영양제를 삭제할까요?'),
+        content: Text(occ.name),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dCtx).pop(false),
+            child: const Text('취소'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(dCtx).pop(true),
+            child: const Text('삭제'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !context.mounted) return;
+
+    if (occ.isCurated && occ.product != null) {
+      await _removeCurated(context, ref, member, occ.product!);
+    } else if (!occ.isCurated && occ.manual != null) {
+      await _removeManual(context, ref, member, occ.manual!);
+    }
   }
 
   Future<void> _removeCurated(
@@ -298,158 +346,60 @@ void _toastDeleted(BuildContext context, String name) {
   );
 }
 
-/// Card for products from the curated 250-product DB.
-/// Shows scheduleLabel, "검증된 정보" badge, top ingredients.
-class _CuratedProductCard extends StatefulWidget {
-  final Product product;
+/// Compact (≈80px tall) supplement card. Shows the photo, the entry
+/// name, and a one-line dose label like "식후 2정". Tap to open the
+/// detail page (or the manual-edit screen for user-input entries).
+class _CompactSupplementCard extends StatelessWidget {
+  final IntakeOccurrence occurrence;
+  final VoidCallback onTap;
   final VoidCallback onRemove;
 
-  const _CuratedProductCard({required this.product, required this.onRemove});
-
-  @override
-  State<_CuratedProductCard> createState() => _CuratedProductCardState();
-}
-
-class _CuratedProductCardState extends State<_CuratedProductCard> {
-  bool _expanded = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final product = widget.product;
-    final allLines = _allIngredientLines(product.ingredients);
-    final ingredientCount = product.ingredients.length;
-
-    return AlyakCard(
-      padding: const EdgeInsets.all(14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              ProductImage(product: product, size: 64),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      product.name,
-                      style: AppTypography.title.copyWith(fontSize: 14.5),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      product.scheduleLabel,
-                      style: AppTypography.body2.copyWith(
-                        fontSize: 13,
-                        color: AppColors.ink2,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    const _SourceBadge(
-                      label: '✅ 검증된 정보',
-                      bg: AppColors.okBg,
-                      fg: AppColors.okInk,
-                    ),
-                  ],
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete_outline, size: 20),
-                color: AppColors.muted,
-                onPressed: () =>
-                    _confirmDelete(context, product.name, widget.onRemove),
-                tooltip: '삭제',
-                visualDensity: VisualDensity.compact,
-              ),
-            ],
-          ),
-          if (ingredientCount > 0) ...[
-            const SizedBox(height: 10),
-            InkWell(
-              borderRadius: BorderRadius.circular(AppRadius.r10),
-              onTap: () => setState(() => _expanded = !_expanded),
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 10),
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceMuted,
-                  borderRadius: BorderRadius.circular(AppRadius.r10),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          '영양소 $ingredientCount종',
-                          style: AppTypography.caption.copyWith(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.ink2,
-                          ),
-                        ),
-                        const Spacer(),
-                        Icon(
-                          _expanded
-                              ? Icons.keyboard_arrow_up
-                              : Icons.keyboard_arrow_down,
-                          color: AppColors.muted,
-                          size: 18,
-                        ),
-                      ],
-                    ),
-                    if (_expanded) ...[
-                      const SizedBox(height: 6),
-                      for (final line in allLines)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 2),
-                          child: Text(
-                            '· $line',
-                            style: AppTypography.body2.copyWith(
-                              fontSize: 12,
-                              color: AppColors.ink2,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-/// Card for user-input products. Shows scheduleLabel, "직접 입력한 정보"
-/// badge, and exposes both edit + delete buttons.
-class _ManualProductCard extends StatelessWidget {
-  final ManualProductEntry entry;
-  final VoidCallback onEdit;
-  final VoidCallback onRemove;
-
-  const _ManualProductCard({
-    required this.entry,
-    required this.onEdit,
+  const _CompactSupplementCard({
+    required this.occurrence,
+    required this.onTap,
     required this.onRemove,
   });
 
   @override
   Widget build(BuildContext context) {
-    return AlyakCard(
-      padding: const EdgeInsets.all(14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    final occ = occurrence;
+    final unit = occ.unit.isEmpty ? '정' : occ.unit;
+    final mealLabel = occ.mealRelation.label;
+    final doseLine = mealLabel.isEmpty
+        ? '${occ.dose}$unit'
+        : '$mealLabel ${occ.dose}$unit';
+
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppRadius.r12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.r12),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.r12),
+            border: Border.all(color: AppColors.hairline, width: 1),
+          ),
+          child: Row(
             children: [
-              const ProductPhoto(label: '직접', verified: false),
+              if (occ.isCurated && occ.product != null)
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(AppRadius.r10),
+                  child: ProductImage(product: occ.product!, size: 60),
+                )
+              else
+                Container(
+                  width: 60,
+                  height: 60,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: AppColors.surfaceMuted,
+                    borderRadius: BorderRadius.circular(AppRadius.r10),
+                  ),
+                  child: const Text('💊', style: TextStyle(fontSize: 24)),
+                ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -457,85 +407,98 @@ class _ManualProductCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      entry.name,
-                      style: AppTypography.title.copyWith(fontSize: 14.5),
-                      maxLines: 2,
+                      occ.name,
+                      style: AppTypography.title.copyWith(fontSize: 14),
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
-                    Text(
-                      entry.scheduleLabel,
-                      style: AppTypography.body2.copyWith(
-                        fontSize: 13,
-                        color: AppColors.ink2,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    const _SourceBadge(
-                      label: '📝 직접 입력한 정보',
-                      bg: AppColors.surfaceMuted,
-                      fg: AppColors.ink2,
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            doseLine,
+                            style: AppTypography.body2.copyWith(
+                              fontSize: 12.5,
+                              color: AppColors.ink2,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        _SourcePill(curated: occ.isCurated),
+                      ],
                     ),
                   ],
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.edit_outlined, size: 20),
+                icon: const Icon(Icons.delete_outline, size: 18),
                 color: AppColors.muted,
-                onPressed: onEdit,
-                tooltip: '수정',
                 visualDensity: VisualDensity.compact,
-              ),
-              IconButton(
-                icon: const Icon(Icons.delete_outline, size: 20),
-                color: AppColors.muted,
-                onPressed: () => _confirmDelete(context, entry.name, onRemove),
+                splashRadius: 18,
                 tooltip: '삭제',
-                visualDensity: VisualDensity.compact,
+                onPressed: onRemove,
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              color: AppColors.warnBg,
-              borderRadius: BorderRadius.circular(AppRadius.r10),
-            ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('⚠️', style: TextStyle(fontSize: 14)),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '정확한 함량 정보 없음',
-                        style: AppTypography.caption.copyWith(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.warnInk,
-                        ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        entry.intakeNote ?? '정확한 영양 분석이 어려워요',
-                        style: AppTypography.caption.copyWith(
-                          fontSize: 11.5,
-                          color: AppColors.ink2,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SourcePill extends StatelessWidget {
+  final bool curated;
+  const _SourcePill({required this.curated});
+
+  @override
+  Widget build(BuildContext context) {
+    final label = curated ? '✅ 검증' : '📝 직접';
+    final bg = curated ? AppColors.okBg : AppColors.surfaceMuted;
+    final fg = curated ? AppColors.okInk : AppColors.ink2;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: AppTypography.micro.copyWith(
+          fontSize: 10,
+          fontWeight: FontWeight.w800,
+          color: fg,
+        ),
+      ),
+    );
+  }
+}
+
+/// Time-of-day section header (🌅 아침 (3개) etc.). Stays simple even
+/// when the slot is empty so the user keeps a sense of the daily
+/// rhythm — empty slots render with a faint "(없음)" hint.
+class _SlotHeader extends StatelessWidget {
+  final IntakeSlot slot;
+  final int count;
+  const _SlotHeader({required this.slot, required this.count});
+
+  @override
+  Widget build(BuildContext context) {
+    final label = count == 0
+        ? '${slot.emoji} ${slot.label} (없음)'
+        : '${slot.emoji} ${slot.label} ($count개)';
+    return Padding(
+      padding: const EdgeInsets.only(top: 4, bottom: 2, left: 2),
+      child: Text(
+        label,
+        style: AppTypography.title.copyWith(
+          fontSize: 14,
+          fontWeight: FontWeight.w800,
+          color: count == 0 ? AppColors.faint : AppColors.ink,
+        ),
       ),
     );
   }
@@ -744,74 +707,6 @@ class _DashedRectPainter extends CustomPainter {
       old.color != color ||
       old.radius != radius ||
       old.strokeWidth != strokeWidth;
-}
-
-class _SourceBadge extends StatelessWidget {
-  final String label;
-  final Color bg;
-  final Color fg;
-  const _SourceBadge({
-    required this.label,
-    required this.bg,
-    required this.fg,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        label,
-        style: AppTypography.micro.copyWith(
-          fontSize: 10.5,
-          fontWeight: FontWeight.w700,
-          color: fg,
-        ),
-      ),
-    );
-  }
-}
-
-List<String> _allIngredientLines(Map<String, double> ingredients) {
-  if (ingredients.isEmpty) return const [];
-  final entries =
-      ingredients.entries.where((e) => e.value > 0).toList(growable: false);
-  return [
-    for (final e in entries) formatIngredientLine(e.key, e.value),
-  ];
-}
-
-Future<void> _confirmDelete(
-  BuildContext context,
-  String title,
-  VoidCallback onRemove,
-) async {
-  final ok = await showDialog<bool>(
-    context: context,
-    builder: (dCtx) => AlertDialog(
-      backgroundColor: AppColors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.r20),
-      ),
-      title: const Text('이 영양제를 삭제할까요?'),
-      content: Text(title),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(dCtx).pop(false),
-          child: const Text('취소'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.of(dCtx).pop(true),
-          child: const Text('삭제'),
-        ),
-      ],
-    ),
-  );
-  if (ok == true) onRemove();
 }
 
 class _CheckupSection extends ConsumerStatefulWidget {

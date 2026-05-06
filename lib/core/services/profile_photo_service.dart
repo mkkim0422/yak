@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/painting.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -40,10 +41,14 @@ class ProfilePhotoService {
   }
 
   /// Best-effort delete. Silently ignores a missing file so callers can
-  /// chain it after replace/reset without try/catch noise.
+  /// chain it after replace/reset without try/catch noise. Also evicts
+  /// the path from Flutter's image cache so a future load with the same
+  /// path (rare but possible) is forced to re-decode rather than serve
+  /// the now-deleted file's stale bytes.
   Future<void> deleteIfExists(String? path) async {
     if (path == null || path.isEmpty) return;
     final f = File(path);
+    PaintingBinding.instance.imageCache.evict(FileImage(f));
     if (await f.exists()) {
       try {
         await f.delete();
