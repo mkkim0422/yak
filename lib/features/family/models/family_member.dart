@@ -263,6 +263,10 @@ class FamilyMember {
   /// Free-text 200-char memo about the checkup ("콜레스테롤 200, 정상" etc.)
   final String? checkupNote;
 
+  /// Absolute path to a JPEG copied into app-internal storage. Null means
+  /// fall back to [avatarEmoji]. Cleared when the user resets the photo.
+  final String? profileImagePath;
+
   // Metadata
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -289,6 +293,7 @@ class FamilyMember {
     this.activeSymptomIds = const [],
     this.lastCheckupDate,
     this.checkupNote,
+    this.profileImagePath,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -419,6 +424,7 @@ class FamilyMember {
         'active_symptom_ids': activeSymptomIds,
         'last_checkup_date': lastCheckupDate?.toIso8601String(),
         'checkup_note': checkupNote,
+        'profile_image_path': profileImagePath,
         'created_at': createdAt.toIso8601String(),
         'updated_at': updatedAt.toIso8601String(),
       };
@@ -475,6 +481,7 @@ class FamilyMember {
           .toList(),
       lastCheckupDate: _parseDate(json['last_checkup_date']),
       checkupNote: json['checkup_note'] as String?,
+      profileImagePath: json['profile_image_path'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
@@ -506,6 +513,7 @@ class FamilyMember {
     List<String>? activeSymptomIds,
     DateTime? lastCheckupDate,
     String? checkupNote,
+    Object? profileImagePath = _unset,
     DateTime? updatedAt,
   }) =>
       FamilyMember(
@@ -530,7 +538,14 @@ class FamilyMember {
         activeSymptomIds: activeSymptomIds ?? this.activeSymptomIds,
         lastCheckupDate: lastCheckupDate ?? this.lastCheckupDate,
         checkupNote: checkupNote ?? this.checkupNote,
+        profileImagePath: identical(profileImagePath, _unset)
+            ? this.profileImagePath
+            : profileImagePath as String?,
         createdAt: createdAt,
         updatedAt: updatedAt ?? DateTime.now(),
       );
 }
+
+/// Sentinel used by [FamilyMember.copyWith] to distinguish "leave as is"
+/// from "explicitly set to null" for nullable fields like profileImagePath.
+const Object _unset = Object();

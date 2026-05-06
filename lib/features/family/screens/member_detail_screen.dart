@@ -14,11 +14,11 @@ import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_buttons.dart';
 import '../../../core/widgets/alyak_card.dart';
-import '../../../core/widgets/avatar_badge.dart';
 import '../../../core/widgets/conflict_section.dart';
 import '../../../core/widgets/disclaimer_footer.dart';
 import '../../../core/widgets/product_image.dart';
 import '../../../core/widgets/product_photo.dart';
+import '../../../core/widgets/profile_avatar.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../home/providers/member_analysis_provider.dart';
 import '../../home/widgets/nutrient_status_widgets.dart';
@@ -140,7 +140,14 @@ class _ProfileHero extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        AvatarBadge(emoji: member.avatarEmoji, size: 72),
+        GestureDetector(
+          onTap: onEdit,
+          child: ProfileAvatar(
+            member: member,
+            size: 72,
+            showEditHint: true,
+          ),
+        ),
         const SizedBox(width: 14),
         Expanded(
           child: Column(
@@ -203,29 +210,14 @@ class _CurrentSupplementsSection extends ConsumerWidget {
       children: [
         SectionHeader(
           title: '💊 현재 복용 중 · $taking개',
-          action: AlyakTextButton(
-            label: '+ 추가',
-            onPressed: () => _openAddSheet(context, member.id),
+          action: _AddPill(
+            onTap: () => _openAddSheet(context, member.id),
           ),
         ),
         if (taking == 0)
-          AlyakCard(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              children: [
-                const Text('💊', style: TextStyle(fontSize: 32)),
-                const SizedBox(height: 8),
-                Text(
-                  '아직 등록된 영양제가 없어요',
-                  style: AppTypography.title.copyWith(fontSize: 14),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '드시는 영양제가 있으면 추가해 주세요',
-                  style: AppTypography.caption.copyWith(fontSize: 12.5),
-                ),
-              ],
-            ),
+          _AddSupplementCard(
+            empty: true,
+            onTap: () => _openAddSheet(context, member.id),
           )
         else ...[
           for (final p in curatedProducts)
@@ -247,6 +239,10 @@ class _CurrentSupplementsSection extends ConsumerWidget {
                 onRemove: () => _removeManual(context, ref, member, m),
               ),
             ),
+          const SizedBox(height: 4),
+          _AddSupplementCard(
+            onTap: () => _openAddSheet(context, member.id),
+          ),
         ],
       ],
     );
@@ -543,6 +539,211 @@ class _ManualProductCard extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Compact teal pill for the section-header "+ 추가" — visually loud
+/// enough to read at a glance, unlike the previous tiny text-button.
+class _AddPill extends StatelessWidget {
+  final VoidCallback onTap;
+  const _AddPill({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.primary,
+      borderRadius: BorderRadius.circular(999),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(999),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.add_rounded, size: 16, color: Colors.white),
+              const SizedBox(width: 4),
+              Text(
+                '추가하기',
+                style: AppTypography.title.copyWith(
+                  fontSize: 13,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Big tappable add-supplement card. Used both as the empty-state hero
+/// and as the trailing slot below the supplement list — the dashed teal
+/// border + central "+" icon make it impossible to miss.
+class _AddSupplementCard extends StatelessWidget {
+  final VoidCallback onTap;
+  final bool empty;
+  const _AddSupplementCard({required this.onTap, this.empty = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.primarySoft.withValues(alpha: 0.4),
+      borderRadius: BorderRadius.circular(AppRadius.r14),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.r14),
+        onTap: onTap,
+        child: DottedBox(
+          radius: AppRadius.r14,
+          color: AppColors.primary,
+          dash: const [6, 4],
+          strokeWidth: 1.5,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: empty ? 24 : 18,
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: empty ? 48 : 42,
+                  height: empty ? 48 : 42,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(AppRadius.r12),
+                  ),
+                  child: Icon(
+                    Icons.add_rounded,
+                    color: Colors.white,
+                    size: empty ? 26 : 22,
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        empty ? '영양제 추가하기' : '영양제 더 추가하기',
+                        style: AppTypography.title.copyWith(
+                          fontSize: 15,
+                          color: AppColors.primaryInk,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        empty
+                            ? '검증된 250개 DB 검색 또는 직접 입력'
+                            : '라벨 검색 또는 직접 입력',
+                        style: AppTypography.caption.copyWith(
+                          fontSize: 12,
+                          color: AppColors.primaryInk
+                              .withValues(alpha: 0.85),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Lightweight dashed-border container — keeps the dependency graph clean
+/// (no extra package) and matches the look DottedBorder gives us.
+class DottedBox extends StatelessWidget {
+  final Widget child;
+  final double radius;
+  final Color color;
+  final List<double> dash;
+  final double strokeWidth;
+
+  const DottedBox({
+    super.key,
+    required this.child,
+    required this.radius,
+    required this.color,
+    this.dash = const [6, 4],
+    this.strokeWidth = 1.5,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      painter: _DashedRectPainter(
+        radius: radius,
+        color: color,
+        dash: dash,
+        strokeWidth: strokeWidth,
+      ),
+      child: child,
+    );
+  }
+}
+
+class _DashedRectPainter extends CustomPainter {
+  final double radius;
+  final Color color;
+  final List<double> dash;
+  final double strokeWidth;
+
+  _DashedRectPainter({
+    required this.radius,
+    required this.color,
+    required this.dash,
+    required this.strokeWidth,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rrect = RRect.fromRectAndRadius(
+      Offset.zero & size,
+      Radius.circular(radius),
+    );
+    final path = Path()..addRRect(rrect);
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+    final dashed = _dashedPath(path, dash);
+    canvas.drawPath(dashed, paint);
+  }
+
+  Path _dashedPath(Path source, List<double> pattern) {
+    final result = Path();
+    for (final metric in source.computeMetrics()) {
+      double distance = 0.0;
+      bool draw = true;
+      int idx = 0;
+      while (distance < metric.length) {
+        final len = pattern[idx % pattern.length];
+        if (draw) {
+          result.addPath(
+            metric.extractPath(distance, distance + len),
+            Offset.zero,
+          );
+        }
+        distance += len;
+        draw = !draw;
+        idx++;
+      }
+    }
+    return result;
+  }
+
+  @override
+  bool shouldRepaint(_DashedRectPainter old) =>
+      old.color != color ||
+      old.radius != radius ||
+      old.strokeWidth != strokeWidth;
 }
 
 class _SourceBadge extends StatelessWidget {

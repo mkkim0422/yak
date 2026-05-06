@@ -3,8 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/services/profile_photo_service.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/profile_avatar.dart';
 import '../models/family_member.dart';
 import '../providers/family_provider.dart';
 
@@ -40,6 +43,8 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
   late final Set<String> _allergies;
   late final Set<String> _medications;
   bool _initialized = false;
+
+  final ProfilePhotoService _photoService = ProfilePhotoService();
 
   @override
   void initState() {
@@ -114,6 +119,99 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
     context.pop();
   }
 
+  Future<void> _changePhoto(FamilyMember member) async {
+    final choice = await showModalBottomSheet<_PhotoAction>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      showDragHandle: true,
+      builder: (sheetCtx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text('프로필 사진 변경',
+                  style: AppTypography.heading2.copyWith(fontSize: 17)),
+              const SizedBox(height: 12),
+              _photoTile(
+                emoji: '📷',
+                title: '카메라로 찍기',
+                onTap: () =>
+                    Navigator.of(sheetCtx).pop(_PhotoAction.camera),
+              ),
+              const SizedBox(height: 8),
+              _photoTile(
+                emoji: '🖼️',
+                title: '갤러리에서 선택',
+                onTap: () =>
+                    Navigator.of(sheetCtx).pop(_PhotoAction.gallery),
+              ),
+              if (member.profileImagePath != null) ...[
+                const SizedBox(height: 8),
+                _photoTile(
+                  emoji: '🔄',
+                  title: '기본 이모지로 복원',
+                  onTap: () =>
+                      Navigator.of(sheetCtx).pop(_PhotoAction.reset),
+                ),
+              ],
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () => Navigator.of(sheetCtx).pop(),
+                child: const Text('취소'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (choice == null) return;
+
+    if (choice == _PhotoAction.reset) {
+      await _photoService.deleteIfExists(member.profileImagePath);
+      final updated = member.copyWith(profileImagePath: null);
+      await ref.read(familyControllerProvider).updateMember(updated);
+      if (!mounted) return;
+      _toast('기본 이모지로 복원했어요');
+      return;
+    }
+
+    try {
+      final picked = choice == _PhotoAction.camera
+          ? await _photoService.pickFromCamera()
+          : await _photoService.pickFromGallery();
+      if (picked == null) return;
+
+      final saved = await _photoService.saveForMember(
+        memberId: member.id,
+        src: picked,
+      );
+      // Wipe the previous file before persisting the new path.
+      await _photoService.deleteIfExists(member.profileImagePath);
+      final updated = member.copyWith(profileImagePath: saved);
+      await ref.read(familyControllerProvider).updateMember(updated);
+      if (!mounted) return;
+      _toast('프로필 사진이 변경됐어요');
+    } catch (e) {
+      if (!mounted) return;
+      _toast('사진을 가져올 수 없어요. 권한을 확인해주세요');
+    }
+  }
+
+  void _toast(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
   Future<void> _delete(FamilyMember m) async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -167,6 +265,11 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          _PhotoSection(
+            member: member,
+            onChange: () => _changePhoto(member),
+          ),
+          const SizedBox(height: 16),
           _section('기본 정보'),
           _label('이름 *'),
           TextField(
@@ -366,6 +469,97 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
       ),
     );
   }
+}
+
+enum _PhotoAction { camera, gallery, reset }
+
+class _PhotoSection extends StatelessWidget {
+  final FamilyMember member;
+  final VoidCallback onChange;
+
+  const _PhotoSection({required this.member, required this.onChange});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 18),
+      alignment: Alignment.center,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          GestureDetector(
+            onTap: onChange,
+            child: ProfileAvatar(
+              member: member,
+              size: 96,
+              showEditHint: true,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Material(
+            color: AppColors.primarySoft,
+            borderRadius: BorderRadius.circular(AppRadius.r12),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(AppRadius.r12),
+              onTap: onChange,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 14, vertical: 8),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.camera_alt_rounded,
+                        size: 16, color: AppColors.primaryInk),
+                    const SizedBox(width: 6),
+                    Text(
+                      '사진 변경하기',
+                      style: AppTypography.title.copyWith(
+                        fontSize: 13,
+                        color: AppColors.primaryInk,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+Widget _photoTile({
+  required String emoji,
+  required String title,
+  required VoidCallback onTap,
+}) {
+  return Material(
+    color: AppColors.surfaceMuted,
+    borderRadius: BorderRadius.circular(AppRadius.r12),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(AppRadius.r12),
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        child: Row(
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 22)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                title,
+                style: AppTypography.title.copyWith(fontSize: 14.5),
+              ),
+            ),
+            const Icon(Icons.chevron_right,
+                size: 18, color: AppColors.faint),
+          ],
+        ),
+      ),
+    ),
+  );
 }
 
 Widget _section(String title) => Padding(

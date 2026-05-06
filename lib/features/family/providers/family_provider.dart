@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -108,9 +109,19 @@ class FamilyMembersNotifier extends StateNotifier<List<FamilyMember>> {
   }
 
   Future<void> removeMember(String memberId) async {
+    final removed = getMember(memberId);
     state = state.where((m) => m.id != memberId).toList();
     await _storage.delete('$_kMemberPrefix$memberId');
     await _persistIndex();
+    // Best-effort: clean up the orphaned profile photo from app-internal
+    // storage. Silent on failure — a stale thumbnail is harmless.
+    final photo = removed?.profileImagePath;
+    if (photo != null && photo.isNotEmpty) {
+      try {
+        final f = File(photo);
+        if (await f.exists()) await f.delete();
+      } catch (_) {/* ignore */}
+    }
     if (_onMemberRemoved != null) {
       await _onMemberRemoved(memberId);
     }

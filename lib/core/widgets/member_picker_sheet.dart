@@ -6,7 +6,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_typography.dart';
 import '../widgets/alyak_buttons.dart';
 import '../widgets/alyak_card.dart';
-import '../widgets/avatar_badge.dart';
+import '../widgets/profile_avatar.dart';
 import '../../features/family/models/family_member.dart';
 import '../../features/family/providers/family_provider.dart';
 
@@ -120,7 +120,7 @@ class _MemberPicker extends ConsumerWidget {
                   onTap: () => Navigator.of(context).pop(m.id),
                   child: Row(
                     children: [
-                      AvatarBadge(emoji: m.avatarEmoji, size: 44),
+                      ProfileAvatar(member: m, size: 44),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(

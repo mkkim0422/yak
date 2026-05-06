@@ -81,6 +81,43 @@ void main() {
       expect(decoded.birthYear, DateTime.now().year - 30);
       expect(decoded.age, 30);
     });
+
+    test('profile_image_path round-trips when set', () {
+      final original = _member('m1').copyWith(
+        profileImagePath: '/data/profiles/m1_123.jpg',
+      );
+      final encoded = jsonEncode(original.toJson());
+      final decoded = FamilyMember.fromJson(
+        jsonDecode(encoded) as Map<String, dynamic>,
+      );
+      expect(decoded.profileImagePath, '/data/profiles/m1_123.jpg');
+    });
+
+    test('legacy payload without profile_image_path → null', () {
+      final original = _member('m1');
+      final json = original.toJson()..remove('profile_image_path');
+      final decoded =
+          FamilyMember.fromJson(jsonDecode(jsonEncode(json)) as Map<String, dynamic>);
+      expect(decoded.profileImagePath, isNull);
+    });
+
+    test('copyWith with explicit null clears the photo path', () {
+      final withPhoto = _member('m1').copyWith(
+        profileImagePath: '/data/profiles/m1_42.jpg',
+      );
+      expect(withPhoto.profileImagePath, isNotNull);
+      final cleared = withPhoto.copyWith(profileImagePath: null);
+      expect(cleared.profileImagePath, isNull);
+    });
+
+    test('copyWith without profileImagePath param preserves it', () {
+      final withPhoto = _member('m1').copyWith(
+        profileImagePath: '/data/profiles/m1_42.jpg',
+      );
+      final unchanged = withPhoto.copyWith(name: 'renamed');
+      expect(unchanged.profileImagePath, '/data/profiles/m1_42.jpg');
+      expect(unchanged.name, 'renamed');
+    });
   });
 
   group('FamilyMembersNotifier persistence', () {

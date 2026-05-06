@@ -7,7 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
-import '../../../core/widgets/avatar_badge.dart';
+import '../../../core/widgets/profile_avatar.dart';
 import '../../family/models/family_member.dart';
 import '../../family/providers/family_provider.dart';
 import '../providers/member_analysis_provider.dart';
@@ -111,7 +111,7 @@ class _LargeBody extends StatelessWidget {
           // Header — avatar + name + meta. No status pill, no top stripe.
           Row(
             children: [
-              AvatarBadge(emoji: member.avatarEmoji, size: 56),
+              ProfileAvatar(member: member, size: 56),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
@@ -210,8 +210,8 @@ class _CompactBody extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  AvatarBadge(
-                    emoji: member.avatarEmoji,
+                  ProfileAvatar(
+                    member: member,
                     size: 40,
                   ),
                   const SizedBox(width: 10),
@@ -298,7 +298,7 @@ class _MiniBody extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          AvatarBadge(emoji: member.avatarEmoji, size: 36),
+          ProfileAvatar(member: member, size: 36),
           const SizedBox(height: 8),
           Text(
             member.name,

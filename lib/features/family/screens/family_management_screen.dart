@@ -7,7 +7,7 @@ import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_buttons.dart';
 import '../../../core/widgets/alyak_card.dart';
-import '../../../core/widgets/avatar_badge.dart';
+import '../../../core/widgets/profile_avatar.dart';
 import '../models/family_member.dart';
 import '../providers/family_provider.dart';
 
@@ -131,7 +131,7 @@ class _MemberRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          AvatarBadge(emoji: member.avatarEmoji, size: 48),
+          ProfileAvatar(member: member, size: 48),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
