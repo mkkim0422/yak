@@ -8,7 +8,6 @@ import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/avatar_badge.dart';
-import '../../../core/widgets/status_pill.dart';
 import '../../family/models/family_member.dart';
 import '../../family/providers/family_provider.dart';
 import '../providers/member_analysis_provider.dart';
@@ -67,12 +66,9 @@ class FamilyMemberCard extends ConsumerWidget {
             color: AppColors.surface,
             borderRadius:
                 BorderRadius.circular(_radiusFor(variant)),
-            border: Border.all(
-              color: variant == FamilyCardVariant.mini
-                  ? AppColors.hairline
-                  : status.border.withValues(alpha: 0.2),
-              width: variant == FamilyCardVariant.mini ? 1 : 1.5,
-            ),
+            // Calm hairline border on every variant — drop the colored
+            // status outline that previously dominated the card.
+            border: Border.all(color: AppColors.hairline, width: 1),
             boxShadow: AppShadows.card,
           ),
           child: ClipRRect(
@@ -104,127 +100,92 @@ class _LargeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: Container(height: 4, color: status.border),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(18),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  AvatarBadge(
-                    emoji: member.avatarEmoji,
-                    status: status,
-                    size: 56,
-                  ),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          member.name,
-                          style: AppTypography.heading2.copyWith(fontSize: 17),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '${member.ageLabel} ${member.sex.label} · ${member.relationship.label}',
-                          style:
-                              AppTypography.caption.copyWith(fontSize: 12.5),
-                        ),
-                      ],
-                    ),
-                  ),
-                  StatusPill(status: status),
-                ],
-              ),
-              const SizedBox(height: 14),
-              _StatusBanner(status: status, analysis: analysis),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  const Text('💊', style: TextStyle(fontSize: 14)),
-                  const SizedBox(width: 6),
-                  Text(
-                    '${analysis.currentProductCount}개 복용 중',
-                    style: AppTypography.caption.copyWith(
-                      fontSize: 12.5,
-                      color: AppColors.muted,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _StatusBanner extends StatelessWidget {
-  final HealthStatus status;
-  final MemberAnalysis analysis;
-  const _StatusBanner({required this.status, required this.analysis});
-
-  @override
-  Widget build(BuildContext context) {
     final defs = analysis.deficits;
-    final isOk = status == HealthStatus.ok;
-    final label = isOk ? '잘 챙기시는 중' : '${defs.length}개 보충 필요';
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: status.bg,
-        borderRadius: BorderRadius.circular(AppRadius.r12),
-      ),
+    final hasDeficits = defs.isNotEmpty;
+    return Padding(
+      padding: const EdgeInsets.all(18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            label,
-            style: AppTypography.title.copyWith(
-              fontSize: 14,
-              color: status.ink,
-              fontWeight: FontWeight.w700,
-            ),
+          // Header — avatar + name + meta. No status pill, no top stripe.
+          Row(
+            children: [
+              AvatarBadge(emoji: member.avatarEmoji, size: 56),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      member.name,
+                      style: AppTypography.heading2.copyWith(fontSize: 17),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '${member.ageLabel} ${member.sex.label} · ${member.relationship.label}',
+                      style:
+                          AppTypography.caption.copyWith(fontSize: 12.5),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 3),
-          Text(
-            isOk
-                ? '권장 영양소를 모두 섭취 중'
-                : _deficitSummary(defs),
-            style: AppTypography.caption.copyWith(
-              fontSize: 12,
-              color: AppColors.ink2,
-              fontWeight: FontWeight.w500,
-            ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          const SizedBox(height: 16),
+          Container(height: 1, color: AppColors.divider),
+          const SizedBox(height: 14),
+          // Primary info — what they're taking. Plain text, no boxes.
+          Row(
+            children: [
+              const Text('💊', style: TextStyle(fontSize: 14)),
+              const SizedBox(width: 6),
+              Text(
+                '챙기시는 영양제 ${analysis.currentProductCount}개',
+                style: AppTypography.title.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: AppColors.ink2,
+                ),
+              ),
+            ],
           ),
+          if (hasDeficits) ...[
+            const SizedBox(height: 12),
+            Container(height: 1, color: AppColors.divider),
+            const SizedBox(height: 10),
+            // Secondary info — deficits, calmly. Greyed body, no badge,
+            // no colored box, no exclamation marks.
+            Text(
+              '보충 필요 영양소',
+              style: AppTypography.caption.copyWith(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: AppColors.muted,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              _deficitSummary(defs),
+              style: AppTypography.body2.copyWith(
+                fontSize: 13,
+                color: AppColors.muted,
+                fontWeight: FontWeight.w500,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
         ],
       ),
     );
   }
 
   static String _deficitSummary(List<NutrientDeficit> deficits) {
-    if (deficits.isEmpty) return '오늘 점검이 필요해요';
     final top = deficits.take(2).map((d) => d.displayName).join(', ');
     final extra = deficits.length - 2;
-    return extra > 0 ? '$top  +$extra개 더' : top;
+    return extra > 0 ? '$top 외 $extra개' : top;
   }
 }
 
@@ -241,17 +202,9 @@ class _CompactBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final taking = analysis.currentProductCount;
-    return Stack(
-      children: [
-        Positioned(
-          left: 0,
-          top: 0,
-          bottom: 0,
-          child: Container(width: 3, color: status.border),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(14, 12, 12, 12),
-          child: Column(
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(14, 12, 12, 12),
+      child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -299,8 +252,6 @@ class _CompactBody extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ],
     );
   }
 }
@@ -340,51 +291,42 @@ class _MiniBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          child: Container(height: 3, color: status.border),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
+    final taking = analysis.currentProductCount;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          AvatarBadge(emoji: member.avatarEmoji, size: 36),
+          const SizedBox(height: 8),
+          Text(
+            member.name,
+            style: AppTypography.title.copyWith(fontSize: 13),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Text(
+            '${member.age}세 ${member.sex.label}',
+            style: AppTypography.micro.copyWith(fontSize: 10.5),
+          ),
+          const SizedBox(height: 8),
+          Row(
             children: [
-              AvatarBadge(
-                emoji: member.avatarEmoji,
-                status: status,
-                size: 36,
-              ),
-              const SizedBox(height: 8),
               Text(
-                member.name,
-                style: AppTypography.title.copyWith(fontSize: 13),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Text(
-                '${member.age}세 ${member.sex.label}',
-                style: AppTypography.micro.copyWith(fontSize: 10.5),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                status == HealthStatus.ok
-                    ? '✅ 충분'
-                    : '${analysis.deficits.length}개 부족',
-                style: AppTypography.caption.copyWith(
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                  color: status.ink,
+                '💊 $taking개',
+                style: AppTypography.body2.copyWith(
+                  fontSize: 11.5,
+                  color: AppColors.ink2,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
+              const Spacer(),
+              _StatusDot(status: status, hasProducts: taking > 0),
             ],
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

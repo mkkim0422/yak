@@ -4,10 +4,11 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
-import '../../../core/widgets/coverage_bar.dart';
 import '../providers/member_analysis_provider.dart';
 
-/// Tier 1: top deficits with reasons + progress bars. Always expanded.
+/// Top deficits — flat grey bullet list. Tone is informational, never
+/// alarming. Detailed % / reasons are intentionally dropped from this card;
+/// they live on the recommendation screen the "💊 영양제 사러 가기" CTA opens.
 class NutrientPriorityCard extends StatelessWidget {
   final List<NutrientStatus> items;
   const NutrientPriorityCard({super.key, required this.items});
@@ -16,43 +17,16 @@ class NutrientPriorityCard extends StatelessWidget {
   Widget build(BuildContext context) {
     if (items.isEmpty) {
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(vertical: 4),
         child: Text(
           '부족한 영양소가 없어요',
-          style: AppTypography.body2,
+          style: AppTypography.body2.copyWith(color: AppColors.muted),
         ),
       );
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          '🔴 우선 보충 필요',
-          style: AppTypography.sectionTitle.copyWith(fontSize: 15),
-        ),
-        const SizedBox(height: 10),
-        for (var i = 0; i < items.length; i++) ...[
-          if (i > 0) const SizedBox(height: 8),
-          _RecCard(status: items[i]),
-        ],
-      ],
-    );
-  }
-}
-
-class _RecCard extends StatelessWidget {
-  final NutrientStatus status;
-  const _RecCard({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    final pct = status.deficit.percentage.clamp(0, 100);
-    final hs = pct < 50 ? HealthStatus.alert : HealthStatus.warn;
-
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(AppRadius.r16),
@@ -60,49 +34,21 @@ class _RecCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Expanded(
-                child: Text(
-                  status.deficit.displayName,
-                  style: AppTypography.title.copyWith(fontSize: 15),
-                ),
-              ),
-              Text(
-                '$pct%',
-                style: AppTypography.title.copyWith(
-                  fontSize: 13,
-                  color: hs.ink,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          CoverageBar(percent: pct.toDouble(), status: hs),
-          const SizedBox(height: 10),
-          Text(
-            '· 현재 ${status.deficit.current.toStringAsFixed(0)} / '
-            '권장 ${status.deficit.recommended.toStringAsFixed(0)}',
-            style: AppTypography.caption.copyWith(
-              fontSize: 12.5,
-              color: AppColors.ink2,
-            ),
-          ),
-          for (final r in status.reasons.take(2))
+          for (var i = 0; i < items.length; i++) ...[
+            if (i > 0) const SizedBox(height: 4),
             Padding(
-              padding: const EdgeInsets.only(top: 2),
+              padding: const EdgeInsets.symmetric(vertical: 2),
               child: Text(
-                '· $r',
-                style: AppTypography.caption.copyWith(
-                  fontSize: 12.5,
-                  color: AppColors.muted,
+                '• ${items[i].deficit.displayName}',
+                style: AppTypography.body2.copyWith(
+                  fontSize: 14,
+                  color: AppColors.ink2,
                 ),
               ),
             ),
+          ],
         ],
       ),
     );

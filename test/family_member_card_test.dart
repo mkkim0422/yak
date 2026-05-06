@@ -133,10 +133,13 @@ void main() {
     });
   });
 
-  // The redesigned cards use a white surface with a tinted border + status
-  // stripe, so we assert against the BORDER tint instead of the background.
-  group('Card color coding by deficit count', () {
-    testWidgets('zero deficits → ok status border', (tester) async {
+  // After the persona-driven tone-down the card surface is a calm white with
+  // a hairline border on every variant — no more colored top stripes or
+  // status outlines. The status signal lives entirely in the small dot
+  // (compact) or the soft greyed deficit summary (large).
+  group('Card surface stays neutral', () {
+    testWidgets('zero deficits → hairline border, no status tint',
+        (tester) async {
       final m = member('m1');
       await tester.pumpWidget(
         _wrap(
@@ -154,12 +157,10 @@ void main() {
           .first);
       final deco = container.decoration as BoxDecoration;
       final border = deco.border as Border;
-      expect(border.top.color.r, AppColors.okBorder.r);
-      expect(border.top.color.g, AppColors.okBorder.g);
-      expect(border.top.color.b, AppColors.okBorder.b);
+      expect(border.top.color, AppColors.hairline);
     });
 
-    testWidgets('three deficits → alert status border', (tester) async {
+    testWidgets('three deficits → still hairline border', (tester) async {
       final m = member('m1');
       final analysis = MemberAnalysis(
         deficits: [
@@ -191,9 +192,7 @@ void main() {
           .first);
       final deco = container.decoration as BoxDecoration;
       final border = deco.border as Border;
-      expect(border.top.color.r, AppColors.alertBorder.r);
-      expect(border.top.color.g, AppColors.alertBorder.g);
-      expect(border.top.color.b, AppColors.alertBorder.b);
+      expect(border.top.color, AppColors.hairline);
     });
   });
 

@@ -1,5 +1,7 @@
 // Locks in the persona-driven simplification:
-//  * 4-row entry list ("영양제 새로 사고 싶어요" 등) is gone — single CTA "영양제 사러 가기" stands in.
+//  * 4-row entry list ("영양제 새로 사고 싶어요" 등) is gone.
+//  * Top-level "영양제 사러 가기" CTA is now on the member screen, not home.
+//  * "+ 가족 추가하기" button is restored on the home grid.
 //  * compact family card no longer surfaces deficit-name lists or "{N}개 부족" pill.
 //  * AppColors.alertBorder/alertInk now resolves to the amber palette, not red.
 
@@ -91,8 +93,12 @@ void main() {
     expect(find.text('가족 관리'), findsNothing);
     expect(find.text('🎯 무엇을 도와드릴까요?'), findsNothing);
 
-    // New CTA in its place.
-    expect(find.text('영양제 사러 가기'), findsOneWidget);
+    // The "buy supplements" CTA was relocated off home — it now lives on
+    // the member detail screen.
+    expect(find.text('영양제 사러 가기'), findsNothing);
+
+    // "+ 가족 추가하기" is the only secondary action on home.
+    expect(find.text('+ 가족 추가하기'), findsOneWidget);
   });
 
   testWidgets('compact family card shows positive copy only', (tester) async {

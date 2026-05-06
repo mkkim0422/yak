@@ -76,6 +76,8 @@ class MemberDetailScreen extends ConsumerWidget {
             analysis: analysis,
             memberId: memberId,
           ),
+          const SizedBox(height: 20),
+          _BuyCta(memberId: memberId),
           const SizedBox(height: 12),
           const _IntakeSourceDisclaimer(),
           const DisclaimerFooter(),
@@ -695,28 +697,18 @@ class _NutritionStatusSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hasDeficits = analysis.priority.isNotEmpty;
     final hasSecondary = analysis.secondary.isNotEmpty;
     final hasSufficient = analysis.sufficient.isNotEmpty;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(title: '📊 영양 상태'),
+        const SectionHeader(title: '보충 필요 영양소'),
         NutrientPriorityCard(items: analysis.priority),
-        if (hasDeficits) ...[
-          const SizedBox(height: 12),
-          PrimaryButton(
-            label: '추천 영양제 보기 →',
-            full: true,
-            size: AlyakButtonSize.md,
-            onPressed: () => context.push('/recommendation/$memberId'),
-          ),
-        ],
         if (hasSecondary) ...[
           const SizedBox(height: 12),
           NutrientCollapsibleSection(
-            title: '🟡 추가로 챙기시면 좋아요',
+            title: '추가로 챙기시면 좋아요',
             count: analysis.secondary.length,
             items: analysis.secondary.map(formatSecondaryLine).toList(),
           ),
@@ -724,7 +716,7 @@ class _NutritionStatusSection extends StatelessWidget {
         if (hasSufficient) ...[
           const SizedBox(height: 12),
           NutrientCollapsibleSection(
-            title: '✅ 잘 챙기시는 영양소',
+            title: '잘 챙기시는 영양소',
             count: analysis.sufficient.length,
             items: analysis.sufficient
                 .take(8)
@@ -733,6 +725,82 @@ class _NutritionStatusSection extends StatelessWidget {
           ),
         ],
       ],
+    );
+  }
+}
+
+/// Big buy-supplements CTA for the bottom of the member screen. Always
+/// rendered (whether or not the user has deficits) — that's the primary
+/// action the screen drives toward.
+class _BuyCta extends StatelessWidget {
+  final String memberId;
+  const _BuyCta({required this.memberId});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.primary,
+      borderRadius: BorderRadius.circular(AppRadius.r16),
+      child: InkWell(
+        onTap: () => context.push('/recommendation/$memberId'),
+        borderRadius: BorderRadius.circular(AppRadius.r16),
+        child: Container(
+          padding:
+              const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(AppRadius.r16),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x2200ACC1),
+                blurRadius: 16,
+                offset: Offset(0, 6),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 44,
+                height: 44,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.18),
+                  borderRadius: BorderRadius.circular(AppRadius.r12),
+                ),
+                child: const Text('💊', style: TextStyle(fontSize: 22)),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '영양제 사러 가기',
+                      style: AppTypography.title.copyWith(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '부족한 영양소와 추천 제품을 알려드려요',
+                      style: AppTypography.caption.copyWith(
+                        fontSize: 12.5,
+                        color: Colors.white.withValues(alpha: 0.92),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right,
+                  color: Colors.white, size: 22),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
