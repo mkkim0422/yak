@@ -88,6 +88,10 @@ _BAD_MARKERS = (
     "/brands/menu/", "/main/", "/banner",
     "favicon",
     "account_v2", "/cms/my-account/", "/account/",
+    ".svg",
+    # Eundan ships a 240×39 horizontal banner as og:image — same file name
+    # across all product pages.
+    "/skin/basic_coordination_c/upload/happy_skin/",
 )
 
 

@@ -83,6 +83,11 @@ def process_image(raw: bytes) -> Optional[bytes]:
             w, h = im.size
             if w < MIN_DIMENSION or h < MIN_DIMENSION:
                 return None
+            # Banner / strip rejection. Real product photos are ~square
+            # (0.5–2.0 aspect). Anything narrower/wider is a header banner.
+            ratio = w / h
+            if ratio < 0.5 or ratio > 2.0:
+                return None
             # Convert any palette/RGBA to RGB on a white canvas.
             if im.mode != "RGB":
                 bg = Image.new("RGB", im.size, (255, 255, 255))
