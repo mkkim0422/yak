@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/alyak_card.dart';
+import '../../../core/widgets/disclaimer_footer.dart';
+import '../../../core/widgets/entry_row.dart';
+import '../../../core/widgets/section_header.dart';
+import '../../family/providers/family_provider.dart';
 import '../widgets/family_cards_section.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -12,117 +18,152 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final hasFamily = ref.watch(familyProvider).members.isNotEmpty;
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text(AppStrings.appName),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () => context.push('/settings'),
-            tooltip: AppStrings.settingsTitle,
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: const [
-          _Greeting(),
-          SizedBox(height: 16),
-          FamilyCardsSection(),
-          SizedBox(height: 24),
-          _HelpSection(),
-          SizedBox(height: 24),
-          _NotificationsSection(),
-          SizedBox(height: 16),
-          _Disclaimer(),
-        ],
-      ),
-    );
-  }
-}
-
-class _Greeting extends StatelessWidget {
-  const _Greeting();
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(AppStrings.homeGreeting, style: AppTypography.body1),
-        const SizedBox(height: 4),
-        Text(AppStrings.homeFamilyTitle, style: AppTypography.heading1),
-      ],
-    );
-  }
-}
-
-class _HelpSection extends StatelessWidget {
-  const _HelpSection();
-
-  @override
-  Widget build(BuildContext context) {
-    final entries = <_HelpEntry>[
-      _HelpEntry(
-        AppStrings.entryBuySupplements,
-        () => context.push('/recommendation/select'),
-      ),
-      _HelpEntry(
-        AppStrings.entryCurrentCheck,
-        () => context.push('/current-check/select'),
-      ),
-      _HelpEntry(
-        AppStrings.entrySymptomSearch,
-        () => context.push('/symptom-search'),
-      ),
-      _HelpEntry(
-        AppStrings.entryFamilyManage,
-        () => context.push('/family-management'),
-      ),
-    ];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(AppStrings.homeHelpTitle, style: AppTypography.heading3),
-        const SizedBox(height: 12),
-        for (final e in entries)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 14, vertical: 14),
-                  foregroundColor: AppColors.textPrimary,
-                  side: BorderSide(
-                      color: AppColors.primary.withValues(alpha: 0.3)),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                ),
-                onPressed: e.onTap,
-                child: Row(
-                  children: [
-                    Expanded(child: Text(e.label, style: AppTypography.body1)),
-                    const Icon(Icons.chevron_right,
-                        color: AppColors.textSecondary),
-                  ],
-                ),
+      body: SafeArea(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const _HomeHeader(),
+            const SizedBox(height: 4),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 4, 20, 0),
+              child: FamilyCardsSection(),
+            ),
+            const SizedBox(height: 24),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: _EntryList(),
+            ),
+            if (hasFamily) ...[
+              const SizedBox(height: 24),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: _NotificationsSection(),
               ),
+            ],
+            const SizedBox(height: 12),
+            const DisclaimerFooter(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _HomeHeader extends StatelessWidget {
+  const _HomeHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '안녕하세요 👋',
+                  style: AppTypography.caption.copyWith(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '우리 가족 영양제',
+                  style: AppTypography.heading1.copyWith(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
             ),
           ),
-      ],
+          _SettingsBell(
+            onTap: () => context.push('/settings'),
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _HelpEntry {
-  final String label;
+class _SettingsBell extends StatelessWidget {
   final VoidCallback onTap;
-  _HelpEntry(this.label, this.onTap);
+  const _SettingsBell({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppRadius.r12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppRadius.r12),
+        child: Container(
+          width: 40,
+          height: 40,
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.r12),
+            boxShadow: AppShadows.card,
+          ),
+          child: const Icon(Icons.settings_outlined,
+              color: AppColors.ink, size: 20),
+        ),
+      ),
+    );
+  }
+}
+
+class _EntryList extends StatelessWidget {
+  const _EntryList();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SectionHeader(title: '🎯 무엇을 도와드릴까요?'),
+        EntryRow(
+          icon: '💊',
+          title: '영양제 새로 사고 싶어요',
+          sub: '부족한 영양소와 추천 제품을 알려드려요',
+          accent: AppColors.primarySoft,
+          onTap: () => context.push('/recommendation/select'),
+        ),
+        const SizedBox(height: 8),
+        EntryRow(
+          icon: '⚠️',
+          title: '지금 먹는 것 점검하기',
+          sub: '충돌과 과다 섭취를 체크해드려요',
+          accent: AppColors.warnBg,
+          onTap: () => context.push('/current-check/select'),
+        ),
+        const SizedBox(height: 8),
+        EntryRow(
+          icon: '🤒',
+          title: '증상에 맞는 영양제',
+          sub: '어떤 증상이 있으세요?',
+          accent: const Color(0xFFFFE8E8),
+          onTap: () => context.push('/symptom-search'),
+        ),
+        const SizedBox(height: 8),
+        EntryRow(
+          icon: '👨‍👩‍👧',
+          title: '가족 관리',
+          sub: '가족 추가, 정보 수정',
+          accent: AppColors.surfaceMuted,
+          onTap: () => context.push('/family-management'),
+        ),
+      ],
+    );
+  }
 }
 
 class _NotificationsSection extends ConsumerWidget {
@@ -130,34 +171,59 @@ class _NotificationsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Notifications source not wired up yet — render only when populated.
-    final notifications = const <String>[];
-    if (notifications.isEmpty) return const SizedBox.shrink();
-
+    // Notifications source not wired up yet — show static UI sample only when
+    // there is at least one member, matching the design.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(AppStrings.homeNotificationsTitle, style: AppTypography.heading3),
-        const SizedBox(height: 8),
-        for (final note in notifications)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Text('· $note', style: AppTypography.body1),
+        const SectionHeader(title: '🔔 알림'),
+        AlyakCard(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _NotifIcon(emoji: '📦', bg: AppColors.warnBg),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '복용 중인 영양제를 확인해 주세요',
+                      style: AppTypography.title.copyWith(fontSize: 14),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '곧 다 드시거나 떨어진 영양제가 없는지 점검해 주세요',
+                      style: AppTypography.caption.copyWith(fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
+        ),
       ],
     );
   }
 }
 
-class _Disclaimer extends StatelessWidget {
-  const _Disclaimer();
+class _NotifIcon extends StatelessWidget {
+  final String emoji;
+  final Color bg;
+  const _NotifIcon({required this.emoji, required this.bg});
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      AppStrings.disclaimerText,
-      style: AppTypography.caption,
-      textAlign: TextAlign.center,
+    return Container(
+      width: 32,
+      height: 32,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(AppRadius.r10),
+      ),
+      child: Text(emoji, style: const TextStyle(fontSize: 16)),
     );
   }
 }

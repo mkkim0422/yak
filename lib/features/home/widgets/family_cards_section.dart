@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
+import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/alyak_buttons.dart';
 import '../../family/models/family_member.dart';
 import '../../family/providers/family_provider.dart';
 import 'family_member_card.dart';
@@ -21,24 +23,7 @@ class FamilyCardsSection extends ConsumerWidget {
       return const _EmptyFamilyState();
     }
 
-    Widget layout;
-    if (members.length == 1) {
-      layout = _SingleMemberLarge(member: members.first);
-    } else if (members.length == 2) {
-      layout = _TwoMembersRow(members: members);
-    } else if (members.length == 3) {
-      layout = _ThreeMembersLayout(members: members);
-    } else {
-      layout = _GridLayout(members: members);
-    }
-
-    return Column(
-      children: [
-        layout,
-        const SizedBox(height: 12),
-        const _AddMemberButton(),
-      ],
-    );
+    return _DynamicLayout(members: members);
   }
 }
 
@@ -48,27 +33,43 @@ class _EmptyFamilyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 20),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppRadius.r20),
+        border: Border.all(
+          color: AppColors.hairline,
+          width: 1.5,
+          style: BorderStyle.solid,
+        ),
+        boxShadow: AppShadows.card,
       ),
       child: Column(
         children: [
-          const Text('👨‍👩‍👧', style: TextStyle(fontSize: 40)),
-          const SizedBox(height: 12),
-          Text(AppStrings.emptyFamilyTitle, style: AppTypography.heading3),
+          const Text('👨‍👩‍👧‍👦', style: TextStyle(fontSize: 36)),
+          const SizedBox(height: 8),
+          Text(
+            '가족을 추가해 주세요',
+            style: AppTypography.title.copyWith(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
           const SizedBox(height: 6),
           Text(
-            AppStrings.emptyFamilyDescription,
-            style: AppTypography.body2,
+            '한 폰에서 4명까지 관리할 수 있어요.\n1분이면 끝나요.',
             textAlign: TextAlign.center,
+            style: AppTypography.body2.copyWith(
+              fontSize: 13,
+              color: AppColors.muted,
+              height: 1.5,
+            ),
           ),
           const SizedBox(height: 16),
-          FilledButton(
+          PrimaryButton(
+            label: '+ 가족 추가하기',
+            size: AlyakButtonSize.md,
             onPressed: () => context.push('/onboarding/family-add'),
-            child: const Text(AppStrings.addFamilyButton),
           ),
         ],
       ),
@@ -76,115 +77,195 @@ class _EmptyFamilyState extends StatelessWidget {
   }
 }
 
-class _SingleMemberLarge extends StatelessWidget {
-  final FamilyMember member;
-  const _SingleMemberLarge({required this.member});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: FamilyMemberCard(member: member, isLarge: true),
-    );
-  }
-}
-
-class _TwoMembersRow extends StatelessWidget {
+/// Variants:
+///   1 → large
+///   2 → row of compact
+///   3 → 1 large + 2 compact
+///   4 → 2x2 grid of compact
+///   5+ → 2x2 grid + horizontal mini scroll
+class _DynamicLayout extends StatelessWidget {
   final List<FamilyMember> members;
-  const _TwoMembersRow({required this.members});
+  const _DynamicLayout({required this.members});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 175,
-      child: Row(
+    if (members.length == 1) {
+      return FamilyMemberCard(
+        member: members.first,
+        variant: FamilyCardVariant.large,
+      );
+    }
+    if (members.length == 2) {
+      return IntrinsicHeight(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: FamilyMemberCard(
+                member: members[0],
+                variant: FamilyCardVariant.compact,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: FamilyMemberCard(
+                member: members[1],
+                variant: FamilyCardVariant.compact,
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+    if (members.length == 3) {
+      return Column(
         children: [
-          Expanded(child: _CompactCardCell(member: members[0])),
-          const SizedBox(width: 12),
-          Expanded(child: _CompactCardCell(member: members[1])),
+          FamilyMemberCard(
+            member: members[0],
+            variant: FamilyCardVariant.large,
+          ),
+          const SizedBox(height: 10),
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: FamilyMemberCard(
+                    member: members[1],
+                    variant: FamilyCardVariant.compact,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: FamilyMemberCard(
+                    member: members[2],
+                    variant: FamilyCardVariant.compact,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
-      ),
-    );
-  }
-}
-
-class _ThreeMembersLayout extends StatelessWidget {
-  final List<FamilyMember> members;
-  const _ThreeMembersLayout({required this.members});
-
-  @override
-  Widget build(BuildContext context) {
+      );
+    }
+    if (members.length == 4) {
+      return _Grid2x2(members: members);
+    }
+    // 5+
     return Column(
       children: [
-        _SingleMemberLarge(member: members[0]),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 175,
-          child: Row(
-            children: [
-              Expanded(child: _CompactCardCell(member: members[1])),
-              const SizedBox(width: 12),
-              Expanded(child: _CompactCardCell(member: members[2])),
-            ],
-          ),
-        ),
+        _Grid2x2(members: members.sublist(0, 4)),
+        const SizedBox(height: 10),
+        _MiniScroll(members: members.sublist(4)),
       ],
     );
   }
 }
 
-class _GridLayout extends StatelessWidget {
+class _Grid2x2 extends StatelessWidget {
   final List<FamilyMember> members;
-  const _GridLayout({required this.members});
+  const _Grid2x2({required this.members});
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-        mainAxisExtent: 175,
+    Widget row(int a, int b) => IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: FamilyMemberCard(
+                  member: members[a],
+                  variant: FamilyCardVariant.compact,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: FamilyMemberCard(
+                  member: members[b],
+                  variant: FamilyCardVariant.compact,
+                ),
+              ),
+            ],
+          ),
+        );
+
+    return Column(
+      children: [
+        row(0, 1),
+        const SizedBox(height: 10),
+        row(2, 3),
+      ],
+    );
+  }
+}
+
+class _MiniScroll extends StatelessWidget {
+  final List<FamilyMember> members;
+  const _MiniScroll({required this.members});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 130,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.zero,
+        itemCount: members.length + 1,
+        separatorBuilder: (_, _) => const SizedBox(width: 10),
+        itemBuilder: (context, index) {
+          if (index == members.length) {
+            return _AddSlot(
+              onTap: () => context.push('/onboarding/family-add'),
+            );
+          }
+          return SizedBox(
+            width: 110,
+            child: FamilyMemberCard(
+              member: members[index],
+              variant: FamilyCardVariant.mini,
+            ),
+          );
+        },
       ),
-      itemCount: members.length,
-      itemBuilder: (context, index) =>
-          _CompactCardCell(member: members[index]),
     );
   }
 }
 
-class _CompactCardCell extends StatelessWidget {
-  final FamilyMember member;
-  const _CompactCardCell({required this.member});
+class _AddSlot extends StatelessWidget {
+  final VoidCallback onTap;
+  const _AddSlot({required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 175,
-      child: FamilyMemberCard(member: member),
-    );
-  }
-}
-
-class _AddMemberButton extends StatelessWidget {
-  const _AddMemberButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton.icon(
-        icon: const Icon(Icons.add, size: 18),
-        label: const Text('가족 추가하기'),
-        style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.primary,
-          side: BorderSide(color: AppColors.primary.withValues(alpha: 0.5)),
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.r14),
+        onTap: onTap,
+        child: Container(
+          width: 110,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(AppRadius.r14),
+            border: Border.all(
+              color: AppColors.hairline,
+              width: 1.5,
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('＋', style: TextStyle(fontSize: 18, color: AppColors.muted)),
+              const SizedBox(height: 4),
+              Text(
+                '가족 추가',
+                style: AppTypography.caption.copyWith(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
         ),
-        onPressed: () => context.push('/onboarding/family-add'),
       ),
     );
   }
