@@ -51,7 +51,8 @@
       ],
       "popularity_rank": 1,
       "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=A11AOOOOO0627",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/714/992/012/6b0ecd5c62ba47ef979a7244bdfbf387.jpg?v=20260506152554"
     },
     {
       "id": "centrum_man",
@@ -80,7 +81,8 @@
       "popularity_rank": 2,
       "notes": "한국 발매 라벨 22종 비타민·미네랄. 함량 미공개 항목은 누락",
       "data_source": "https://centrum.pchkorea.co.kr/product/centrum-for-men",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/085/538/004/3a40ecc06c2142a1a2309063a3f91a76.jpg?v=20260506153213"
     },
     {
       "id": "centrum_silver_man",
@@ -154,7 +156,7 @@
       "popularity_rank": 4,
       "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=A000000150030",
       "verified_date": "2026-05-06",
-      "image_url": "https://mstatic.oliveyoung.co.kr/mc-static-root/image/comm/noimg_550.gif"
+      "image_url": "https://img.danuri.io/catalog-image/652/960/110/4bba3fb568784fa29e018e0f0adf979a.jpg?v=20260506074153"
     },
     {
       "id": "solgar_multi_man",
@@ -194,7 +196,7 @@
       "popularity_rank": 5,
       "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=A000000150031",
       "verified_date": "2026-05-06",
-      "image_url": "https://mstatic.oliveyoung.co.kr/mc-static-root/image/comm/noimg_550.gif"
+      "image_url": "https://img.danuri.io/catalog-image/634/247/090/1fec1ac422c9482aa72f07b303f68977.jpg?v=20260506154808"
     },
     {
       "id": "imp_premium",
@@ -398,7 +400,8 @@
       "popularity_rank": 12,
       "notes": "고함량 비타민D3. 의사 상담 후 권장",
       "data_source": "https://www.vitatra.com/product/detail/42091",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/148/147/013/3436c758c692401583af4ed09c1a6f5b.jpg?v=20260504114953"
     },
     {
       "id": "now_d3_1000",
@@ -425,7 +428,8 @@
       ],
       "popularity_rank": 13,
       "data_source": "https://www.iherb.com/pr/now-foods-vitamin-d-3-1-000-iu-180-softgels/729",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/770/073/017/34bb083247f2409b8c89171422df9889.jpg?v=20260504114926"
     },
     {
       "id": "lactofit_gold",
@@ -555,7 +559,8 @@
       "popularity_rank": 17,
       "notes": "1일 2포 보장균수 100억 CFU (포당 50억 = 5)",
       "data_source": "https://www.duolac.co.kr/gd/prdDtlView.do?pdtCd=NP00000815",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/256/865/099/8d32705eacf54e54bbe991f6ad16e0a5.jpg?v=20260506080347"
     },
     {
       "id": "duolac_kids",
@@ -610,7 +615,8 @@
       ],
       "popularity_rank": 19,
       "data_source": "https://prod.danawa.com/info/?pcode=4280991",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/956/421/120/788bf0459e654462b70d8d2ac1655d2b.jpg?v=20260506125338"
     },
     {
       "id": "eundan_vit_c_1000",
@@ -639,7 +645,8 @@
       ],
       "popularity_rank": 20,
       "data_source": "https://www.eundan.com/bbs_detail.php?bbs_num=160&tb=board_free&menu_number=470",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/426/012/002/86fb6a9b98574da0bc152f8c1490a83f.jpg?v=20260506153708"
     },
     {
       "id": "eundan_megadose_c",
@@ -756,7 +763,8 @@
       "popularity_rank": 24,
       "notes": "굴 껍질 유래 천연 칼슘",
       "data_source": "https://prod.danawa.com/info/?pcode=6352198",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/289/726/006/a1b0c9eb738443238074764fc0966b07.jpg?v=20260505045840"
     },
     {
       "id": "nordic_ultimate_omega",
@@ -845,7 +853,8 @@
       "popularity_rank": 27,
       "notes": "60ml 액상. 1일 1ml 권장 시 DHA 8mg, EPA 6mg, D 5IU",
       "data_source": "https://www.ople.com/m/shop/item.php?it_id=1282598579",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/500/132/018/cf8e0ab7ac1044c5ac885661c13d39d1.jpg?v=20260506090838"
     },
     {
       "id": "nordic_kids_dha",
@@ -902,7 +911,8 @@
       "popularity_rank": 29,
       "notes": "1일 2캡슐 = EPA+DHA 600mg. rTG 형태",
       "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000059",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/557/762/012/6f66c96b907144818d9bc03d9e69cddf.jpg?v=20260506151047"
     },
     {
       "id": "promega_triple",
@@ -929,7 +939,8 @@
       ],
       "popularity_rank": 30,
       "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000059",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/230/929/013/3dce253b03664e0a8df2f995be539002.jpg?v=20260506140802"
     },
     {
       "id": "atomy_rtg_omega3",
@@ -1019,7 +1030,8 @@
       ],
       "popularity_rank": 33,
       "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000288",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/602/204/060/eeea8d6c8da948f3a48d90c4ad1f0c3e.jpg?v=20260506083524"
     },
     {
       "id": "elevit",
@@ -1085,7 +1097,8 @@
       ],
       "popularity_rank": 35,
       "data_source": "https://www.elenew.co.kr/product-range/elenew1",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/577/251/029/56df833bc26e4dcea7bc6c748c479c0a.jpg?v=20260506070506"
     },
     {
       "id": "elenew_2",
@@ -1115,7 +1128,8 @@
       ],
       "popularity_rank": 36,
       "data_source": "https://www.elenew.co.kr/product-range",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/304/281/009/bb974888daba4ad1a9dabad784de50c8.jpg?v=20260506155048"
     },
     {
       "id": "ginexin_f_40",
@@ -1254,7 +1268,8 @@
       "popularity_rank": 41,
       "notes": "체리/아몬드/홉 유래 식물성 멜라토닌 2mg. 테아닌·트립토판·GABA·발레리안 부원료. 취침 전 1-2정",
       "data_source": "https://m.doctorlean.co.kr/goods/view?no=385",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/110/275/049/8bba61aacde44b85ab2d96d10b25d969.jpg?v=20260506142851"
     },
     {
       "id": "estrog100",
@@ -1280,7 +1295,8 @@
       "popularity_rank": 42,
       "notes": "백수오·한속단·당귀 열수추출물. 1일 514mg/일 권장 (1정 257mg×2)",
       "data_source": "https://www.naturalendo.co.kr/default/product/product_1.php?tit=03&sub=01",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/061/059/071/911d372e0fca4b1ea8383eaae5a5e5b8.jpg?v=20260506080534"
     },
     {
       "id": "jks_red_ginseng_extract",
@@ -1309,7 +1325,8 @@
       "popularity_rank": 43,
       "notes": "6년근 고형분 64%. 진세노사이드 Rg1+Rb1+Rg3 5.5mg/g. 1일 3g (1포)",
       "data_source": "https://www.jungkwanjang.co.kr/products/view.do?ref_id=324&id=394",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/083/659/001/3e19f73ebd5c4767882c639f50b03855.jpg?v=20260506150023"
     },
     {
       "id": "jks_everytime_limited",
@@ -1365,7 +1382,8 @@
       "popularity_rank": 45,
       "notes": "함량 비공개 (라벨 표시 100% 권장량 충족). 사과맛 분말 스틱",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/894/429/020/32bba365af2d4326ab11950b4975b2de.jpg?v=20260506083333"
     },
     {
       "id": "eundan_kids_multi",
@@ -1531,7 +1549,8 @@
       ],
       "popularity_rank": 51,
       "data_source": "https://www.gradium.co.kr/milk-thistle/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/566/825/005/31430a487e214b549f19c0412909553d.jpg?v=20260506125653"
     },
     {
       "id": "now_milk_thistle",
@@ -1642,7 +1661,8 @@
       "popularity_rank": 55,
       "notes": "식약처 권장 4-12mg/일. 헤마토코쿠스 추출",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/690/084/101/1b06bc12aa5f41a7a69839f161c1ceed.jpg?v=20260506144029"
     },
     {
       "id": "creatine_monohydrate",
@@ -1698,7 +1718,8 @@
       "popularity_rank": 57,
       "notes": "나티콜 BPMG 콜라겐 1500mg/포. 부원료 비타민C·판토텐산·비오틴·D·아연·셀렌",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/187/987/028/4710ae8b17fe46b9861afa891a21319d.jpg?v=20260506131613"
     },
     {
       "id": "evercollagen_time",
@@ -1797,7 +1818,8 @@
       "popularity_rank": 60,
       "notes": "베지캡슐. 1일 1캡슐 식사와 함께",
       "data_source": "https://www.ople.com/m/shop/item.php?it_id=1505230841",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/748/597/043/806311e5a2fa4cb5acc4cf5ccd47c8a5.jpg?v=20260506074754"
     },
     {
       "id": "now_b50",
@@ -1833,7 +1855,7 @@
       "notes": "PABA, 콜린, 이노시톨 추가",
       "data_source": "https://www.iherb.com/pr/now-foods-b-50-100-veg-capsules/447",
       "verified_date": "2026-05-06",
-      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now00471/s/62.jpg"
+      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now00471/l/62.jpg"
     },
     {
       "id": "gnc_megaman",
@@ -1878,7 +1900,8 @@
       "popularity_rank": 62,
       "notes": "1일 2정 권장. 표기 함량은 1정 기준 (라벨 2정 분량의 절반)",
       "data_source": "https://prod.danawa.com/info/?pcode=3375355",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/355/375/003/e9abf89ab6aa4361b8d60e02d239787b.jpg?v=20260504153540"
     },
     {
       "id": "gnc_womens_ultra_mega",
@@ -1926,7 +1949,8 @@
       ],
       "popularity_rank": 63,
       "data_source": "https://www.dongwonmall.com/product/detail.do?productId=000094901",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/669/378/003/cda75b3ecfee4d62856777196c19958d.jpg?v=20260504153604"
     },
     {
       "id": "now_adam",
@@ -1954,7 +1978,8 @@
       "popularity_rank": 64,
       "notes": "함량 비공개. 식사와 함께 1일 2캡슐",
       "data_source": "https://food119.co.kr/40/?idx=769",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/005/204/121/6838b25ba4cd4527be513fce1266cca3.jpg?v=20260506075415"
     },
     {
       "id": "now_eve",
@@ -1982,7 +2007,8 @@
       "popularity_rank": 65,
       "notes": "함량 비공개. 1일 3캡슐 = 약 2개월분",
       "data_source": "https://food119.co.kr/40/?idx=770",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/936/746/087/79abb29121a74e9db9f4777e42a0d19d.jpg?v=20260506072038"
     },
     {
       "id": "solgar_ca_mg_zn",
@@ -2046,7 +2072,8 @@
       "popularity_rank": 67,
       "notes": "1일 5정 (총 Ca 1000 + Mg 500 + D 400IU)",
       "data_source": "https://prod.danawa.com/info/?pcode=17689739",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/739/689/017/3099ef040033417590d99e7003d8266a.jpg?v=20260506062520"
     },
     {
       "id": "ckd_vit_d_1000",
@@ -2076,7 +2103,8 @@
       "popularity_rank": 68,
       "notes": "1정 400mg. 영양소기준치 250%",
       "data_source": "https://prod.danawa.com/info/?pcode=3121502",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/502/121/003/1fadb0bb4475444d93ae26ae0b406f52.jpg?v=20260506130552"
     },
     {
       "id": "ckd_vit_d_2000",
@@ -2104,7 +2132,8 @@
       ],
       "popularity_rank": 69,
       "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000208",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/568/231/019/8b956ca7900943ee8bb4ddc259dfa557.jpg?v=20260506015627"
     },
     {
       "id": "atomy_spirulina",
@@ -2188,7 +2217,8 @@
       "popularity_rank": 72,
       "notes": "보스웰리아추출물 800mg/정. 식약처 일일 섭취량 500mg/일",
       "data_source": "https://www.ckdhc.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/826/284/029/c4cef08282af4a0681b0e247ebac4507.jpg?v=20260504111412"
     },
     {
       "id": "esther_boswellia",
@@ -2337,7 +2367,8 @@
       "popularity_rank": 77,
       "notes": "1정 263mg / 아연 30mg (글루콘산아연)",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/912/160/076/6d76b36c2cb24ded9a2a3dd8ea18e8a0.jpg?v=20260506060304"
     },
     {
       "id": "now_zinc_50",
@@ -2365,7 +2396,7 @@
       "popularity_rank": 78,
       "data_source": "https://www.iherb.com/",
       "verified_date": "2026-05-06",
-      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/cms/my-account/account_v2.png"
+      "image_url": "https://img.danuri.io/catalog-image/351/267/006/08f7ab6b68534a3db6005e3a7e631610.jpg?v=20260506152623"
     },
     {
       "id": "ckd_krill_oil",
@@ -2421,7 +2452,8 @@
       "popularity_rank": 80,
       "notes": "L-카르니틴 일반 권장 500-2000mg",
       "data_source": "https://naturegreenlife.co.kr/product/elkaslim",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/690/084/101/1b06bc12aa5f41a7a69839f161c1ceed.jpg?v=20260506144029"
     },
     {
       "id": "glucosamine_general",
@@ -2449,7 +2481,8 @@
       "popularity_rank": 81,
       "notes": "골관절염 권장 1일 1500mg. 1정 500mg × 3정",
       "data_source": "https://gradium.co.kr/glucosamine/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/690/084/101/1b06bc12aa5f41a7a69839f161c1ceed.jpg?v=20260506144029"
     },
     {
       "id": "chondroitin_general",
@@ -2478,7 +2511,8 @@
       "popularity_rank": 82,
       "notes": "1일 800-1200mg. 1정 600mg × 2정",
       "data_source": "https://prod.danawa.com/info/?pcode=13412984",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/690/084/101/1b06bc12aa5f41a7a69839f161c1ceed.jpg?v=20260506144029"
     },
     {
       "id": "msm_general",
@@ -2681,7 +2715,8 @@
       "popularity_rank": 89,
       "notes": "성인 일일 권장 60mcg, 상한 400mcg",
       "data_source": "https://m.oliveyoung.co.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/442/272/029/15d07ed82d2243048b68086844d0e652.jpg?v=20260506081709"
     },
     {
       "id": "now_selenium_100",
@@ -2709,7 +2744,7 @@
       "popularity_rank": 90,
       "data_source": "https://www.iherb.com/",
       "verified_date": "2026-05-06",
-      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/cms/my-account/account_v2.png"
+      "image_url": "https://img.danuri.io/catalog-image/806/070/017/b35800a746f342af86f7e9d294526050.jpg?v=20260506074229"
     },
     {
       "id": "myprotein_the_whey",
@@ -2767,7 +2802,8 @@
       "popularity_rank": 92,
       "notes": "공복 권장. 임상 600-1800mg 범위 사용",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/690/084/101/1b06bc12aa5f41a7a69839f161c1ceed.jpg?v=20260506144029"
     },
     {
       "id": "lipo_vit_c_general",
@@ -2797,7 +2833,8 @@
       "popularity_rank": 93,
       "notes": "리포좀 형태 = 흡수율↑. 일반 시장 500-1500mg/포",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/690/084/101/1b06bc12aa5f41a7a69839f161c1ceed.jpg?v=20260506144029"
     },
     {
       "id": "ckd_glucosamine_plus",
@@ -2826,7 +2863,8 @@
       "popularity_rank": 94,
       "notes": "1정 1200mg 中 글루코사민 함량 추정. 1일 2정 = 1200mg",
       "data_source": "https://prod.danawa.com/info/?pcode=1780625",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/733/384/106/100cd2ea1b824018864c58fafb815b76.jpg?v=20260506085714"
     },
     {
       "id": "gnc_lutein_20",
@@ -2856,7 +2894,8 @@
       "popularity_rank": 95,
       "notes": "식약처 일일 최대 20mg",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/227/413/052/fb6dc2ed446b40a48213bf0f0b7c2e5d.jpg?v=20260506065613"
     },
     {
       "id": "gnc_lutein_40",
@@ -2884,7 +2923,8 @@
       "popularity_rank": 96,
       "notes": "1정 40mg (식약처 상한치 초과 — 라벨 1/2정 권장 가능성)",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/865/191/071/70129389b7224f229b904cbde44c6e24.jpg?v=20260506081658"
     },
     {
       "id": "doctorlin_lutein_zeaxanthin_24",
@@ -2915,7 +2955,8 @@
       "popularity_rank": 97,
       "notes": "오전 식후 1캡슐",
       "data_source": "https://m.doctorlean.co.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/766/956/014/b777d5e142e34b12a60cc4a8d20e864e.jpg?v=20260506073649"
     },
     {
       "id": "tanacia_q",
@@ -3001,7 +3042,8 @@
       "popularity_rank": 100,
       "notes": "1정 1500mg 中 철 24mg (1일 영양성분기준치 200%)",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/035/721/009/b7a90180685a484782fe3a88c640e693.jpg?v=20260504114831"
     },
     {
       "id": "choa_vit_d_4000_chewable",
@@ -3092,7 +3134,8 @@
       "popularity_rank": 103,
       "notes": "보장균수 100억 CFU/일",
       "data_source": "https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000179239",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/333/938/018/e4adc0c4a60448c3b17764b29a9a3249.jpg?v=20260506144029"
     },
     {
       "id": "cj_byocore_skin_immune",
@@ -3146,7 +3189,8 @@
       "popularity_rank": 105,
       "notes": "보장균수 50억 CFU. 식약처 기능성 인정",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/618/652/067/7bdc0384f1f34ae2aec660c5b9930dff.jpg?v=20260506072717"
     },
     {
       "id": "atomy_b_complex",
@@ -3274,7 +3318,8 @@
       "popularity_rank": 108,
       "notes": "1일 4정 2500mg. 표기는 1정 기준 (1일분 ÷ 4)",
       "data_source": "https://kr.atomy.com/product/000181",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/664/342/097/17728e59982d4161a5fa9bf228196617.jpg?v=20260504111758"
     },
     {
       "id": "atomy_inner_collagen",
@@ -3333,7 +3378,8 @@
       "popularity_rank": 110,
       "notes": "공복 권장. 일반 600-1800mg/일",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/690/084/101/1b06bc12aa5f41a7a69839f161c1ceed.jpg?v=20260506144029"
     },
     {
       "id": "curcumin_general",
@@ -3422,7 +3468,8 @@
       "popularity_rank": 113,
       "notes": "성인 상한 35mg — 분할 복용 권장",
       "data_source": "https://m.oliveyoung.co.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/454/148/006/3465de8237bb45a2816b3a263403f39e.jpg?v=20260506092123"
     },
     {
       "id": "pilly_red_ginseng_octacosanol",
@@ -3544,7 +3591,8 @@
       "popularity_rank": 117,
       "notes": "1일 2포 = 콜라겐 3270mg + Gly-Pro-Val-Gly-Pro-Ser 2.7141mg + 비타민C 150mg. 512 Da 저분자",
       "data_source": "https://prod.danawa.com/info/?pcode=14622788",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/833/622/014/02830a688bd348b08319153a2b6b84a8.jpg?v=20260506070359"
     },
     {
       "id": "ckd_elastin_collagen",
@@ -3570,7 +3618,8 @@
       "popularity_rank": 118,
       "notes": "함량 비공개. 먹는 히알루론산 분말 형태",
       "data_source": "https://www.ckdhc.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/900/247/016/cffed9a2572e401ebb216deacad32551.jpg?v=20260506144053"
     },
     {
       "id": "jks_everytime_regular",
@@ -3686,7 +3735,8 @@
       "popularity_rank": 122,
       "notes": "함량 비공개. 초임계 추출 rTG",
       "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000059",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/167/768/018/1aa107103cd94d3eae48f45e6951fdce.jpg?v=20260506151013"
     },
     {
       "id": "promega_dual_plus",
@@ -3776,7 +3826,8 @@
       "popularity_rank": 125,
       "notes": "1일 2캡슐 = 300mg 권장",
       "data_source": "https://prod.danawa.com/info/?pcode=7862869",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/591/205/082/2b37d7f0f0f04c7881273f9aa996a99e.jpg?v=20260506072509"
     },
     {
       "id": "now_l_theanine_200",
@@ -3805,7 +3856,8 @@
       "popularity_rank": 126,
       "notes": "사용자 후기: 수면 질 개선 69%, 스트레스 감소 63%",
       "data_source": "https://www.iherb.com/pr/now-foods-l-theanine-200-mg-60-veg-capsules/12099",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/179/592/005/2661d17759c842a1ab3ea9023c1a42a7.jpg?v=20260504114654"
     },
     {
       "id": "neworigin_vit_d_mushroom",
@@ -3865,7 +3917,8 @@
       "popularity_rank": 128,
       "notes": "산사나무 열매 함유",
       "data_source": "https://www.iherb.com/pr/now-foods-coq10-100-mg-50-veg-capsules/61",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/616/036/091/c31f70015e444517a63883cc65d73223.jpg?v=20260506155040"
     },
     {
       "id": "solgar_coq10_200",
@@ -3895,7 +3948,8 @@
       "popularity_rank": 129,
       "notes": "고흡수 유비퀴논 형태",
       "data_source": "https://m.oliveyoung.co.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/359/042/030/168e3e55d324431a87f087e320379861.jpg?v=20260506061848"
     },
     {
       "id": "aminovital_pro_3800",
@@ -3993,7 +4047,7 @@
       "notes": "1테이블스푼(약 6g) = 식이섬유 5g",
       "data_source": "https://www.iherb.com/",
       "verified_date": "2026-05-06",
-      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/cms/my-account/account_v2.png"
+      "image_url": "https://img.danuri.io/catalog-image/105/471/062/5c3b5fde3f6245c183d4dacabaee096a.jpg?v=20260506090508"
     },
     {
       "id": "5htp_general",
@@ -4052,7 +4106,8 @@
       "popularity_rank": 134,
       "notes": "1일 2g 권장. 1g 단위 표기 (1g per 'g' 단위)",
       "data_source": "https://us.myprotein.com/p/sports-nutrition/citrulline-malate/10852539/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/072/586/019/05e37a3371d94eb2bede42c193b43287.jpg?v=20260506081517"
     },
     {
       "id": "myprotein_aakg",
@@ -4110,7 +4165,8 @@
       "popularity_rank": 136,
       "notes": "식약처 상한치 (1정 40mg) — 의사 상담 권장",
       "data_source": "https://m.oliveyoung.co.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/408/883/049/13946d7ce0774fc69e66dd31035b0c87.jpg?v=20260506070128"
     },
     {
       "id": "neworigin_lutein_zeaxanthin_astaxanthin",
@@ -4173,7 +4229,8 @@
       "popularity_rank": 138,
       "notes": "1캡슐 160mg",
       "data_source": "https://www.neworigin.co.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/681/300/029/8fb8510f7eed427d9760afa351e7aa29.jpg?v=20260506134808"
     },
     {
       "id": "ckd_iron_folate_d_plus",
@@ -4235,7 +4292,8 @@
       "popularity_rank": 140,
       "notes": "철-아세틸트랜스페린 (계란 단백질 결합) — 흡수율↑",
       "data_source": "https://www.ckdpharm.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/167/768/018/1aa107103cd94d3eae48f45e6951fdce.jpg?v=20260506151013"
     },
     {
       "id": "jks_hongijanggun_2",
@@ -4323,7 +4381,8 @@
       "popularity_rank": 143,
       "notes": "1일 3-5g. 단백질 약 69.5%",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/690/084/101/1b06bc12aa5f41a7a69839f161c1ceed.jpg?v=20260506144029"
     },
     {
       "id": "lacfido_kids_d_1000",
@@ -4352,7 +4411,8 @@
       "popularity_rank": 144,
       "notes": "씹어 먹는 형태. 어린이용",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/761/237/018/4a5a0ddc50aa435b8a2efbd65e177766.jpg?v=20260506081449"
     },
     {
       "id": "celltrion_kids_d_2000",
@@ -4380,7 +4440,8 @@
       "popularity_rank": 145,
       "notes": "1캡슐 350mg",
       "data_source": "https://www.celltrionhealthcare.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/291/610/019/611ec054333d48248794129d6917cf27.jpg?v=20260504115248"
     },
     {
       "id": "jamieson_kids_d_chewable",
@@ -4406,7 +4467,8 @@
       "popularity_rank": 146,
       "notes": "함량 미공개 (1정 1400mg)",
       "data_source": "https://www.jamiesonvitamins.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/973/220/004/1fbb0e6c979648ea9bc80e97964f0ec0.jpg?v=20260506081549"
     },
     {
       "id": "myprotein_beta_alanine",
@@ -4525,7 +4587,8 @@
       "popularity_rank": 150,
       "notes": "어린이 홍삼 중 진세노사이드 8.8mg/포로 높은 편",
       "data_source": "https://www.hamsoamall.co.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/878/162/006/03a57feef4514b90a197eea912831e7e.jpg?v=20260504114713"
     },
     {
       "id": "krill_oil_general",
@@ -4556,7 +4619,8 @@
       "popularity_rank": 151,
       "notes": "인지질 약 50%, EPA 14-18%, DHA 8-12% 표준 추정",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/690/084/101/1b06bc12aa5f41a7a69839f161c1ceed.jpg?v=20260506144029"
     },
     {
       "id": "iherb_lcarnitine",
@@ -4679,7 +4743,8 @@
       "popularity_rank": 155,
       "notes": "1정 290mg. 1일 1회",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/599/232/029/97f9554896d04e88a017ca76865929a1.jpg?v=20260430185924"
     },
     {
       "id": "eaa_general",
@@ -4709,7 +4774,8 @@
       "popularity_rank": 156,
       "notes": "9종 필수 아미노산. 1일 10-20g 권장",
       "data_source": "https://www.muscleup.co.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/690/084/101/1b06bc12aa5f41a7a69839f161c1ceed.jpg?v=20260506144029"
     },
     {
       "id": "solgar_l_arginine_1000",
@@ -4768,7 +4834,7 @@
       "popularity_rank": 158,
       "data_source": "https://www.iherb.com/pr/now-foods-l-arginine-1-000-mg-120-tablets/411",
       "verified_date": "2026-05-06",
-      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now00035/s/32.jpg"
+      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now00035/l/32.jpg"
     },
     {
       "id": "ckd_joint_pain_quick",
@@ -4857,7 +4923,8 @@
       "popularity_rank": 161,
       "notes": "1정 500mg",
       "data_source": "https://www.ople.com/m/shop/item.php?it_id=1341933335",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/330/048/003/e0f0d9eca8b64914bd2d45f2d6dfb497.jpg?v=20260506041252"
     },
     {
       "id": "njorigin_saw_palmetto_1100",
@@ -4886,7 +4953,8 @@
       "popularity_rank": 162,
       "notes": "1캡슐 1100mg. 로르산 115mg (식약처 권장 충족)",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/644/289/029/95f4787a5ee54150af1dd55c5cf16f7c.jpg?v=20260506045752"
     },
     {
       "id": "cranberry_general",
@@ -4914,7 +4982,8 @@
       "popularity_rank": 163,
       "notes": "Cran-Max 표준화 추출물. 안토시아노사이드 1.25mg",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/690/084/101/1b06bc12aa5f41a7a69839f161c1ceed.jpg?v=20260506144029"
     },
     {
       "id": "active_folate_general",
@@ -4944,7 +5013,8 @@
       "popularity_rank": 164,
       "notes": "L-methylfolate / 5-MTHF 형태. UMFA 안전성 ↑",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/690/084/101/1b06bc12aa5f41a7a69839f161c1ceed.jpg?v=20260506144029"
     },
     {
       "id": "ckd_zinc_plus_30",
@@ -4975,7 +5045,8 @@
       "popularity_rank": 165,
       "notes": "글루콘산아연 + 구리 (장기 복용 시 구리 결핍 예방)",
       "data_source": "https://www.ckdhc.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/799/275/029/49948e396cd14adc8cca23e61b4f0492.jpg?v=20260506154643"
     },
     {
       "id": "thegm_more_heme_iron_woman",
@@ -5097,7 +5168,8 @@
       "popularity_rank": 169,
       "notes": "어린이 홍삼 중 진세노사이드 9.6mg/포로 최다",
       "data_source": "https://www.nhhansamin.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/435/421/031/e876cd3e72494b26b7c1d2f3fd97b586.jpg?v=20260506074652"
     },
     {
       "id": "nordic_kids_dha_capsule",
@@ -5158,7 +5230,8 @@
       "popularity_rank": 171,
       "notes": "1정당 EPA 135 + DHA 90 + 기타 = 283mg",
       "data_source": "https://www.nordic.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/307/248/006/f2c796cdcb4645949ec5a0c7795624bf.jpg?v=20260430193107"
     },
     {
       "id": "nordic_omega_2x_mini",
@@ -5282,7 +5355,8 @@
       "popularity_rank": 175,
       "notes": "분말 1포 L-카르니틴 2000mg. 식약처 인정",
       "data_source": "https://www.ckdhc.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/833/622/014/02830a688bd348b08319153a2b6b84a8.jpg?v=20260506070359"
     },
     {
       "id": "imp_power_a_plus",
@@ -5394,7 +5468,8 @@
       "popularity_rank": 178,
       "notes": "1정 800mg, 2개월분 60정. 다나와 가격비교 함량 공개",
       "data_source": "https://www.ckdhc.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/234/748/006/5e47956e8f704b3dbff973ec8f04c1c6.jpg?v=20260506155423"
     },
     {
       "id": "denps_truvitamin",
@@ -5459,7 +5534,8 @@
       "popularity_rank": 180,
       "notes": "1정 850mg, B군 일일권장량 300%까지. 정확 mg 비공개로 ingredients 비움",
       "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000208",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/507/309/065/092320715b4e4c93b1a556e124daede2.jpg?v=20260506080341"
     },
     {
       "id": "eundan_vit_c_gold_plus",
@@ -5542,7 +5618,8 @@
       "popularity_rank": 182,
       "notes": "2025mg/정. 인삼/귀리/마늘 부원료 포함",
       "data_source": "https://www.dongwonmall.com/product/detail.do?productId=000094901",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/669/378/003/cda75b3ecfee4d62856777196c19958d.jpg?v=20260504153604"
     },
     {
       "id": "gnc_megamen",
@@ -5588,7 +5665,8 @@
       "popularity_rank": 183,
       "notes": "1일 2정 기준 함량 (베타카로틴 3mg = 비타민A 1500mcg RAE 환산)",
       "data_source": "https://prod.danawa.com/info/?pcode=3375355",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/355/375/003/e9abf89ab6aa4361b8d60e02d239787b.jpg?v=20260504153540"
     },
     {
       "id": "solgar_camg_citrate",
@@ -5619,7 +5697,8 @@
       "popularity_rank": 184,
       "notes": "1일 5정 기준. 1정당 칼슘 200mg + 마그네슘 100mg",
       "data_source": "https://prod.danawa.com/info/?pcode=17689739",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/195/576/089/b15571b5aeb846c680ca7b07a9d8154e.jpg?v=20260506070443"
     },
     {
       "id": "solgar_coq10_100",
@@ -5650,7 +5729,8 @@
       "popularity_rank": 185,
       "notes": "유비퀴논 형태 100mg. 식후 복용",
       "data_source": "https://m.oliveyoung.co.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/535/269/062/56b4f51117d947f2ae17759db74bbdf3.jpg?v=20260506140814"
     },
     {
       "id": "tobicom_lutein_zeaxanthin",
@@ -5689,7 +5769,8 @@
       "popularity_rank": 186,
       "notes": "루테인+지아잔틴+종합비타민. 안국약품",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/137/080/094/7e283c8c59784a40b13e20164aa57676.jpg?v=20260506155358"
     },
     {
       "id": "drbest_high_abs_mg_200",
@@ -5720,7 +5801,8 @@
       "popularity_rank": 187,
       "notes": "리시네이트 글리시네이트 킬레이트 (Albion). 1정당 100mg, 2정 = 200mg",
       "data_source": "https://prod.danawa.com/info/?pcode=11109768",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/768/109/011/c7a4f52669ad4697b8e23272395049e7.jpg?v=20260506071044"
     },
     {
       "id": "ckd_mg_plus",
@@ -5751,7 +5833,8 @@
       "popularity_rank": 188,
       "notes": "1정 95mg. 1일 2정 = 190mg",
       "data_source": "https://prod.danawa.com/info/?pcode=18751613",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/394/677/029/57064cd23a634fb8b99860407fb277af.jpg?v=20260506074413"
     },
     {
       "id": "bblab_low_collagen_5000",
@@ -5781,7 +5864,8 @@
       "popularity_rank": 189,
       "notes": "1포 5000mg 저분자 피쉬 콜라겐. 15일분",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/536/471/075/bf58be29174549b8b9ee03785311f504.jpg?v=20260506154853"
     },
     {
       "id": "ckd_eyeclear_lutein_zea",
@@ -5820,7 +5904,8 @@
       "popularity_rank": 190,
       "notes": "7중 복합기능성. 종근당건강 베스트셀러",
       "data_source": "https://www.ckdhc.com/product/productView.do?category=CKD_CATE00000024&prodCode=CHC0000288",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/983/396/010/e25d14161a6d42119bfcb80a8d37f439.jpg?v=20260506142835"
     },
     {
       "id": "gnm_milk_thistle_full",
@@ -5854,7 +5939,8 @@
       "popularity_rank": 191,
       "notes": "1정 900mg, 식약처 일일권장량 130mg 충족. 조정석 광고",
       "data_source": "https://www.gradium.co.kr/milk-thistle/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/566/825/005/31430a487e214b549f19c0412909553d.jpg?v=20260506125653"
     },
     {
       "id": "yuhan_beecom_c",
@@ -5934,7 +6020,8 @@
       "popularity_rank": 193,
       "notes": "활성비타민B (푸르설티아민) + C 고함량. 1정 기준",
       "data_source": "https://nedrug.mfds.go.kr/pbp/CCBBB01/getItemDetailCache?cacheSeq=200400325aupdateTs2024-07-19+13:46:36.0b",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/800/110/019/0936f53de3ed488c9864264d8285cb7d.jpg?v=20260506144204"
     },
     {
       "id": "aronamin_gold",
@@ -6014,7 +6101,8 @@
       "popularity_rank": 195,
       "notes": "13가지 비타민/미네랄. 츄어블. D + K 100% 이상",
       "data_source": "https://centrum.pchkorea.co.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/766/590/008/a60ca35e3a4e44aaaa4b38e18e9057ee.jpg?v=20260506090633"
     },
     {
       "id": "ckd_kids_multivit",
@@ -6059,7 +6147,8 @@
       "popularity_rank": 196,
       "notes": "1정 1500mg. 18종 종합영양",
       "data_source": "https://www.ckdhc.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/491/361/006/2b545b3d2f3a4c859497edd72d2af6ae.jpg?v=20260506151133"
     },
     {
       "id": "atomy_hemohim_v2",
@@ -6209,7 +6298,8 @@
       "popularity_rank": 200,
       "notes": "임신 1단계 (준비기-12주) 맞춤. 비타민A는 의도적 비함유",
       "data_source": "https://www.elenew.co.kr/product-range/elenew1",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/577/251/029/56df833bc26e4dcea7bc6c748c479c0a.jpg?v=20260506070506"
     },
     {
       "id": "cenovis_kids_multi",
@@ -6241,7 +6331,8 @@
       "popularity_rank": 201,
       "notes": "1일 2정 = A 420mcg + D 3mcg. 나머지 mg 비공개",
       "data_source": "https://www.cenovismall.co.kr/goods/goods_view.php?goodsNo=100012",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/098/363/010/f9a13bdda1444f1d94af1a05c59a828c.jpg?v=20260506090418"
     },
     {
       "id": "now_vit_d3_2000",
@@ -6302,7 +6393,8 @@
       "popularity_rank": 203,
       "notes": "1캡슐 5000mcg 단일 성분. 베지캡슐",
       "data_source": "https://www.iherb.com/pr/now-foods-biotin-5-000-mcg-120-veg-capsules/19478",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/350/532/062/f35b751cdb67464f9fcd80a14fd17163.jpg?v=20260505090500"
     },
     {
       "id": "solgar_omega3_950",
@@ -6336,7 +6428,7 @@
       "notes": "1캡슐 1250mg / EPA+DHA 950mg. EPA:DHA = 약 4:3 (Solgar 표준)",
       "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=",
       "verified_date": "2026-05-06",
-      "image_url": "https://mstatic.oliveyoung.co.kr/mc-static-root/image/comm/noimg_550.gif"
+      "image_url": "https://img.danuri.io/catalog-image/958/823/010/8485db62f09c4dc3b7ee749e51002eba.jpg?v=20260506034542"
     },
     {
       "id": "ckd_camgd_zn_v2",
@@ -6432,7 +6524,8 @@
       "popularity_rank": 207,
       "notes": "해외 직구 제품. 정확 mg 비공개",
       "data_source": "https://centrum.pchkorea.co.kr/product/centrum-for-men",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/779/068/006/a5d553ce997747679a12ac68570f9849.jpg?v=20260504121424"
     },
     {
       "id": "frombio_boswellia",
@@ -6535,7 +6628,8 @@
       "popularity_rank": 210,
       "notes": "한국인 식습관 고려. 1정 = 1일 1정",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/369/440/021/30a06f902f9b44ddb51dce51699d97d6.jpg?v=20260505081257"
     },
     {
       "id": "cenovis_men_multi",
@@ -6580,7 +6674,8 @@
       "popularity_rank": 211,
       "notes": "호주 세노비스. 마그네슘+칼슘+철 강화",
       "data_source": "https://www.cenovismall.co.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/782/141/093/2171b63946634aa5b7044c1c2cebc321.jpg?v=20260506090335"
     },
     {
       "id": "thorne_basic_b",
@@ -6618,7 +6713,8 @@
       "popularity_rank": 212,
       "notes": "활성형 (P5P, 메틸코발라민, 5-MTHF) + 콜린 28mg",
       "data_source": "https://www.thorne.com/products/dp/basic-b-complex",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/065/033/078/118082153c8a42bf98bcfada03865581.jpg?v=20260506054817"
     },
     {
       "id": "lifeextension_bcomplex",
@@ -6762,7 +6858,8 @@
       "popularity_rank": 216,
       "notes": "1정 1000mg 단일 성분. 600정 대용량 (코스트코)",
       "data_source": "https://www.ckdhc.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/956/421/120/788bf0459e654462b70d8d2ac1655d2b.jpg?v=20260506125338"
     },
     {
       "id": "atomy_propolis_gummy_v2",
@@ -6838,7 +6935,7 @@
       "notes": "국내 정식. 1일 1정. 활성 비타민B군",
       "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=A000000150031",
       "verified_date": "2026-05-06",
-      "image_url": "https://mstatic.oliveyoung.co.kr/mc-static-root/image/comm/noimg_550.gif"
+      "image_url": "https://img.danuri.io/catalog-image/634/247/090/1fec1ac422c9482aa72f07b303f68977.jpg?v=20260506154808"
     },
     {
       "id": "solgar_women_multi",
@@ -6882,7 +6979,7 @@
       "notes": "국내 정식. 1일 1정. 철분 6mg 강화",
       "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=A000000150030",
       "verified_date": "2026-05-06",
-      "image_url": "https://mstatic.oliveyoung.co.kr/mc-static-root/image/comm/noimg_550.gif"
+      "image_url": "https://img.danuri.io/catalog-image/652/960/110/4bba3fb568784fa29e018e0f0adf979a.jpg?v=20260506074153"
     },
     {
       "id": "huons_menolacto",
@@ -6944,7 +7041,8 @@
       "popularity_rank": 221,
       "notes": "1캡슐 654mg. 1일 2캡슐 = EPA+DHA 900mg + 비타민E 11mg",
       "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000059",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/230/929/013/3dce253b03664e0a8df2f995be539002.jpg?v=20260506140802"
     },
     {
       "id": "centrum_woman_double_up",
@@ -6972,7 +7070,8 @@
       "popularity_rank": 222,
       "notes": "1일 1정 23종 비타민/미네랄. 정확 함량 비공개",
       "data_source": "https://centrum.pchkorea.co.kr/product/centrum-for-women",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/248/737/046/4162a22b85ae45adaa84ebbe22ce17d5.jpg?v=20260506081017"
     },
     {
       "id": "ckd_iron_folate_d",
@@ -7038,7 +7137,8 @@
       "popularity_rank": 224,
       "notes": "락토바실러스 가세리 BNR17 보장균수 100억 CFU",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/206/071/011/6029251ca30a4f1f86bdb81e40456e07.jpg?v=20260506081213"
     },
     {
       "id": "eundan_vit_c_easy_d",
@@ -7101,7 +7201,7 @@
       "notes": "1캡슐 Magtein 667mg = 마그네슘 48mg. 1일 3캡슐 = 144mg",
       "data_source": "https://kr.iherb.com/pr/now-foods-magtein-magnesium-l-threonate-90-veg-capsules/57577",
       "verified_date": "2026-05-06",
-      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now02390/s/50.jpg"
+      "image_url": "https://cloudinary.images-iherb.com/image/upload/f_auto,q_auto:eco/images/now/now02390/l/50.jpg"
     },
     {
       "id": "atomy_megavit_c_2000",
@@ -7162,7 +7262,8 @@
       "popularity_rank": 228,
       "notes": "1일 2회×2정 = 비타민C 200mg + D 5mcg. 다른 영양은 비공개",
       "data_source": "https://kr.atomy.com/product/000181",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/867/255/029/12ab71a205e7470e8ea0f736f79073b3.jpg?v=20260423022944"
     },
     {
       "id": "desimone_capsule",
@@ -7282,7 +7383,8 @@
       "popularity_rank": 232,
       "notes": "1포당 콜라겐 1635mg + 비타민C 75mg. 1일 2포",
       "data_source": "https://prod.danawa.com/info/?pcode=14622788",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/833/622/014/02830a688bd348b08319153a2b6b84a8.jpg?v=20260506070359"
     },
     {
       "id": "sportsresearch_omega3_triple",
@@ -7346,7 +7448,8 @@
       "popularity_rank": 234,
       "notes": "1캡슐 1250mg / EPA+DHA 937mg",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/298/942/013/560c4903624448b89194a19884fab40e.jpg?v=20260506074535"
     },
     {
       "id": "centrum_kids_gummy",
@@ -7384,7 +7487,8 @@
       "popularity_rank": 235,
       "notes": "구미 형태. 1정당 함량 (정타입과 유사한 함량)",
       "data_source": "https://centrum.pchkorea.co.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/123/227/036/37a0d9ed141448c080abeaf5ac6a21e5.jpg?v=20260506150539"
     },
     {
       "id": "berocca_bayer",
@@ -7425,7 +7529,8 @@
       "popularity_rank": 236,
       "notes": "물에 녹여 마시는 발포정. 7종 B군 고함량",
       "data_source": "https://www.bayer.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/165/073/079/1e486f664a9740d6810387cc99cc7526.jpg?v=20260504120815"
     },
     {
       "id": "ckd_vit_d_2000_zn",
@@ -7456,7 +7561,8 @@
       "popularity_rank": 237,
       "notes": "1캡슐 D 2000IU + 아연 8.5mg (아연 추가 변형)",
       "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000208",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/995/278/006/50a180cb54a6435ea308d717f5011b73.jpg?v=20260506090643"
     },
     {
       "id": "ckd_vit_d_1000_v2",
@@ -7487,7 +7593,8 @@
       "popularity_rank": 238,
       "notes": "1정 400mg = 비타민D 25mcg (1000IU). 3개월분",
       "data_source": "https://prod.danawa.com/info/?pcode=3121502",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/502/121/003/1fadb0bb4475444d93ae26ae0b406f52.jpg?v=20260506130552"
     },
     {
       "id": "ckd_coq10_99",
@@ -7516,7 +7623,8 @@
       "popularity_rank": 239,
       "notes": "1캡슐 Q10 99mg (식약처 일일권장량 100mg에 근접)",
       "data_source": "https://www.ckdhc.com/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/615/481/003/a68c7578afe74644a61b32d788cfa44b.jpg?v=20260506140658"
     },
     {
       "id": "vitalbeautie_probio_gold",
@@ -7580,7 +7688,8 @@
       "popularity_rank": 241,
       "notes": "1포 2g 분말. 비타500의 분말 버전",
       "data_source": "https://www.kdpharma.co.kr/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/665/706/011/b935688c96c841cc90e71774ecd74122.jpg?v=20260506053858"
     },
     {
       "id": "donga_dicamax_d",
@@ -7731,7 +7840,8 @@
       "popularity_rank": 245,
       "notes": "1일 4정 = 23종 영양 풀 패널. 2개월분",
       "data_source": "https://kr.atomy.com/product/000181",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/664/342/097/17728e59982d4161a5fa9bf228196617.jpg?v=20260504111758"
     },
     {
       "id": "centrum_woman_kr_v2",
@@ -7813,7 +7923,8 @@
       "popularity_rank": 247,
       "notes": "3g/일 기준 진세노사이드 Rg1+Rb1+Rg3 16.5mg. 식약처 5대 기능성",
       "data_source": "https://www.jungkwanjang.co.kr/products/view.do?ref_id=324&id=394",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/083/659/001/3e19f73ebd5c4767882c639f50b03855.jpg?v=20260506150023"
     },
     {
       "id": "tobicom_gold",
@@ -7844,7 +7955,8 @@
       "popularity_rank": 248,
       "notes": "토코페롤아세테이트2배산 100mg = 비타민E 50mg. 14가지 성분",
       "data_source": "https://prod.danawa.com/info/",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/137/080/094/7e283c8c59784a40b13e20164aa57676.jpg?v=20260506155358"
     },
     {
       "id": "ckd_imbita_allinone",
@@ -7872,7 +7984,8 @@
       "popularity_rank": 249,
       "notes": "1정 1450mg. 비타민 12종 + 미네랄 11종. 정확 mg 비공개",
       "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000208",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/095/275/049/f7b8cb57b1974008bb25edbe94d140ee.jpg?v=20260506153423"
     },
     {
       "id": "solgar_b_complex_100_v2",
@@ -7911,7 +8024,8 @@
       "popularity_rank": 250,
       "notes": "1캡슐 = 모든 B군 100mg/100mcg 균등 함량. 솔가 대표 B 컴플렉스 (정확 함량 검증)",
       "data_source": "https://www.ople.com/m/shop/item.php?it_id=1505230841",
-      "verified_date": "2026-05-06"
+      "verified_date": "2026-05-06",
+      "image_url": "https://img.danuri.io/catalog-image/748/597/043/806311e5a2fa4cb5acc4cf5ccd47c8a5.jpg?v=20260506074754"
     }
   ]
 }

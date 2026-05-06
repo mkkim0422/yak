@@ -79,6 +79,7 @@ class _MetaImageParser(HTMLParser):
 
 _BAD_MARKERS = (
     "pixel", "1x1", "blank.gif", "no_image", "noimage",
+    "noimg_", "no-img",
     "og_image", "og-image", "og_default",
     "share.png", "share.jpg", "share-image",
     "default.png", "default.jpg",
@@ -86,7 +87,16 @@ _BAD_MARKERS = (
     "/common/", "/share/",
     "/brands/menu/", "/main/", "/banner",
     "favicon",
+    "account_v2", "/cms/my-account/", "/account/",
 )
+
+
+def _upgrade_iherb_size(url: str) -> str:
+    """iHerb cloudinary URLs use /s/ (small) /m/ /l/ /xl/ for sizes.
+    Upgrade to large for nicer photos."""
+    if "cloudinary.images-iherb.com" in url and "/s/" in url:
+        return url.replace("/s/", "/l/")
+    return url
 
 
 def _normalize(candidate: str, page_url: str) -> Optional[str]:
@@ -102,6 +112,7 @@ def _normalize(candidate: str, page_url: str) -> Optional[str]:
     lc = candidate.lower()
     if any(m in lc for m in _BAD_MARKERS):
         return None
+    candidate = _upgrade_iherb_size(candidate)
     return candidate
 
 
