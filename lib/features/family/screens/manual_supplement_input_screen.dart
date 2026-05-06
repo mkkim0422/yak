@@ -3,10 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/data/models/product_model.dart';
 import '../../../core/notifications/notification_provider.dart';
 import '../../../core/security/secure_storage.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/alyak_buttons.dart';
+import '../../../core/widgets/alyak_card.dart';
 import '../models/family_member.dart';
 import '../providers/family_provider.dart';
 
@@ -24,13 +28,26 @@ const List<String> _categories = [
   '기타',
 ];
 
-/// SecureStorage key for the local "정보 등록 요청" queue. Stored locally
-/// only — the queue is read by Settings → admin → export later.
+/// SecureStorage key for the local "정보 등록 요청" queue. Stored locally only.
 const String kProductRegistrationRequestsKey = 'product.registration.requests';
 
 class ManualSupplementInputScreen extends ConsumerStatefulWidget {
   final String memberId;
-  const ManualSupplementInputScreen({super.key, required this.memberId});
+
+  /// When non-null, the form is in edit mode for a previously-saved
+  /// `ManualProductEntry`. Submit overwrites that entry instead of appending.
+  final String? editEntryId;
+
+  /// When true, immediately surface the "정보 등록 요청" sheet on entry —
+  /// reached from the search-empty page's secondary card.
+  final bool requestMode;
+
+  const ManualSupplementInputScreen({
+    super.key,
+    required this.memberId,
+    this.editEntryId,
+    this.requestMode = false,
+  });
 
   @override
   ConsumerState<ManualSupplementInputScreen> createState() =>
@@ -41,57 +58,172 @@ class _ManualSupplementInputScreenState
     extends ConsumerState<ManualSupplementInputScreen> {
   final _name = TextEditingController();
   final _brand = TextEditingController();
-  final _dose = TextEditingController(text: '1');
   final _packageSize = TextEditingController(text: '60');
+  final _customDose = TextEditingController();
+  final _customIntakes = TextEditingController();
+  final _intakeNote = TextEditingController();
+
   String _category = _categories.first;
+  IntakeTiming _timing = IntakeTiming.anyTimeAfterMeal;
+  // Selected radio for dose-per-intake. -1 means "직접 입력".
+  int _doseChoice = 1;
+  // Selected radio for intakes-per-day. -1 means "직접 입력".
+  int _intakeChoice = 1;
+
+  ManualProductEntry? _editing;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.editEntryId != null) {
+      final controller = ref.read(familyControllerProvider);
+      final member = controller.getMember(widget.memberId);
+      final entry = member?.manualProducts.firstWhere(
+        (e) => e.id == widget.editEntryId,
+        orElse: () => ManualProductEntry(
+          id: '',
+          name: '',
+          category: _categories.first,
+          dailyDose: 1,
+          packageSize: 0,
+          ingredients: const {},
+          startedAt: DateTime.now(),
+        ),
+      );
+      if (entry != null && entry.id.isNotEmpty) {
+        _editing = entry;
+        _name.text = entry.name;
+        _brand.text = entry.brand ?? '';
+        _packageSize.text = entry.packageSize.toString();
+        _category = _categories.contains(entry.category)
+            ? entry.category
+            : _categories.first;
+        _timing = entry.intakeTiming;
+        _doseChoice = const [1, 2, 3].contains(entry.dosePerIntake)
+            ? entry.dosePerIntake
+            : -1;
+        if (_doseChoice == -1) {
+          _customDose.text = entry.dosePerIntake.toString();
+        }
+        _intakeChoice = const [1, 2, 3].contains(entry.intakesPerDay)
+            ? entry.intakesPerDay
+            : -1;
+        if (_intakeChoice == -1) {
+          _customIntakes.text = entry.intakesPerDay.toString();
+        }
+        _intakeNote.text = entry.intakeNote ?? '';
+      }
+    }
+
+    if (widget.requestMode) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _requestRegistration();
+      });
+    }
+  }
 
   @override
   void dispose() {
     _name.dispose();
     _brand.dispose();
-    _dose.dispose();
     _packageSize.dispose();
+    _customDose.dispose();
+    _customIntakes.dispose();
+    _intakeNote.dispose();
     super.dispose();
+  }
+
+  int? _resolvedDose() {
+    if (_doseChoice == -1) {
+      final v = int.tryParse(_customDose.text.trim());
+      if (v == null || v < 1) return null;
+      return v;
+    }
+    return _doseChoice;
+  }
+
+  int? _resolvedIntakes() {
+    if (_intakeChoice == -1) {
+      final v = int.tryParse(_customIntakes.text.trim());
+      if (v == null || v < 1) return null;
+      return v;
+    }
+    return _intakeChoice;
   }
 
   Future<void> _save() async {
     final name = _name.text.trim();
-    final dose = int.tryParse(_dose.text);
-    final packageSize = int.tryParse(_packageSize.text);
+    final dose = _resolvedDose();
+    final intakes = _resolvedIntakes();
+    final packageSize = int.tryParse(_packageSize.text.trim());
 
-    if (name.isEmpty || dose == null || dose <= 0 || packageSize == null) {
+    if (name.isEmpty || dose == null || intakes == null || packageSize == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('필수 항목을 입력해주세요')),
       );
       return;
     }
 
-    final manual = ManualProductEntry(
-      id: 'manual_${DateTime.now().microsecondsSinceEpoch}',
-      name: name,
-      brand: _brand.text.trim().isEmpty ? null : _brand.text.trim(),
-      category: _category,
-      dailyDose: dose,
-      packageSize: packageSize,
-      ingredients: const {},
-      startedAt: DateTime.now(),
-    );
+    final dailyDose = dose * intakes;
+    // If 1일 2회 이상이면 multiple로 보고 — UI에서 분복 라벨이 합성되도록.
+    final timing = intakes >= 2 ? IntakeTiming.multiple : _timing;
+    final note = _intakeNote.text.trim().isEmpty
+        ? null
+        : _intakeNote.text.trim();
 
     final controller = ref.read(familyControllerProvider);
     final member = controller.getMember(widget.memberId);
     if (member == null) return;
-    final updated = member.copyWith(
-      manualProducts: [...member.manualProducts, manual],
-    );
-    await controller.updateMember(updated);
 
-    final daysOfStock = packageSize ~/ dose;
-    final remind = (daysOfStock - 5).clamp(7, 365);
-    await ref.read(notificationServiceProvider).scheduleProductReorderReminder(
-          memberId: widget.memberId,
-          productId: manual.id,
-          daysFromNow: remind,
-        );
+    if (_editing != null) {
+      final updatedEntry = _editing!.copyWith(
+        name: name,
+        brand: _brand.text.trim().isEmpty ? null : _brand.text.trim(),
+        category: _category,
+        dailyDose: dailyDose,
+        packageSize: packageSize,
+        intakeTiming: timing,
+        dosePerIntake: dose,
+        intakesPerDay: intakes,
+        intakeNote: note,
+      );
+      final updated = member.copyWith(
+        manualProducts: [
+          for (final m in member.manualProducts)
+            if (m.id == updatedEntry.id) updatedEntry else m,
+        ],
+      );
+      await controller.updateMember(updated);
+    } else {
+      final manual = ManualProductEntry(
+        id: 'manual_${DateTime.now().microsecondsSinceEpoch}',
+        name: name,
+        brand: _brand.text.trim().isEmpty ? null : _brand.text.trim(),
+        category: _category,
+        dailyDose: dailyDose,
+        packageSize: packageSize,
+        ingredients: const {},
+        startedAt: DateTime.now(),
+        intakeTiming: timing,
+        dosePerIntake: dose,
+        intakesPerDay: intakes,
+        intakeNote: note,
+      );
+      final updated = member.copyWith(
+        manualProducts: [...member.manualProducts, manual],
+      );
+      await controller.updateMember(updated);
+      final daysOfStock = packageSize ~/ dailyDose;
+      final remind = (daysOfStock - 5).clamp(7, 365);
+      await ref
+          .read(notificationServiceProvider)
+          .scheduleProductReorderReminder(
+            memberId: widget.memberId,
+            productId: manual.id,
+            daysFromNow: remind,
+          );
+    }
+
     if (!mounted) return;
     context.pop();
   }
@@ -102,6 +234,10 @@ class _ManualSupplementInputScreenState
     final ok = await showDialog<bool>(
       context: context,
       builder: (dctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r20),
+        ),
         title: const Text('정보 등록 요청'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -157,28 +293,56 @@ class _ManualSupplementInputScreenState
 
   @override
   Widget build(BuildContext context) {
+    final isEditing = _editing != null;
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('영양제 직접 추가'),
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new, size: 20),
+          onPressed: () =>
+              context.canPop() ? context.pop() : context.go('/home'),
+        ),
+        title: Text(isEditing ? '영양제 수정' : '영양제 직접 추가'),
         actions: [
-          TextButton(onPressed: _save, child: const Text('저장')),
+          TextButton(
+            onPressed: _save,
+            child: Text(isEditing ? '수정' : '저장'),
+          ),
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.warningLight,
-              borderRadius: BorderRadius.circular(10),
+          AlyakCard(
+            background: AppColors.warnBg,
+            border: Border.all(
+              color: AppColors.warnBorder.withValues(alpha: 0.2),
             ),
-            child: Text(
-              '함량 정보는 입력하지 않습니다.\n'
-              '재구매 알림과 가족별 복용 기록 용도로만 저장돼요.\n'
-              '정확한 영양 분석을 원하시면 아래 "정보 등록 요청"을 눌러주세요.',
-              style: AppTypography.body2,
+            shadow: const [],
+            padding: const EdgeInsets.all(14),
+            child: Text.rich(
+              TextSpan(
+                style: AppTypography.body2.copyWith(
+                  fontSize: 13,
+                  color: AppColors.ink2,
+                ),
+                children: [
+                  TextSpan(
+                    text: '⚠️ 함량 정보는 입력하지 않습니다  ',
+                    style: AppTypography.title.copyWith(
+                      fontSize: 13,
+                      color: AppColors.warnInk,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const TextSpan(
+                    text:
+                        '복용 기록과 재구매 알림 용도로만 저장돼요. 정확한 분석은 라벨 검증된 250개 제품에서만 가능해요.',
+                  ),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 16),
@@ -199,47 +363,42 @@ class _ManualSupplementInputScreenState
                 setState(() => _category = v ?? _categories.first),
             decoration: const InputDecoration(border: OutlineInputBorder()),
           ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _label('1일 복용량 *'),
-                    TextField(
-                      controller: _dose,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _label('한 통 사이즈 *'),
-                    TextField(
-                      controller: _packageSize,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          const SizedBox(height: 16),
+          _label('복용 시간 *'),
+          _TimingPicker(
+            value: _timing,
+            onChanged: (t) => setState(() => _timing = t),
+          ),
+          const SizedBox(height: 16),
+          _label('1회 복용량 *'),
+          _RadioWithCustom(
+            options: const [1, 2, 3],
+            optionLabel: (n) => '$n정',
+            selected: _doseChoice,
+            onSelect: (v) => setState(() => _doseChoice = v),
+            customController: _customDose,
+            customSuffix: '정',
+          ),
+          const SizedBox(height: 16),
+          _label('1일 횟수 *'),
+          _RadioWithCustom(
+            options: const [1, 2, 3],
+            optionLabel: (n) => '$n회',
+            selected: _intakeChoice,
+            onSelect: (v) => setState(() => _intakeChoice = v),
+            customController: _customIntakes,
+            customSuffix: '회',
+          ),
+          const SizedBox(height: 16),
+          _label('한 통 사이즈 *'),
+          TextField(
+            controller: _packageSize,
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              suffixText: '정/포/캡슐',
+            ),
           ),
           const SizedBox(height: 12),
           _label('브랜드 (선택)'),
@@ -247,16 +406,28 @@ class _ManualSupplementInputScreenState
             controller: _brand,
             decoration: const InputDecoration(border: OutlineInputBorder()),
           ),
-          const SizedBox(height: 24),
-          OutlinedButton.icon(
-            icon: const Icon(Icons.send_outlined),
-            label: const Text('정보 등록 요청 (정확한 함량 데이터 추가)'),
-            onPressed: _requestRegistration,
-          ),
           const SizedBox(height: 12),
-          FilledButton(
+          _label('복용 메모 (선택)'),
+          TextField(
+            controller: _intakeNote,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: '예: 공복 또는 식전 30분, 분복 권장',
+            ),
+            maxLines: 2,
+          ),
+          const SizedBox(height: 24),
+          if (!isEditing)
+            OutlinedButton.icon(
+              icon: const Icon(Icons.send_outlined),
+              label: const Text('정보 등록 요청 (정확한 함량 데이터 추가)'),
+              onPressed: _requestRegistration,
+            ),
+          const SizedBox(height: 12),
+          PrimaryButton(
+            label: isEditing ? '수정 저장' : '저장',
+            full: true,
             onPressed: _save,
-            child: const Text('저장'),
           ),
         ],
       ),
@@ -265,6 +436,139 @@ class _ManualSupplementInputScreenState
 }
 
 Widget _label(String text) => Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Text(text, style: AppTypography.body2),
+      padding: const EdgeInsets.only(bottom: 6, left: 4),
+      child: Text(
+        text,
+        style: AppTypography.body2.copyWith(
+          fontSize: 12.5,
+          fontWeight: FontWeight.w600,
+          color: AppColors.muted,
+        ),
+      ),
     );
+
+class _TimingPicker extends StatelessWidget {
+  final IntakeTiming value;
+  final ValueChanged<IntakeTiming> onChanged;
+  const _TimingPicker({required this.value, required this.onChanged});
+
+  static const List<(IntakeTiming, String)> _options = [
+    (IntakeTiming.morningEmpty, '🌅 오전 식사 전 (공복)'),
+    (IntakeTiming.morningAfter, '🌅 오전 식사 후'),
+    (IntakeTiming.lunchAfter, '🌞 점심 식사 후'),
+    (IntakeTiming.dinnerAfter, '🌙 저녁 식사 후'),
+    (IntakeTiming.beforeSleep, '🌙 취침 전'),
+    (IntakeTiming.anyTimeAfterMeal, '🍴 식후 (시간 무관)'),
+    (IntakeTiming.withMeal, '🍴 식사 중'),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (final (t, label) in _options)
+          _RadioRow(
+            selected: t == value,
+            label: label,
+            onTap: () => onChanged(t),
+          ),
+      ],
+    );
+  }
+}
+
+class _RadioRow extends StatelessWidget {
+  final bool selected;
+  final String label;
+  final VoidCallback onTap;
+  const _RadioRow({
+    required this.selected,
+    required this.label,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(AppRadius.r10),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+        child: Row(
+          children: [
+            Icon(
+              selected
+                  ? Icons.radio_button_checked
+                  : Icons.radio_button_unchecked,
+              color: selected ? AppColors.primary : AppColors.faint,
+              size: 20,
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                label,
+                style: AppTypography.body1.copyWith(fontSize: 14),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RadioWithCustom extends StatelessWidget {
+  final List<int> options;
+  final String Function(int) optionLabel;
+  final int selected;
+  final ValueChanged<int> onSelect;
+  final TextEditingController customController;
+  final String customSuffix;
+
+  const _RadioWithCustom({
+    required this.options,
+    required this.optionLabel,
+    required this.selected,
+    required this.onSelect,
+    required this.customController,
+    required this.customSuffix,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        for (final n in options)
+          _RadioRow(
+            selected: n == selected,
+            label: optionLabel(n),
+            onTap: () => onSelect(n),
+          ),
+        _RadioRow(
+          selected: selected == -1,
+          label: '직접 입력',
+          onTap: () => onSelect(-1),
+        ),
+        if (selected == -1)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(34, 4, 0, 0),
+            child: TextField(
+              controller: customController,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                LengthLimitingTextInputFormatter(3),
+              ],
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 12, vertical: 10),
+                suffixText: customSuffix,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}

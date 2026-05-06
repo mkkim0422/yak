@@ -1,4 +1,6 @@
 import '../../../core/data/models/family_input.dart' as input_model;
+import '../../../core/data/models/product_model.dart'
+    show IntakeTiming, IntakeTimingX;
 
 /// Relationship of a family member to the primary user.
 enum Relationship {
@@ -86,6 +88,21 @@ class ManualProductEntry {
   final Map<String, double> ingredients;
   final DateTime startedAt;
 
+  /// When the user takes the product. Defaults to anyTimeAfterMeal for
+  /// legacy entries that predate this field.
+  final IntakeTiming intakeTiming;
+
+  /// Quantity per single intake. Invariant: dosePerIntake * intakesPerDay
+  /// == dailyDose.
+  final int dosePerIntake;
+
+  /// Daily intake count.
+  final int intakesPerDay;
+
+  /// Free-form text — "공복 또는 식전 30분", "분복 권장" 같은 사용자
+  /// 메모를 그대로 보존.
+  final String? intakeNote;
+
   const ManualProductEntry({
     required this.id,
     required this.name,
@@ -97,6 +114,10 @@ class ManualProductEntry {
     this.imagePath,
     required this.ingredients,
     required this.startedAt,
+    this.intakeTiming = IntakeTiming.anyTimeAfterMeal,
+    this.dosePerIntake = 1,
+    this.intakesPerDay = 1,
+    this.intakeNote,
   });
 
   Map<String, dynamic> toJson() => {
@@ -110,17 +131,38 @@ class ManualProductEntry {
         'image_path': imagePath,
         'ingredients': ingredients,
         'started_at': startedAt.toIso8601String(),
+        'intake_timing': intakeTiming.name,
+        'dose_per_intake': dosePerIntake,
+        'intakes_per_day': intakesPerDay,
+        'intake_note': intakeNote,
       };
 
   factory ManualProductEntry.fromJson(Map<String, dynamic> json) {
     final ing = (json['ingredients'] as Map<String, dynamic>?) ??
         const <String, dynamic>{};
+    final dailyDose = (json['daily_dose'] as num?)?.toInt() ?? 1;
+    final dose = (json['dose_per_intake'] as num?)?.toInt();
+    final n = (json['intakes_per_day'] as num?)?.toInt();
+
+    // Migration: legacy entries lack the new fields → default to once-daily
+    // single dose. dailyDose stays untouched for analysis-engine compat.
+    final resolvedDose = dose ?? dailyDose;
+    final resolvedN = n ?? 1;
+
+    final timingRaw = json['intake_timing'];
+    final timing = timingRaw is String
+        ? IntakeTiming.values.firstWhere(
+            (t) => t.name == timingRaw,
+            orElse: () => IntakeTiming.anyTimeAfterMeal,
+          )
+        : IntakeTiming.anyTimeAfterMeal;
+
     return ManualProductEntry(
       id: json['id'] as String,
       name: (json['name'] as String?) ?? '',
       brand: json['brand'] as String?,
       category: (json['category'] as String?) ?? '',
-      dailyDose: (json['daily_dose'] as num?)?.toInt() ?? 1,
+      dailyDose: dailyDose,
       packageSize: (json['package_size'] as num?)?.toInt() ?? 0,
       priceKrw: (json['price_krw'] as num?)?.toInt(),
       imagePath: json['image_path'] as String?,
@@ -128,6 +170,10 @@ class ManualProductEntry {
         (key, value) => MapEntry(key, (value as num?)?.toDouble() ?? 0),
       ),
       startedAt: DateTime.parse(json['started_at'] as String),
+      intakeTiming: timing,
+      dosePerIntake: resolvedDose < 1 ? 1 : resolvedDose,
+      intakesPerDay: resolvedN < 1 ? 1 : resolvedN,
+      intakeNote: json['intake_note'] as String?,
     );
   }
 
@@ -140,6 +186,10 @@ class ManualProductEntry {
     int? priceKrw,
     String? imagePath,
     Map<String, double>? ingredients,
+    IntakeTiming? intakeTiming,
+    int? dosePerIntake,
+    int? intakesPerDay,
+    String? intakeNote,
   }) =>
       ManualProductEntry(
         id: id,
@@ -152,7 +202,24 @@ class ManualProductEntry {
         imagePath: imagePath ?? this.imagePath,
         ingredients: ingredients ?? this.ingredients,
         startedAt: startedAt,
+        intakeTiming: intakeTiming ?? this.intakeTiming,
+        dosePerIntake: dosePerIntake ?? this.dosePerIntake,
+        intakesPerDay: intakesPerDay ?? this.intakesPerDay,
+        intakeNote: intakeNote ?? this.intakeNote,
       );
+
+  /// Compose a Korean-language schedule line — same shape as Product.scheduleLabel
+  /// but uses '정' as the default unit for manual entries.
+  String get scheduleLabel {
+    final n = intakesPerDay;
+    final dose = dosePerIntake;
+    if (n <= 1) {
+      return '${intakeTiming.koreanLabel} $dose정';
+    }
+    if (n == 2) return '🌅 아침 $dose정 / 🌙 저녁 $dose정';
+    if (n == 3) return '🌅 아침 $dose정 / 🌞 점심 $dose정 / 🌙 저녁 $dose정';
+    return '⏰ 1일 $n회 (라벨 참조)';
+  }
 }
 
 class FamilyMember {

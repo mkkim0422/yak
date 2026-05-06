@@ -182,13 +182,23 @@ class _ResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ingredients = product.ingredients.keys.take(3).join(', ');
-    final meta = '${product.dailyDose}${product.unit}/일 · '
-        '${product.packageSize}${product.unit}';
+    final hasIngredients = product.ingredients.isNotEmpty;
+    final analysisBadge = hasIngredients
+        ? const _Badge(
+            label: '✅ 정확 분석 가능',
+            bg: AppColors.okBg,
+            fg: AppColors.okInk,
+          )
+        : const _Badge(
+            label: '⚠️ 함량 정보 비공개',
+            bg: AppColors.warnBg,
+            fg: AppColors.warnInk,
+          );
     return AlyakCard(
       padding: const EdgeInsets.all(14),
       child: Row(
         children: [
-          const ProductPhoto(label: '제품', verified: true),
+          ProductPhoto(label: '제품', verified: hasIngredients),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -202,36 +212,27 @@ class _ResultCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: 2),
-                Text(meta, style: AppTypography.caption.copyWith(fontSize: 12)),
+                Text(
+                  product.scheduleLabel,
+                  style: AppTypography.caption.copyWith(
+                    fontSize: 12,
+                    color: AppColors.ink2,
+                  ),
+                ),
                 if (ingredients.isNotEmpty) ...[
                   const SizedBox(height: 4),
                   Text(
-                    ingredients,
+                    '채워주는 영양소: $ingredients',
                     style: AppTypography.body2.copyWith(
-                      fontSize: 12,
-                      color: AppColors.ink2,
+                      fontSize: 11.5,
+                      color: AppColors.muted,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ],
                 const SizedBox(height: 6),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 7, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: AppColors.okBg,
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Text(
-                    '✅ 정확 분석 가능',
-                    style: AppTypography.micro.copyWith(
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.okInk,
-                    ),
-                  ),
-                ),
+                analysisBadge,
               ],
             ),
           ),
@@ -242,6 +243,32 @@ class _ResultCard extends StatelessWidget {
             onPressed: onPick,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _Badge extends StatelessWidget {
+  final String label;
+  final Color bg;
+  final Color fg;
+  const _Badge({required this.label, required this.bg, required this.fg});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: AppTypography.micro.copyWith(
+          fontSize: 10.5,
+          fontWeight: FontWeight.w700,
+          color: fg,
+        ),
       ),
     );
   }
@@ -281,33 +308,106 @@ class _NoResults extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('🔎', style: TextStyle(fontSize: 44)),
-            const SizedBox(height: 16),
-            Text(
-              '검색 결과가 없어요',
-              style: AppTypography.heading2.copyWith(fontSize: 17),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              '검증된 제품 데이터베이스에\n아직 등록되지 않은 영양제예요.',
-              style: AppTypography.caption.copyWith(fontSize: 13),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            PrimaryButton(
-              label: '+ 직접 추가하기',
-              size: AlyakButtonSize.md,
-              onPressed: () =>
-                  context.go('/supplement/manual?member=$memberId'),
-            ),
-          ],
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+      children: [
+        Center(
+          child: Column(
+            children: [
+              const Text('🔎', style: TextStyle(fontSize: 44)),
+              const SizedBox(height: 16),
+              Text(
+                '검색 결과가 없어요',
+                style: AppTypography.heading2.copyWith(fontSize: 17),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                '검증된 제품 데이터베이스에\n아직 등록되지 않은 영양제예요.',
+                style: AppTypography.caption.copyWith(fontSize: 13),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
+        const SizedBox(height: 24),
+        _OptionCard(
+          emoji: '📝',
+          title: '직접 입력하기',
+          sub: '라벨을 보고 정보를 입력해 주세요',
+          primary: true,
+          onTap: () => context.push('/supplement/manual?member=$memberId'),
+        ),
+        const SizedBox(height: 10),
+        _OptionCard(
+          emoji: '📨',
+          title: '등록 요청',
+          sub: '운영자에게 정확한 함량 데이터 등록을 요청해요',
+          onTap: () => context.push(
+              '/supplement/manual?member=$memberId&request=1'),
+        ),
+      ],
+    );
+  }
+}
+
+class _OptionCard extends StatelessWidget {
+  final String emoji;
+  final String title;
+  final String sub;
+  final bool primary;
+  final VoidCallback onTap;
+
+  const _OptionCard({
+    required this.emoji,
+    required this.title,
+    required this.sub,
+    required this.onTap,
+    this.primary = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlyakCard(
+      padding: const EdgeInsets.all(16),
+      onTap: onTap,
+      border: primary
+          ? Border.all(color: AppColors.primary, width: 1.5)
+          : Border.all(color: AppColors.hairline, width: 1.5),
+      background: primary ? AppColors.primarySoft : AppColors.surface,
+      child: Row(
+        children: [
+          Text(emoji, style: const TextStyle(fontSize: 24)),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: AppTypography.title.copyWith(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    color: primary ? AppColors.primaryInk : AppColors.ink,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  sub,
+                  style: AppTypography.caption.copyWith(
+                    fontSize: 12,
+                    color: AppColors.ink2,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Icon(
+            Icons.chevron_right,
+            size: 18,
+            color: primary ? AppColors.primary : AppColors.faint,
+          ),
+        ],
       ),
     );
   }

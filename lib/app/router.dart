@@ -144,7 +144,21 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/supplement/manual',
         builder: (context, state) {
           final memberId = state.uri.queryParameters['member'] ?? '';
-          return ManualSupplementInputScreen(memberId: memberId);
+          final requestMode = state.uri.queryParameters['request'] == '1';
+          return ManualSupplementInputScreen(
+            memberId: memberId,
+            requestMode: requestMode,
+          );
+        },
+      ),
+      GoRoute(
+        path: '/supplement/manual/edit/:entryId',
+        builder: (context, state) {
+          final memberId = state.uri.queryParameters['member'] ?? '';
+          return ManualSupplementInputScreen(
+            memberId: memberId,
+            editEntryId: state.pathParameters['entryId'],
+          );
         },
       ),
       GoRoute(
