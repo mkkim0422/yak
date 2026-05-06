@@ -6,6 +6,8 @@ import '../../../core/data/models/product_model.dart';
 import '../../../core/data/nutrient_labels.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/notifications/notification_provider.dart';
+import '../../../core/security/secure_storage.dart';
+import '../../../core/services/conflict_checker.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_shadows.dart';
@@ -13,12 +15,14 @@ import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_buttons.dart';
 import '../../../core/widgets/alyak_card.dart';
 import '../../../core/widgets/avatar_badge.dart';
+import '../../../core/widgets/conflict_section.dart';
 import '../../../core/widgets/disclaimer_footer.dart';
 import '../../../core/widgets/product_image.dart';
 import '../../../core/widgets/product_photo.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../home/providers/member_analysis_provider.dart';
 import '../../home/widgets/nutrient_status_widgets.dart';
+import '../../onboarding/screens/notification_setup_screen.dart';
 import '../models/family_member.dart';
 import '../providers/family_provider.dart';
 
@@ -44,6 +48,11 @@ class MemberDetailScreen extends ConsumerWidget {
         .whereType<Product>()
         .toList(growable: false);
     final status = statusFromDeficitCount(analysis.deficits.length);
+    final conflicts = ConflictChecker.check(
+      member: member,
+      products: curatedProducts,
+      manuals: member.manualProducts,
+    );
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -73,6 +82,12 @@ class MemberDetailScreen extends ConsumerWidget {
             member: member,
             curatedProducts: curatedProducts,
           ),
+          if (conflicts.isNotEmpty) ...[
+            const SizedBox(height: 20),
+            ConflictSection(conflicts: conflicts),
+          ],
+          const SizedBox(height: 20),
+          _CheckupSection(member: member),
           const SizedBox(height: 20),
           _NutritionStatusSection(
             analysis: analysis,
@@ -596,6 +611,200 @@ Future<void> _confirmDelete(
     ),
   );
   if (ok == true) onRemove();
+}
+
+class _CheckupSection extends ConsumerStatefulWidget {
+  final FamilyMember member;
+  const _CheckupSection({required this.member});
+
+  @override
+  ConsumerState<_CheckupSection> createState() => _CheckupSectionState();
+}
+
+class _CheckupSectionState extends ConsumerState<_CheckupSection> {
+  Future<void> _editCheckup() async {
+    final result = await showCheckupEditor(
+      context: context,
+      initialDate: widget.member.lastCheckupDate,
+      initialNote: widget.member.checkupNote,
+    );
+    if (result == null) return;
+    final updated = widget.member.copyWith(
+      lastCheckupDate: result.date,
+      checkupNote: result.note,
+    );
+    await ref.read(familyControllerProvider).updateMember(updated);
+    // Re-anchor the annual checkup notification on the new date — but only
+    // when the user has the checkup-reminder toggle enabled.
+    final svc = ref.read(notificationServiceProvider);
+    await svc.cancelAnnualCheckupReminder(updated.id);
+    final checkupOn =
+        (await SecureStorage.read(kCheckupEnabledKey)) != '0';
+    if (checkupOn) {
+      await svc.scheduleAnnualCheckupReminder(
+        memberId: updated.id,
+        from: result.date,
+        memberName: updated.name,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (widget.member.age < 20) return const SizedBox.shrink();
+    final date = widget.member.lastCheckupDate;
+    final note = widget.member.checkupNote;
+
+    if (date == null) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SectionHeader(title: '🏥 최근 건강검진'),
+          AlyakCard(
+            padding: const EdgeInsets.all(16),
+            onTap: _editCheckup,
+            child: Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: AppColors.primarySoft,
+                    borderRadius: BorderRadius.circular(AppRadius.r10),
+                  ),
+                  child: const Text('🏥', style: TextStyle(fontSize: 20)),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        '건강검진을 받으셨어요?',
+                        style: AppTypography.title.copyWith(fontSize: 14),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        '검진일을 등록하면 1년 뒤 알려드려요',
+                        style: AppTypography.caption.copyWith(fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+                const Icon(Icons.chevron_right,
+                    color: AppColors.faint, size: 18),
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SectionHeader(
+          title: '🏥 최근 건강검진',
+          action: AlyakTextButton(
+            label: '수정',
+            onPressed: _editCheckup,
+          ),
+        ),
+        AlyakCard(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '검진일 ${_formatCheckupDate(date)}',
+                style: AppTypography.title.copyWith(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              if (note != null && note.isNotEmpty) ...[
+                const SizedBox(height: 6),
+                Text(
+                  '메모 · $note',
+                  style: AppTypography.body2.copyWith(
+                    fontSize: 13,
+                    color: AppColors.ink2,
+                    height: 1.4,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+String _formatCheckupDate(DateTime d) =>
+    '${d.year}년 ${d.month}월 ${d.day}일';
+
+class CheckupEditorResult {
+  final DateTime date;
+  final String? note;
+  const CheckupEditorResult({required this.date, this.note});
+}
+
+/// Reusable checkup editor — used by the member screen + family-add chat.
+/// Returns `null` if the user cancels.
+Future<CheckupEditorResult?> showCheckupEditor({
+  required BuildContext context,
+  DateTime? initialDate,
+  String? initialNote,
+}) async {
+  final picked = await showDatePicker(
+    context: context,
+    initialDate: initialDate ?? DateTime.now(),
+    firstDate: DateTime(DateTime.now().year - 5),
+    lastDate: DateTime.now(),
+    helpText: '건강검진 받으신 날짜',
+  );
+  if (picked == null) return null;
+  if (!context.mounted) return null;
+
+  final controller = TextEditingController(text: initialNote ?? '');
+  final note = await showDialog<String>(
+    context: context,
+    builder: (dctx) => AlertDialog(
+      backgroundColor: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.r20),
+      ),
+      title: const Text('메모 (선택)'),
+      content: TextField(
+        controller: controller,
+        autofocus: true,
+        maxLength: 200,
+        maxLines: 3,
+        decoration: const InputDecoration(
+          hintText: '예: 콜레스테롤 200, 정상',
+          border: OutlineInputBorder(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(dctx).pop(''),
+          child: const Text('건너뛰기'),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(dctx).pop(controller.text.trim()),
+          child: const Text('저장'),
+        ),
+      ],
+    ),
+  );
+  if (note == null) return null;
+  return CheckupEditorResult(
+    date: picked,
+    note: note.isEmpty ? null : note,
+  );
 }
 
 class _NutritionStatusSection extends StatelessWidget {

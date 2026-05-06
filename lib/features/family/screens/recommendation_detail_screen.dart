@@ -6,8 +6,10 @@ import '../../../core/data/models/recommendation_result.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/data/supplement_repository.dart';
 import '../../../core/l10n/app_strings.dart';
+import '../../../core/services/conflict_checker.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/conflict_section.dart';
 import '../../home/providers/member_analysis_provider.dart';
 import '../providers/family_provider.dart';
 
@@ -47,6 +49,24 @@ class RecommendationDetailScreen extends ConsumerWidget {
       member.medications,
     );
 
+    // Existing supplements vs the top recommended pick — preview what would
+    // happen if the user added it, so the screen can show "추가 시 주의".
+    final currentProducts = member.currentProductIds
+        .map(repo.getById)
+        .whereType<Product>()
+        .toList(growable: false);
+    final addedConflicts = <String, List<ConflictItem>>{};
+    for (final pick in picks) {
+      if (pick.suggestions.isEmpty) continue;
+      final candidate = pick.suggestions.first;
+      addedConflicts[candidate.id] = ConflictChecker.diff(
+        member: member,
+        products: currentProducts,
+        manuals: member.manualProducts,
+        candidate: candidate,
+      );
+    }
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(title: Text('${member.name}님 추천')),
@@ -77,7 +97,13 @@ class RecommendationDetailScreen extends ConsumerWidget {
           if (picks.isEmpty)
             Text('추천할 항목이 없어요', style: AppTypography.body2)
           else
-            for (final p in picks) _NutrientPickCard(pick: p),
+            for (final p in picks)
+              _NutrientPickCard(
+                pick: p,
+                addedConflicts: p.suggestions.isEmpty
+                    ? const []
+                    : addedConflicts[p.suggestions.first.id] ?? const [],
+              ),
           const SizedBox(height: 20),
           _section('⚠️ 충돌 / 시너지'),
           if (conflicts.isEmpty)
@@ -198,7 +224,11 @@ class _SufficientLine extends StatelessWidget {
 
 class _NutrientPickCard extends StatelessWidget {
   final _NutrientPick pick;
-  const _NutrientPickCard({required this.pick});
+  final List<ConflictItem> addedConflicts;
+  const _NutrientPickCard({
+    required this.pick,
+    this.addedConflicts = const [],
+  });
   @override
   Widget build(BuildContext context) {
     if (pick.suggestions.isEmpty) return const SizedBox.shrink();
@@ -225,6 +255,35 @@ class _NutrientPickCard extends StatelessWidget {
                 style: AppTypography.body1,
               ),
             ),
+          if (addedConflicts.isEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 6),
+              child: Text(
+                '✅ 추가 시 충돌 없음',
+                style: AppTypography.caption.copyWith(
+                  fontSize: 12,
+                  color: AppColors.okInk,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            )
+          else ...[
+            const SizedBox(height: 8),
+            Text(
+              '⚠️ 추가 시 주의',
+              style: AppTypography.caption.copyWith(
+                fontSize: 12,
+                color: AppColors.warnInk,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(height: 4),
+            for (final c in addedConflicts)
+              Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: ConflictCard(item: c),
+              ),
+          ],
         ],
       ),
     );

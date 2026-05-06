@@ -98,19 +98,28 @@ class NotificationService {
     return true;
   }
 
+  /// Reschedule the morning + evening reminders. When [familyCount] >= 2 the
+  /// title says "가족 영양제 챙기실 시간이에요" instead of singular phrasing,
+  /// because most families add multiple members. Default 1 keeps older
+  /// callers working unchanged.
   Future<void> rescheduleDaily({
     TimeOfDay? morning,
     TimeOfDay? evening,
+    int familyCount = 1,
   }) async {
     await ensureInitialized();
     await _plugin.cancel(_morningId);
     await _plugin.cancel(_eveningId);
 
+    final title = familyCount >= 2
+        ? '가족 영양제 챙기실 시간이에요'
+        : '오늘 영양제 챙기셨어요?';
+
     if (morning != null) {
       await _scheduleDaily(
         id: _morningId,
         time: morning,
-        title: '아침 영양제 시간이에요',
+        title: title,
         body: '물 한 컵과 함께 챙겨드세요',
       );
     }
@@ -118,7 +127,7 @@ class NotificationService {
       await _scheduleDaily(
         id: _eveningId,
         time: evening,
-        title: '저녁 영양제 시간이에요',
+        title: title,
         body: '오늘도 수고 많으셨어요',
       );
     }
@@ -170,12 +179,13 @@ class NotificationService {
     );
   }
 
-  /// Annual "you should get a checkup" nudge — informational only;
-  /// the app no longer asks the user to enter checkup numbers.
-  /// Scheduled 1 year out from [from] (defaults to now).
+  /// Annual checkup nudge — fires 1 year after [from] (defaults to now).
+  /// When [memberName] is supplied the title is personalised so users with
+  /// multiple family members can tell whose nudge it is.
   Future<void> scheduleAnnualCheckupReminder({
     required String memberId,
     DateTime? from,
+    String? memberName,
   }) async {
     await ensureInitialized();
     final id = _idFor(memberId, _checkupIdBase, 'annual_checkup');
@@ -188,9 +198,12 @@ class NotificationService {
     if (!fireAt.isAfter(now)) {
       fireAt = now.add(const Duration(days: 1));
     }
+    final title = memberName != null && memberName.isNotEmpty
+        ? '$memberName님 건강검진 받으신 지 1년이 되었어요'
+        : '1년에 한 번 건강검진 받으세요';
     await _plugin.zonedSchedule(
       id,
-      '1년에 한 번 건강검진 받으세요',
+      title,
       '국가 건강검진을 챙겨보세요',
       fireAt,
       _details(),

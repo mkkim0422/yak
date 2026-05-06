@@ -165,7 +165,7 @@ void main() {
       required int age,
     }) {
       var n = 0;
-      for (var s = 1; s <= 17; s++) {
+      for (var s = 1; s <= 18; s++) {
         if (debugShouldShowStep(
             step: s, relationship: rel, sex: sex, age: age)) {
           n++;
@@ -175,14 +175,17 @@ void main() {
     }
 
     test('newborn (1세 son): no diet/sleep/stress, no smoking/drinking', () {
-      // Steps shown: 1 rel, 2 name, 3 birth, 5 disclaimer, 6 height, 14 allergies,
-      // 15 meds, 16 products, 17 complete = 9
-      // Not shown: 4 (implied), 7 (male), 8 (no-op), 9-13 (under-age)
+      // Steps shown: 1 rel, 2 name, 3 birth, 5 disclaimer, 6 height,
+      // 14 allergies, 15 meds, 16 products, 18 complete = 9
+      // Not shown: 4 (implied), 7 (male), 8 (no-op), 9-13 (under-age),
+      // 17 checkup (under 20).
       expect(_show(4, rel: Relationship.son, sex: Sex.male, age: 1), isFalse);
       expect(_show(5, rel: Relationship.son, sex: Sex.male, age: 1), isTrue);
       expect(_show(11, rel: Relationship.son, sex: Sex.male, age: 1),
           isFalse);
       expect(_show(15, rel: Relationship.son, sex: Sex.male, age: 1), isTrue);
+      expect(_show(17, rel: Relationship.son, sex: Sex.male, age: 1),
+          isFalse);
       expect(countSteps(rel: Relationship.son, sex: Sex.male, age: 1), 9);
     });
 

@@ -4,13 +4,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/data/models/product_model.dart';
+import '../../../core/data/product_repository.dart';
 import '../../../core/notifications/notification_provider.dart';
 import '../../../core/security/secure_storage.dart';
+import '../../../core/services/conflict_checker.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_buttons.dart';
 import '../../../core/widgets/alyak_card.dart';
+import '../../../core/widgets/conflict_section.dart';
 import '../models/family_member.dart';
 import '../providers/family_provider.dart';
 
@@ -258,6 +261,39 @@ class _ManualSupplementInputScreenState
         intakesPerDay: intakes,
         intakeNote: note,
       );
+
+      // Conflict preview — manual entries lack ingredient totals so only the
+      // timing-pile-up rule fires. Still useful for "5 supplements at once".
+      final repo = ref.read(productRepositoryProvider);
+      final currentProducts = member.currentProductIds
+          .map(repo.getById)
+          .whereType<Product>()
+          .toList(growable: false);
+      final beforeAll = ConflictChecker.check(
+        member: member,
+        products: currentProducts,
+        manuals: member.manualProducts,
+      );
+      final afterAll = ConflictChecker.check(
+        member: member,
+        products: currentProducts,
+        manuals: [...member.manualProducts, manual],
+      );
+      final added = afterAll.skip(beforeAll.length).toList();
+      if (added.isNotEmpty && mounted) {
+        final ok = await showDialog<bool>(
+          context: context,
+          builder: (dctx) => ConflictAddDialog(
+            conflicts: added,
+            productName: name,
+            onCancel: () => Navigator.of(dctx).pop(false),
+            onConfirm: () => Navigator.of(dctx).pop(true),
+          ),
+        );
+        if (ok != true) return;
+      }
+      if (!mounted) return;
+
       final updated = member.copyWith(
         manualProducts: [...member.manualProducts, manual],
       );

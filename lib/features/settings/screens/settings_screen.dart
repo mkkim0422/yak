@@ -9,6 +9,7 @@ import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/disclaimer_footer.dart';
+import '../../family/providers/family_provider.dart';
 import '../../onboarding/screens/notification_setup_screen.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -52,11 +53,62 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     await SecureStorage.write(kNotifEveningKey, formatTimeOfDay(_evening));
     await SecureStorage.write(kNotifEnabledKey, _dailyEnabled ? '1' : '0');
     final svc = ref.read(notificationServiceProvider);
+    final familyCount = ref.read(familyMembersProvider).length;
     if (_dailyEnabled) {
-      await svc.rescheduleDaily(morning: _morning, evening: _evening);
+      await svc.rescheduleDaily(
+        morning: _morning,
+        evening: _evening,
+        familyCount: familyCount,
+      );
     } else {
       await svc.rescheduleDaily();
     }
+  }
+
+  /// Toggle the daily-reminder switch with permission gating.
+  /// User flips ON → request OS permission → if denied, flip OFF and toast.
+  Future<void> _toggleDaily(bool v) async {
+    if (v) {
+      final granted =
+          await ref.read(notificationServiceProvider).requestPermission();
+      if (!granted) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('알림 권한이 거부되었어요. 설정에서 켜주세요'),
+              backgroundColor: AppColors.warnInk,
+            ),
+          );
+        }
+        if (mounted) setState(() => _dailyEnabled = false);
+        await SecureStorage.write(kNotifEnabledKey, '0');
+        return;
+      }
+    }
+    setState(() => _dailyEnabled = v);
+    await _persistDaily();
+  }
+
+  Future<void> _toggleCheckup(bool v) async {
+    if (v) {
+      final granted =
+          await ref.read(notificationServiceProvider).requestPermission();
+      if (!granted) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('알림 권한이 거부되었어요. 설정에서 켜주세요'),
+              backgroundColor: AppColors.warnInk,
+            ),
+          );
+        }
+        if (mounted) setState(() => _checkupEnabled = false);
+        await SecureStorage.write(kCheckupEnabledKey, '0');
+        return;
+      }
+    }
+    setState(() => _checkupEnabled = v);
+    await SecureStorage.write(kCheckupEnabledKey, v ? '1' : '0');
   }
 
   Future<void> _pickTime(bool morning) async {
@@ -173,10 +225,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 title: '매일 영양제 알림',
                 trailing: Switch(
                   value: _dailyEnabled,
-                  onChanged: (v) async {
-                    setState(() => _dailyEnabled = v);
-                    await _persistDaily();
-                  },
+                  onChanged: _toggleDaily,
                 ),
               ),
               if (_dailyEnabled) ...[
@@ -235,11 +284,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 sub: '가족별 1년에 한 번',
                 trailing: Switch(
                   value: _checkupEnabled,
-                  onChanged: (v) async {
-                    setState(() => _checkupEnabled = v);
-                    await SecureStorage.write(
-                        kCheckupEnabledKey, v ? '1' : '0');
-                  },
+                  onChanged: _toggleCheckup,
                 ),
               ),
             ],

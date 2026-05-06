@@ -255,6 +255,14 @@ class FamilyMember {
   // Symptoms
   final List<String> activeSymptomIds;
 
+  /// Last health checkup the member underwent (e.g. 국가 건강검진). Drives
+  /// the annual checkup reminder — the next nudge fires 1 year after this
+  /// date. `null` for members who haven't entered checkup history.
+  final DateTime? lastCheckupDate;
+
+  /// Free-text 200-char memo about the checkup ("콜레스테롤 200, 정상" etc.)
+  final String? checkupNote;
+
   // Metadata
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -279,6 +287,8 @@ class FamilyMember {
     this.currentProductIds = const [],
     this.manualProducts = const [],
     this.activeSymptomIds = const [],
+    this.lastCheckupDate,
+    this.checkupNote,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -407,6 +417,8 @@ class FamilyMember {
         'current_product_ids': currentProductIds,
         'manual_products': manualProducts.map((p) => p.toJson()).toList(),
         'active_symptom_ids': activeSymptomIds,
+        'last_checkup_date': lastCheckupDate?.toIso8601String(),
+        'checkup_note': checkupNote,
         'created_at': createdAt.toIso8601String(),
         'updated_at': updatedAt.toIso8601String(),
       };
@@ -461,9 +473,16 @@ class FamilyMember {
       activeSymptomIds: ((json['active_symptom_ids'] as List?) ?? const [])
           .map((e) => e.toString())
           .toList(),
+      lastCheckupDate: _parseDate(json['last_checkup_date']),
+      checkupNote: json['checkup_note'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
+  }
+
+  static DateTime? _parseDate(Object? raw) {
+    if (raw is! String || raw.isEmpty) return null;
+    return DateTime.tryParse(raw);
   }
 
   FamilyMember copyWith({
@@ -485,6 +504,8 @@ class FamilyMember {
     List<String>? currentProductIds,
     List<ManualProductEntry>? manualProducts,
     List<String>? activeSymptomIds,
+    DateTime? lastCheckupDate,
+    String? checkupNote,
     DateTime? updatedAt,
   }) =>
       FamilyMember(
@@ -507,6 +528,8 @@ class FamilyMember {
         currentProductIds: currentProductIds ?? this.currentProductIds,
         manualProducts: manualProducts ?? this.manualProducts,
         activeSymptomIds: activeSymptomIds ?? this.activeSymptomIds,
+        lastCheckupDate: lastCheckupDate ?? this.lastCheckupDate,
+        checkupNote: checkupNote ?? this.checkupNote,
         createdAt: createdAt,
         updatedAt: updatedAt ?? DateTime.now(),
       );

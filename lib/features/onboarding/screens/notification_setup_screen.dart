@@ -9,6 +9,7 @@ import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_buttons.dart';
 import '../../../core/widgets/alyak_card.dart';
+import '../../family/providers/family_provider.dart';
 
 const String kNotifMorningKey = 'notif.morning.time';
 const String kNotifEveningKey = 'notif.evening.time';
@@ -71,7 +72,12 @@ class _NotificationSetupScreenState
       final svc = ref.read(notificationServiceProvider);
       await svc.requestPermission();
       if (_doseEnabled) {
-        await svc.rescheduleDaily(morning: _morning, evening: _evening);
+        final familyCount = ref.read(familyMembersProvider).length;
+        await svc.rescheduleDaily(
+          morning: _morning,
+          evening: _evening,
+          familyCount: familyCount,
+        );
       }
     }
     if (!mounted) return;

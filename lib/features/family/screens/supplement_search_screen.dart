@@ -5,12 +5,14 @@ import 'package:go_router/go_router.dart';
 import '../../../core/data/models/product_model.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/notifications/notification_provider.dart';
+import '../../../core/services/conflict_checker.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_buttons.dart';
 import '../../../core/widgets/alyak_card.dart';
+import '../../../core/widgets/conflict_section.dart';
 import '../../../core/widgets/product_image.dart';
 import '../providers/family_provider.dart';
 
@@ -120,6 +122,32 @@ class _SupplementSearchScreenState
       );
       return;
     }
+
+    final repo = ref.read(productRepositoryProvider);
+    final currentProducts = member.currentProductIds
+        .map(repo.getById)
+        .whereType<Product>()
+        .toList(growable: false);
+    final added = ConflictChecker.diff(
+      member: member,
+      products: currentProducts,
+      manuals: member.manualProducts,
+      candidate: product,
+    );
+    if (added.isNotEmpty && mounted) {
+      final ok = await showDialog<bool>(
+        context: context,
+        builder: (dctx) => ConflictAddDialog(
+          conflicts: added,
+          productName: product.name,
+          onCancel: () => Navigator.of(dctx).pop(false),
+          onConfirm: () => Navigator.of(dctx).pop(true),
+        ),
+      );
+      if (ok != true) return;
+    }
+    if (!mounted) return;
+
     final updated = member.copyWith(
       currentProductIds: [...member.currentProductIds, product.id],
     );

@@ -31,6 +31,7 @@ class _StubNotificationService extends NotificationService {
   Future<void> rescheduleDaily({
     TimeOfDay? morning,
     TimeOfDay? evening,
+    int familyCount = 1,
   }) async {
     lastMorning = morning;
     lastEvening = evening;

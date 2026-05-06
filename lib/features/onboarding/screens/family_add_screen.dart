@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/data/models/product_model.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/notifications/notification_provider.dart';
+import '../../../core/security/secure_storage.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_typography.dart';
@@ -15,17 +16,20 @@ import '../../../core/widgets/product_image.dart';
 import '../../../core/widgets/step_indicator.dart';
 import '../../family/models/family_member.dart';
 import '../../family/providers/family_provider.dart';
+import '../../family/screens/member_detail_screen.dart' show showCheckupEditor;
 import '../widgets/chat_message.dart';
+import 'notification_setup_screen.dart';
 
 /// Toss-style chat to register a new family member.
-/// Steps (max 17 — most users see fewer because of age/sex skips):
+/// Steps (max 18 — most users see fewer because of age/sex skips):
 ///   1 relationship · 2 name · 3 birthYear · 4 sex (only when relationship
 ///   doesn't imply it) · 5 medical disclaimer (only when age < 4) ·
 ///   6 height/weight · 7 pregnancy/lactation (combined, female 20–50) ·
 ///   8 (no-op, retained for back-compat in the step counter) ·
 ///   9 smoking · 10 drinking (both 19+) · 11 diet · 12 sleep (both 4+) ·
 ///   13 stress (13+) · 14 allergies · 15 medications (1+) ·
-///   16 products (opens inline picker sheet) · 17 complete.
+///   16 products (opens inline picker sheet) · 17 checkup (date + memo, 20+) ·
+///   18 complete.
 class FamilyAddScreen extends ConsumerStatefulWidget {
   /// Optional preset relationship — when entering from the welcome
   /// screen's "나부터 등록하기" CTA we skip step 1.
@@ -40,7 +44,7 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
   final _scrollCtrl = ScrollController();
   final _draft = _Draft();
   int _step = 1;
-  static const int _totalSteps = 17;
+  static const int _totalSteps = 18;
 
   @override
   void initState() {
@@ -261,6 +265,8 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
         return '현재 복용 중인 약이 있나요? (선택)';
       case 16:
         return '현재 드시는 영양제가 있나요? (선택)';
+      case 17:
+        return '최근 건강검진 받으신 날짜를 알려주세요 (선택)';
       default:
         return '${_draft.name}님 등록 완료! 🎉';
     }
@@ -295,6 +301,8 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
       isPregnant: _draft.isPregnant,
       isBreastfeeding: _draft.isBreastfeeding,
       currentProductIds: List.unmodifiable(_draft.pendingCuratedProductIds),
+      lastCheckupDate: _draft.lastCheckupDate,
+      checkupNote: _draft.checkupNote,
       createdAt: now,
       updatedAt: now,
     );
@@ -322,10 +330,19 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
       }
     }
 
-    // Annual checkup nudge — informational only, no data entry.
-    await ref
-        .read(notificationServiceProvider)
-        .scheduleAnnualCheckupReminder(memberId: member.id);
+    // Annual checkup nudge — only when the user has the toggle on. Anchor
+    // on the entered checkup date if any, else 1 year from now.
+    final checkupOn =
+        (await SecureStorage.read(kCheckupEnabledKey)) != '0';
+    if (checkupOn) {
+      await ref
+          .read(notificationServiceProvider)
+          .scheduleAnnualCheckupReminder(
+            memberId: member.id,
+            from: member.lastCheckupDate,
+            memberName: member.name,
+          );
+    }
 
     if (!mounted) return;
 
@@ -378,6 +395,10 @@ class _Draft {
   /// Curated 250-DB product ids that the user picked in the chat-end product
   /// sheet. Applied to `member.currentProductIds` on save.
   List<String> pendingCuratedProductIds = const [];
+
+  /// Last health checkup the user reports having taken (optional).
+  DateTime? lastCheckupDate;
+  String? checkupNote;
 
   /// Live age = currentYear - birthYear.
   int get age => DateTime.now().year - birthYear;
@@ -446,7 +467,11 @@ bool _shouldShow(int step, _Draft d) {
     case 15:
       return d.age >= 1;
     case 16:
+      return true;
     case 17:
+      // Checkup date capture — only meaningful for adults.
+      return d.age >= 20;
+    case 18:
       return true;
     default:
       return true;
@@ -678,6 +703,24 @@ class _StepInput extends StatelessWidget {
               ),
             ),
           ],
+        );
+        break;
+      case 17:
+        child = _CheckupStepInput(
+          onSubmit: (date, note) {
+            onSubmitDraft((d) {
+              d.lastCheckupDate = date;
+              d.checkupNote = note;
+            });
+            if (date == null) {
+              onAnswer('건너뛰기');
+            } else {
+              final memoSuffix =
+                  note == null || note.isEmpty ? '' : ' · $note';
+              onAnswer(
+                  '${date.year}년 ${date.month}월 ${date.day}일$memoSuffix');
+            }
+          },
         );
         break;
       default:
@@ -1098,6 +1141,42 @@ class _MultiSelectState extends State<_MultiSelect> {
 }
 
 enum _PregLact { pregnant, lactating, both, none }
+
+class _CheckupStepInput extends StatelessWidget {
+  final void Function(DateTime? date, String? note) onSubmit;
+  const _CheckupStepInput({required this.onSubmit});
+
+  Future<void> _pick(BuildContext context) async {
+    final result = await showCheckupEditor(context: context);
+    if (result == null) {
+      onSubmit(null, null);
+      return;
+    }
+    onSubmit(result.date, result.note);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton(
+            onPressed: () => onSubmit(null, null),
+            child: const Text('건너뛰기'),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: FilledButton.icon(
+            icon: const Icon(Icons.calendar_today, size: 16),
+            label: const Text('날짜 선택'),
+            onPressed: () => _pick(context),
+          ),
+        ),
+      ],
+    );
+  }
+}
 
 /// Inline product picker shown at the end of the family-add chat. Lets the
 /// user search the curated 250-DB and pile up several products in one shot,

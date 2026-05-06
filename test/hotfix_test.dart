@@ -257,8 +257,12 @@ void main() {
     });
   });
 
-  group('H2 - HealthCheckup is gone', () {
-    test('no source file references HealthCheckup or lastCheckup', () {
+  group('H2 - HealthCheckup model is gone', () {
+    test('no source file references the old HealthCheckup model', () {
+      // The heavy HealthCheckup model (with cholesterol/bmi/etc fields) was
+      // removed. We re-introduced a much simpler `lastCheckupDate` + note
+      // pair, so that lowercase identifier is allowed; only the old class
+      // name and screen file should be absent.
       final libRoot = Directory('lib');
       final offenders = <String>[];
       for (final f in libRoot
@@ -266,8 +270,7 @@ void main() {
           .whereType<File>()
           .where((f) => f.path.endsWith('.dart'))) {
         final text = f.readAsStringSync();
-        if (text.contains('HealthCheckup') ||
-            text.contains('lastCheckup') ||
+        if (text.contains('class HealthCheckup') ||
             text.contains('health_checkup_input_screen')) {
           offenders.add(f.path);
         }
