@@ -1,5 +1,5 @@
 {
-  "version": "2026.05.06-v7-multiple-verified",
+  "version": "2026.05.06-v8-atm-me-verified",
   "currency": "KRW",
   "schema_notes": [
     "Ingredient amounts are PER UNIT (정/캡슐/포). The recommendation engine multiplies by daily_dose.",
@@ -127,7 +127,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후",
       "ingredients": {
         "vitamin_d_iu": 132,
         "vitamin_e_mg": 110,
@@ -152,7 +152,7 @@
       ],
       "popularity_rank": 4,
       "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=A000000150030",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "solgar_multi_man",
@@ -167,7 +167,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후",
       "ingredients": {
         "vitamin_d_iu": 133,
         "vitamin_e_mg": 110.2,
@@ -190,8 +190,8 @@
         "centrum_man"
       ],
       "popularity_rank": 5,
-      "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=A000000015043",
-      "verified_date": "2026-05-04"
+      "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=A000000150031",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "imp_premium",
@@ -234,7 +234,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (의약품 ONE-A-DAY 형태)",
       "ingredients": {
         "vitamin_b1_mg": 120
       },
@@ -247,8 +247,8 @@
       ],
       "popularity_rank": 7,
       "notes": "벤포티아민(B1) 120mg. 다른 영양소 함량 비공개",
-      "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=2020111700007",
-      "verified_date": "2026-05-04"
+      "data_source": "https://nedrug.mfds.go.kr/pbp/CCBBB01/getItemDetailCache?cacheSeq=202007899aupdateTs2024-07-18+23:53:21.0b",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "dikamax_1000",
@@ -294,7 +294,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (다림바이오텍 디카맥스디)",
       "ingredients": {},
       "good_for": [
         "뼈 건강",
@@ -306,7 +306,7 @@
       "popularity_rank": 9,
       "notes": "디카맥스 변종. 정확한 함량 별도 확인 필요",
       "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=A11AKP08F0265",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "solgar_d3_1000",
@@ -350,7 +350,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1츄어블 (씹어 섭취)",
       "ingredients": {
         "vitamin_d_iu": 1000
       },
@@ -363,7 +363,7 @@
       ],
       "popularity_rank": 11,
       "data_source": "https://www.khan.co.kr/article/201602171619172",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "solgar_d3_5000",
@@ -406,7 +406,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1 소프트젤 식사와 함께",
       "ingredients": {
         "vitamin_d_iu": 1000
       },
@@ -417,8 +417,8 @@
         "solgar_d3_1000"
       ],
       "popularity_rank": 13,
-      "data_source": "https://kr.iherb.com/c/vitamin-d-3",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.iherb.com/pr/now-foods-vitamin-d-3-1-000-iu-180-softgels/729",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "lactofit_gold",
@@ -495,7 +495,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (어린이용)",
       "ingredients": {
         "probiotics_billion_cfu": 1,
         "vitamin_d_iu": 400,
@@ -510,8 +510,8 @@
       ],
       "popularity_rank": 16,
       "notes": "보장균수 10억 CFU. 비타민D 10mcg = 400IU",
-      "data_source": "https://prod.danawa.com/info/?pcode=5870677",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/products/5951/(%EB%8B%A8%EC%A2%85)-%EB%9D%BD%ED%86%A0%ED%95%8F-%EC%83%9D%EC%9C%A0%EC%82%B0%EA%B7%A0-%EA%B3%A8%EB%93%9C",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "duolac_gold",
@@ -560,7 +560,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (어린이용)",
       "ingredients": {},
       "good_for": [
         "어린이 장 건강"
@@ -570,8 +570,8 @@
       ],
       "popularity_rank": 18,
       "notes": "함량 미공개. 750mg x 100정",
-      "data_source": "https://www.costco.co.kr/HealthSupplement/Probiotics/Duolac-Kids-Probiotics-750mg-x-100ct/p/624720",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.duolac.co.kr/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_vit_c_1000",
@@ -643,7 +643,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (3000mg 메가도스)",
       "ingredients": {
         "vitamin_c_mg": 3000
       },
@@ -655,8 +655,8 @@
         "eundan_vit_c_1000"
       ],
       "popularity_rank": 21,
-      "data_source": "https://www.costco.co.kr/HealthSupplement/VitaminMineral/Vitamin-C/Korea-Eundan-Megadose-C-3000mg-120ct/p/679835",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/products/110/%EB%A9%94%EA%B0%80%EB%8F%84%EC%8A%A4C-3000",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "solgar_mg_citrate",
@@ -901,7 +901,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 (트리플 함량)",
       "ingredients": {
         "omega3_total_mg": 654
       },
@@ -912,8 +912,8 @@
         "promega_dual"
       ],
       "popularity_rank": 30,
-      "data_source": "https://www.costco.co.kr/HealthSupplement/Omega-3Krill-Oil/Chongkundang-Promega-Omega-3-654mg-x-60-x-2/p/621380",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000059",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "atomy_rtg_omega3",
@@ -985,7 +985,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 식후 (지용성)",
       "ingredients": {
         "lutein_mg": 18.18,
         "zeaxanthin_mg": 1.82,
@@ -1000,8 +1000,8 @@
         "hurum_lutein"
       ],
       "popularity_rank": 33,
-      "data_source": "https://prod.danawa.com/info/?pcode=78761264",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000288",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "elevit",
@@ -1050,10 +1050,10 @@
       "unit": "정",
       "daily_dose": 1,
       "package_size": 120,
-      "intake_timing": "morningEmpty",
+      "intake_timing": "morningAfter",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식사 후 (B군 함유)",
       "ingredients": {
         "vitamin_b9_mcg": 800
       },
@@ -1066,8 +1066,8 @@
         "elevit"
       ],
       "popularity_rank": 35,
-      "data_source": "https://www.elenew.co.kr/product-range",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.elenew.co.kr/product-range/elenew1",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "elenew_2",
@@ -1079,10 +1079,10 @@
       "unit": "정",
       "daily_dose": 1,
       "package_size": 120,
-      "intake_timing": "morningEmpty",
+      "intake_timing": "morningAfter",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식사 후 (B군 함유)",
       "ingredients": {
         "iron_mg": 60,
         "vitamin_c_mg": 60
@@ -1097,7 +1097,7 @@
       ],
       "popularity_rank": 36,
       "data_source": "https://www.elenew.co.kr/product-range",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ginexin_f_40",
@@ -1302,7 +1302,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1포 아침 식사 30분 전 공복 권장",
       "ingredients": {
         "ginsenoside_mg": 17
       },
@@ -1313,8 +1313,8 @@
         "jks_red_ginseng_extract"
       ],
       "popularity_rank": 44,
-      "data_source": "https://dnublog.co.kr/2026/04/26/%EC%A0%95%EA%B4%80%EC%9E%A5-%EC%97%90%EB%B8%8C%EB%A6%AC%ED%83%80%EC%9E%84-%ED%9A%A8%EB%8A%A5%C2%B7%EB%B3%B5%EC%9A%A9%EB%B2%95%C2%B7%EA%B0%80%EA%B2%A9-2026-%EC%B5%9C%EC%8B%A0-%EB%9D%BC%EC%9D%B8/",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/products/3/%ED%99%8D%EC%82%BC%EC%A0%95-%EC%97%90%EB%B8%8C%EB%A6%AC%ED%83%80%EC%9E%84-10ml",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "kidsten_multi",
@@ -1599,7 +1599,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 식후 (지용성)",
       "ingredients": {
         "astaxanthin_mg": 6
       },
@@ -1610,8 +1610,8 @@
       "alternatives": [],
       "popularity_rank": 55,
       "notes": "식약처 권장 4-12mg/일. 헤마토코쿠스 추출",
-      "data_source": "https://wp1health.com/2025/09/02/astaxanthin-selection-criteria/",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "creatine_monohydrate",
@@ -1653,7 +1653,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (저분자 1500mg)",
       "ingredients": {
         "collagen_mg": 1500
       },
@@ -1665,8 +1665,8 @@
       ],
       "popularity_rank": 57,
       "notes": "나티콜 BPMG 콜라겐 1500mg/포. 부원료 비타민C·판토텐산·비오틴·D·아연·셀렌",
-      "data_source": "https://www.costco.co.kr/HealthSupplement/DietBeauty-Supplement/Collagen/Nutrione-BB-Lab-The-Collagen-1500-2g-x-90ct/p/657633",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "evercollagen_time",
@@ -1681,7 +1681,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포",
       "ingredients": {
         "collagen_mg": 1000
       },
@@ -1694,8 +1694,8 @@
       ],
       "popularity_rank": 58,
       "notes": "저분자 콜라겐 펩타이드 1000mg/포",
-      "data_source": "https://www.odkshop.com/en/products/%EB%89%B4%ED%8A%B8%EB%A6%AC-%EC%97%90%EB%B2%84%EC%BD%9C%EB%9D%BC%EA%B2%90-%ED%83%80%EC%9E%84-%EC%A0%80%EB%B6%84%EC%9E%90-%EC%BD%9C%EB%9D%BC%EA%B2%90-%ED%8E%A9%ED%83%80%EC%9D%B4%EB%93%9C-1000mg-%EB%AC%BC%EC%97%86%EC%9D%B4-%ED%95%98%EB%A3%A8%ED%95%9C%ED%8F%AC-%ED%95%9C%EB%8B%AC%EB%B6%84",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/products/5183/%EC%97%90%EB%B2%84%EC%BD%9C%EB%9D%BC%EA%B2%90-%ED%83%80%EC%9E%84",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "evercollagen_time_biotin",
@@ -1710,7 +1710,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (비오틴 셀)",
       "ingredients": {
         "collagen_mg": 1000,
         "biotin_mcg": 30,
@@ -1725,8 +1725,8 @@
       ],
       "popularity_rank": 59,
       "notes": "콜라겐 1000mg + 비오틴/아연/셀렌",
-      "data_source": "https://www.odkshop.com/en/products/%EB%89%B4%ED%8A%B8%EB%A6%AC-%EC%97%90%EB%B2%84%EC%BD%9C%EB%9D%BC%EA%B2%90-%ED%83%80%EC%9E%84-%EB%B9%84%EC%98%A4%ED%8B%B4%EC%85%80",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/products/191/%EC%97%90%EB%B2%84%EC%BD%9C%EB%9D%BC%EA%B2%90-%ED%83%80%EC%9E%84%EB%B9%84%EC%98%A4%ED%8B%B4",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "solgar_b_complex_100",
@@ -1813,7 +1813,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 2,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 2정 식후 (GNC 메가맨 라벨)",
       "ingredients": {
         "beta_carotene_mg": 1.5,
         "vitamin_b1_mg": 7.5,
@@ -1843,7 +1843,7 @@
       "popularity_rank": 62,
       "notes": "1일 2정 권장. 표기 함량은 1정 기준 (라벨 2정 분량의 절반)",
       "data_source": "https://prod.danawa.com/info/?pcode=3375355",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "gnc_womens_ultra_mega",
@@ -1858,7 +1858,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (라벨 확인)",
       "ingredients": {
         "beta_carotene_mg": 1.5,
         "vitamin_a_mcg": 288.75,
@@ -1890,8 +1890,8 @@
         "solgar_multi_woman"
       ],
       "popularity_rank": 63,
-      "data_source": "https://m.dongwonmall.com/product/detail.do?productId=001025125",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.dongwonmall.com/product/detail.do?productId=000094901",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "now_adam",
@@ -2025,7 +2025,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 충분한 물과 함께",
       "ingredients": {
         "vitamin_d_iu": 1000
       },
@@ -2040,7 +2040,7 @@
       "popularity_rank": 68,
       "notes": "1정 400mg. 영양소기준치 250%",
       "data_source": "https://prod.danawa.com/info/?pcode=3121502",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_vit_d_2000",
@@ -2055,7 +2055,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 (아임비타 라인)",
       "ingredients": {
         "vitamin_d_iu": 2000
       },
@@ -2067,8 +2067,8 @@
         "solgar_d3_5000"
       ],
       "popularity_rank": 69,
-      "data_source": "https://www.ckdhc.com/product/productView.do?category=CKD_CATE00000063&prodCode=CHC0000244",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000208",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "atomy_spirulina",
@@ -2112,7 +2112,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1구미 (씹어 섭취)",
       "ingredients": {},
       "good_for": [
         "면역 항산화",
@@ -2122,7 +2122,7 @@
       "popularity_rank": 71,
       "notes": "함량 비공개. 식약처 권장 플라보노이드 16-17mg 기준",
       "data_source": "https://kr.atomy.com/product/004028",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_boswellia_7days",
@@ -2137,7 +2137,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (7일 간편 케어)",
       "ingredients": {
         "boswellia_extract_mg": 800
       },
@@ -2149,8 +2149,8 @@
       ],
       "popularity_rank": 72,
       "notes": "보스웰리아추출물 800mg/정. 식약처 일일 섭취량 500mg/일",
-      "data_source": "https://ckdmall.co.kr/category/%EA%B4%80%EC%A0%88%EA%B1%B4%EA%B0%95-%EB%B3%B4%EC%8A%A4%EC%9B%B0%EB%A6%AC%EC%95%84/261",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.ckdhc.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "esther_boswellia",
@@ -2281,7 +2281,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후",
       "ingredients": {
         "zinc_mg": 30
       },
@@ -2294,8 +2294,8 @@
       ],
       "popularity_rank": 77,
       "notes": "1정 263mg / 아연 30mg (글루콘산아연)",
-      "data_source": "https://m.dongwonmall.com/product/detail.do?productId=000345093",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "now_zinc_50",
@@ -2310,7 +2310,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 식사와 함께",
       "ingredients": {
         "zinc_mg": 50
       },
@@ -2321,8 +2321,8 @@
         "gnc_zinc_30"
       ],
       "popularity_rank": 78,
-      "data_source": "https://prod.danawa.com/info/?pcode=6267351",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.iherb.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_krill_oil",
@@ -2337,7 +2337,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 식후 (지용성)",
       "ingredients": {
         "phospholipid_mg": 400
       },
@@ -2348,8 +2348,8 @@
       "alternatives": [],
       "popularity_rank": 79,
       "notes": "남극 크릴오일 100% 1000mg. 인지질 약 40-50% 추정",
-      "data_source": "http://www.ckdhc.com/product/productView.do?category=&prodCode=CHC0000024",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.ckdhc.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "lcarnitine_2000",
@@ -2364,7 +2364,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (2000mg, 운동 30분 전 권장)",
       "ingredients": {
         "l_carnitine_mg": 2000
       },
@@ -2377,8 +2377,8 @@
       ],
       "popularity_rank": 80,
       "notes": "L-카르니틴 일반 권장 500-2000mg",
-      "data_source": "https://naturegreenlife.co.kr/product/%EC%97%98%EC%B9%B4%EC%8A%AC%EB%A6%BC-l-%EC%B9%B4%EB%A5%B4%EB%8B%88%ED%8B%B4-2000mg-%EB%8B%A4%EC%9D%B4%EC%96%B4%ED%8A%B8/14/",
-      "verified_date": "2026-05-04"
+      "data_source": "https://naturegreenlife.co.kr/product/elkaslim",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "glucosamine_general",
@@ -2475,10 +2475,10 @@
       "unit": "정",
       "daily_dose": 1,
       "package_size": 30,
-      "intake_timing": "morningEmpty",
+      "intake_timing": "morningAfter",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후 (임산부 종합비타민, B군)",
       "ingredients": {},
       "good_for": [
         "임산부 종합"
@@ -2489,8 +2489,8 @@
       ],
       "popularity_rank": 84,
       "notes": "함량 비공개",
-      "data_source": "https://www.medi-post.co.kr/health-functional-food/2015/06/29900/",
-      "verified_date": "2026-05-04"
+      "data_source": "https://hanminutrition.com/c02170/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "atomy_psyllium",
@@ -2561,7 +2561,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1포 아침 식사 30분 전 공복",
       "ingredients": {
         "ginsenoside_mg": 7
       },
@@ -2574,8 +2574,8 @@
       ],
       "popularity_rank": 87,
       "notes": "10ml/포. 진세노사이드 7mg/일 (저가 라인)",
-      "data_source": "https://prod.danawa.com/info/?pcode=6600124",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/products/3/%ED%99%8D%EC%82%BC%EC%A0%95-%EC%97%90%EB%B8%8C%EB%A6%AC%ED%83%80%EC%9E%84-10ml",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "jks_everytime_soft",
@@ -2590,7 +2590,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1포 아침 식사 30분 전 공복",
       "ingredients": {
         "ginsenoside_mg": 11.6
       },
@@ -2602,8 +2602,8 @@
         "jks_everytime_limited"
       ],
       "popularity_rank": 88,
-      "data_source": "https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000210587",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/products/3/%ED%99%8D%EC%82%BC%EC%A0%95-%EC%97%90%EB%B8%8C%EB%A6%AC%ED%83%80%EC%9E%84-10ml",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "solgar_selenium_200",
@@ -2618,7 +2618,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후",
       "ingredients": {
         "selenium_mcg": 200
       },
@@ -2631,8 +2631,8 @@
       ],
       "popularity_rank": 89,
       "notes": "성인 일일 권장 60mcg, 상한 400mcg",
-      "data_source": "https://m.vitatra.com/product/detail/32084",
-      "verified_date": "2026-05-04"
+      "data_source": "https://m.oliveyoung.co.kr/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "now_selenium_100",
@@ -2647,7 +2647,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식사와 함께",
       "ingredients": {
         "selenium_mcg": 100
       },
@@ -2658,8 +2658,8 @@
         "solgar_selenium_200"
       ],
       "popularity_rank": 90,
-      "data_source": "https://dailyvita.com/products/now-foods-selenium-100-mcg-100-tablets-1/",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.iherb.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "myprotein_the_whey",
@@ -2704,7 +2704,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 식사 무관",
       "ingredients": {
         "alpha_lipoic_acid_mg": 600
       },
@@ -2716,8 +2716,8 @@
       "alternatives": [],
       "popularity_rank": 92,
       "notes": "공복 권장. 임상 600-1800mg 범위 사용",
-      "data_source": "https://www.ople.com/m/shop/item.php?it_id=1511255947",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "lipo_vit_c_general",
@@ -2732,7 +2732,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (리포좀형)",
       "ingredients": {
         "vitamin_c_mg": 1000
       },
@@ -2746,8 +2746,8 @@
       ],
       "popularity_rank": 93,
       "notes": "리포좀 형태 = 흡수율↑. 일반 시장 500-1500mg/포",
-      "data_source": "https://www.celltrionmall.com/item/DL2024030629",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_glucosamine_plus",
@@ -2791,7 +2791,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후",
       "ingredients": {
         "lutein_mg": 20,
         "zeaxanthin_mg": 1
@@ -2805,8 +2805,8 @@
       ],
       "popularity_rank": 95,
       "notes": "식약처 일일 최대 20mg",
-      "data_source": "https://www.pillyze.com/products/1391/%EB%A3%A8%ED%85%8C%EC%9D%B8-20mg",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "gnc_lutein_40",
@@ -2821,7 +2821,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후",
       "ingredients": {
         "lutein_mg": 40
       },
@@ -2833,8 +2833,8 @@
       ],
       "popularity_rank": 96,
       "notes": "1정 40mg (식약처 상한치 초과 — 라벨 1/2정 권장 가능성)",
-      "data_source": "http://m.plusflex.net/goods/view?no=568",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "doctorlin_lutein_zeaxanthin_24",
@@ -2849,7 +2849,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 식후",
       "ingredients": {
         "lutein_mg": 20,
         "zeaxanthin_mg": 4
@@ -2864,8 +2864,8 @@
       ],
       "popularity_rank": 97,
       "notes": "오전 식후 1캡슐",
-      "data_source": "https://www.pillyze.com/products/4636/%EB%A3%A8%ED%85%8C%EC%9D%B8-%EC%A7%80%EC%95%84%EC%9E%94%ED%8B%B4-24",
-      "verified_date": "2026-05-04"
+      "data_source": "https://m.doctorlean.co.kr/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "tanacia_q",
@@ -2880,7 +2880,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (혈행 개선)",
       "ingredients": {
         "ginkgo_extract_mg": 80,
         "flavonol_glycosides_mg": 36
@@ -2894,8 +2894,8 @@
       ],
       "popularity_rank": 98,
       "notes": "은행잎 추출물 분말 + 플라보놀 배당체 36mg/일",
-      "data_source": "https://www.yuyu.co.kr/ko/productInfo/productView.do?product_id=142&category=H&pageIndex=1&order=new",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.health.kr/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "solgar_milk_thistle_300",
@@ -2939,7 +2939,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1츄어블 공복 (철분 흡수 ↑)",
       "ingredients": {
         "iron_mg": 24
       },
@@ -2949,8 +2949,8 @@
       "alternatives": [],
       "popularity_rank": 100,
       "notes": "1정 1500mg 中 철 24mg (1일 영양성분기준치 200%)",
-      "data_source": "https://www.mo-vita.co.kr/m2/goods/view.php?goodsno=1272",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "choa_vit_d_4000_chewable",
@@ -2965,7 +2965,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1츄어블 (조아제약, 씹어 섭취)",
       "ingredients": {
         "vitamin_d_iu": 4000
       },
@@ -2979,8 +2979,8 @@
       ],
       "popularity_rank": 101,
       "notes": "스위스 DSM 비타민D. 씹어 먹는 캡슐",
-      "data_source": "https://www.choa.co.kr/productInfo/productInfo_020200.asp?idx=214&bmain=view",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "cj_byocore_500",
@@ -2995,7 +2995,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 (변형: 60캡슐 30일분 라벨 1일 2캡슐)",
       "ingredients": {
         "probiotics_billion_cfu": 50
       },
@@ -3011,7 +3011,7 @@
       "popularity_rank": 102,
       "notes": "보장균수 500억 CFU/일 (1캡슐). 트리플코어 포뮬러",
       "data_source": "https://cjwellcare.com/product/%EB%B0%94%EC%9D%B4%EC%98%A4%EC%BD%94%EC%96%B4-%EA%B1%B4%EA%B0%95%ED%95%9C-%EC%83%9D%EC%9C%A0%EC%82%B0%EA%B7%A0-500%EC%96%B5/775/",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "cj_byocore_100",
@@ -3026,7 +3026,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (100억 CFU)",
       "ingredients": {
         "probiotics_billion_cfu": 10
       },
@@ -3040,7 +3040,7 @@
       "popularity_rank": 103,
       "notes": "보장균수 100억 CFU/일",
       "data_source": "https://www.oliveyoung.co.kr/store/goods/getGoodsDetail.do?goodsNo=A000000179239",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "cj_byocore_skin_immune",
@@ -3055,7 +3055,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (피부면역 100억)",
       "ingredients": {
         "probiotics_billion_cfu": 10
       },
@@ -3067,7 +3067,7 @@
       ],
       "popularity_rank": 104,
       "data_source": "https://cjwellcare.com/product/%EB%B0%94%EC%9D%B4%EC%98%A4%EC%BD%94%EC%96%B4-%ED%94%BC%EB%B6%80%EB%A9%B4%EC%97%AD-%EC%9C%A0%EC%82%B0%EA%B7%A0-100%EC%96%B5-30%ED%8F%AC/761/",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "bblab_zino_free_vag",
@@ -3082,7 +3082,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 (질유산균 리스펙타프로)",
       "ingredients": {
         "probiotics_billion_cfu": 5
       },
@@ -3092,8 +3092,8 @@
       "alternatives": [],
       "popularity_rank": 105,
       "notes": "보장균수 50억 CFU. 식약처 기능성 인정",
-      "data_source": "https://www.nutrione.co.kr/item/dtl/1000296320",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "atomy_b_complex",
@@ -3234,7 +3234,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1병 (음용 콜라겐)",
       "ingredients": {
         "collagen_peptide_mg": 2.7141
       },
@@ -3248,8 +3248,8 @@
       ],
       "popularity_rank": 109,
       "notes": "1병 20ml 액상. Gly-Pro-Val-Gly-Pro-Ser 펩타이드",
-      "data_source": "https://kr.atomy.com/product/004008",
-      "verified_date": "2026-05-04"
+      "data_source": "https://kr.atomy.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "nac_general",
@@ -3264,7 +3264,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 식후",
       "ingredients": {
         "nac_mg": 600
       },
@@ -3276,8 +3276,8 @@
       "alternatives": [],
       "popularity_rank": 110,
       "notes": "공복 권장. 일반 600-1800mg/일",
-      "data_source": "https://www.pillyze.com/nutrients/610/NAC(%EC%97%94%EC%95%84%EC%84%B8%ED%8B%B8%EC%8B%9C%EC%8A%A4%ED%85%8C%EC%9D%B8)",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "curcumin_general",
@@ -3321,7 +3321,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 식후",
       "ingredients": {
         "resveratrol_mg": 250
       },
@@ -3334,8 +3334,8 @@
       ],
       "popularity_rank": 112,
       "notes": "임상 250-1000mg/일. 시르투인(SIRT1) 활성",
-      "data_source": "https://www.pillyze.com/products/20169/%EB%A0%88%EC%8A%A4%EB%B2%A0%EB%9D%BC%ED%8A%B8%EB%A1%A4",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "solgar_zinc_50",
@@ -3350,7 +3350,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식사와 함께",
       "ingredients": {
         "zinc_mg": 50
       },
@@ -3364,8 +3364,8 @@
       ],
       "popularity_rank": 113,
       "notes": "성인 상한 35mg — 분할 복용 권장",
-      "data_source": "https://www.pillyze.com/products/1081/%EC%95%84%EC%97%B0-50",
-      "verified_date": "2026-05-04"
+      "data_source": "https://m.oliveyoung.co.kr/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "pilly_red_ginseng_octacosanol",
@@ -3499,7 +3499,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (저분자 피쉬 콜라겐)",
       "ingredients": {},
       "good_for": [
         "피부 + 히알루론산"
@@ -3509,8 +3509,8 @@
       ],
       "popularity_rank": 118,
       "notes": "함량 비공개. 먹는 히알루론산 분말 형태",
-      "data_source": "https://soyu.kr/product/%EC%A2%85%EA%B7%BC%EB%8B%B9-%EB%A8%B9%EB%8A%94-%EC%97%98%EB%9D%BC%EC%8A%A4%ED%8B%B4-%EC%A0%80%EB%B6%84%EC%9E%90-%ED%94%BC%EC%89%AC-%EC%BD%9C%EB%9D%BC%EA%B2%90-60%ED%8F%AC/578/",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.ckdhc.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "jks_everytime_regular",
@@ -3525,7 +3525,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1포 아침 식사 30분 전 공복",
       "ingredients": {
         "ginsenoside_mg": 7
       },
@@ -3539,8 +3539,8 @@
       ],
       "popularity_rank": 119,
       "notes": "분말. 진세노사이드 Rg1+Rb1+Rg3 7.0 mg/g",
-      "data_source": "https://www.jungkwanjang.co.kr/products/view.do?ref_id=1043&id=1501",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/products/3/%ED%99%8D%EC%82%BC%EC%A0%95-%EC%97%90%EB%B8%8C%EB%A6%AC%ED%83%80%EC%9E%84-10ml",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "atomy_chinaeng_lacto",
@@ -3555,7 +3555,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (친생유산균 30억 CFU)",
       "ingredients": {
         "probiotics_billion_cfu": 3
       },
@@ -3568,8 +3568,8 @@
       ],
       "popularity_rank": 120,
       "notes": "보장균수 30억 CFU/포. 12종 유산균 (10 + 특허 2)",
-      "data_source": "https://kr.atomy.com/product/000164",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/products/132/%ED%94%84%EB%A1%9C%EB%B0%94%EC%9D%B4%EC%98%A4%ED%8B%B1%EC%8A%A4-10%ED%94%8C%EB%9F%AC%EC%8A%A4-%EC%B9%9C%EC%83%9D-%EC%9C%A0%EC%82%B0%EA%B7%A0",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "atomy_kids_probiotics",
@@ -3584,7 +3584,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (키즈 프로바이오틱스 20억 CFU)",
       "ingredients": {},
       "good_for": [
         "어린이 장 건강"
@@ -3596,7 +3596,7 @@
       "popularity_rank": 121,
       "notes": "함량 비공개",
       "data_source": "https://kr.atomy.com/product/004052",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_belderwell_omega3",
@@ -3755,7 +3755,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (식물성 비타민D)",
       "ingredients": {
         "vitamin_d_iu": 400
       },
@@ -3769,8 +3769,8 @@
       ],
       "popularity_rank": 127,
       "notes": "버섯 통째로 사용. 폴리페놀·키토산·베타글루칸 부원료",
-      "data_source": "https://www.neworigin.co.kr/goods/goods_view.php?goodsNo=1000000029",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.neworigin.co.kr/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "now_coq10_100",
@@ -3910,7 +3910,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 6,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 6g (분말, 충분한 물과 함께)",
       "ingredients": {
         "dietary_fiber_g": 5
       },
@@ -3924,8 +3924,8 @@
       ],
       "popularity_rank": 132,
       "notes": "1테이블스푼(약 6g) = 식이섬유 5g",
-      "data_source": "https://kr.iherb.com/c/psyllium",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.iherb.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "5htp_general",
@@ -4027,7 +4027,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1 소프트젤 식사와 함께",
       "ingredients": {
         "lutein_mg": 40
       },
@@ -4040,8 +4040,8 @@
       ],
       "popularity_rank": 136,
       "notes": "식약처 상한치 (1정 40mg) — 의사 상담 권장",
-      "data_source": "https://www.vitatra.com/product/detail/32290",
-      "verified_date": "2026-05-04"
+      "data_source": "https://m.oliveyoung.co.kr/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "neworigin_lutein_zeaxanthin_astaxanthin",
@@ -4056,7 +4056,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 식후",
       "ingredients": {
         "lutein_mg": 10,
         "zeaxanthin_mg": 2,
@@ -4072,8 +4072,8 @@
       ],
       "popularity_rank": 137,
       "notes": "1캡슐 140mg",
-      "data_source": "https://www.neworigin.co.kr/goods/goods_view.php?goodsNo=1000001880",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.neworigin.co.kr/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "neworigin_lutein_astaxanthin",
@@ -4088,7 +4088,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 식후",
       "ingredients": {
         "lutein_mg": 20,
         "astaxanthin_mg": 6
@@ -4103,8 +4103,8 @@
       ],
       "popularity_rank": 138,
       "notes": "1캡슐 160mg",
-      "data_source": "https://www.neworigin.co.kr/goods/goods_view.php?goodsNo=1000001515",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.neworigin.co.kr/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_iron_folate_d_plus",
@@ -4119,7 +4119,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 공복 (철분/엽산/비타민D)",
       "ingredients": {
         "iron_mg": 24,
         "vitamin_b9_mcg": 400,
@@ -4136,7 +4136,7 @@
       "popularity_rank": 139,
       "notes": "철 24mg + 엽산 400mcg + D 20mcg",
       "data_source": "https://www.pillyze.com/products/620/%EC%B2%A0%EB%B6%84-%EC%97%BD%EC%82%B0-%EB%B9%84%ED%83%80%EB%AF%BCD-%ED%94%8C%EB%9F%AC%EC%8A%A4",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_bolgre_prenatal",
@@ -4151,7 +4151,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식전 공복 (임산부 철분)",
       "ingredients": {
         "iron_mg": 40
       },
@@ -4164,8 +4164,8 @@
       ],
       "popularity_rank": 140,
       "notes": "철-아세틸트랜스페린 (계란 단백질 결합) — 흡수율↑",
-      "data_source": "https://www.khan.co.kr/article/201510292101375",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.ckdpharm.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "jks_hongijanggun_2",
@@ -4237,7 +4237,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 4,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 4g 식후 (분말)",
       "ingredients": {
         "protein_g": 2.78
       },
@@ -4250,8 +4250,8 @@
       ],
       "popularity_rank": 143,
       "notes": "1일 3-5g. 단백질 약 69.5%",
-      "data_source": "https://namu.wiki/w/%EC%8A%A4%ED%94%BC%EB%A3%B0%EB%A6%AC%EB%82%98",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "lacfido_kids_d_1000",
@@ -4295,7 +4295,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1츄어블 (어린이용)",
       "ingredients": {
         "vitamin_d_iu": 2000
       },
@@ -4307,8 +4307,8 @@
       ],
       "popularity_rank": 145,
       "notes": "1캡슐 350mg",
-      "data_source": "https://www.celltrionmall.com/item/ST2023082228",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.celltrionhealthcare.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "jamieson_kids_d_chewable",
@@ -4467,7 +4467,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 식후",
       "ingredients": {
         "phospholipid_mg": 500,
         "epa_mg": 80,
@@ -4482,8 +4482,8 @@
       ],
       "popularity_rank": 151,
       "notes": "인지질 약 50%, EPA 14-18%, DHA 8-12% 표준 추정",
-      "data_source": "https://namu.wiki/w/%ED%81%AC%EB%A6%B4%20%EC%98%A4%EC%9D%BC",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "iherb_lcarnitine",
@@ -4527,7 +4527,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (의약품)",
       "ingredients": {
         "vitamin_c_mg": 1000
       },
@@ -4542,8 +4542,8 @@
       ],
       "popularity_rank": 153,
       "notes": "일반의약품. 1정 1030.93mg 中 비타민C 1000mg",
-      "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=A11AHHHHH0243",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=2018032100008",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_ca_mg_d_zn",
@@ -4590,7 +4590,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후",
       "ingredients": {
         "selenium_mcg": 100
       },
@@ -4603,8 +4603,8 @@
       ],
       "popularity_rank": 155,
       "notes": "1정 290mg. 1일 1회",
-      "data_source": "https://vita100age.cafe24.com/product/gnc%EC%85%80%EB%A0%88%EB%8A%84100%ED%95%AD%EC%82%B0%ED%99%94%EC%98%81%EC%96%91%EC%A0%9C48197/1546/",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "eaa_general",
@@ -4736,7 +4736,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 (애터미 오-쏘팔메토)",
       "ingredients": {
         "saw_palmetto_lauric_acid_mg": 89.6
       },
@@ -4750,7 +4750,7 @@
       "popularity_rank": 160,
       "notes": "1캡슐 500mg. 로르산 89.6mg",
       "data_source": "https://kr.atomy.com/product/000171",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "gnc_saw_palmetto",
@@ -4793,7 +4793,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 (1100mg)",
       "ingredients": {
         "saw_palmetto_lauric_acid_mg": 115
       },
@@ -4806,8 +4806,8 @@
       ],
       "popularity_rank": 162,
       "notes": "1캡슐 1100mg. 로르산 115mg (식약처 권장 충족)",
-      "data_source": "https://www.costco.co.kr/HealthSupplement/Other-Health-Supplement/Other-Health-Supplements/-1100mg-x-90/p/638640",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "cranberry_general",
@@ -4822,7 +4822,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 (크랜베리 500mg)",
       "ingredients": {
         "cranberry_extract_mg": 500,
         "anthocyanoside_mg": 1.25
@@ -4834,8 +4834,8 @@
       "alternatives": [],
       "popularity_rank": 163,
       "notes": "Cran-Max 표준화 추출물. 안토시아노사이드 1.25mg",
-      "data_source": "https://www.pillyze.com/nutrients/420/%ED%81%AC%EB%9E%9C%EB%B2%A0%EB%A6%AC",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "active_folate_general",
@@ -4850,7 +4850,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 공복 (5-MTHF 활성형 엽산)",
       "ingredients": {
         "vitamin_b9_mcg": 800
       },
@@ -4864,8 +4864,8 @@
       ],
       "popularity_rank": 164,
       "notes": "L-methylfolate / 5-MTHF 형태. UMFA 안전성 ↑",
-      "data_source": "https://optvitamin.com/en/products/5-mthf%ED%99%9C%EC%84%B1%ED%98%95-%EC%97%BD%EC%82%B0-1-mg",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_zinc_plus_30",
@@ -4880,7 +4880,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후",
       "ingredients": {
         "zinc_mg": 30,
         "copper_mg": 1.5
@@ -4895,8 +4895,8 @@
       ],
       "popularity_rank": 165,
       "notes": "글루콘산아연 + 구리 (장기 복용 시 구리 결핍 예방)",
-      "data_source": "https://www.ssg.com/item/itemView.ssg?itemId=1000405240598",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.ckdhc.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "thegm_more_heme_iron_woman",
@@ -4911,7 +4911,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 공복 (가용성 헴철)",
       "ingredients": {
         "heme_iron_mg": 12,
         "vitamin_d_iu": 1000
@@ -4926,8 +4926,8 @@
       ],
       "popularity_rank": 166,
       "notes": "가용성 헴철 12mg + 비타민D 1000IU",
-      "data_source": "https://thegmpharm.co.kr/product/%EB%8D%94%ED%97%B4%EC%B2%A0%ED%8F%AC%EC%9A%B0%EB%A8%BC-%EA%B0%80%EC%9A%A9%EC%84%B1%ED%97%B4%EC%B2%A0-%EC%9E%84%EC%82%B0%EB%B6%80-%EC%B2%A0%EB%B6%84%EC%A0%9C-%ED%97%B4%EC%B2%A0100-%EB%B9%84%ED%83%80%EB%AF%BCd-1000iu/110/",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "evercollagen_in_up_plus",
@@ -4975,7 +4975,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (콜라겐 + 히알루론산)",
       "ingredients": {},
       "good_for": [
         "피부 + 관절 (BioCell Type II)"
@@ -4986,8 +4986,8 @@
       ],
       "popularity_rank": 168,
       "notes": "BioCell Collagen II + 콘드로이틴 + 히알루론산 매트릭스",
-      "data_source": "https://www.ople.com/m/shop/item.php?it_id=1505216341",
-      "verified_date": "2026-05-04"
+      "data_source": "https://m.givewell.kr/product/%EC%86%94%EA%B0%80-%EC%BD%9C%EB%9D%BC%EA%B2%90-%ED%9E%88%EC%95%8C%EB%A3%A8%EB%A1%A0%EC%82%B0-%EC%BB%B4%ED%94%8C%EB%A0%89%EC%8A%A4/380/display/1/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "hansamin_kids_redginseng",
@@ -5151,10 +5151,10 @@
       "unit": "포",
       "daily_dose": 1,
       "package_size": 7,
-      "intake_timing": "anyTimeAfterMeal",
+      "intake_timing": "morningAfter",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1바이알 식후 (아침/점심 권장, B군 다량)",
       "ingredients": {
         "vitamin_c_mg": 1000,
         "vitamin_b9_mcg": 800
@@ -5169,8 +5169,8 @@
       ],
       "popularity_rank": 174,
       "notes": "1포 = 액상 + 흰정 + 노란정. 18종 영양소. 1일 1회 아침 식후",
-      "data_source": "https://www.dapharm.com/ko/brand/product/IMN",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/columns/40",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_allatme_303_lcarnitine",
@@ -5185,7 +5185,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 식후",
       "ingredients": {
         "l_carnitine_mg": 2000
       },
@@ -5198,8 +5198,8 @@
       ],
       "popularity_rank": 175,
       "notes": "분말 1포 L-카르니틴 2000mg. 식약처 인정",
-      "data_source": "https://prod.danawa.com/info/?pcode=17060804",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.ckdhc.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "imp_power_a_plus",
@@ -5324,7 +5324,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 식후",
       "ingredients": {
         "vitamin_b1_mg": 48,
         "vitamin_b2_mg": 56,
@@ -5344,8 +5344,8 @@
       ],
       "popularity_rank": 179,
       "notes": "유럽 원료. 30포(30일분) 스틱형 분말",
-      "data_source": "https://www.denps.com/kor/vitamin.php",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/products/173/%ED%8A%B8%EB%A3%A8%EB%B0%94%EC%9D%B4%ED%83%80%EB%AF%BC",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_imbita_daily",
@@ -5360,7 +5360,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (850mg)",
       "ingredients": {},
       "good_for": [
         "하루 1정 종합비타민",
@@ -5373,7 +5373,7 @@
       "popularity_rank": 180,
       "notes": "1정 850mg, B군 일일권장량 300%까지. 정확 mg 비공개로 ingredients 비움",
       "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000208",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "eundan_vit_c_gold_plus",
@@ -5388,7 +5388,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후",
       "ingredients": {
         "vitamin_c_mg": 1000,
         "vitamin_d_iu": 400,
@@ -5405,8 +5405,8 @@
       ],
       "popularity_rank": 181,
       "notes": "1정 1000mg + D 400IU + 비오틴 + 아연. 4개월분",
-      "data_source": "https://prod.danawa.com/info/?pcode=4620588",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.eundan.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "gnc_womens_ultramega",
@@ -5421,7 +5421,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정",
       "ingredients": {
         "vitamin_k_mcg": 30,
         "vitamin_c_mg": 70,
@@ -5454,8 +5454,8 @@
       ],
       "popularity_rank": 182,
       "notes": "2025mg/정. 인삼/귀리/마늘 부원료 포함",
-      "data_source": "https://m.dongwonmall.com/product/detail.do?productId=000094901",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.dongwonmall.com/product/detail.do?productId=000094901",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "gnc_megamen",
@@ -5578,7 +5578,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 식후",
       "ingredients": {
         "lutein_mg": 18.2,
         "zeaxanthin_mg": 1.8,
@@ -5601,8 +5601,8 @@
       ],
       "popularity_rank": 186,
       "notes": "루테인+지아잔틴+종합비타민. 안국약품",
-      "data_source": "https://prod.danawa.com/info/?pcode=27895013",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "drbest_high_abs_mg_200",
@@ -5679,7 +5679,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (저분자 5000mg)",
       "ingredients": {
         "collagen_mg": 5000
       },
@@ -5693,8 +5693,8 @@
       ],
       "popularity_rank": 189,
       "notes": "1포 5000mg 저분자 피쉬 콜라겐. 15일분",
-      "data_source": "https://www.nutrione.co.kr/item/dtl/1000391528",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_eyeclear_lutein_zea",
@@ -6013,7 +6013,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (v2)",
       "ingredients": {
         "probiotics_billion_cfu": 1,
         "vitamin_d_iu": 400,
@@ -6028,8 +6028,8 @@
       ],
       "popularity_rank": 198,
       "notes": "1포 10억 보장균수. 요구르트맛 분말 (D 함량 풀패널)",
-      "data_source": "https://prod.danawa.com/info/?pcode=4112583",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/products/5951/(%EB%8B%A8%EC%A2%85)-%EB%9D%BD%ED%86%A0%ED%95%8F-%EC%83%9D%EC%9C%A0%EC%82%B0%EA%B7%A0-%EA%B3%A8%EB%93%9C",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "elevit_pregnancy",
@@ -6041,10 +6041,10 @@
       "unit": "정",
       "daily_dose": 1,
       "package_size": 100,
-      "intake_timing": "morningEmpty",
+      "intake_timing": "morningAfter",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 아침 식사와 함께 (오전 입덧 시 점심·저녁)",
       "ingredients": {
         "vitamin_b9_mcg": 800,
         "iron_mg": 60,
@@ -6072,8 +6072,8 @@
       ],
       "popularity_rank": 199,
       "notes": "한국 정제 기준. 엽산 0.8mg + 철 60mg WHO 권장량",
-      "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=2016051700012",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.elevit.co.kr/ko/pregnancy",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "elenew_1_full",
@@ -6085,10 +6085,10 @@
       "unit": "정",
       "daily_dose": 1,
       "package_size": 56,
-      "intake_timing": "morningEmpty",
+      "intake_timing": "morningAfter",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 아침 식사 후 (풀 패널)",
       "ingredients": {
         "vitamin_b1_mg": 1.4,
         "vitamin_b6_mg": 1.9,
@@ -6118,7 +6118,7 @@
       "popularity_rank": 200,
       "notes": "임신 1단계 (준비기-12주) 맞춤. 비타민A는 의도적 비함유",
       "data_source": "https://www.elenew.co.kr/product-range/elenew1",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "cenovis_kids_multi",
@@ -6165,7 +6165,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1 소프트젤 식사와 함께",
       "ingredients": {
         "vitamin_d_iu": 2000
       },
@@ -6180,8 +6180,8 @@
       ],
       "popularity_rank": 202,
       "notes": "1정 D3 50mcg = 2000IU 단일 성분",
-      "data_source": "https://kr.iherb.com/r/now-foods-vitamin-d-3-high-potency-2-000-iu-240-softgels/16272",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.iherb.com/pr/now-foods-vitamin-d-3-2-000-iu-240-softgels/41",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "now_biotin_5000",
@@ -6226,7 +6226,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1 소프트젤 식사와 함께",
       "ingredients": {
         "epa_mg": 504,
         "dha_mg": 378,
@@ -6243,8 +6243,8 @@
       ],
       "popularity_rank": 204,
       "notes": "1캡슐 1250mg / EPA+DHA 950mg. EPA:DHA = 약 4:3 (Solgar 표준)",
-      "data_source": "https://prod.danawa.com/info/?pcode=62786573",
-      "verified_date": "2026-05-04"
+      "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_camgd_zn_v2",
@@ -6292,7 +6292,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (풀 패널)",
       "ingredients": {
         "collagen_mg": 1000,
         "biotin_mcg": 30,
@@ -6309,8 +6309,8 @@
       ],
       "popularity_rank": 206,
       "notes": "저분자 콜라겐 1000mg + 비오틴/아연/셀렌. 식약처 인증",
-      "data_source": "https://www.kurly.com/goods/1000269933",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/products/5183/%EC%97%90%EB%B2%84%EC%BD%9C%EB%9D%BC%EA%B2%90-%ED%83%80%EC%9E%84",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "centrum_advance_50plus",
@@ -6325,7 +6325,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식사 직후 (50세 이상)",
       "ingredients": {},
       "good_for": [
         "50세 이상 종합비타민",
@@ -6337,8 +6337,8 @@
       ],
       "popularity_rank": 207,
       "notes": "해외 직구 제품. 정확 mg 비공개",
-      "data_source": "https://prod.danawa.com/info/?pcode=6068750",
-      "verified_date": "2026-05-04"
+      "data_source": "https://centrum.pchkorea.co.kr/product/centrum-for-men",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "frombio_boswellia",
@@ -6382,7 +6382,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 식후",
       "ingredients": {
         "glucosamine_mg": 1500
       },
@@ -6395,8 +6395,8 @@
       ],
       "popularity_rank": 209,
       "notes": "1일 1캡슐 = 글루코사민 1500mg. 식약처 일일권장량 충족",
-      "data_source": "https://www.yaksamom.com/m2/goods/view.php?goodsno=917",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.ckdhc.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "gnm_multi_15",
@@ -6411,7 +6411,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후 (15종 영양소)",
       "ingredients": {
         "vitamin_a_mcg": 490,
         "vitamin_d_iu": 400,
@@ -6439,8 +6439,8 @@
       ],
       "popularity_rank": 210,
       "notes": "한국인 식습관 고려. 1정 = 1일 1정",
-      "data_source": "https://gnmart.co.kr/product/%EC%B4%9D-3%EA%B0%9C%EC%9B%94%EB%B6%84-%EC%A2%85%ED%95%A9%EB%B9%84%ED%83%80%EB%AF%BC-%EB%AF%B8%EB%84%A4%EB%9E%84-15-90%EC%A0%95-1%EB%B0%95%EC%8A%A4/57/",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "cenovis_men_multi",
@@ -6455,7 +6455,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정",
       "ingredients": {
         "magnesium_mg": 66,
         "vitamin_a_mcg": 600,
@@ -6484,8 +6484,8 @@
       ],
       "popularity_rank": 211,
       "notes": "호주 세노비스. 마그네슘+칼슘+철 강화",
-      "data_source": "https://prod.danawa.com/info/?pcode=1748345",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.cenovismall.co.kr/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "thorne_basic_b",
@@ -6576,7 +6576,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식사와 함께",
       "ingredients": {
         "vitamin_d_iu": 5000
       },
@@ -6590,8 +6590,8 @@
       ],
       "popularity_rank": 214,
       "notes": "1정 5000IU (125mcg). 상한섭취량 4000IU 초과 시 전문가 상담",
-      "data_source": "https://www.pillyze.com/products/26206",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "centrum_man_kr",
@@ -6606,7 +6606,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후",
       "ingredients": {
         "vitamin_a_mcg": 1159,
         "vitamin_d_iu": 400,
@@ -6635,8 +6635,8 @@
       ],
       "popularity_rank": 215,
       "notes": "국내 정식. 1일 1정",
-      "data_source": "https://www.pillyze.com/products/22038",
-      "verified_date": "2026-05-04"
+      "data_source": "https://centrum.pchkorea.co.kr/product/centrum-for-men",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_vit_c_1000_v2",
@@ -6651,7 +6651,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후 (v2)",
       "ingredients": {
         "vitamin_c_mg": 1000
       },
@@ -6666,8 +6666,8 @@
       ],
       "popularity_rank": 216,
       "notes": "1정 1000mg 단일 성분. 600정 대용량 (코스트코)",
-      "data_source": "https://prod.danawa.com/info/?pcode=4280991",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.ckdhc.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "atomy_propolis_gummy_v2",
@@ -6682,7 +6682,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1구미 (v2)",
       "ingredients": {
         "flavonoids_mg": 0.3,
         "zinc_mg": 2.55
@@ -6698,7 +6698,7 @@
       "popularity_rank": 217,
       "notes": "1구미 1g = 플라보노이드 0.3mg + 아연. 4개월분",
       "data_source": "https://kr.atomy.com/product/004028",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "solgar_men_multi",
@@ -6713,7 +6713,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식사와 함께",
       "ingredients": {
         "vitamin_d_iu": 133,
         "vitamin_e_mg": 110.2,
@@ -6740,8 +6740,8 @@
       ],
       "popularity_rank": 218,
       "notes": "국내 정식. 1일 1정. 활성 비타민B군",
-      "data_source": "https://prod.danawa.com/info/?pcode=5252103",
-      "verified_date": "2026-05-04"
+      "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=A000000150031",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "solgar_women_multi",
@@ -6756,7 +6756,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식사와 함께",
       "ingredients": {
         "vitamin_d_iu": 133,
         "vitamin_e_mg": 110,
@@ -6783,8 +6783,8 @@
       ],
       "popularity_rank": 219,
       "notes": "국내 정식. 1일 1정. 철분 6mg 강화",
-      "data_source": "https://prod.danawa.com/info/?pcode=5252010",
-      "verified_date": "2026-05-04"
+      "data_source": "https://m.oliveyoung.co.kr/m/G.do?goodsNo=A000000150030",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "huons_menolacto",
@@ -6799,7 +6799,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 (갱년기 유산균)",
       "ingredients": {},
       "good_for": [
         "여성 갱년기",
@@ -6811,8 +6811,8 @@
       ],
       "popularity_rank": 220,
       "notes": "국내 최초 갱년기 기능성 인정. YT1 균수 비공개로 ingredients 비움",
-      "data_source": "https://www.huonsmall.com/goods/goods_view.php?goodsNo=1000000027",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/products/1584/%EC%97%98%EB%A3%A8%EB%B9%84-%EB%A9%94%EB%85%B8%EB%9D%BD%ED%86%A0-%ED%94%84%EB%A1%9C%EB%B0%94%EC%9D%B4%EC%98%A4%ED%8B%B1%EC%8A%A4",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_promega_triple",
@@ -6860,7 +6860,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후 (더블업 함량 강화)",
       "ingredients": {},
       "good_for": [
         "여성 23종 영양",
@@ -6872,8 +6872,8 @@
       ],
       "popularity_rank": 222,
       "notes": "1일 1정 23종 비타민/미네랄. 정확 함량 비공개",
-      "data_source": "https://www.kurly.com/goods/5097881",
-      "verified_date": "2026-05-04"
+      "data_source": "https://centrum.pchkorea.co.kr/product/centrum-for-women",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_iron_folate_d",
@@ -6888,7 +6888,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 공복 (철분 흡수 ↑)",
       "ingredients": {
         "iron_mg": 12,
         "vitamin_d_iu": 400,
@@ -6907,8 +6907,8 @@
       ],
       "popularity_rank": 223,
       "notes": "1일 1캡슐 500mg. 임산부/수유부 보충",
-      "data_source": "https://www.dongwonmall.com/product/detail.do?productId=000933835",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.pillyze.com/products/620/%EC%B2%A0%EB%B6%84-%EC%97%BD%EC%82%B0-%EB%B9%84%ED%83%80%EB%AF%BCD-%ED%94%8C%EB%9F%AC%EC%8A%A4",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "bnr17_bienalsin_pro",
@@ -6923,7 +6923,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 (다이어트 유산균)",
       "ingredients": {
         "probiotics_billion_cfu": 10
       },
@@ -6937,8 +6937,8 @@
       ],
       "popularity_rank": 224,
       "notes": "락토바실러스 가세리 BNR17 보장균수 100억 CFU",
-      "data_source": "https://prod.danawa.com/info/?pcode=11071221",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "eundan_vit_c_easy_d",
@@ -6953,7 +6953,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (이지 + 비타민D 결합)",
       "ingredients": {
         "vitamin_c_mg": 1000,
         "vitamin_d_iu": 1000
@@ -6968,8 +6968,8 @@
       ],
       "popularity_rank": 225,
       "notes": "1정 = C 1000mg + D 25mcg (1000IU)",
-      "data_source": "https://prod.danawa.com/info/?pcode=14043326",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.eundan.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "now_magtein",
@@ -7014,7 +7014,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (애터미 메가비타민 C 2000)",
       "ingredients": {
         "vitamin_c_mg": 2000
       },
@@ -7028,8 +7028,8 @@
       ],
       "popularity_rank": 227,
       "notes": "1포 3g = 비타민C 2000mg. 분말형",
-      "data_source": "https://kr.atomy.com/product/004030",
-      "verified_date": "2026-05-04"
+      "data_source": "https://kr.atomy.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "atomy_color_multi",
@@ -7074,7 +7074,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 (드시모네 고함량)",
       "ingredients": {
         "probiotics_billion_cfu": 1125
       },
@@ -7089,8 +7089,8 @@
       ],
       "popularity_rank": 229,
       "notes": "보장균수 1125억 CFU. 식약처 개별인정 장 면역",
-      "data_source": "https://prod.danawa.com/info/?pcode=5386405",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.dapharm.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "cenovis_vit_d_2000",
@@ -7105,7 +7105,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정",
       "ingredients": {
         "vitamin_d_iu": 2000
       },
@@ -7119,8 +7119,8 @@
       ],
       "popularity_rank": 230,
       "notes": "1정 D 2000IU (50mcg). 일일권장량 500%",
-      "data_source": "https://www.medifonews.com/mobile/article.html?no=204544",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.cenovismall.co.kr/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_imbita_high_b",
@@ -7193,7 +7193,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1 소프트젤 식사와 함께",
       "ingredients": {
         "epa_mg": 690,
         "dha_mg": 260,
@@ -7209,8 +7209,8 @@
       ],
       "popularity_rank": 233,
       "notes": "1캡슐 1250mg / EPA+DHA 1040mg. IFOS 인증",
-      "data_source": "https://prod.danawa.com/info/?pcode=10749003",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.sportsresearch.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "trueen_rtg_omega3",
@@ -7225,7 +7225,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 식후",
       "ingredients": {
         "epa_mg": 524,
         "dha_mg": 413,
@@ -7240,8 +7240,8 @@
       ],
       "popularity_rank": 234,
       "notes": "1캡슐 1250mg / EPA+DHA 937mg",
-      "data_source": "https://www.pillyze.com/products/15111",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "centrum_kids_gummy",
@@ -7335,7 +7335,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1캡슐 (D + 아연)",
       "ingredients": {
         "vitamin_d_iu": 2000,
         "zinc_mg": 8.5
@@ -7350,8 +7350,8 @@
       ],
       "popularity_rank": 237,
       "notes": "1캡슐 D 2000IU + 아연 8.5mg (아연 추가 변형)",
-      "data_source": "https://prod.danawa.com/info/?pcode=6278995",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000208",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_vit_d_1000_v2",
@@ -7366,7 +7366,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (v2 라벨)",
       "ingredients": {
         "vitamin_d_iu": 1000
       },
@@ -7381,8 +7381,8 @@
       ],
       "popularity_rank": 238,
       "notes": "1정 400mg = 비타민D 25mcg (1000IU). 3개월분",
-      "data_source": "https://www.dongwonmall.com/product/detail.do?productId=000777658",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/?pcode=3121502",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_coq10_99",
@@ -7426,7 +7426,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (바이탈뷰티)",
       "ingredients": {
         "probiotics_billion_cfu": 10
       },
@@ -7440,8 +7440,8 @@
       ],
       "popularity_rank": 240,
       "notes": "1포 1.4g = 10종 복합 100억 CFU. 아모레퍼시픽",
-      "data_source": "https://www.vitalbeautie.com/kr/ko/products/probiotics-gold.html",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.amorepacific.com/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "kwangdong_vita500_stick",
@@ -7456,7 +7456,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1포 (광동 비타500 스틱)",
       "ingredients": {
         "vitamin_c_mg": 500,
         "vitamin_b1_mg": 0.36,
@@ -7474,8 +7474,8 @@
       ],
       "popularity_rank": 241,
       "notes": "1포 2g 분말. 비타500의 분말 버전",
-      "data_source": "https://www.ekdp.com/product/items_view.do?s=649",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.kdpharma.co.kr/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "donga_dicamax_d",
@@ -7490,7 +7490,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (다림바이오텍 디카맥스디 정)",
       "ingredients": {
         "calcium_mg": 100,
         "vitamin_d_iu": 1000
@@ -7507,7 +7507,7 @@
       "popularity_rank": 242,
       "notes": "1정 = 칼슘 100mg + D 1000IU. 일반의약품",
       "data_source": "https://www.health.kr/searchDrug/result_drug.asp?drug_cd=A11AKP08F0265",
-      "verified_date": "2026-05-04"
+      "verified_date": "2026-05-06"
     },
     {
       "id": "orthomol_immun_kr",
@@ -7519,10 +7519,10 @@
       "unit": "병",
       "daily_dose": 1,
       "package_size": 30,
-      "intake_timing": "anyTimeAfterMeal",
+      "intake_timing": "morningAfter",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1바이알 식후 (아침/점심 권장, B군 다량)",
       "ingredients": {
         "vitamin_c_mg": 1000,
         "zinc_mg": 10,
@@ -7543,8 +7543,8 @@
       ],
       "popularity_rank": 243,
       "notes": "독일산. 액상+엽산정+요오드정 3종 1세트 / 일",
-      "data_source": "https://prod.danawa.com/info/?pcode=15676235",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.dapharm.com/ko/brand/product/IMN",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "yakult_cuperz",
@@ -7638,7 +7638,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 식후 (풀 패널)",
       "ingredients": {
         "vitamin_a_mcg": 1097,
         "vitamin_d_iu": 400,
@@ -7673,8 +7673,8 @@
       ],
       "popularity_rank": 246,
       "notes": "1정 1418mg. centrum_woman과 동일 제품의 정확 수치 패널",
-      "data_source": "https://www.pillyze.com/products/136",
-      "verified_date": "2026-05-04"
+      "data_source": "https://centrum.pchkorea.co.kr/product/centrum-for-women",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "kgc_hongsam_jung",
@@ -7689,7 +7689,7 @@
       "intake_timing": "morningEmpty",
       "dose_per_intake": 3,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 3g 아침 공복 (티스푼)",
       "ingredients": {
         "ginsenoside_rg1_rb1_rg3_mg": 16.5
       },
@@ -7704,8 +7704,8 @@
       ],
       "popularity_rank": 247,
       "notes": "3g/일 기준 진세노사이드 Rg1+Rb1+Rg3 16.5mg. 식약처 5대 기능성",
-      "data_source": "https://www.kgcshop.co.kr/shop/goodsView?itemId=110731",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.jungkwanjang.co.kr/products/view.do?ref_id=324&id=394",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "tobicom_gold",
@@ -7720,7 +7720,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (눈 건강 멀티)",
       "ingredients": {
         "vitamin_e_mg": 50,
         "vitamin_c_mg": 200
@@ -7735,8 +7735,8 @@
       ],
       "popularity_rank": 248,
       "notes": "토코페롤아세테이트2배산 100mg = 비타민E 50mg. 14가지 성분",
-      "data_source": "https://www.asiae.co.kr/article/2016112810284761818",
-      "verified_date": "2026-05-04"
+      "data_source": "https://prod.danawa.com/info/",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "ckd_imbita_allinone",
@@ -7751,7 +7751,7 @@
       "intake_timing": "anyTimeAfterMeal",
       "dose_per_intake": 1,
       "intakes_per_day": 1,
-      "intake_note": null,
+      "intake_note": "1일 1회 1정 (올인원)",
       "ingredients": {},
       "good_for": [
         "하루 1정 종합비타민+미네랄",
@@ -7763,8 +7763,8 @@
       ],
       "popularity_rank": 249,
       "notes": "1정 1450mg. 비타민 12종 + 미네랄 11종. 정확 mg 비공개",
-      "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000218",
-      "verified_date": "2026-05-04"
+      "data_source": "https://www.ckdhc.com/product/productView.do?prodCode=CHC0000208",
+      "verified_date": "2026-05-06"
     },
     {
       "id": "solgar_b_complex_100_v2",
