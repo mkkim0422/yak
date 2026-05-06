@@ -48,7 +48,10 @@ class MemberDetailScreen extends ConsumerWidget {
       appBar: AppBar(
         backgroundColor: AppColors.background,
         elevation: 0,
-        title: const SizedBox.shrink(),
+        title: Text(
+          '${member.name}의 영양제 관리',
+          style: AppTypography.heading3.copyWith(fontSize: 16),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new, size: 20),
           onPressed: () =>
@@ -306,7 +309,7 @@ class _CurrentSupplementsSection extends ConsumerWidget {
               padding: const EdgeInsets.only(bottom: 8),
               child: _CuratedProductCard(
                 product: p,
-                onRemove: () => _removeCurated(ref, member, p.id),
+                onRemove: () => _removeCurated(context, ref, member, p),
               ),
             ),
           for (final m in member.manualProducts)
@@ -317,7 +320,7 @@ class _CurrentSupplementsSection extends ConsumerWidget {
                 onEdit: () => context.push(
                   '/supplement/manual/edit/${m.id}?member=${member.id}',
                 ),
-                onRemove: () => _removeManual(ref, member, m.id),
+                onRemove: () => _removeManual(context, ref, member, m),
               ),
             ),
         ],
@@ -326,36 +329,53 @@ class _CurrentSupplementsSection extends ConsumerWidget {
   }
 
   Future<void> _removeCurated(
+    BuildContext context,
     WidgetRef ref,
     FamilyMember member,
-    String productId,
+    Product product,
   ) async {
     final updated = member.copyWith(
       currentProductIds:
-          member.currentProductIds.where((id) => id != productId).toList(),
+          member.currentProductIds.where((id) => id != product.id).toList(),
     );
     await ref.read(familyControllerProvider).updateMember(updated);
     await ref.read(notificationServiceProvider).cancelReorderReminder(
           memberId: member.id,
-          productId: productId,
+          productId: product.id,
         );
+    if (context.mounted) _toastDeleted(context, product.name);
   }
 
   Future<void> _removeManual(
+    BuildContext context,
     WidgetRef ref,
     FamilyMember member,
-    String manualId,
+    ManualProductEntry manual,
   ) async {
     final updated = member.copyWith(
       manualProducts:
-          member.manualProducts.where((m) => m.id != manualId).toList(),
+          member.manualProducts.where((m) => m.id != manual.id).toList(),
     );
     await ref.read(familyControllerProvider).updateMember(updated);
     await ref.read(notificationServiceProvider).cancelReorderReminder(
           memberId: member.id,
-          productId: manualId,
+          productId: manual.id,
         );
+    if (context.mounted) _toastDeleted(context, manual.name);
   }
+}
+
+void _toastDeleted(BuildContext context, String name) {
+  final messenger = ScaffoldMessenger.maybeOf(context);
+  if (messenger == null) return;
+  messenger.showSnackBar(
+    SnackBar(
+      content: Text('$name이(가) 삭제됐어요'),
+      backgroundColor: AppColors.muted,
+      duration: const Duration(seconds: 3),
+      behavior: SnackBarBehavior.floating,
+    ),
+  );
 }
 
 /// Card for products from the curated 250-product DB.

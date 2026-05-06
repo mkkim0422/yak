@@ -31,6 +31,10 @@ const List<String> _categories = [
 /// SecureStorage key for the local "정보 등록 요청" queue. Stored locally only.
 const String kProductRegistrationRequestsKey = 'product.registration.requests';
 
+const _errorOutline = OutlineInputBorder(
+  borderSide: BorderSide(color: AppColors.alertBorder, width: 1.5),
+);
+
 class ManualSupplementInputScreen extends ConsumerStatefulWidget {
   final String memberId;
 
@@ -71,6 +75,18 @@ class _ManualSupplementInputScreenState
   int _intakeChoice = 1;
 
   ManualProductEntry? _editing;
+
+  // Validation error messages keyed by field id. Empty / missing = OK.
+  String? _errName;
+  String? _errDose;
+  String? _errIntakes;
+  String? _errPackage;
+
+  // Anchors for scroll-to-first-error.
+  final _nameKey = GlobalKey();
+  final _doseKey = GlobalKey();
+  final _intakesKey = GlobalKey();
+  final _packageKey = GlobalKey();
 
   @override
   void initState() {
@@ -155,14 +171,47 @@ class _ManualSupplementInputScreenState
     final name = _name.text.trim();
     final dose = _resolvedDose();
     final intakes = _resolvedIntakes();
-    final packageSize = int.tryParse(_packageSize.text.trim());
+    final packageSizeRaw = _packageSize.text.trim();
+    final packageSize = int.tryParse(packageSizeRaw);
 
-    if (name.isEmpty || dose == null || intakes == null || packageSize == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('필수 항목을 입력해주세요')),
-      );
+    setState(() {
+      _errName = name.isEmpty ? '제품명을 입력해주세요' : null;
+      _errDose = dose == null
+          ? (_doseChoice == -1
+              ? '1회 복용량을 입력해주세요'
+              : '1회 복용량을 선택해주세요')
+          : null;
+      _errIntakes = intakes == null
+          ? (_intakeChoice == -1
+              ? '1일 횟수를 입력해주세요'
+              : '1일 횟수를 선택해주세요')
+          : null;
+      _errPackage = (packageSize == null || packageSize < 1)
+          ? '한 통 사이즈를 입력해주세요'
+          : null;
+    });
+
+    final firstError = <(String?, GlobalKey)>[
+      (_errName, _nameKey),
+      (_errDose, _doseKey),
+      (_errIntakes, _intakesKey),
+      (_errPackage, _packageKey),
+    ].firstWhere((e) => e.$1 != null, orElse: () => (null, _nameKey));
+
+    if (firstError.$1 != null) {
+      final ctx = firstError.$2.currentContext;
+      if (ctx != null) {
+        await Scrollable.ensureVisible(
+          ctx,
+          duration: const Duration(milliseconds: 250),
+          alignment: 0.1,
+        );
+      }
       return;
     }
+
+    // Re-cast to non-nullable now that validation has passed.
+    if (dose == null || intakes == null || packageSize == null) return;
 
     final dailyDose = dose * intakes;
     // If 1일 2회 이상이면 multiple로 보고 — UI에서 분복 라벨이 합성되도록.
@@ -225,7 +274,21 @@ class _ManualSupplementInputScreenState
     }
 
     if (!mounted) return;
+    final isEditing = _editing != null;
     context.pop();
+    final messenger = ScaffoldMessenger.maybeOf(context);
+    if (messenger != null) {
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            isEditing ? '$name 정보가 수정됐어요' : '$name이(가) 추가됐어요',
+          ),
+          backgroundColor: AppColors.okInk,
+          duration: const Duration(seconds: 3),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   Future<void> _requestRegistration() async {
@@ -346,10 +409,18 @@ class _ManualSupplementInputScreenState
             ),
           ),
           const SizedBox(height: 16),
-          _label('제품명 *'),
+          KeyedSubtree(key: _nameKey, child: _label('제품명 *')),
           TextField(
             controller: _name,
-            decoration: const InputDecoration(border: OutlineInputBorder()),
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
+              errorText: _errName,
+              errorBorder: _errorOutline,
+              focusedErrorBorder: _errorOutline,
+            ),
+            onChanged: (_) {
+              if (_errName != null) setState(() => _errName = null);
+            },
           ),
           const SizedBox(height: 12),
           _label('카테고리 *'),
@@ -370,35 +441,49 @@ class _ManualSupplementInputScreenState
             onChanged: (t) => setState(() => _timing = t),
           ),
           const SizedBox(height: 16),
-          _label('1회 복용량 *'),
+          KeyedSubtree(key: _doseKey, child: _label('1회 복용량 *')),
           _RadioWithCustom(
             options: const [1, 2, 3],
             optionLabel: (n) => '$n정',
             selected: _doseChoice,
-            onSelect: (v) => setState(() => _doseChoice = v),
+            onSelect: (v) => setState(() {
+              _doseChoice = v;
+              _errDose = null;
+            }),
             customController: _customDose,
             customSuffix: '정',
+            errorText: _errDose,
           ),
           const SizedBox(height: 16),
-          _label('1일 횟수 *'),
+          KeyedSubtree(key: _intakesKey, child: _label('1일 횟수 *')),
           _RadioWithCustom(
             options: const [1, 2, 3],
             optionLabel: (n) => '$n회',
             selected: _intakeChoice,
-            onSelect: (v) => setState(() => _intakeChoice = v),
+            onSelect: (v) => setState(() {
+              _intakeChoice = v;
+              _errIntakes = null;
+            }),
             customController: _customIntakes,
             customSuffix: '회',
+            errorText: _errIntakes,
           ),
           const SizedBox(height: 16),
-          _label('한 통 사이즈 *'),
+          KeyedSubtree(key: _packageKey, child: _label('한 통 사이즈 *')),
           TextField(
             controller: _packageSize,
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              border: const OutlineInputBorder(),
               suffixText: '정/포/캡슐',
+              errorText: _errPackage,
+              errorBorder: _errorOutline,
+              focusedErrorBorder: _errorOutline,
             ),
+            onChanged: (_) {
+              if (_errPackage != null) setState(() => _errPackage = null);
+            },
           ),
           const SizedBox(height: 12),
           _label('브랜드 (선택)'),
@@ -524,6 +609,7 @@ class _RadioWithCustom extends StatelessWidget {
   final ValueChanged<int> onSelect;
   final TextEditingController customController;
   final String customSuffix;
+  final String? errorText;
 
   const _RadioWithCustom({
     required this.options,
@@ -532,11 +618,13 @@ class _RadioWithCustom extends StatelessWidget {
     required this.onSelect,
     required this.customController,
     required this.customSuffix,
+    this.errorText,
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         for (final n in options)
           _RadioRow(
@@ -565,6 +653,21 @@ class _RadioWithCustom extends StatelessWidget {
                 contentPadding: const EdgeInsets.symmetric(
                     horizontal: 12, vertical: 10),
                 suffixText: customSuffix,
+                errorBorder: _errorOutline,
+                focusedErrorBorder: _errorOutline,
+                errorText: errorText != null ? '' : null, // border-only
+              ),
+            ),
+          ),
+        if (errorText != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 4, top: 4),
+            child: Text(
+              errorText!,
+              style: const TextStyle(
+                color: AppColors.alertInk,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),

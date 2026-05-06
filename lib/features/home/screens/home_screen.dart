@@ -9,6 +9,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_card.dart';
 import '../../../core/widgets/disclaimer_footer.dart';
 import '../../../core/widgets/entry_row.dart';
+import '../../../core/widgets/member_picker_sheet.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../family/providers/family_provider.dart';
 import '../widgets/family_cards_section.dart';
@@ -121,11 +122,22 @@ class _SettingsBell extends StatelessWidget {
   }
 }
 
-class _EntryList extends StatelessWidget {
+class _EntryList extends ConsumerWidget {
   const _EntryList();
 
+  Future<void> _pickAndGo(
+    BuildContext context,
+    WidgetRef ref, {
+    required String purpose,
+    required String Function(String memberId) destination,
+  }) async {
+    final pickedId = await pickMemberId(context, ref, purpose: purpose);
+    if (pickedId == null || !context.mounted) return;
+    context.push(destination(pickedId));
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -135,7 +147,12 @@ class _EntryList extends StatelessWidget {
           title: '영양제 새로 사고 싶어요',
           sub: '부족한 영양소와 추천 제품을 알려드려요',
           accent: AppColors.primarySoft,
-          onTap: () => context.push('/recommendation/select'),
+          onTap: () => _pickAndGo(
+            context,
+            ref,
+            purpose: '누구의 영양제를 추천받을까요?',
+            destination: (id) => '/recommendation/$id',
+          ),
         ),
         const SizedBox(height: 8),
         EntryRow(
@@ -143,7 +160,12 @@ class _EntryList extends StatelessWidget {
           title: '지금 먹는 것 점검하기',
           sub: '충돌과 과다 섭취를 체크해드려요',
           accent: AppColors.warnBg,
-          onTap: () => context.push('/current-check/select'),
+          onTap: () => _pickAndGo(
+            context,
+            ref,
+            purpose: '누구의 복용을 점검할까요?',
+            destination: (id) => '/current-check/$id',
+          ),
         ),
         const SizedBox(height: 8),
         EntryRow(
