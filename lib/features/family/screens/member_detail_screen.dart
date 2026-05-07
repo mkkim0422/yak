@@ -97,6 +97,7 @@ class MemberDetailScreen extends ConsumerWidget {
           _NutritionStatusSection(
             analysis: analysis,
             memberId: memberId,
+            member: member,
           ),
           const SizedBox(height: 20),
           _BuyCta(memberId: memberId),
@@ -259,7 +260,8 @@ class _CurrentSupplementsSection extends ConsumerWidget {
     IntakeOccurrence occ,
   ) {
     if (occ.isCurated) {
-      context.push('/product/${occ.entryId}');
+      // 멤버 컨텍스트로 진입 → 상세 화면이 KDRIs 권장량 대비 % 노출.
+      context.push('/product/${occ.entryId}?member=$memberId');
     } else {
       context.push(
         '/supplement/manual/edit/${occ.entryId}?member=$memberId',
@@ -932,17 +934,41 @@ Future<CheckupEditorResult?> showCheckupEditor({
 class _NutritionStatusSection extends StatelessWidget {
   final MemberAnalysis analysis;
   final String memberId;
+  final FamilyMember member;
   const _NutritionStatusSection({
     required this.analysis,
     required this.memberId,
+    required this.member,
   });
 
   @override
   Widget build(BuildContext context) {
+    // 영양제 0개 + 직접 입력도 0개 → 일반 KDRIs 권장 안내로 헤더 변경.
+    // "보충 필요"는 권장량 대비 부족 계산이 의미를 갖는 경우(=섭취 데이터
+    // 존재)에만 노출하고, 그 외에는 사용자에게 "이 연령대에 자주 부족한
+    // 영양소"라는 일반 안내로 압박감을 줄입니다.
+    final hasIntake = member.currentProductIds.isNotEmpty ||
+        member.manualProducts.isNotEmpty;
+    final title = hasIntake
+        ? '보충 필요 영양소'
+        : '이 연령대에 자주 부족한 영양소';
+    final subtitle = hasIntake
+        ? '권장량 대비 부족한 영양소입니다'
+        : '${member.ageLabel} ${member.sex.label}에게 권장되는 영양소 (KDRIs 2025)';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(title: '보충 필요 영양소'),
+        SectionHeader(title: title),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 0, 4, 8),
+          child: Text(
+            subtitle,
+            style: AppTypography.caption.copyWith(
+              fontSize: 12,
+              color: AppColors.muted,
+            ),
+          ),
+        ),
         NutrientPriorityCard(items: analysis.priority),
       ],
     );

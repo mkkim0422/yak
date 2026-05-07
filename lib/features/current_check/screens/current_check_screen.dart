@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/data/models/product_model.dart';
+import '../../../core/data/nutrient_labels.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/data/supplement_repository.dart';
 import '../../../core/l10n/app_strings.dart';
@@ -57,13 +58,13 @@ class CurrentCheckScreen extends ConsumerWidget {
               _ProductBrief(
                 title: p.name,
                 summary: '${p.dailyDose}${p.unit}/일 · '
-                    '${p.ingredients.keys.take(3).join(', ')}',
+                    '${p.ingredients.keys.take(3).map(nutrientLabel).join(', ')}',
               ),
             for (final m in member.manualProducts)
               _ProductBrief(
                 title: m.name,
                 summary:
-                    '${m.dailyDose}/일 · ${m.ingredients.keys.take(3).join(', ')}',
+                    '${m.dailyDose}/일 · ${m.ingredients.keys.take(3).map(nutrientLabel).join(', ')}',
               ),
           ],
           const SizedBox(height: 20),

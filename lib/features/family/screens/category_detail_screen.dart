@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/data/models/product_model.dart';
+import '../../../core/data/nutrient_labels.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/services/nutrient_recommender.dart';
 import '../../../core/services/product_targeting.dart';
@@ -165,7 +166,7 @@ class _CategoryDetailScreenState extends ConsumerState<CategoryDetailScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            _RecPickGrid(picks: picks),
+            _RecPickGrid(picks: picks, memberId: widget.memberId),
             const SizedBox(height: 24),
           ],
           Row(
@@ -199,7 +200,9 @@ class _CategoryDetailScreenState extends ConsumerState<CategoryDetailScreen> {
                 padding: const EdgeInsets.only(bottom: 8),
                 child: _ListRow(
                   product: p,
-                  onTap: () => context.push('/product/${p.id}'),
+                  onTap: () => context.push(
+                    '/product/${p.id}?member=${widget.memberId}',
+                  ),
                 ),
               ),
           const SizedBox(height: 16),
@@ -212,7 +215,8 @@ class _CategoryDetailScreenState extends ConsumerState<CategoryDetailScreen> {
 
 class _RecPickGrid extends StatelessWidget {
   final List<RankedProduct> picks;
-  const _RecPickGrid({required this.picks});
+  final String memberId;
+  const _RecPickGrid({required this.picks, required this.memberId});
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +229,9 @@ class _RecPickGrid extends StatelessWidget {
             child: _PickTile(
               tier: picks[i].tier,
               product: picks[i].product,
-              onTap: () => context.push('/product/${picks[i].product.id}'),
+              onTap: () => context.push(
+                '/product/${picks[i].product.id}?member=$memberId',
+              ),
             ),
           ),
         ],
@@ -365,7 +371,8 @@ class _ListRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ingredients = product.ingredients.keys.take(3).join(', ');
+    final ingredients =
+        product.ingredients.keys.take(3).map(nutrientLabel).join(', ');
     return AlyakCard(
       padding: const EdgeInsets.all(12),
       onTap: onTap,

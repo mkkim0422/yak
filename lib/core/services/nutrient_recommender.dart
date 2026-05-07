@@ -17,10 +17,25 @@ const double kComprehensiveMinScore = 0.7;
 /// 종합추천 pick, since they're designed to broadly cover deficits.
 const double kComprehensiveMultiBonus = 0.15;
 
-/// Ingredient-similarity threshold (Jaccard over the bestseller's ingredient
-/// keys) for a candidate to qualify as a 가성비 alternative. Same effect at
-/// a different price point — by spec.
-const double kValueSimilarityMin = 0.6;
+/// 가성비 (value) tier requires the candidate's main-nutrient amount to be
+/// within ±20% of the bestseller's. "Same effect at a different price point".
+const double kValueAmountTolerance = 0.20;
+
+/// 가성비 (value) tier requires the candidate to be less heavily promoted
+/// than the bestseller. Anything ranked 6+ counts as "low ad budget".
+const int kValueMinPopularityRank = 6;
+
+/// 카테고리 포커스 — 단일 / 주력 영양제(성분 1-3개)는 100점, 5개 이하는
+/// 70점, 8개+ 종합비타민은 30점. 판매량 / 가성비 카드에 가중 합산되며
+/// 종합추천 카드에는 적용되지 않습니다 — 종합추천은 multi가 본질적으로
+/// 더 적합하기 때문.
+int _categoryFocusScore(Product p, String mainNutrient) {
+  if ((p.ingredients[mainNutrient] ?? 0) <= 0) return 0;
+  final n = p.ingredients.values.where((v) => v > 0).length;
+  if (n <= 3) return 100;
+  if (n <= 5) return 70;
+  return 30;
+}
 
 /// One nutrient row in the recommendation screen — surfaces the top 3
 /// products that supply that nutrient, scored against the persona.
@@ -91,6 +106,9 @@ class NutrientRecommender {
                 product: p,
                 targetScore: targetMatchScore(product: p, member: member),
                 popularityScore: _popularityScore(p),
+                focusScore: isCategoryKey
+                    ? 50 // 카테고리 키는 포커스 측정 의미 X (uniform)
+                    : _categoryFocusScore(p, n.key),
               ))
           .where((c) => c.targetScore >= 0)
           .toList(growable: true);
@@ -99,23 +117,27 @@ class NutrientRecommender {
       final picks = <RankedProduct>[];
       final used = <String>{};
 
-      // 1. 판매량 — most popular product in the persona's eligible set.
+      // 1. 판매량 — most popular product in the persona's eligible set,
+      // 카테고리 포커스 가중 합산. 비타민D 카테고리에서 종합비타민이 1순위로
+      // 올라가는 회귀 방지: 단일/주력 제품이 popularity가 비슷하면 우선.
       final bestseller = _pickBy(
         scored,
         used,
-        (c) => c.popularityScore + c.targetScore,
+        (c) => c.popularityScore + c.targetScore + c.focusScore,
       );
       if (bestseller != null) {
         picks.add(RankedProduct(tier: kTierBestseller, product: bestseller));
         used.add(bestseller.id);
       }
 
-      // 2. 가성비 — same/similar ingredient profile as the bestseller, but
-      // with weaker advertising signal (higher popularity rank = less
-      // promoted = typically cheaper). Spec: "광고 X 저렴한 제품".
+      // 2. 가성비 — main-nutrient 함량이 판매량 1위와 ±20% 이내이고
+      // popularity rank가 6+(=광고 약함)인 제품. 매칭 후보가 없으면 카드
+      // 자체를 표시하지 않고 자연스럽게 떨어집니다.
       if (bestseller != null && picks.length < picksPerNutrient) {
         final value = _pickValueAlternative(
           bestseller: bestseller,
+          mainNutrient: n.key,
+          isCategoryKey: isCategoryKey,
           scored: scored,
           used: used,
         );
@@ -158,10 +180,12 @@ class _ScoredCandidate {
   final Product product;
   final int targetScore;
   final int popularityScore;
+  final int focusScore;
   _ScoredCandidate({
     required this.product,
     required this.targetScore,
     required this.popularityScore,
+    required this.focusScore,
   });
 }
 
@@ -183,40 +207,58 @@ Product? _pickBy(
   return best?.product;
 }
 
-/// 가성비 candidate: matches the bestseller's ingredient profile (Jaccard ≥
-/// [kValueSimilarityMin]) but is less heavily promoted. Less-popular product
-/// is preferred — same effect at a lower price point. Returns null when
-/// nothing qualifies (no overlap, or only the bestseller exists).
+/// 가성비 candidate. Conditions (모두 만족해야 함):
+///   1. 판매량 1위와 다른 제품 (`used` 필터로 보장)
+///   2. main nutrient 함유량이 판매량 1위와 ±20% 이내
+///      (카테고리 키는 함량 비교 대신 카테고리 동일 + 성분 가짓수 비슷)
+///   3. popularity_rank ≥ 6 (광고/마케팅 영향 약함 추정)
+///   4. 카테고리 포커스가 30점 이상 (종합비타민으로 빠지지 않게)
+///
+/// 매칭 후보가 없으면 `null` — UI는 가성비 카드를 표시하지 않습니다.
 Product? _pickValueAlternative({
   required Product bestseller,
+  required String mainNutrient,
+  required bool isCategoryKey,
   required List<_ScoredCandidate> scored,
   required Set<String> used,
 }) {
-  if (bestseller.ingredients.isEmpty) return null;
+  final targetAmount =
+      isCategoryKey ? 0.0 : (bestseller.ingredients[mainNutrient] ?? 0.0);
 
-  // Build similarity-scored candidate list. Skip the bestseller itself + any
-  // product already picked.
-  final similar = <({Product product, double similarity, int popRank})>[];
+  final candidates = <({Product product, int popRank, int focusScore})>[];
   for (final c in scored) {
-    if (used.contains(c.product.id)) continue;
-    final s = _ingredientSimilarity(c.product, bestseller);
-    if (s < kValueSimilarityMin) continue;
-    similar.add((
-      product: c.product,
-      similarity: s,
-      popRank: c.product.popularityRank ?? 9999,
-    ));
-  }
-  if (similar.isEmpty) return null;
+    final p = c.product;
+    if (used.contains(p.id)) continue;
 
-  // Order: similarity desc, then popularity rank desc (less popular = less
-  // advertising premium). Stable on ties so insertion order survives.
-  similar.sort((a, b) {
-    final c = b.similarity.compareTo(a.similarity);
-    if (c != 0) return c;
+    // popularity rank 6+ 만 (1-5위는 광고 영향 큼).
+    final rank = p.popularityRank ?? 9999;
+    if (rank < kValueMinPopularityRank) continue;
+
+    // 카테고리 포커스 ≥ 30 (종합비타민이 가성비에 들어가지 않게).
+    if (c.focusScore < 30) continue;
+
+    if (isCategoryKey) {
+      // 카테고리 페이지(간 건강, 수면 등) — 동일 카테고리 + 성분 가짓수 비슷.
+      // (카테고리 키 자체에는 함량 비교 대상이 없음)
+      candidates.add((product: p, popRank: rank, focusScore: c.focusScore));
+    } else {
+      if (targetAmount <= 0) continue;
+      final amount = p.ingredients[mainNutrient] ?? 0;
+      if (amount <= 0) continue;
+      final diff = (amount - targetAmount).abs() / targetAmount;
+      if (diff > kValueAmountTolerance) continue;
+      candidates.add((product: p, popRank: rank, focusScore: c.focusScore));
+    }
+  }
+  if (candidates.isEmpty) return null;
+
+  // 우선순위: 카테고리 포커스 desc → popularity rank desc(더 무명) → asc.
+  candidates.sort((a, b) {
+    final f = b.focusScore.compareTo(a.focusScore);
+    if (f != 0) return f;
     return b.popRank.compareTo(a.popRank);
   });
-  return similar.first.product;
+  return candidates.first.product;
 }
 
 /// 종합추천 candidate: maximises the fraction of the user's deficits that
@@ -258,22 +300,6 @@ double _comprehensiveScore(Product p, List<String> deficits) {
     if ((p.ingredients[key] ?? 0) > 0) matched++;
   }
   return matched / deficits.length;
-}
-
-/// Jaccard-like overlap of [a]'s ingredients vs [b]'s. For each of [b]'s
-/// ingredient keys, [a] earns a hit when it carries the same key with an
-/// amount within ±50% of [b]'s — close enough that the two products are
-/// substitutable for the user's dosing purposes.
-double _ingredientSimilarity(Product a, Product b) {
-  if (b.ingredients.isEmpty) return 0;
-  var match = 0;
-  b.ingredients.forEach((key, bAmount) {
-    final aAmount = a.ingredients[key] ?? 0;
-    if (aAmount <= 0 || bAmount <= 0) return;
-    final ratio = aAmount / bAmount;
-    if (ratio >= 0.5 && ratio <= 2.0) match++;
-  });
-  return match / b.ingredients.length;
 }
 
 bool _isMultiCategory(String category) {

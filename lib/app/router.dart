@@ -187,6 +187,9 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/product/:productId',
         builder: (context, state) => ProductDetailScreen(
           productId: state.pathParameters['productId']!,
+          // Optional ?member=ID — when supplied, the detail screen renders
+          // KDRIs 권장량 대비 % alongside each ingredient row.
+          memberId: state.uri.queryParameters['member'],
         ),
       ),
       GoRoute(

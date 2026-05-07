@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/data/models/product_model.dart';
+import '../../../core/data/nutrient_labels.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/notifications/notification_provider.dart';
 import '../../../core/services/conflict_checker.dart';
@@ -210,7 +211,8 @@ class _ResultCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ingredients = product.ingredients.keys.take(3).join(', ');
+    final ingredients =
+        product.ingredients.keys.take(3).map(nutrientLabel).join(', ');
     final hasIngredients = product.ingredients.isNotEmpty;
     final analysisBadge = hasIngredients
         ? const _Badge(

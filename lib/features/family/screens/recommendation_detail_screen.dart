@@ -104,6 +104,7 @@ class RecommendationDetailScreen extends ConsumerWidget {
                 child: _CategoryCard(
                   title: r.displayName,
                   picks: r.picks,
+                  memberId: memberId,
                   onMore: () => context.push(
                     '/recommendation/$memberId/category/${r.nutrient}',
                   ),
@@ -121,6 +122,7 @@ class RecommendationDetailScreen extends ConsumerWidget {
                         ? analysis.lifestyleSuggestions[i].reason
                         : null,
                     picks: lifestyleRecos[i].picks,
+                    memberId: memberId,
                     onMore: () => context.push(
                       '/recommendation/$memberId/category/${lifestyleRecos[i].nutrient}',
                     ),
@@ -198,11 +200,13 @@ class _CategoryCard extends StatelessWidget {
   final String? reason;
   final List<RankedProduct> picks;
   final VoidCallback onMore;
+  final String memberId;
 
   const _CategoryCard({
     required this.title,
     required this.picks,
     required this.onMore,
+    required this.memberId,
     this.reason,
   });
 
@@ -247,8 +251,9 @@ class _CategoryCard extends StatelessWidget {
                   child: _TierTile(
                     tier: picks[i].tier,
                     product: picks[i].product,
-                    onTap: () =>
-                        context.push('/product/${picks[i].product.id}'),
+                    onTap: () => context.push(
+                      '/product/${picks[i].product.id}?member=$memberId',
+                    ),
                   ),
                 ),
               ],
@@ -330,30 +335,40 @@ class _TierTile extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: AppColors.primarySoft,
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text(
-                  tier,
-                  style: AppTypography.micro.copyWith(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w800,
-                    color: AppColors.primaryInk,
+              IntrinsicWidth(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: AppColors.primarySoft,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    tier,
+                    style: AppTypography.micro.copyWith(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w800,
+                      color: AppColors.primaryInk,
+                    ),
+                    overflow: TextOverflow.visible,
+                    softWrap: false,
                   ),
                 ),
               ),
               const SizedBox(height: 6),
               Center(child: ProductImage(product: product, size: 56)),
               const SizedBox(height: 6),
+              // 2줄까지 풀어서 보여주고, 그 이상이면 ellipsis. height 1.3으로
+              // 두 줄 합쳐 약 31px — 카드 높이가 일정하게 유지됩니다.
               Text(
                 product.name,
-                style: AppTypography.title.copyWith(fontSize: 12),
+                style: AppTypography.title.copyWith(
+                  fontSize: 12,
+                  height: 1.3,
+                ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
+                softWrap: true,
               ),
             ],
           ),

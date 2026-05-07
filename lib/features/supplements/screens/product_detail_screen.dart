@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/data/kdris_2025.dart';
 import '../../../core/data/models/product_model.dart';
 import '../../../core/data/nutrient_labels.dart';
 import '../../../core/data/product_category_meta.dart';
@@ -15,18 +16,30 @@ import '../../../core/widgets/alyak_card.dart';
 import '../../../core/widgets/disclaimer_footer.dart';
 import '../../../core/widgets/product_image.dart';
 import '../../../core/widgets/state_views.dart';
+import '../../family/models/family_member.dart';
+import '../../family/providers/family_provider.dart';
 
 /// Detail page for a curated product (250-DB entry). Renders photo,
 /// dosage, category benefit, ingredients table, cautions and external
-/// price-search links. The route is `/product/:productId`.
+/// price-search links. The route is `/product/:productId` with an optional
+/// `?member=ID` query parameter — when supplied, the ingredients section
+/// renders KDRIs 2025 권장량 대비 % alongside each row.
 class ProductDetailScreen extends ConsumerWidget {
   final String productId;
-  const ProductDetailScreen({super.key, required this.productId});
+  final String? memberId;
+  const ProductDetailScreen({
+    super.key,
+    required this.productId,
+    this.memberId,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final repo = ref.watch(productRepositoryProvider);
     final product = repo.getById(productId);
+    final member = (memberId == null || memberId!.isEmpty)
+        ? null
+        : ref.watch(familyControllerProvider).getMember(memberId!);
     if (product == null) {
       return Scaffold(
         backgroundColor: AppColors.background,
@@ -70,7 +83,7 @@ class ProductDetailScreen extends ConsumerWidget {
           _CategoryBenefitSection(meta: meta, category: product.category),
           if (product.ingredients.isNotEmpty) ...[
             const SizedBox(height: 16),
-            _IngredientsSection(product: product),
+            _IngredientsSection(product: product, member: member),
           ],
           if (meta.cautions.isNotEmpty) ...[
             const SizedBox(height: 16),
@@ -201,36 +214,38 @@ class _CategoryBenefitSection extends StatelessWidget {
 
 class _IngredientsSection extends StatelessWidget {
   final Product product;
-  const _IngredientsSection({required this.product});
+  final FamilyMember? member;
+  const _IngredientsSection({required this.product, this.member});
 
   @override
   Widget build(BuildContext context) {
     final entries = product.ingredients.entries
         .where((e) => e.value > 0)
         .toList(growable: false);
+    final m = member;
+    final headerSuffix =
+        m != null ? ' (${m.name}님 권장량 대비)' : '';
     return AlyakCard(
       padding: const EdgeInsets.all(14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _SectionTitle('📊 영양 성분 (${entries.length}종)'),
+          _SectionTitle('📊 영양 성분 (${entries.length}종)$headerSuffix'),
           const SizedBox(height: 8),
-          for (final e in entries)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 3),
-              child: Text(
-                '· ${formatIngredientLine(e.key, e.value)}',
-                style: AppTypography.body2.copyWith(
-                  fontSize: 13,
-                  color: AppColors.ink2,
-                ),
-              ),
-            ),
+          for (final e in entries) _IngredientRow(
+            nutrientKey: e.key,
+            // dailyDose 곱은 사용자에게 와닿는 "1일 섭취량" 기준.
+            dailyAmount: e.value * product.dailyDose,
+            member: m,
+          ),
           const SizedBox(height: 6),
           Text(
-            '※ 권장량/상한섭취량 비교는 가족 멤버 화면의 추천에서 확인하세요. '
-            '기준은 2025 한국인 영양소 섭취기준(KDRIs)을 따릅니다.',
+            m == null
+                ? '※ 권장량 비교는 가족 멤버 화면에서 영양제 카드를 탭해 확인하세요. '
+                    '기준은 2025 한국인 영양소 섭취기준(KDRIs)을 따릅니다.'
+                : '※ 권장량은 ${m.name}님(${m.ageLabel} ${m.sex.label}) 기준이며, '
+                    '2025 한국인 영양소 섭취기준(KDRIs)을 따릅니다.',
             style: AppTypography.caption.copyWith(
               fontSize: 11,
               color: AppColors.muted,
@@ -241,6 +256,108 @@ class _IngredientsSection extends StatelessWidget {
       ),
     );
   }
+}
+
+/// One row of the ingredients card. Renders "비타민D 400IU" alone or, when
+/// a member context is present, "비타민D 400IU / 800IU 권장 (50%)".
+class _IngredientRow extends StatelessWidget {
+  final String nutrientKey;
+  final double dailyAmount;
+  final FamilyMember? member;
+  const _IngredientRow({
+    required this.nutrientKey,
+    required this.dailyAmount,
+    required this.member,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final base = '· ${formatIngredientLine(nutrientKey, dailyAmount)}';
+    final m = member;
+    if (m == null) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3),
+        child: Text(
+          base,
+          style: AppTypography.body2.copyWith(
+            fontSize: 13,
+            color: AppColors.ink2,
+          ),
+        ),
+      );
+    }
+
+    final recommended = recommendedKDRIs2025(
+      nutrient: nutrientKey,
+      age: m.age,
+      isMale: m.sex == Sex.male,
+      isPregnant: m.isPregnant,
+      isLactating: m.isBreastfeeding,
+    );
+    if (recommended == null || recommended <= 0) {
+      // KDRIs 표에 없는 영양소(보충제 키 등)는 권장량 비교 X.
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3),
+        child: Text(
+          base,
+          style: AppTypography.body2.copyWith(
+            fontSize: 13,
+            color: AppColors.ink2,
+          ),
+        ),
+      );
+    }
+
+    final pct = (dailyAmount / recommended * 100).round().clamp(0, 999);
+    final pctColor = pct >= 100
+        ? AppColors.okInk
+        : pct >= 50
+            ? AppColors.warnInk
+            : AppColors.muted;
+    final unit = _splitUnit(nutrientKey);
+    final recStr = _formatRec(recommended, unit);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Text.rich(
+        TextSpan(
+          style: AppTypography.body2.copyWith(
+            fontSize: 13,
+            color: AppColors.ink2,
+          ),
+          children: [
+            TextSpan(text: base),
+            TextSpan(
+              text: ' / $recStr 권장',
+              style: TextStyle(color: AppColors.muted),
+            ),
+            TextSpan(
+              text: ' ($pct%)',
+              style: TextStyle(
+                color: pctColor,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+String _splitUnit(String key) {
+  if (key.endsWith('_iu')) return 'IU';
+  if (key.endsWith('_mcg')) return 'mcg';
+  if (key.endsWith('_billion_cfu')) return '억CFU';
+  if (key.endsWith('_g')) return 'g';
+  if (key.endsWith('_mg')) return 'mg';
+  return '';
+}
+
+String _formatRec(double v, String unit) {
+  final str =
+      v >= 100 || v == v.roundToDouble() ? v.toStringAsFixed(0) : v.toStringAsFixed(1);
+  return unit.isEmpty ? str : '$str$unit';
 }
 
 class _CautionSection extends StatelessWidget {
