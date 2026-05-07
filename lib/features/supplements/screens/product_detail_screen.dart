@@ -83,6 +83,7 @@ class ProductDetailScreen extends ConsumerWidget {
             _SourceSection(url: product.dataSource!),
           ],
           const SizedBox(height: 12),
+          const ProductInfoDisclaimer(),
           const DisclaimerFooter(),
         ],
       ),
@@ -226,6 +227,16 @@ class _IngredientsSection extends StatelessWidget {
                 ),
               ),
             ),
+          const SizedBox(height: 6),
+          Text(
+            '※ 권장량/상한섭취량 비교는 가족 멤버 화면의 추천에서 확인하세요. '
+            '기준은 2025 한국인 영양소 섭취기준(KDRIs)을 따릅니다.',
+            style: AppTypography.caption.copyWith(
+              fontSize: 11,
+              color: AppColors.muted,
+              height: 1.5,
+            ),
+          ),
         ],
       ),
     );
