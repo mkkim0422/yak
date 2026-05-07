@@ -193,7 +193,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => ProductDetailScreen(
           productId: state.pathParameters['productId']!,
           // Optional ?member=ID — when supplied, the detail screen renders
-          // KDRIs 권장량 대비 % alongside each ingredient row.
+          // 권장량 대비 4단계 평가 (충분/부족/많음/정보없음) per row.
           memberId: state.uri.queryParameters['member'],
         ),
       ),

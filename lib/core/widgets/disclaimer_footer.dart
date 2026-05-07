@@ -21,7 +21,7 @@ class DisclaimerFooter extends StatelessWidget {
       child: const Text(
         '본 앱은 의료 행위가 아니며,\n'
         '의사·약사의 전문 진단을 대체하지 않습니다.\n'
-        '추천은 2025 한국인 영양소 섭취기준(KDRIs) 기반 일반 정보입니다.',
+        '추천은 2025 한국인 영양소 섭취기준 기반 일반 정보입니다.',
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 11,
@@ -57,9 +57,9 @@ class KdrisRecommendationDisclaimer extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              '추천은 2025 한국인 영양소 섭취기준(KDRIs)을 기준으로 한 일반 '
-              '정보입니다. 흡연·음주·수면·스트레스 등 KDRIs에 별도 권장이 '
-              '없는 항목은 일반 권장량을 적용합니다. 개인 건강 상태에 맞는 '
+              '추천은 2025 한국인 영양소 섭취기준을 기반으로 한 일반 '
+              '정보입니다. 흡연·음주·수면·스트레스 등 별도 권장이 없는 '
+              '항목은 일반 권장량을 적용합니다. 개인 건강 상태에 맞는 '
               '결정은 의사·약사와 상담하세요.',
               style: AppTypography.caption.copyWith(
                 fontSize: 11.5,

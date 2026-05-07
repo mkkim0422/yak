@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/data/kdris_2025.dart';
 import '../../../core/data/models/product_model.dart';
+import '../../../core/data/nutrient_evaluation.dart';
 import '../../../core/data/nutrient_labels.dart';
 import '../../../core/data/product_category_meta.dart';
 import '../../../core/data/product_repository.dart';
@@ -289,13 +290,16 @@ class _IngredientsSection extends StatelessWidget {
               member: m,
               isDerived: true,
             ),
-          const SizedBox(height: 6),
+          if (m != null) ...[
+            const SizedBox(height: 12),
+            const _ExcessiveExplainer(),
+          ],
+          const SizedBox(height: 8),
           Text(
             m == null
-                ? '※ 권장량 비교는 가족 멤버 화면에서 영양제 카드를 탭해 확인하세요. '
-                    '기준은 2025 한국인 영양소 섭취기준(KDRIs)을 따릅니다.'
-                : '※ 권장량은 ${m.name}님(${m.ageLabel} ${m.sex.label}) 기준이며, '
-                    '2025 한국인 영양소 섭취기준(KDRIs)을 따릅니다.',
+                ? '※ 권장량 비교는 가족 멤버 화면에서 영양제 카드를 탭해 확인하세요.'
+                : '※ ${m.name}님 만 ${m.age}세 ${m.sex.label} 기준\n'
+                    '※ 권장량 출처: 2025 한국인 영양소 섭취기준',
             style: AppTypography.caption.copyWith(
               fontSize: 11,
               color: AppColors.muted,
@@ -308,13 +312,82 @@ class _IngredientsSection extends StatelessWidget {
   }
 }
 
-/// 영양 성분 한 줄. 멤버 컨텍스트가 있으면 KDRIs 권장량 대비 % 표시.
+/// "💡 권장량보다 많은 이유" 펼침 카드 — 사용자가 '많아요' / 충분 표시를
+/// 보고 위험 인식을 가지지 않도록 친근한 안내. 식약처 인정 안전 함량
+/// 사실 + 의사 상담 권고 한 줄.
+class _ExcessiveExplainer extends StatefulWidget {
+  const _ExcessiveExplainer();
+
+  @override
+  State<_ExcessiveExplainer> createState() => _ExcessiveExplainerState();
+}
+
+class _ExcessiveExplainerState extends State<_ExcessiveExplainer> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.primarySoft,
+      borderRadius: BorderRadius.circular(AppRadius.r12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.r12),
+        onTap: () => setState(() => _open = !_open),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  const Text('💡', style: TextStyle(fontSize: 14)),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      '권장량보다 많은 이유',
+                      style: AppTypography.title.copyWith(
+                        fontSize: 13,
+                        color: AppColors.primaryInk,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    _open ? Icons.expand_less : Icons.expand_more,
+                    size: 20,
+                    color: AppColors.primaryInk,
+                  ),
+                ],
+              ),
+              if (_open) ...[
+                const SizedBox(height: 8),
+                Text(
+                  '영양제는 권장량보다 많이 들어 있어요. '
+                  '식약처가 인정한 안전한 함량이지만, '
+                  '복용 결정 전 의사·약사와 상담하세요.',
+                  style: AppTypography.body2.copyWith(
+                    fontSize: 12.5,
+                    color: AppColors.ink2,
+                    height: 1.55,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 영양 성분 한 줄 — 4단계 평가 + 쉬운 표현.
 ///
-/// UX 가드:
-///   * 200% 초과 → "충분 (200%+)" 회색으로 캡 — "999%" 같은 충격 노출 차단.
-///   * UL 초과 → "주의 (UL 초과)" 빨강으로 강조.
-///   * KDRIs에 없는 영양소(콜라겐·진세노사이드 등) → 함량만 + "권장량 정보
-///     없음" 회색.
+/// 모토: 30-40대 엄마가 1초에 이해. % / 전문 용어 / 영문 약어 X.
+///   * ✅ 충분해요 (권장량 90% 이상, UL 이내)
+///   * ⚠️ N mg 부족해요 (권장량 90% 미만)
+///   * ⚠️ N mg 많아요 (UL 초과)
+///   * ℹ️ 정보 없음 (KDRIs 매트릭스 외 영양소)
 class _IngredientRow extends StatelessWidget {
   final String nutrientKey;
   final double dailyAmount;
@@ -336,20 +409,15 @@ class _IngredientRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final m = member;
     final totalAmount = dailyAmount + extraAmount;
-
-    // 파생 행은 nutrientKey의 함량 라벨이 아닌 "비타민A 환산" 형태로 표시.
     final base = isDerived
         ? '· (환산) ${formatIngredientLine(nutrientKey, totalAmount)}'
         : '· ${formatIngredientLine(nutrientKey, totalAmount)}';
 
+    // 멤버 컨텍스트 X — 함량만 표시 (영양제 검색에서 직접 진입 케이스).
     if (m == null) {
       return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        child: _rowText(
-          base,
-          extraNote: extraNote,
-          extraNoteColor: AppColors.muted,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: _rowOnlyAmount(base, extraNote: extraNote),
       );
     }
 
@@ -361,146 +429,91 @@ class _IngredientRow extends StatelessWidget {
       isLactating: m.isBreastfeeding,
     );
     final upperLimit = upperLimitKDRIs2025(nutrientKey);
+    final eval = evaluateNutrient(
+      amount: totalAmount,
+      recommended: recommended,
+      upperLimit: upperLimit,
+    );
+    final unit = _unitForKey(nutrientKey);
+    final statusText = statusLabelFor(eval, unit);
+    final statusColor = _colorFor(eval.status);
 
-    // 권장량 정보 없음 — 함량만 + 안내.
-    if (recommended == null || recommended <= 0) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        child: _rowText(
-          base,
-          tail: ' · 권장량 정보 없음',
-          tailColor: AppColors.faint,
-          extraNote: extraNote,
-          extraNoteColor: AppColors.muted,
-        ),
-      );
-    }
-
-    // UL 초과 우선 — 빨강 "주의".
-    if (upperLimit != null && totalAmount > upperLimit) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        child: _rowText(
-          base,
-          tail: ' · 주의 (UL 초과)',
-          tailColor: AppColors.danger,
-          tailBold: true,
-          extraNote: extraNote,
-          extraNoteColor: AppColors.muted,
-        ),
-      );
-    }
-
-    final pctRaw = totalAmount / recommended * 100;
-    final unit = _splitUnit(nutrientKey);
-    final recStr = _formatRec(recommended, unit);
-
-    // 200% 초과 캡 — "충분 (200%+)" 회색 (수용성 비타민에서 999% 노출 방지).
-    if (pctRaw > 200) {
-      return Padding(
-        padding: const EdgeInsets.symmetric(vertical: 3),
-        child: _rowText(
-          base,
-          tail: ' / $recStr 권장 · 충분 (200%+)',
-          tailColor: AppColors.muted,
-          tailBold: false,
-          extraNote: extraNote,
-          extraNoteColor: AppColors.muted,
-        ),
-      );
-    }
-
-    final pct = pctRaw.round();
-    final pctColor = _percentColor(pct);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
-      child: Text.rich(
-        TextSpan(
-          style: AppTypography.body2.copyWith(
-            fontSize: 13,
-            color: AppColors.ink2,
-          ),
-          children: [
-            TextSpan(text: base),
-            TextSpan(
-              text: ' / $recStr 권장',
-              style: const TextStyle(color: AppColors.muted),
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // 영양소 + 함량 (단위 단순화).
+          Text(
+            base,
+            style: AppTypography.body2.copyWith(
+              fontSize: 13.5,
+              color: AppColors.ink,
+              fontWeight: FontWeight.w600,
             ),
-            TextSpan(
-              text: ' ($pct%)',
-              style: TextStyle(
-                color: pctColor,
-                fontWeight: FontWeight.w700,
+          ),
+          const SizedBox(height: 2),
+          // 4단계 평가 라벨.
+          Padding(
+            padding: const EdgeInsets.only(left: 12),
+            child: Text(
+              statusText,
+              style: AppTypography.body2.copyWith(
+                fontSize: 12.5,
+                color: statusColor,
+                fontWeight: FontWeight.w600,
               ),
             ),
-            if (extraNote != null)
-              TextSpan(
-                text: '\n  $extraNote',
+          ),
+          if (extraNote != null) ...[
+            const SizedBox(height: 2),
+            Padding(
+              padding: const EdgeInsets.only(left: 12),
+              child: Text(
+                extraNote!,
                 style: AppTypography.caption.copyWith(
                   fontSize: 11,
                   color: AppColors.muted,
                 ),
               ),
+            ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _rowText(
-    String base, {
-    String? tail,
-    Color? tailColor,
-    bool tailBold = false,
-    String? extraNote,
-    Color? extraNoteColor,
-  }) {
-    return Text.rich(
-      TextSpan(
-        style: AppTypography.body2.copyWith(
-          fontSize: 13,
-          color: AppColors.ink2,
-        ),
-        children: [
-          TextSpan(text: base),
-          if (tail != null)
-            TextSpan(
-              text: tail,
-              style: TextStyle(
-                color: tailColor ?? AppColors.muted,
-                fontWeight:
-                    tailBold ? FontWeight.w700 : FontWeight.w500,
-              ),
-            ),
-          if (extraNote != null)
-            TextSpan(
-              text: '\n  $extraNote',
-              style: AppTypography.caption.copyWith(
-                fontSize: 11,
-                color: extraNoteColor ?? AppColors.muted,
-              ),
-            ),
         ],
       ),
     );
   }
+
+  Widget _rowOnlyAmount(String base, {String? extraNote}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          base,
+          style: AppTypography.body2.copyWith(
+            fontSize: 13.5,
+            color: AppColors.ink2,
+          ),
+        ),
+        if (extraNote != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 12, top: 2),
+            child: Text(
+              extraNote,
+              style: AppTypography.caption.copyWith(
+                fontSize: 11,
+                color: AppColors.muted,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
 }
 
-/// % → 색상 5단계.
-///   * 50% 미만 = 주황 (보충 필요)
-///   * 50-99% = 녹색 (적정 진입)
-///   * 100% = 청록 (정상)
-///   * 101-200% = 청록 (충분)
-///   * 200%+ = 회색 (캡 표시, 별도 처리됨)
-///
-/// UL 초과는 본 함수 호출 전 별도 분기에서 빨강으로 처리.
-Color _percentColor(int pct) {
-  if (pct >= 100) return AppColors.primary;
-  if (pct >= 50) return AppColors.okInk;
-  return AppColors.warnInk;
-}
-
-String _splitUnit(String key) {
+/// 영양소 키 → 사용자 친화 단위 (α-TE / RAE / NE / DFE 제거).
+String _unitForKey(String key) {
   if (key.endsWith('_iu')) return 'IU';
   if (key.endsWith('_mcg')) return 'mcg';
   if (key.endsWith('_billion_cfu')) return '억CFU';
@@ -509,11 +522,24 @@ String _splitUnit(String key) {
   return '';
 }
 
-String _formatRec(double v, String unit) {
-  final str =
-      v >= 100 || v == v.roundToDouble() ? v.toStringAsFixed(0) : v.toStringAsFixed(1);
-  return unit.isEmpty ? str : '$str$unit';
+/// NutrientStatus → 색상.
+///   * sufficient   → 녹색 (success)
+///   * insufficient → 주황 (warning)
+///   * excessive    → 빨강 (danger)
+///   * unknown      → 회색 (muted)
+Color _colorFor(NutrientStatus status) {
+  switch (status) {
+    case NutrientStatus.sufficient:
+      return AppColors.okInk;
+    case NutrientStatus.insufficient:
+      return AppColors.warnInk;
+    case NutrientStatus.excessive:
+      return AppColors.danger;
+    case NutrientStatus.unknown:
+      return AppColors.muted;
+  }
 }
+
 
 class _CautionSection extends StatelessWidget {
   final List<String> cautions;

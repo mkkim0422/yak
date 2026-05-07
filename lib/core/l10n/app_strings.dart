@@ -122,7 +122,6 @@ class AppStrings {
   static const String memberDetailDeficient = '❌ 부족한 영양소';
   static const String memberDetailSufficient = '✅ 잘 섭취중';
   static const String memberDetailNoData = '아직 분석 데이터가 없어요';
-  static const String coveragePercentTemplate = '%d%% 충족';
   static const String coverageNotTakingLabel = '안 드심';
 
   // Family

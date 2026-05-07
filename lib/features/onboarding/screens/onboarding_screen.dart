@@ -51,7 +51,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       accentColor: AppColors.primarySoft,
       title: '지금 시작해보세요',
       body: '가족을 추가하면 영양제 추천을 받을 수 있어요.\n'
-          '2025 한국인 영양소 섭취기준(KDRIs) 기반.',
+          '2025 한국인 영양소 섭취기준 기반.',
       ctaLabel: '시작하기',
     ),
   ];
