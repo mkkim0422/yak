@@ -1,3 +1,4 @@
+import '../data/kdris_2025.dart';
 import '../data/models/product_model.dart';
 import '../data/nutrient_labels.dart';
 import '../../features/family/models/family_member.dart';
@@ -91,34 +92,33 @@ _IntakeRow _rowFromManual(ManualProductEntry m) => _IntakeRow(
       isMultivitamin: _looksMultivitaminManual(m),
     );
 
-/// Korean food-standard upper-tolerable-intake levels (UL). Pulls from the
-/// same nutrient-key vocabulary the rest of the app uses (`vitamin_d_iu`,
-/// `calcium_mg`, etc.) so we can compare totals directly without unit math.
+/// Upper-tolerable-intake (UL) lookup. Reads from KDRIs 2025 first; falls
+/// back to nutrient-key aliases that the curated DB uses but KDRIs doesn't
+/// list directly (e.g. `vitamin_a_iu`, `caffeine_mg`).
 ///
 /// Nutrients without a UL (B1/B2/B5/B7/B12 — water-soluble) are deliberately
 /// absent so they never trigger an overdose card. Magnesium UL applies to
 /// supplements only (not dietary intake).
-const Map<String, double> _kUpperLimits = {
-  'vitamin_a_mcg': 3000,
+double? _ulFor(String key) {
+  final fromTable = upperLimitKDRIs2025(key);
+  if (fromTable != null) return fromTable;
+  // Aliases / DB-specific keys that KDRIs doesn't enumerate but the curated
+  // DB ships. Centralised here so we don't drift between sources.
+  return _kKDRIsAliasUls[key];
+}
+
+const Map<String, double> _kKDRIsAliasUls = {
+  // Vitamin A in IU (DB legacy units; KDRIs uses μg RAE). 1μg RAE ≈ 3.33 IU.
   'vitamin_a_iu': 10000,
-  'vitamin_d_iu': 4000,
-  'vitamin_d3_iu': 4000,
+  // Vitamin D μg variant (KDRIs uses 100μg ↔ 4000 IU).
   'vitamin_d_mcg': 100,
-  'vitamin_e_mg': 540,
-  'vitamin_c_mg': 2000,
-  'vitamin_b6_mg': 100,
-  'vitamin_b9_mcg': 1000,
+  'vitamin_d3_iu': 4000,
+  // Folate aliases.
   'folate_mcg': 1000,
   'folic_acid_mcg': 1000,
-  'niacin_mg': 35,
-  'calcium_mg': 2500,
-  'iron_mg': 45,
-  'magnesium_mg': 350,
-  'zinc_mg': 35,
-  'selenium_mcg': 400,
-  'iodine_mcg': 2400,
-  'copper_mcg': 10000,
+  // Copper alias (KDRIs is in μg; some DB rows use mg).
   'copper_mg': 10,
+  // Caffeine — non-KDRIs but tracked for pregnancy / safety.
   'caffeine_mg': 400,
 };
 
@@ -263,7 +263,7 @@ List<ConflictItem> _overdoseConflicts(List<_IntakeRow> rows) {
 
   final out = <ConflictItem>[];
   totals.forEach((key, total) {
-    final ul = _kUpperLimits[key];
+    final ul = _ulFor(key);
     if (ul == null) return; // No UL → never warn (B12, K, B1/2/5/7 etc.)
     if (total <= ul) return;
 

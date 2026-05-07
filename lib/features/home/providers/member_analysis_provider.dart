@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/data/kdris_2025.dart';
 import '../../../core/data/models/product_model.dart';
 import '../../../core/data/product_repository.dart';
 import '../../family/models/family_member.dart';
@@ -108,46 +109,48 @@ class MemberAnalysis {
   }
 }
 
-const Map<String, ({double amount, String label})> _baseRdi = {
-  'vitamin_d_iu': (amount: 800, label: '비타민D'),
-  'magnesium_mg': (amount: 320, label: '마그네슘'),
-  'omega3_total_mg': (amount: 1000, label: '오메가3'),
-  'calcium_mg': (amount: 800, label: '칼슘'),
-  'iron_mg': (amount: 10, label: '철분'),
-  'zinc_mg': (amount: 9, label: '아연'),
-  'vitamin_b12_mcg': (amount: 2.4, label: '비타민B12'),
-  'vitamin_b9_mcg': (amount: 400, label: '엽산'),
-  'vitamin_c_mg': (amount: 90, label: '비타민C'),
-  'probiotics_billion_cfu': (amount: 10, label: '유산균'),
-  'coenzyme_q10_mg': (amount: 100, label: '코엔자임Q10'),
-};
+/// Nutrient keys the analysis engine compares against KDRIs 2025. Order
+/// matters only for deterministic iteration in tests — UI consumers re-sort
+/// by deficit %.
+const List<String> _kAnalysisKeys = [
+  'vitamin_d_iu',
+  'magnesium_mg',
+  'omega3_total_mg',
+  'calcium_mg',
+  'iron_mg',
+  'zinc_mg',
+  'vitamin_b12_mcg',
+  'vitamin_b9_mcg',
+  'vitamin_c_mg',
+  'probiotics_billion_cfu',
+  'coenzyme_q10_mg',
+  // 2025 신규 — 콜린(choline_mg) AI/UL 동시 설정. 분석 대상에 합류.
+  'choline_mg',
+];
 
-double _ageScale(AgeGroup g) {
-  switch (g) {
-    case AgeGroup.newborn:
-      return 0.25;
-    case AgeGroup.toddler:
-      return 0.4;
-    case AgeGroup.child:
-      return 0.6;
-    case AgeGroup.teen:
-      return 0.85;
-    case AgeGroup.adult:
-      return 1.0;
-    case AgeGroup.middleAged:
-      return 1.0;
-    case AgeGroup.elderly:
-      return 0.95;
-  }
-}
-
+/// Persona → recommended-amount map keyed by nutrient. KDRIs 2025 표를
+/// 단일 진입점으로 사용하며, 표 결측 시 0(=비교 제외)으로 폴백합니다.
+/// 임신/수유부 가산치는 KDRIs 표 내부에서 자동 처리됩니다.
 Map<String, double> _recommendedFor(FamilyMember member) {
-  final scale = _ageScale(member.ageGroup);
-  return {
-    for (final entry in _baseRdi.entries)
-      entry.key: entry.value.amount * scale,
-  };
+  final out = <String, double>{};
+  for (final key in _kAnalysisKeys) {
+    final v = recommendedKDRIs2025(
+      nutrient: key,
+      age: member.age,
+      isMale: member.sex == Sex.male,
+      isPregnant: member.isPregnant,
+      isLactating: member.isBreastfeeding,
+    );
+    if (v != null) out[key] = v;
+  }
+  return out;
 }
+
+/// Korean display label for an analysis key — used by deficit cards.
+/// Falls back to the bare key when the nutrient isn't in the KDRIs table
+/// (shouldn't happen in normal flow since `_kAnalysisKeys` is a subset).
+String _displayLabel(String nutrient) =>
+    nameKDRIs2025(nutrient) ?? nutrient;
 
 class _IntakeBreakdown {
   final Map<String, double> totals = <String, double>{};
@@ -190,7 +193,7 @@ MemberAnalysis analyzeMember(FamilyMember member, ProductRepository repo) {
     final pct = pctRaw.clamp(0, 200).toInt();
     final entry = NutrientDeficit(
       nutrient: nutrient,
-      displayName: _baseRdi[nutrient]!.label,
+      displayName: _displayLabel(nutrient),
       current: current,
       recommended: recommended,
       percentage: pct,
