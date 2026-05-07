@@ -97,12 +97,6 @@ class MemberAnalysis {
   bool get hasDeficits => deficits.isNotEmpty;
   int get sufficientCount => sufficient.length;
 
-  String get statusEmoji {
-    if (deficits.isEmpty) return '✅';
-    if (deficits.length <= 2) return '⚠️';
-    return '🟠';
-  }
-
   String get statusText {
     if (deficits.isEmpty) return '충분히 섭취중';
     return '${deficits.length}개 부족';

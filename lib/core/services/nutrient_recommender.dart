@@ -18,8 +18,10 @@ const double kComprehensiveMinScore = 0.7;
 const double kComprehensiveMultiBonus = 0.15;
 
 /// 가성비 (value) tier requires the candidate's main-nutrient amount to be
-/// within ±20% of the bestseller's. "Same effect at a different price point".
-const double kValueAmountTolerance = 0.20;
+/// within ±30% of the bestseller's. "Same effect at a different price point".
+/// Loosened from ±20% in V1 release polish — 어린이 카테고리처럼 후보 풀이
+/// 적은 곳에서 가성비 카드 미표시 빈도 줄이기 위함.
+const double kValueAmountTolerance = 0.30;
 
 /// 가성비 (value) tier requires the candidate to be less heavily promoted
 /// than the bestseller. Anything ranked 6+ counts as "low ad budget".
@@ -92,36 +94,49 @@ class NutrientRecommender {
 
     for (final n in nutrients) {
       final isCategoryKey = !_looksLikeNutrientKey(n.key);
-      final candidates = all
-          .where((p) => isCategoryKey
-              ? p.category == n.key
-              : (p.ingredients[n.key] ?? 0) > 0)
-          .toList(growable: false);
-      if (candidates.isEmpty) continue;
 
-      // Score each candidate by persona match + raw popularity. Hard-excluded
-      // products (wrong sex / kids-only / etc.) drop out.
-      final scored = candidates
-          .map((p) => _ScoredCandidate(
-                product: p,
-                targetScore: targetMatchScore(product: p, member: member),
-                popularityScore: _popularityScore(p),
-                focusScore: isCategoryKey
-                    ? 50 // 카테고리 키는 포커스 측정 의미 X (uniform)
-                    : _categoryFocusScore(p, n.key),
-              ))
+      // 두 후보 풀:
+      //   * tight (hard filter) — 사용자가 "비타민D 추천에 락토핏이 왜?"라고
+      //     혼란스러워하지 않도록 단일/주력 제품 또는 영양소 카테고리 정합
+      //     제품만. bestseller + value 티어에 사용.
+      //   * broad — 메인 영양소를 함유하기만 하면 OK. multivitamin/prenatal
+      //     같은 종합 제품이 종합추천 티어에 surface 될 수 있게 함.
+      final tightCandidates = all
+          .where((p) => _categoryHardMatch(p, n.key, isCategoryKey))
+          .toList(growable: false);
+      final broadCandidates = isCategoryKey
+          ? tightCandidates // 카테고리 키는 둘 다 동일
+          : all
+              .where((p) => (p.ingredients[n.key] ?? 0) > 0)
+              .toList(growable: false);
+
+      if (broadCandidates.isEmpty) continue;
+
+      _ScoredCandidate score(Product p) => _ScoredCandidate(
+            product: p,
+            targetScore: targetMatchScore(product: p, member: member),
+            popularityScore: _popularityScore(p),
+            focusScore: isCategoryKey
+                ? 50
+                : _categoryFocusScore(p, n.key),
+          );
+
+      final tightScored = tightCandidates
+          .map(score)
           .where((c) => c.targetScore >= 0)
           .toList(growable: true);
-      if (scored.isEmpty) continue;
+      final broadScored = broadCandidates
+          .map(score)
+          .where((c) => c.targetScore >= 0)
+          .toList(growable: true);
 
       final picks = <RankedProduct>[];
       final used = <String>{};
 
-      // 1. 판매량 — most popular product in the persona's eligible set,
-      // 카테고리 포커스 가중 합산. 비타민D 카테고리에서 종합비타민이 1순위로
-      // 올라가는 회귀 방지: 단일/주력 제품이 popularity가 비슷하면 우선.
+      // 1. 판매량 — tight pool에서. 카테고리에 단일/주력 제품 후보가 없으면
+      // bestseller도 없는 것이 맞습니다 (사용자 혼란 방지).
       final bestseller = _pickBy(
-        scored,
+        tightScored,
         used,
         (c) => c.popularityScore + c.targetScore + c.focusScore,
       );
@@ -130,15 +145,13 @@ class NutrientRecommender {
         used.add(bestseller.id);
       }
 
-      // 2. 가성비 — main-nutrient 함량이 판매량 1위와 ±20% 이내이고
-      // popularity rank가 6+(=광고 약함)인 제품. 매칭 후보가 없으면 카드
-      // 자체를 표시하지 않고 자연스럽게 떨어집니다.
+      // 2. 가성비 — tight pool에서, 다른 브랜드 우선.
       if (bestseller != null && picks.length < picksPerNutrient) {
         final value = _pickValueAlternative(
           bestseller: bestseller,
           mainNutrient: n.key,
           isCategoryKey: isCategoryKey,
-          scored: scored,
+          scored: tightScored,
           used: used,
         );
         if (value != null) {
@@ -147,12 +160,12 @@ class NutrientRecommender {
         }
       }
 
-      // 3. 종합추천 — covers the user's full deficit list the most.
-      // Multivitamin / prenatal categories get a small bonus since they're
-      // designed for broad coverage. 70% threshold per spec.
+      // 3. 종합추천 — broad pool에서. multivitamin이 비타민D row에서 종합
+      // 추천 카드로 surface 되도록 hard filter를 거치지 않습니다.
+      // 70% 임계 + multi 보너스로 자연스러운 노출.
       if (deficitNutrients.isNotEmpty && picks.length < picksPerNutrient) {
         final comp = _pickComprehensive(
-          scored: scored,
+          scored: broadScored,
           used: used,
           deficits: deficitNutrients,
         );
@@ -209,10 +222,14 @@ Product? _pickBy(
 
 /// 가성비 candidate. Conditions (모두 만족해야 함):
 ///   1. 판매량 1위와 다른 제품 (`used` 필터로 보장)
-///   2. main nutrient 함유량이 판매량 1위와 ±20% 이내
-///      (카테고리 키는 함량 비교 대신 카테고리 동일 + 성분 가짓수 비슷)
+///   2. main nutrient 함유량이 판매량 1위와 ±30% 이내 (V1.1 완화 — 어린이
+///      카테고리 등 후보 풀이 적은 곳에서 매칭률 ↑)
 ///   3. popularity_rank ≥ 6 (광고/마케팅 영향 약함 추정)
 ///   4. 카테고리 포커스가 30점 이상 (종합비타민으로 빠지지 않게)
+///   5. **다른 브랜드 우선** — 동일 브랜드의 라인업(예: GNC 비타민D 1000 vs
+///      GNC 비타민D 5000)이 가성비로 잡혀 1위와 사실상 같은 출처를 보여주는
+///      이슈 차단. 다른 브랜드 후보가 있으면 그 안에서, 없으면 동일 브랜드
+///      후보로 폴백.
 ///
 /// 매칭 후보가 없으면 `null` — UI는 가성비 카드를 표시하지 않습니다.
 Product? _pickValueAlternative({
@@ -230,16 +247,11 @@ Product? _pickValueAlternative({
     final p = c.product;
     if (used.contains(p.id)) continue;
 
-    // popularity rank 6+ 만 (1-5위는 광고 영향 큼).
     final rank = p.popularityRank ?? 9999;
     if (rank < kValueMinPopularityRank) continue;
-
-    // 카테고리 포커스 ≥ 30 (종합비타민이 가성비에 들어가지 않게).
     if (c.focusScore < 30) continue;
 
     if (isCategoryKey) {
-      // 카테고리 페이지(간 건강, 수면 등) — 동일 카테고리 + 성분 가짓수 비슷.
-      // (카테고리 키 자체에는 함량 비교 대상이 없음)
       candidates.add((product: p, popRank: rank, focusScore: c.focusScore));
     } else {
       if (targetAmount <= 0) continue;
@@ -252,13 +264,19 @@ Product? _pickValueAlternative({
   }
   if (candidates.isEmpty) return null;
 
-  // 우선순위: 카테고리 포커스 desc → popularity rank desc(더 무명) → asc.
-  candidates.sort((a, b) {
+  // 다른 브랜드 우선 분리. 빈 풀이면 동일 브랜드 폴백.
+  final differentBrand = candidates
+      .where((c) => c.product.brand != bestseller.brand)
+      .toList();
+  final pool = differentBrand.isNotEmpty ? differentBrand : candidates;
+
+  // 우선순위: 카테고리 포커스 desc → popularity rank desc(더 무명).
+  pool.sort((a, b) {
     final f = b.focusScore.compareTo(a.focusScore);
     if (f != 0) return f;
     return b.popRank.compareTo(a.popRank);
   });
-  return candidates.first.product;
+  return pool.first.product;
 }
 
 /// 종합추천 candidate: maximises the fraction of the user's deficits that
@@ -318,6 +336,66 @@ bool _looksLikeNutrientKey(String key) {
       key.endsWith('_mcg') ||
       key.endsWith('_g') ||
       key.endsWith('_billion_cfu');
+}
+
+/// 카테고리 hard filter — 사용자 직관에 어긋나는 제품을 row 진입 단계에서
+/// 차단합니다. 이전 soft 필터는 비타민D row에 락토핏 키즈(유산균 위주
+/// 멀티-성분)를 노출시켰습니다. 사용자가 "비타민D 추천에 유산균이 왜?"라며
+/// 신뢰를 잃는 케이스 차단이 본 함수의 목적.
+///
+/// 규칙:
+/// - 카테고리 키(`liver`/`sleep`/`prenatal` 등): `p.category == key` 정합
+/// - 영양소 키(`vitamin_d_iu` 등):
+///   1) 메인 영양소 함유 필수 (현재 필터)
+///   2) **카테고리가 영양소 카테고리** (예: `vitamin_d`/`vitamin_c`)이면
+///      OK — 단일 영양소 주력 제품
+///   3) **성분 가짓수 ≤ 2** 면 OK — 사실상 단일 영양제(센트룸 멘 같은
+///      함량 없는 단순 라벨도 포함)
+///   4) 그 외(probiotics 위주에 비타민D 곁들인 락토핏, 종합비타민 14성분
+///      센트룸 등) → 카테고리에서 제외. 종합비타민은 별도의 종합추천
+///      카드에서 surface 됩니다.
+bool _categoryHardMatch(Product p, String key, bool isCategoryKey) {
+  if (isCategoryKey) return p.category == key;
+
+  // 1. 메인 영양소 함유 필수.
+  final amount = p.ingredients[key] ?? 0;
+  if (amount <= 0) return false;
+
+  // 2. 카테고리가 영양소 카테고리와 정합 (vitamin_d_iu → vitamin_d).
+  final keyBase = _baseFromNutrientKey(key);
+  if (keyBase != null) {
+    if (p.category == keyBase) return true;
+    if (p.category.startsWith(keyBase)) return true;
+    // omega3_total_mg → 'omega3' / 'krill_oil'(오메가3 위주) 매칭 보강.
+    if (keyBase == 'omega3' &&
+        (p.category == 'omega3' || p.category == 'krill_oil')) {
+      return true;
+    }
+  }
+
+  // 3. 단일/주력 영양제 (성분 가짓수 ≤ 2). 락토핏(3 성분)·종합비타민(8+
+  // 성분)은 모두 막힙니다.
+  final ingredientCount = p.ingredients.values.where((v) => v > 0).length;
+  if (ingredientCount <= 2) return true;
+
+  return false;
+}
+
+/// 영양소 키에서 단위 suffix(_mg/_iu/_mcg/_g/_billion_cfu)를 떼어내고
+/// 카테고리 매칭에 쓸 베이스 명을 돌려줍니다.
+String? _baseFromNutrientKey(String key) {
+  for (final suffix in const [
+    '_billion_cfu',
+    '_mcg',
+    '_mg',
+    '_iu',
+    '_g',
+  ]) {
+    if (key.endsWith(suffix)) {
+      return key.substring(0, key.length - suffix.length);
+    }
+  }
+  return null;
 }
 
 int _popularityScore(Product p) {

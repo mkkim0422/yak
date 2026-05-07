@@ -196,19 +196,17 @@ void main() {
     });
   });
 
-  group('MemberAnalysis status text', () {
-    test('empty deficits → 충분', () {
+  group('MemberAnalysis statusText', () {
+    test('empty deficits → 충분히 섭취중', () {
       const a = MemberAnalysis(
         deficits: [],
         sufficient: [],
         currentProductCount: 0,
-
       );
       expect(a.statusText, '충분히 섭취중');
-      expect(a.statusEmoji, '✅');
     });
 
-    test('two deficits → ⚠️', () {
+    test('N deficits → "N개 부족" 텍스트', () {
       final a = MemberAnalysis(
         deficits: [
           for (int i = 0; i < 2; i++)
@@ -222,30 +220,13 @@ void main() {
         ],
         sufficient: const [],
         currentProductCount: 0,
-
       );
-      expect(a.statusEmoji, '⚠️');
       expect(a.statusText, '2개 부족');
     });
 
-    test('four deficits → 🟠', () {
-      final a = MemberAnalysis(
-        deficits: [
-          for (int i = 0; i < 4; i++)
-            NutrientDeficit(
-              nutrient: 'n$i',
-              displayName: 'N$i',
-              current: 0,
-              recommended: 100,
-              percentage: 0,
-            ),
-        ],
-        sufficient: const [],
-        currentProductCount: 0,
-
-      );
-      expect(a.statusEmoji, '🟠');
-    });
+    // statusEmoji getter는 V1 가족 카드 톤다운에서 dead-getter로 제거됨.
+    // 가족 카드의 _StatusDot은 영양제 등록 여부(회색/청록)만 표시하며,
+    // 부족/주의 표시는 멤버 진입 후 보충 영양소 카드에서만 노출됩니다.
   });
 
   group('FamilyMember avatar emoji', () {

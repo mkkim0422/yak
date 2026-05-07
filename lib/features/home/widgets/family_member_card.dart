@@ -256,6 +256,10 @@ class _CompactBody extends StatelessWidget {
   }
 }
 
+/// 가족 카드 우상단의 작은 점 — V1에서는 부족/주의 표시(주황)를 제거하고
+/// "영양제 등록 여부"의 단순 indicator로 단순화. warn/alert 색상은 멤버
+/// 진입 후 보충 영양소 / 충돌 카드에서만 노출되며, 가족 카드 자체는
+/// 긍정 톤을 유지합니다.
 class _StatusDot extends StatelessWidget {
   final HealthStatus status;
   final bool hasProducts;
@@ -263,11 +267,7 @@ class _StatusDot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = !hasProducts
-        ? AppColors.faint
-        : status == HealthStatus.ok
-            ? AppColors.okBorder
-            : AppColors.warnBorder;
+    final color = hasProducts ? AppColors.primary : AppColors.faint;
     return Container(
       width: 8,
       height: 8,
