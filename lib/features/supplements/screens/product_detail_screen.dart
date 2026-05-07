@@ -78,7 +78,7 @@ class ProductDetailScreen extends ConsumerWidget {
           ],
           const SizedBox(height: 16),
           _PriceLinksSection(product: product),
-          if (product.dataSource != null && product.dataSource!.isNotEmpty) ...[
+          if (!isDeadSourceUrl(product.dataSource)) ...[
             const SizedBox(height: 16),
             _SourceSection(url: product.dataSource!),
           ],

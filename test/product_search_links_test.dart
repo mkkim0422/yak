@@ -31,4 +31,43 @@ void main() {
           'https://www.coupang.com/np/search?q=Centrum+Women');
     });
   });
+
+  group('isDeadSourceUrl — broken-source domain denylist', () {
+    test('null / empty → true (no source to render)', () {
+      expect(isDeadSourceUrl(null), isTrue);
+      expect(isDeadSourceUrl(''), isTrue);
+    });
+
+    test('malformed URL → true', () {
+      expect(isDeadSourceUrl('not a url at all'), isTrue);
+    });
+
+    test('centrum.pchkorea.co.kr (DNS dead) → true', () {
+      expect(
+        isDeadSourceUrl(
+            'https://centrum.pchkorea.co.kr/product/centrum-for-men'),
+        isTrue,
+      );
+      expect(isDeadSourceUrl('https://centrum.pchkorea.co.kr/'), isTrue);
+    });
+
+    test('subdomain of dead host → true', () {
+      expect(isDeadSourceUrl('https://www.pchkorea.co.kr/x'), isTrue);
+    });
+
+    test('healthy host (health.kr) → false', () {
+      expect(
+        isDeadSourceUrl(
+            'https://www.health.kr/searchDrug/result_drug.asp?drug_cd=A11AOOOOO0627'),
+        isFalse,
+      );
+    });
+
+    test('host case-insensitive match', () {
+      expect(
+        isDeadSourceUrl('https://CENTRUM.PCHKOREA.CO.KR/product/x'),
+        isTrue,
+      );
+    });
+  });
 }
