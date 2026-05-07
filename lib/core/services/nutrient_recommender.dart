@@ -48,9 +48,15 @@ class NutrientRecommender {
     final out = <NutrientRecommendation>[];
 
     for (final n in nutrients) {
-      // Candidates that deliver this nutrient.
+      // Candidates that deliver this nutrient — or, when the key has no
+      // unit suffix, products in the matching category. The category branch
+      // is what powers lifestyle suggestions like 'liver' / 'sleep' /
+      // 'prenatal' that aren't tied to an RDI nutrient.
+      final isCategoryKey = !_looksLikeNutrientKey(n.key);
       final candidates = all
-          .where((p) => (p.ingredients[n.key] ?? 0) > 0)
+          .where((p) => isCategoryKey
+              ? p.category == n.key
+              : (p.ingredients[n.key] ?? 0) > 0)
           .toList(growable: false);
       if (candidates.isEmpty) continue;
 
@@ -138,6 +144,17 @@ class _ScoredCandidate {
     required this.fitScore,
   });
   int get totalScore => targetScore + popularityScore + fitScore;
+}
+
+/// Returns true when the key is an RDI nutrient (suffix `_mg`/`_iu`/`_mcg`/
+/// `_g`/`_billion_cfu`). Category keys (`liver`, `sleep`, `prenatal`, ...)
+/// have no suffix and route through the category branch instead.
+bool _looksLikeNutrientKey(String key) {
+  return key.endsWith('_mg') ||
+      key.endsWith('_iu') ||
+      key.endsWith('_mcg') ||
+      key.endsWith('_g') ||
+      key.endsWith('_billion_cfu');
 }
 
 int _popularityScore(Product p) {

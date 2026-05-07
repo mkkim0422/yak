@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import '../../../core/data/models/product_model.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/notifications/notification_provider.dart';
-import '../../../core/security/secure_storage.dart';
 import '../../../core/services/conflict_checker.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
@@ -31,9 +30,6 @@ const List<String> _categories = [
   '기타',
 ];
 
-/// SecureStorage key for the local "정보 등록 요청" queue. Stored locally only.
-const String kProductRegistrationRequestsKey = 'product.registration.requests';
-
 const _errorOutline = OutlineInputBorder(
   borderSide: BorderSide(color: AppColors.alertBorder, width: 1.5),
 );
@@ -45,15 +41,10 @@ class ManualSupplementInputScreen extends ConsumerStatefulWidget {
   /// `ManualProductEntry`. Submit overwrites that entry instead of appending.
   final String? editEntryId;
 
-  /// When true, immediately surface the "정보 등록 요청" sheet on entry —
-  /// reached from the search-empty page's secondary card.
-  final bool requestMode;
-
   const ManualSupplementInputScreen({
     super.key,
     required this.memberId,
     this.editEntryId,
-    this.requestMode = false,
   });
 
   @override
@@ -134,11 +125,6 @@ class _ManualSupplementInputScreenState
       }
     }
 
-    if (widget.requestMode) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _requestRegistration();
-      });
-    }
   }
 
   @override
@@ -327,69 +313,6 @@ class _ManualSupplementInputScreenState
     }
   }
 
-  Future<void> _requestRegistration() async {
-    final ctrl = TextEditingController(text: _name.text.trim());
-    final brandCtrl = TextEditingController(text: _brand.text.trim());
-    final ok = await showDialog<bool>(
-      context: context,
-      builder: (dctx) => AlertDialog(
-        backgroundColor: AppColors.surface,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppRadius.r20),
-        ),
-        title: const Text('정보 등록 요청'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              '제품명/브랜드를 알려주세요. 검토 후 정확한 함량 데이터로 추가합니다.',
-              style: TextStyle(fontSize: 13),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: ctrl,
-              decoration: const InputDecoration(
-                labelText: '제품명',
-                border: OutlineInputBorder(),
-              ),
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: brandCtrl,
-              decoration: const InputDecoration(
-                labelText: '브랜드 (선택)',
-                border: OutlineInputBorder(),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dctx).pop(false),
-            child: const Text('취소'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(dctx).pop(true),
-            child: const Text('보내기'),
-          ),
-        ],
-      ),
-    );
-    if (ok != true) return;
-    final entry =
-        '${DateTime.now().toIso8601String()}|${ctrl.text.trim()}|${brandCtrl.text.trim()}';
-    final existing = await SecureStorage.read(kProductRegistrationRequestsKey);
-    final next = existing == null || existing.isEmpty
-        ? entry
-        : '$existing\n$entry';
-    await SecureStorage.write(kProductRegistrationRequestsKey, next);
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('등록 요청을 받았어요')),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final isEditing = _editing != null;
@@ -538,13 +461,6 @@ class _ManualSupplementInputScreenState
             maxLines: 2,
           ),
           const SizedBox(height: 24),
-          if (!isEditing)
-            OutlinedButton.icon(
-              icon: const Icon(Icons.send_outlined),
-              label: const Text('정보 등록 요청 (정확한 함량 데이터 추가)'),
-              onPressed: _requestRegistration,
-            ),
-          const SizedBox(height: 12),
           PrimaryButton(
             label: isEditing ? '수정 저장' : '저장',
             full: true,

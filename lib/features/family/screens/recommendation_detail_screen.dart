@@ -4,30 +4,23 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/data/models/product_model.dart';
 import '../../../core/data/product_repository.dart';
-import '../../../core/notifications/notification_provider.dart';
-import '../../../core/services/conflict_checker.dart';
 import '../../../core/services/nutrient_recommender.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
-import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
-import '../../../core/widgets/alyak_buttons.dart';
 import '../../../core/widgets/alyak_card.dart';
-import '../../../core/widgets/conflict_section.dart';
 import '../../../core/widgets/disclaimer_footer.dart';
 import '../../../core/widgets/product_image.dart';
-import '../../../core/widgets/section_header.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../home/providers/member_analysis_provider.dart';
 import '../models/family_member.dart';
 import '../providers/family_provider.dart';
 
-/// Recommendation surface — positive-tone redesign.
-///   * "💊 추천 영양제" cards drive the screen (top of fold).
-///   * Each card lists 적정 함량 / 판매량 / 가성비 picks for one nutrient.
-///   * The "추천 영양소" rollup is collapsed by default (no 0% pressure).
-///   * Conflict messages live in the add-confirmation dialog, NOT inline
-///     on the recommendation cards.
+/// Recommendation surface — exploration-only.
+/// Each row = one nutrient deficit or one lifestyle category. Each row shows
+/// up to 3 picks tagged 적정 함량 / 판매량 / 가성비. Tapping a card opens
+/// the product detail page; the [+ 추가] button has been removed entirely
+/// (adding now happens from the product detail page or the search flow).
 class RecommendationDetailScreen extends ConsumerWidget {
   final String memberId;
   const RecommendationDetailScreen({super.key, required this.memberId});
@@ -49,15 +42,12 @@ class RecommendationDetailScreen extends ConsumerWidget {
     final repo = ref.watch(productRepositoryProvider);
     final analysis = ref.watch(memberNutrientAnalysisProvider(memberId));
 
-    // Recommendation is built off the member's deficits (anything < 70% of
-    // recommended). If they have no deficits we still show the priority
-    // nutrients for that persona so the screen is never empty.
     final nutrientList = analysis.deficits.isNotEmpty
         ? analysis.deficits
         : analysis.priority.map((p) => p.deficit).toList();
 
     final recommender = NutrientRecommender(repo);
-    final recos = recommender.recommend(
+    final nutrientRecos = recommender.recommend(
       member: member,
       nutrients: [
         for (final d in nutrientList)
@@ -69,6 +59,16 @@ class RecommendationDetailScreen extends ConsumerWidget {
           ),
       ],
     );
+
+    final lifestyleRecos = recommender.recommend(
+      member: member,
+      nutrients: [
+        for (final s in analysis.lifestyleSuggestions)
+          (key: s.category, displayName: s.displayName, recommended: 0.0, unit: ''),
+      ],
+    );
+
+    final hasContent = nutrientRecos.isNotEmpty || lifestyleRecos.isNotEmpty;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -88,25 +88,63 @@ class RecommendationDetailScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
         children: [
-          if (recos.isEmpty)
+          if (!hasContent)
             _EmptyHero(member: member)
           else ...[
-            const SectionHeader(title: '💊 추천 영양제'),
-            for (final r in recos)
+            const _SectionLabel(label: '보충이 필요한 영양제'),
+            for (final r in nutrientRecos)
               Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: _NutrientRecommendationCard(
-                  reco: r,
-                  member: member,
+                padding: const EdgeInsets.only(bottom: 14),
+                child: _CategoryCard(
+                  title: r.displayName,
+                  picks: r.picks,
+                  onMore: () => context.push(
+                    '/recommendation/$memberId/category/${r.nutrient}',
+                  ),
                 ),
               ),
+            if (lifestyleRecos.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              const _SectionLabel(label: '추가로 챙기시면 좋은 영양제'),
+              for (var i = 0; i < lifestyleRecos.length; i++)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 14),
+                  child: _CategoryCard(
+                    title: lifestyleRecos[i].displayName,
+                    reason: i < analysis.lifestyleSuggestions.length
+                        ? analysis.lifestyleSuggestions[i].reason
+                        : null,
+                    picks: lifestyleRecos[i].picks,
+                    onMore: () => context.push(
+                      '/recommendation/$memberId/category/${lifestyleRecos[i].nutrient}',
+                    ),
+                  ),
+                ),
+            ],
           ],
-          const SizedBox(height: 12),
-          _NutrientRollup(nutrients: nutrientList),
           const SizedBox(height: 16),
           const _RecommendationDisclaimer(),
           const DisclaimerFooter(),
         ],
+      ),
+    );
+  }
+}
+
+class _SectionLabel extends StatelessWidget {
+  final String label;
+  const _SectionLabel({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 8, 4, 12),
+      child: Text(
+        label,
+        style: AppTypography.heading2.copyWith(
+          fontSize: 17,
+          fontWeight: FontWeight.w800,
+        ),
       ),
     );
   }
@@ -143,259 +181,178 @@ class _EmptyHero extends StatelessWidget {
   }
 }
 
-class _NutrientRecommendationCard extends ConsumerStatefulWidget {
-  final NutrientRecommendation reco;
-  final FamilyMember member;
-  const _NutrientRecommendationCard({
-    required this.reco,
-    required this.member,
+/// One category row (e.g. "비타민D", "간 건강"). Header + 3-tier pick cards.
+/// The cards are tap-only — no inline `+ 추가` action — and route to the
+/// product detail page. The trailing `더보기 →` button opens
+/// [CategoryDetailScreen] for the full list + sort toggle.
+class _CategoryCard extends StatelessWidget {
+  final String title;
+  final String? reason;
+  final List<RankedProduct> picks;
+  final VoidCallback onMore;
+
+  const _CategoryCard({
+    required this.title,
+    required this.picks,
+    required this.onMore,
+    this.reason,
   });
 
   @override
-  ConsumerState<_NutrientRecommendationCard> createState() =>
-      _NutrientRecommendationCardState();
-}
-
-class _NutrientRecommendationCardState
-    extends ConsumerState<_NutrientRecommendationCard> {
-  Future<void> _add(Product product) async {
-    final controller = ref.read(familyControllerProvider);
-    final repo = ref.read(productRepositoryProvider);
-    final freshMember =
-        controller.getMember(widget.member.id) ?? widget.member;
-    if (freshMember.currentProductIds.contains(product.id)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('이미 추가된 영양제예요')),
-      );
-      return;
-    }
-    final currentProducts = freshMember.currentProductIds
-        .map(repo.getById)
-        .whereType<Product>()
-        .toList(growable: false);
-    final added = ConflictChecker.diff(
-      member: freshMember,
-      products: currentProducts,
-      manuals: freshMember.manualProducts,
-      candidate: product,
-    );
-    if (added.isNotEmpty && mounted) {
-      final ok = await showDialog<bool>(
-        context: context,
-        builder: (dctx) => ConflictAddDialog(
-          conflicts: added,
-          productName: product.name,
-          onCancel: () => Navigator.of(dctx).pop(false),
-          onConfirm: () => Navigator.of(dctx).pop(true),
-        ),
-      );
-      if (ok != true) return;
-    }
-    if (!mounted) return;
-
-    final updated = freshMember.copyWith(
-      currentProductIds: [...freshMember.currentProductIds, product.id],
-    );
-    await controller.updateMember(updated);
-    final dailyDose = product.dailyDose <= 0 ? 1 : product.dailyDose;
-    final daysOfStock = product.packageSize ~/ dailyDose;
-    final remind = (daysOfStock - 5).clamp(7, 365);
-    await ref.read(notificationServiceProvider).scheduleProductReorderReminder(
-          memberId: widget.member.id,
-          productId: product.id,
-          daysFromNow: remind,
-        );
-    if (!mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('${product.name}이(가) 추가됐어요'),
-        backgroundColor: AppColors.okInk,
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final r = widget.reco;
     return AlyakCard(
       padding: const EdgeInsets.all(14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            r.displayName,
-            style: AppTypography.title.copyWith(
-              fontSize: 16,
-              fontWeight: FontWeight.w800,
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: AppTypography.title.copyWith(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+              _MoreButton(onTap: onMore),
+            ],
           ),
-          const SizedBox(height: 10),
-          for (final pick in r.picks)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: _PickRow(
-                tier: pick.tier,
-                product: pick.product,
-                onAdd: () => _add(pick.product),
+          if (reason != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              reason!,
+              style: AppTypography.caption.copyWith(
+                fontSize: 12,
+                color: AppColors.ink2,
               ),
             ),
+          ],
+          const SizedBox(height: 12),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (var i = 0; i < picks.length; i++) ...[
+                if (i > 0) const SizedBox(width: 8),
+                Expanded(
+                  child: _TierTile(
+                    tier: picks[i].tier,
+                    product: picks[i].product,
+                    onTap: () =>
+                        context.push('/product/${picks[i].product.id}'),
+                  ),
+                ),
+              ],
+              if (picks.length < 3)
+                for (var i = picks.length; i < 3; i++) ...[
+                  const SizedBox(width: 8),
+                  const Expanded(child: SizedBox()),
+                ],
+            ],
+          ),
         ],
       ),
     );
   }
 }
 
-class _PickRow extends StatelessWidget {
+class _MoreButton extends StatelessWidget {
+  final VoidCallback onTap;
+  const _MoreButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.primarySoft,
+      borderRadius: BorderRadius.circular(999),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(999),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                '더보기',
+                style: AppTypography.title.copyWith(
+                  fontSize: 12.5,
+                  color: AppColors.primaryInk,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(width: 2),
+              const Icon(Icons.chevron_right,
+                  size: 16, color: AppColors.primaryInk),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _TierTile extends StatelessWidget {
   final String tier;
   final Product product;
-  final VoidCallback onAdd;
-  const _PickRow({
+  final VoidCallback onTap;
+
+  const _TierTile({
     required this.tier,
     required this.product,
-    required this.onAdd,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceMuted,
+    return Material(
+      color: AppColors.surfaceMuted,
+      borderRadius: BorderRadius.circular(AppRadius.r12),
+      child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.r12),
-      ),
-      child: Row(
-        children: [
-          ProductImage(product: product, size: 48),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: AppColors.primarySoft,
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Text(
-                    tier,
-                    style: AppTypography.micro.copyWith(
-                      fontSize: 10.5,
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.primaryInk,
-                    ),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: AppColors.surfaceMuted,
+            borderRadius: BorderRadius.circular(AppRadius.r12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: AppColors.primarySoft,
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  tier,
+                  style: AppTypography.micro.copyWith(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w800,
+                    color: AppColors.primaryInk,
                   ),
                 ),
-                const SizedBox(height: 3),
-                Text(
-                  product.name,
-                  style: AppTypography.title.copyWith(fontSize: 13.5),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 6),
+              Center(child: ProductImage(product: product, size: 56)),
+              const SizedBox(height: 6),
+              Text(
+                product.name,
+                style: AppTypography.title.copyWith(fontSize: 12),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
           ),
-          const SizedBox(width: 8),
-          PrimaryButton(
-            label: '+ 추가',
-            size: AlyakButtonSize.sm,
-            onPressed: onAdd,
-          ),
-        ],
+        ),
       ),
     );
   }
-}
-
-class _NutrientRollup extends StatefulWidget {
-  final List<NutrientDeficit> nutrients;
-  const _NutrientRollup({required this.nutrients});
-
-  @override
-  State<_NutrientRollup> createState() => _NutrientRollupState();
-}
-
-class _NutrientRollupState extends State<_NutrientRollup> {
-  bool _open = false;
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.nutrients.isEmpty) return const SizedBox.shrink();
-    return AlyakCard(
-      padding: EdgeInsets.zero,
-      shadow: AppShadows.card,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          InkWell(
-            borderRadius: BorderRadius.circular(AppRadius.r16),
-            onTap: () => setState(() => _open = !_open),
-            child: Padding(
-              padding: const EdgeInsets.all(14),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      '추천 영양소 (${widget.nutrients.length}종)',
-                      style: AppTypography.title.copyWith(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                  Icon(
-                    _open ? Icons.expand_less : Icons.expand_more,
-                    color: AppColors.muted,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          if (_open) ...[
-            const Divider(height: 1, color: AppColors.divider),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(14, 10, 14, 14),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  for (final n in widget.nutrients)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: Text(
-                        '· ${n.displayName} (권장 ${_formatRecommended(n)})',
-                        style: AppTypography.body2.copyWith(
-                          fontSize: 13,
-                          color: AppColors.ink2,
-                        ),
-                      ),
-                    ),
-                  const SizedBox(height: 6),
-                  Text(
-                    '※ 식단으로도 섭취 가능합니다',
-                    style: AppTypography.caption.copyWith(fontSize: 11.5),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-String _formatRecommended(NutrientDeficit d) {
-  final unit = _unitFor(d.nutrient);
-  final n = d.recommended;
-  final str = n >= 100 || n == n.roundToDouble()
-      ? n.toStringAsFixed(0)
-      : n.toStringAsFixed(1);
-  return '$str$unit';
 }
 
 class _RecommendationDisclaimer extends StatelessWidget {
@@ -419,8 +376,6 @@ class _RecommendationDisclaimer extends StatelessWidget {
 }
 
 String _unitFor(String key) {
-  // Cheap suffix-based unit extraction so we don't have to import the
-  // full nutrient_labels helper here.
   if (key.endsWith('_iu')) return 'IU';
   if (key.endsWith('_mcg')) return 'mcg';
   if (key.endsWith('_billion_cfu')) return '억CFU';

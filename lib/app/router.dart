@@ -11,6 +11,7 @@ import '../core/widgets/state_views.dart';
 import '../features/current_check/screens/current_check_screen.dart';
 import '../features/family/models/family_member.dart';
 import '../features/family/providers/family_provider.dart';
+import '../features/family/screens/category_detail_screen.dart';
 import '../features/family/screens/family_edit_screen.dart';
 import '../features/family/screens/family_management_screen.dart';
 import '../features/family/screens/family_products_screen.dart';
@@ -136,6 +137,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(
+        path: '/recommendation/:memberId/category/:category',
+        builder: (context, state) => CategoryDetailScreen(
+          memberId: state.pathParameters['memberId']!,
+          categoryKey: state.pathParameters['category']!,
+        ),
+      ),
+      GoRoute(
         path: '/supplement/search',
         builder: (context, state) {
           final memberId = state.uri.queryParameters['member'] ?? '';
@@ -146,11 +154,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/supplement/manual',
         builder: (context, state) {
           final memberId = state.uri.queryParameters['member'] ?? '';
-          final requestMode = state.uri.queryParameters['request'] == '1';
-          return ManualSupplementInputScreen(
-            memberId: memberId,
-            requestMode: requestMode,
-          );
+          return ManualSupplementInputScreen(memberId: memberId);
         },
       ),
       GoRoute(

@@ -229,21 +229,22 @@ class _CurrentSupplementsSection extends ConsumerWidget {
             onTap: () => _openAddSheet(context, member.id),
           )
         else ...[
-          for (final slot in IntakeSlot.values) ...[
-            _SlotHeader(slot: slot, count: schedule.forSlot(slot).length),
-            const SizedBox(height: 6),
-            for (final occ in schedule.forSlot(slot))
-              Padding(
-                padding: const EdgeInsets.only(bottom: 6),
-                child: _CompactSupplementCard(
-                  occurrence: occ,
-                  onTap: () => _openOccurrence(context, member.id, occ),
-                  onRemove: () =>
-                      _removeOccurrence(context, ref, member, occ),
+          for (final slot in IntakeSlot.values)
+            if (schedule.forSlot(slot).isNotEmpty) ...[
+              _SlotHeader(slot: slot, count: schedule.forSlot(slot).length),
+              const SizedBox(height: 6),
+              for (final occ in schedule.forSlot(slot))
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 6),
+                  child: _CompactSupplementCard(
+                    occurrence: occ,
+                    onTap: () => _openOccurrence(context, member.id, occ),
+                    onRemove: () =>
+                        _removeOccurrence(context, ref, member, occ),
+                  ),
                 ),
-              ),
-            const SizedBox(height: 10),
-          ],
+              const SizedBox(height: 10),
+            ],
           _AddSupplementCard(
             onTap: () => _openAddSheet(context, member.id),
           ),
@@ -603,17 +604,17 @@ class _AddSupplementCard extends StatelessWidget {
                           fontWeight: FontWeight.w800,
                         ),
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        empty
-                            ? '검증된 250개 DB 검색 또는 직접 입력'
-                            : '라벨 검색 또는 직접 입력',
-                        style: AppTypography.caption.copyWith(
-                          fontSize: 12,
-                          color: AppColors.primaryInk
-                              .withValues(alpha: 0.85),
+                      if (empty) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          '검증된 250개 DB 검색 또는 직접 입력',
+                          style: AppTypography.caption.copyWith(
+                            fontSize: 12,
+                            color: AppColors.primaryInk
+                                .withValues(alpha: 0.85),
+                          ),
                         ),
-                      ),
+                      ],
                     ],
                   ),
                 ),
@@ -977,7 +978,7 @@ class _BuyCta extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      '영양제 사러 가기',
+                      '추천 영양제 보기',
                       style: AppTypography.title.copyWith(
                         fontSize: 17,
                         fontWeight: FontWeight.w800,
@@ -986,7 +987,7 @@ class _BuyCta extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      '부족한 영양소와 추천 제품을 알려드려요',
+                      '내게 필요한 영양제를 알려드려요',
                       style: AppTypography.caption.copyWith(
                         fontSize: 12.5,
                         color: Colors.white.withValues(alpha: 0.92),

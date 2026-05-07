@@ -160,7 +160,7 @@ class ConflictAddDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppRadius.r20),
       ),
-      title: const Text('⚠️ 충돌 가능성'),
+      title: const Text('⚠️ 확인이 필요해요'),
       content: ConstrainedBox(
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.5,
@@ -172,7 +172,7 @@ class ConflictAddDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '"$productName"을(를) 추가하면:',
+                '"$productName"을(를) 추가하면 다음을 확인해 주세요:',
                 style: AppTypography.body1.copyWith(fontSize: 13.5),
               ),
               const SizedBox(height: 10),
@@ -195,7 +195,7 @@ class ConflictAddDialog extends StatelessWidget {
                 ),
               const SizedBox(height: 6),
               Text(
-                '그래도 추가하시겠어요?',
+                '확인 후 추가하시겠어요?',
                 style: AppTypography.body2.copyWith(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -212,7 +212,7 @@ class ConflictAddDialog extends StatelessWidget {
         ),
         FilledButton(
           onPressed: onConfirm,
-          child: const Text('확인하고 추가'),
+          child: const Text('확인했어요, 추가'),
         ),
       ],
     );

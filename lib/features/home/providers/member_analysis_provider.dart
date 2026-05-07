@@ -41,6 +41,27 @@ class NutrientStatus {
   });
 }
 
+/// Lifestyle-driven supplement category suggestion (밀크씨슬 / 멜라토닌 /
+/// BCAA 등). Unlike [NutrientDeficit], these aren't tied to a recommended
+/// daily allowance — they surface a *category* of products that the user
+/// might benefit from based on smoking / drinking / sleep / stress.
+class LifestyleSuggestion {
+  /// Product category in the curated DB (`liver`, `sleep`, `sports`, ...).
+  final String category;
+
+  /// Header label shown in the recommendation list (e.g. "간 건강").
+  final String displayName;
+
+  /// Why we suggested this — used as the card's subtitle.
+  final String reason;
+
+  const LifestyleSuggestion({
+    required this.category,
+    required this.displayName,
+    required this.reason,
+  });
+}
+
 class MemberAnalysis {
   final List<NutrientDeficit> deficits;
   final List<NutrientDeficit> sufficient;
@@ -52,12 +73,18 @@ class MemberAnalysis {
   /// Next 4-5 deficits, shown collapsed by default.
   final List<NutrientStatus> secondary;
 
+  /// Persona-driven category suggestions. Surface alongside nutrient
+  /// deficits on the recommendation screen. Empty when no lifestyle
+  /// signals fire.
+  final List<LifestyleSuggestion> lifestyleSuggestions;
+
   const MemberAnalysis({
     required this.deficits,
     required this.sufficient,
     required this.currentProductCount,
     this.priority = const [],
     this.secondary = const [],
+    this.lifestyleSuggestions = const [],
   });
 
   factory MemberAnalysis.empty() => const MemberAnalysis(
@@ -220,15 +247,30 @@ MemberAnalysis analyzeMember(FamilyMember member, ProductRepository repo) {
     if (member.stressLevel == StressLevel.high) {
       if (d.nutrient == 'magnesium_mg' ||
           d.nutrient == 'vitamin_b1_mg' ||
-          d.nutrient == 'vitamin_b9_mcg') {
+          d.nutrient == 'vitamin_b9_mcg' ||
+          d.nutrient == 'vitamin_c_mg') {
         score += 20;
         reasons.add('스트레스 시 영양소 소모 증가');
       }
     }
-    if (member.sleepHours == SleepHours.less5 &&
-        d.nutrient == 'magnesium_mg') {
-      score += 20;
-      reasons.add('수면 부족 — 근육 이완에 도움');
+    if (member.sleepHours == SleepHours.less5) {
+      if (d.nutrient == 'magnesium_mg') {
+        score += 20;
+        reasons.add('수면 부족 — 근육 이완에 도움');
+      }
+      if (d.nutrient == 'vitamin_b6_mg') {
+        score += 15;
+        reasons.add('수면 호르몬 합성에 관여');
+      }
+    }
+    // 음주 (주 1회+) — B군 / 엽산 추가 보충
+    if (member.drinkingFrequency == DrinkingFrequency.weekly ||
+        member.drinkingFrequency == DrinkingFrequency.daily) {
+      if (d.nutrient == 'vitamin_b1_mg' ||
+          d.nutrient == 'vitamin_b6_mg') {
+        score += 15;
+        reasons.add('음주 시 B군 손실');
+      }
     }
     // Pregnancy / breastfeeding: very strong boost.
     if (member.isPregnant) {
@@ -278,7 +320,56 @@ MemberAnalysis analyzeMember(FamilyMember member, ProductRepository repo) {
         member.currentProductIds.length + member.manualProducts.length,
     priority: priority,
     secondary: secondary,
+    lifestyleSuggestions: _lifestyleSuggestions(member),
   );
+}
+
+/// Build category-level supplement suggestions from the persona's lifestyle.
+/// These render alongside nutrient deficits on the recommendation screen so
+/// users see context-appropriate categories (간 건강 for drinkers, 수면 for
+/// sleep-deprived, 운동 보조 for athletes etc.) even when no RDI deficit
+/// would otherwise surface them.
+List<LifestyleSuggestion> _lifestyleSuggestions(FamilyMember m) {
+  final out = <LifestyleSuggestion>[];
+
+  // 음주: 간 건강. 주 1회 이상이면 surface.
+  if (m.drinkingFrequency == DrinkingFrequency.weekly ||
+      m.drinkingFrequency == DrinkingFrequency.daily) {
+    out.add(const LifestyleSuggestion(
+      category: 'liver',
+      displayName: '간 건강',
+      reason: '음주가 잦으시면 간 보호 영양제를 챙기시면 좋아요.',
+    ));
+  }
+
+  // 수면 부족: 수면 보조 (5시간 미만).
+  if (m.sleepHours == SleepHours.less5) {
+    out.add(const LifestyleSuggestion(
+      category: 'sleep',
+      displayName: '수면 보조',
+      reason: '수면 시간이 짧으시면 멜라토닌·마그네슘이 도움될 수 있어요.',
+    ));
+  }
+
+  // 임산부 전용 종합 — 일반 멀티는 비타민A 함량 위험.
+  if (m.isPregnant) {
+    out.add(const LifestyleSuggestion(
+      category: 'prenatal',
+      displayName: '임산부 종합',
+      reason: '엽산·철분 강화, 비타민A 안전 함량으로 설계된 제품을 권해요.',
+    ));
+  }
+
+  // 식단 부족: 종합비타민으로 전반 보충.
+  if (m.dietQuality == DietQuality.poor) {
+    out.add(const LifestyleSuggestion(
+      category: 'multivitamin',
+      displayName: '종합비타민',
+      reason: '식단이 불규칙하시면 종합비타민으로 전반 보충이 안전해요.',
+    ));
+  }
+
+  return out;
 }
 
 /// Per-member nutrient analysis with riverpod's auto-cache.

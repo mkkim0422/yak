@@ -337,14 +337,6 @@ class _NoResults extends StatelessWidget {
           primary: true,
           onTap: () => context.push('/supplement/manual?member=$memberId'),
         ),
-        const SizedBox(height: 10),
-        _OptionCard(
-          emoji: '📨',
-          title: '등록 요청',
-          sub: '운영자에게 정확한 함량 데이터 등록을 요청해요',
-          onTap: () => context.push(
-              '/supplement/manual?member=$memberId&request=1'),
-        ),
       ],
     );
   }
