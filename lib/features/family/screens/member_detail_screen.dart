@@ -18,6 +18,7 @@ import '../../../core/widgets/disclaimer_footer.dart';
 import '../../../core/widgets/product_image.dart';
 import '../../../core/widgets/profile_avatar.dart';
 import '../../../core/widgets/section_header.dart';
+import '../../../core/widgets/state_views.dart';
 import '../../home/providers/member_analysis_provider.dart';
 import '../../home/widgets/nutrient_status_widgets.dart';
 import '../../onboarding/screens/notification_setup_screen.dart';
@@ -35,8 +36,13 @@ class MemberDetailScreen extends ConsumerWidget {
 
     if (member == null) {
       return Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: Text('가족 멤버를 찾을 수 없어요')),
+        backgroundColor: AppColors.background,
+        appBar: AppBar(backgroundColor: AppColors.background, elevation: 0),
+        body: const ErrorStateView(
+          emoji: '🔎',
+          title: '가족 멤버를 찾을 수 없어요',
+          message: '삭제됐거나 잘못된 링크일 수 있어요.',
+        ),
       );
     }
 

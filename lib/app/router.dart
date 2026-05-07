@@ -7,6 +7,7 @@ import '../core/security/secure_storage.dart';
 import '../core/security/session_guard.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_typography.dart';
+import '../core/widgets/state_views.dart';
 import '../features/current_check/screens/current_check_screen.dart';
 import '../features/family/models/family_member.dart';
 import '../features/family/providers/family_provider.dart';
@@ -279,19 +280,18 @@ class _NotFoundScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('찾을 수 없어요')),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('요청하신 화면을 찾을 수 없어요'),
-            const SizedBox(height: 12),
-            FilledButton(
-              onPressed: () => context.go('/home'),
-              child: const Text('홈으로'),
-            ),
-          ],
-        ),
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+        elevation: 0,
+        title: const Text('찾을 수 없어요'),
+      ),
+      body: ErrorStateView(
+        emoji: '🔎',
+        title: '요청하신 화면을 찾을 수 없어요',
+        message: '잘못된 링크이거나 삭제된 화면일 수 있어요.',
+        retryLabel: '홈으로',
+        onRetry: () => context.go('/home'),
       ),
     );
   }

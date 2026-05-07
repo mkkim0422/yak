@@ -8,6 +8,7 @@ import '../../../core/data/supplement_repository.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/state_views.dart';
 import '../../family/providers/family_provider.dart';
 import '../../home/providers/member_analysis_provider.dart';
 import '../../home/widgets/nutrient_status_widgets.dart';
@@ -21,8 +22,13 @@ class CurrentCheckScreen extends ConsumerWidget {
     final member = ref.watch(familyControllerProvider).getMember(memberId);
     if (member == null) {
       return Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: Text('가족 멤버를 찾을 수 없어요')),
+        backgroundColor: AppColors.background,
+        appBar: AppBar(backgroundColor: AppColors.background, elevation: 0),
+        body: const ErrorStateView(
+          emoji: '🔎',
+          title: '가족 멤버를 찾을 수 없어요',
+          message: '삭제됐거나 잘못된 링크일 수 있어요.',
+        ),
       );
     }
     final repo = ref.watch(productRepositoryProvider);

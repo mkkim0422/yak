@@ -8,6 +8,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/profile_avatar.dart';
+import '../../../core/widgets/state_views.dart';
 import '../models/family_member.dart';
 import '../providers/family_provider.dart';
 
@@ -248,8 +249,13 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
         ref.read(familyControllerProvider).getMember(widget.memberId);
     if (member == null) {
       return Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: Text('가족 멤버를 찾을 수 없어요')),
+        backgroundColor: AppColors.background,
+        appBar: AppBar(backgroundColor: AppColors.background, elevation: 0),
+        body: const ErrorStateView(
+          emoji: '🔎',
+          title: '가족 멤버를 찾을 수 없어요',
+          message: '삭제됐거나 잘못된 링크일 수 있어요.',
+        ),
       );
     }
     _hydrate(member);

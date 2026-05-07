@@ -8,6 +8,7 @@ import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_buttons.dart';
 import '../../../core/widgets/disclaimer_footer.dart';
+import '../../../core/widgets/state_views.dart';
 import '../../family/providers/family_provider.dart';
 import '../widgets/family_cards_section.dart';
 
@@ -132,34 +133,12 @@ class _EmptyFamilyHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 24),
-      child: Column(
-        children: [
-          const Text('👨‍👩‍👧', style: TextStyle(fontSize: 44)),
-          const SizedBox(height: 12),
-          Text(
-            '가족을 추가해서\n영양제를 관리해보세요',
-            textAlign: TextAlign.center,
-            style: AppTypography.heading2.copyWith(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-              height: 1.4,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            '한 폰에서 4명까지 관리할 수 있어요',
-            style: AppTypography.caption.copyWith(fontSize: 13),
-          ),
-          const SizedBox(height: 20),
-          PrimaryButton(
-            label: '+ 가족 추가하기',
-            full: true,
-            onPressed: () => context.push('/onboarding/family-add'),
-          ),
-        ],
-      ),
+    return EmptyStateView(
+      emoji: '👨‍👩‍👧',
+      title: '가족을 추가해서\n영양제를 관리해보세요',
+      message: '한 폰에서 4명까지 관리할 수 있어요',
+      primaryLabel: '+ 가족 추가하기',
+      onPrimary: () => context.push('/onboarding/family-add'),
     );
   }
 }

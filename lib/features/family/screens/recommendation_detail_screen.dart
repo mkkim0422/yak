@@ -17,6 +17,7 @@ import '../../../core/widgets/conflict_section.dart';
 import '../../../core/widgets/disclaimer_footer.dart';
 import '../../../core/widgets/product_image.dart';
 import '../../../core/widgets/section_header.dart';
+import '../../../core/widgets/state_views.dart';
 import '../../home/providers/member_analysis_provider.dart';
 import '../models/family_member.dart';
 import '../providers/family_provider.dart';
@@ -36,8 +37,13 @@ class RecommendationDetailScreen extends ConsumerWidget {
     final member = ref.watch(familyControllerProvider).getMember(memberId);
     if (member == null) {
       return Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: Text('가족 멤버를 찾을 수 없어요')),
+        backgroundColor: AppColors.background,
+        appBar: AppBar(backgroundColor: AppColors.background, elevation: 0),
+        body: const ErrorStateView(
+          emoji: '🔎',
+          title: '가족 멤버를 찾을 수 없어요',
+          message: '삭제됐거나 잘못된 링크일 수 있어요.',
+        ),
       );
     }
     final repo = ref.watch(productRepositoryProvider);

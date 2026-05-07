@@ -14,6 +14,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_card.dart';
 import '../../../core/widgets/disclaimer_footer.dart';
 import '../../../core/widgets/product_image.dart';
+import '../../../core/widgets/state_views.dart';
 
 /// Detail page for a curated product (250-DB entry). Renders photo,
 /// dosage, category benefit, ingredients table, cautions and external
@@ -34,7 +35,11 @@ class ProductDetailScreen extends ConsumerWidget {
           elevation: 0,
           title: const Text('영양제 상세'),
         ),
-        body: const Center(child: Text('제품 정보를 찾을 수 없어요')),
+        body: const ErrorStateView(
+          emoji: '🔎',
+          title: '제품 정보를 찾을 수 없어요',
+          message: '데이터에 등록되지 않았거나 삭제됐을 수 있어요.',
+        ),
       );
     }
 

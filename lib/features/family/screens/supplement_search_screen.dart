@@ -14,6 +14,7 @@ import '../../../core/widgets/alyak_buttons.dart';
 import '../../../core/widgets/alyak_card.dart';
 import '../../../core/widgets/conflict_section.dart';
 import '../../../core/widgets/product_image.dart';
+import '../../../core/widgets/state_views.dart';
 import '../providers/family_provider.dart';
 
 /// Local-DB only supplement search. Future stages will layer 식약처 + Naver
@@ -305,27 +306,10 @@ class _Badge extends StatelessWidget {
 class _SearchEmptyHint extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('💊', style: TextStyle(fontSize: 44)),
-            const SizedBox(height: 16),
-            Text(
-              '어떤 영양제를 찾고 계세요?',
-              style: AppTypography.heading2.copyWith(fontSize: 17),
-            ),
-            const SizedBox(height: 6),
-            Text(
-              '제품명, 성분, 브랜드로 검색할 수 있어요.',
-              style: AppTypography.caption.copyWith(fontSize: 13),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
+    return const EmptyStateView(
+      emoji: '💊',
+      title: '어떤 영양제를 찾고 계세요?',
+      message: '제품명, 성분, 브랜드로 검색할 수 있어요.',
     );
   }
 }
@@ -339,23 +323,11 @@ class _NoResults extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
       children: [
-        Center(
-          child: Column(
-            children: [
-              const Text('🔎', style: TextStyle(fontSize: 44)),
-              const SizedBox(height: 16),
-              Text(
-                '검색 결과가 없어요',
-                style: AppTypography.heading2.copyWith(fontSize: 17),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                '검증된 제품 데이터베이스에\n아직 등록되지 않은 영양제예요.',
-                style: AppTypography.caption.copyWith(fontSize: 13),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
+        const EmptyStateView(
+          emoji: '🔎',
+          title: '검색 결과가 없어요',
+          message: '검증된 제품 데이터베이스에\n아직 등록되지 않은 영양제예요.',
+          padding: EdgeInsets.symmetric(horizontal: 0),
         ),
         const SizedBox(height: 24),
         _OptionCard(

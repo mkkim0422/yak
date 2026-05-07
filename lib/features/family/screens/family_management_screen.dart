@@ -8,6 +8,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_buttons.dart';
 import '../../../core/widgets/alyak_card.dart';
 import '../../../core/widgets/profile_avatar.dart';
+import '../../../core/widgets/state_views.dart';
 import '../models/family_member.dart';
 import '../providers/family_provider.dart';
 
@@ -267,21 +268,12 @@ class _Empty extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text('👨‍👩‍👧', style: TextStyle(fontSize: 40)),
-          const SizedBox(height: 12),
-          Text('가족이 없어요', style: AppTypography.title.copyWith(fontSize: 15)),
-          const SizedBox(height: 12),
-          PrimaryButton(
-            label: '+ 가족 추가',
-            size: AlyakButtonSize.md,
-            onPressed: onAdd,
-          ),
-        ],
-      ),
+    return EmptyStateView(
+      emoji: '👨‍👩‍👧',
+      title: '가족이 없어요',
+      message: '가족을 추가해서 영양제를 함께 관리해 보세요.',
+      primaryLabel: '+ 가족 추가',
+      onPrimary: onAdd,
     );
   }
 }

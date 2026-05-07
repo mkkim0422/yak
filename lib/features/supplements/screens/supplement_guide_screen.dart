@@ -6,6 +6,7 @@ import '../../../core/data/supplement_repository.dart';
 import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_typography.dart';
+import '../../../core/widgets/state_views.dart';
 
 class SupplementGuideScreen extends ConsumerStatefulWidget {
   final String supplementId;
@@ -26,8 +27,13 @@ class _SupplementGuideScreenState
     final SupplementGuide? guide = _findGuide(repo, widget.supplementId);
     if (guide == null) {
       return Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: Text('영양소 정보를 찾을 수 없어요')),
+        backgroundColor: AppColors.background,
+        appBar: AppBar(backgroundColor: AppColors.background, elevation: 0),
+        body: const ErrorStateView(
+          emoji: '🔎',
+          title: '영양소 정보를 찾을 수 없어요',
+          message: '데이터에 등록되지 않은 항목입니다.',
+        ),
       );
     }
 
