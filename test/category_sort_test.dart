@@ -1,6 +1,6 @@
-// Regression tests for category-detail sort modes — pinned the bug where
-// "적정 함량" on a category page (간 건강 / 수면 보조 etc.) silently fell
-// back to popularity rank, producing identical results to "판매량".
+// Sort modes on the category-detail screen, after the 적정함량 → 종합추천
+// rework. Three modes: 판매량 (popularity asc) / 가성비 (days of stock desc) /
+// 종합추천 (deficit-coverage desc + multivitamin bonus).
 
 import 'package:flutter_test/flutter_test.dart';
 
@@ -35,154 +35,131 @@ int _cmp(
   Product a,
   Product b, {
   required SortModeApi mode,
-  required String key,
-  double recommended = 0,
-  required bool isCategoryKey,
+  List<String> deficits = const [],
 }) =>
     compareForSortMode(
       a: a,
       b: b,
       mode: mode,
-      key: key,
-      recommended: recommended,
-      isCategoryKey: isCategoryKey,
+      deficitNutrients: deficits,
     );
 
 List<Product> _sorted(
   List<Product> items, {
   required SortModeApi mode,
-  required String key,
-  double recommended = 0,
-  required bool isCategoryKey,
+  List<String> deficits = const [],
 }) {
   final out = [...items];
-  out.sort((a, b) => _cmp(a, b,
-      mode: mode,
-      key: key,
-      recommended: recommended,
-      isCategoryKey: isCategoryKey));
+  out.sort((a, b) => _cmp(a, b, mode: mode, deficits: deficits));
   return out;
 }
 
 void main() {
-  group('적정 함량 — nutrient-keyed page (vitamin_d_iu)', () {
-    test('closest to recommended wins', () {
-      // recommended = 1000 IU; daily delivery: a=1000, b=400, c=4000.
-      final a = _p(id: 'a', category: 'vitamin_d',
-          ingredients: {'vitamin_d_iu': 1000}, popularityRank: 99);
-      final b = _p(id: 'b', category: 'vitamin_d',
-          ingredients: {'vitamin_d_iu': 400}, popularityRank: 1);
-      final c = _p(id: 'c', category: 'vitamin_d',
-          ingredients: {'vitamin_d_iu': 4000}, popularityRank: 50);
-      final out = _sorted([b, a, c],
-          mode: SortModeApi.fit,
-          key: 'vitamin_d_iu',
-          recommended: 1000,
-          isCategoryKey: false);
-      expect(out.map((p) => p.id).toList(), ['a', 'b', 'c']);
-    });
-  });
-
-  group('적정 함량 — category page with primary nutrient', () {
-    test("liver → silymarin_mg desc, NOT popularity", () {
-      // Even though `b` has the best popularity rank, `a` has more silymarin
-      // and must come first under "적정 함량".
-      final a = _p(id: 'a', category: 'liver',
-          ingredients: {'silymarin_mg': 200}, popularityRank: 50);
-      final b = _p(id: 'b', category: 'liver',
-          ingredients: {'silymarin_mg': 80}, popularityRank: 1);
-      final c = _p(id: 'c', category: 'liver',
-          ingredients: {'silymarin_mg': 140}, popularityRank: 10);
-      final out = _sorted([b, c, a],
-          mode: SortModeApi.fit,
-          key: 'liver',
-          isCategoryKey: true);
-      expect(out.map((p) => p.id).toList(), ['a', 'c', 'b']);
-    });
-
-    test("sleep → melatonin_mg desc", () {
-      final a = _p(id: 'a', category: 'sleep',
-          ingredients: {'melatonin_mg': 5}, popularityRank: 10);
-      final b = _p(id: 'b', category: 'sleep',
-          ingredients: {'melatonin_mg': 3}, popularityRank: 1);
-      final out = _sorted([b, a],
-          mode: SortModeApi.fit, key: 'sleep', isCategoryKey: true);
-      expect(out.first.id, 'a');
-    });
-
-    test("prenatal → vitamin_b9_mcg (folate) desc", () {
-      final a = _p(id: 'low_folate', category: 'prenatal',
-          ingredients: {'vitamin_b9_mcg': 200}, popularityRank: 1);
-      final b = _p(id: 'high_folate', category: 'prenatal',
-          ingredients: {'vitamin_b9_mcg': 800}, popularityRank: 50);
-      final out = _sorted([a, b],
-          mode: SortModeApi.fit, key: 'prenatal', isCategoryKey: true);
-      expect(out.first.id, 'high_folate');
-    });
-  });
-
-  group('적정 함량 — category page WITHOUT primary nutrient', () {
-    test('multivitamin → ingredient count desc', () {
-      // 'multivitamin' isn't in the primary-nutrient map, so richer combo wins.
-      final lean = _p(id: 'lean', category: 'multivitamin',
-          ingredients: {'vitamin_d_iu': 400, 'vitamin_c_mg': 60},
-          popularityRank: 1);
-      final rich = _p(id: 'rich', category: 'multivitamin',
-          ingredients: {
-            'vitamin_a_mcg': 800,
-            'vitamin_d_iu': 1000,
-            'vitamin_e_mg': 30,
-            'vitamin_b1_mg': 1.2,
-            'vitamin_b2_mg': 1.4,
-            'vitamin_b6_mg': 1.7,
-            'vitamin_b9_mcg': 400,
-            'vitamin_b12_mcg': 2.4,
-            'vitamin_c_mg': 90,
-            'iron_mg': 8,
-          },
-          popularityRank: 50);
-      final out = _sorted([lean, rich],
-          mode: SortModeApi.fit, key: 'multivitamin', isCategoryKey: true);
-      expect(out.first.id, 'rich');
-    });
-  });
-
   group('판매량 — popularity rank ascending', () {
-    test('lower rank wins; null rank goes last', () {
+    test('rank 1 first; null rank goes last', () {
       final a = _p(id: 'r1', popularityRank: 1);
       final b = _p(id: 'r10', popularityRank: 10);
       final c = _p(id: 'unranked', popularityRank: null);
-      final out = _sorted([c, b, a],
-          mode: SortModeApi.popularity, key: 'liver', isCategoryKey: true);
+      final out = _sorted([c, b, a], mode: SortModeApi.popularity);
       expect(out.map((p) => p.id).toList(), ['r1', 'r10', 'unranked']);
     });
   });
 
-  group('가성비 — package size / daily dose desc (more days = better)', () {
-    test('120정/일1 (120일) > 60정/일1 (60일) > 60정/일3 (20일)', () {
-      final big = _p(id: '120_1', packageSize: 120, dailyDose: 1); // 120 days
-      final mid = _p(id: '60_1', packageSize: 60, dailyDose: 1); // 60 days
-      final dense = _p(id: '60_3', packageSize: 60, dailyDose: 3); // 20 days
-      final out = _sorted([dense, mid, big],
-          mode: SortModeApi.value, key: 'liver', isCategoryKey: true);
+  group('가성비 — days-of-stock descending', () {
+    test('120정/일1 > 60정/일1 > 60정/일3', () {
+      final big = _p(id: '120_1', packageSize: 120, dailyDose: 1);
+      final mid = _p(id: '60_1', packageSize: 60, dailyDose: 1);
+      final dense = _p(id: '60_3', packageSize: 60, dailyDose: 3);
+      final out = _sorted([dense, mid, big], mode: SortModeApi.value);
       expect(out.map((p) => p.id).toList(), ['120_1', '60_1', '60_3']);
+    });
+
+    test('ties on stock days fall back to popularity', () {
+      // Both bottles have the same days-of-stock (60). Tiebreak by rank.
+      final pop = _p(id: 'popular', packageSize: 60, dailyDose: 1,
+          popularityRank: 1);
+      final unpop = _p(id: 'unranked', packageSize: 60, dailyDose: 1,
+          popularityRank: 50);
+      final out = _sorted([unpop, pop], mode: SortModeApi.value);
+      expect(out.first.id, 'popular');
     });
   });
 
-  group('regression — 적정 함량 vs 판매량 produce different orders', () {
-    test("liver page: 적정 함량 ≠ 판매량 when silymarin and rank disagree",
+  group('종합추천 — deficit coverage descending', () {
+    test('product covering more deficits ranks higher', () {
+      final lean = _p(id: 'd_only', category: 'vitamin_d',
+          ingredients: {'vitamin_d_iu': 1000});
+      final broad = _p(id: 'multi', category: 'multivitamin',
+          ingredients: {
+            'vitamin_d_iu': 400,
+            'magnesium_mg': 200,
+            'vitamin_c_mg': 60,
+          });
+      final out = _sorted([lean, broad],
+          mode: SortModeApi.comprehensive,
+          deficits: ['vitamin_d_iu', 'magnesium_mg', 'vitamin_c_mg']);
+      // multi covers 3/3 → wins (also gets +0.15 multivitamin bonus).
+      expect(out.first.id, 'multi');
+    });
+
+    test('multivitamin bonus surfaces broad combos even on partial coverage',
         () {
-      final ranked = _p(id: 'rank_only', category: 'liver',
-          ingredients: {'silymarin_mg': 100}, popularityRank: 1);
-      final concentrated = _p(id: 'silymarin_high', category: 'liver',
-          ingredients: {'silymarin_mg': 300}, popularityRank: 99);
-      final byPop = _sorted([concentrated, ranked],
-          mode: SortModeApi.popularity, key: 'liver', isCategoryKey: true);
-      final byFit = _sorted([concentrated, ranked],
-          mode: SortModeApi.fit, key: 'liver', isCategoryKey: true);
-      expect(byPop.first.id, 'rank_only');
-      expect(byFit.first.id, 'silymarin_high');
-      expect(byPop, isNot(equals(byFit)));
+      final single = _p(id: 'just_d', category: 'vitamin_d',
+          ingredients: {'vitamin_d_iu': 1000});
+      final multi = _p(id: 'multi', category: 'multivitamin',
+          ingredients: {'vitamin_d_iu': 400, 'magnesium_mg': 200});
+      // Both cover 1 of the deficit list → tie on raw score (1/3), but
+      // multivitamin bonus pushes 'multi' above the single-nutrient product.
+      final out = _sorted([single, multi],
+          mode: SortModeApi.comprehensive,
+          deficits: ['vitamin_d_iu', 'iron_mg', 'zinc_mg']);
+      expect(out.first.id, 'multi');
+    });
+
+    test('empty deficit list → multivitamin bonus alone (still meaningful)',
+        () {
+      final regular = _p(id: 'regular', category: 'vitamin_d',
+          ingredients: {'vitamin_d_iu': 1000});
+      final multi = _p(id: 'multi', category: 'multivitamin',
+          ingredients: {'vitamin_d_iu': 400});
+      final out = _sorted([regular, multi],
+          mode: SortModeApi.comprehensive, deficits: const []);
+      expect(out.first.id, 'multi');
+    });
+
+    test('zero-coverage products fall back to popularity tiebreak', () {
+      final ranked = _p(id: 'ranked', popularityRank: 1,
+          ingredients: {'silymarin_mg': 100});
+      final unranked = _p(id: 'unranked', popularityRank: 100,
+          ingredients: {'silymarin_mg': 200});
+      // Neither contains the deficit nutrients → tie at score 0 → popularity.
+      final out = _sorted([unranked, ranked],
+          mode: SortModeApi.comprehensive,
+          deficits: ['vitamin_d_iu', 'iron_mg']);
+      expect(out.first.id, 'ranked');
+    });
+  });
+
+  group('regression — 판매량 ≠ 종합추천 when bestseller has narrow profile',
+      () {
+    test('narrow bestseller vs broad multivitamin', () {
+      final bestseller = _p(id: 'narrow_pop', category: 'vitamin_d',
+          popularityRank: 1, ingredients: {'vitamin_d_iu': 1000});
+      final multi = _p(id: 'broad', category: 'multivitamin',
+          popularityRank: 50,
+          ingredients: {
+            'vitamin_d_iu': 400,
+            'magnesium_mg': 200,
+            'vitamin_c_mg': 60,
+            'iron_mg': 8,
+          });
+      final byPop = _sorted([bestseller, multi], mode: SortModeApi.popularity);
+      final byComp = _sorted([bestseller, multi],
+          mode: SortModeApi.comprehensive,
+          deficits: ['vitamin_d_iu', 'magnesium_mg', 'vitamin_c_mg', 'iron_mg']);
+      expect(byPop.first.id, 'narrow_pop');
+      expect(byComp.first.id, 'broad');
+      expect(byPop, isNot(equals(byComp)));
     });
   });
 }

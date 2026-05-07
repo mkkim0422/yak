@@ -17,16 +17,20 @@ import '../../home/providers/member_analysis_provider.dart';
 import '../providers/family_provider.dart';
 
 /// "더보기" page for one category — both nutrient deficits (vitamin_d_iu) and
-/// lifestyle categories (liver, sleep). Shows the same 3-tier recommendation
-/// row up top, then the entire matching product list with a sort toggle
-/// (적정함량 / 판매량). Tapping any card opens the product detail page.
-enum _SortMode { fit, popularity, value }
+/// lifestyle categories (liver, sleep). Shows the 3-tier recommendation row
+/// up top (판매량 / 가성비 / 종합추천), then the entire matching product
+/// list with a sort toggle in the same order. Tapping any card opens the
+/// product detail page.
+///
+/// Enum order matters — [_SortMode.values] is what populates the toggle
+/// menu, so it must match the user-facing 판매량 → 가성비 → 종합추천 order.
+enum _SortMode { popularity, value, comprehensive }
 
 extension on _SortMode {
   String get label => switch (this) {
-        _SortMode.fit => '적정함량',
         _SortMode.popularity => '판매량',
         _SortMode.value => '가성비',
+        _SortMode.comprehensive => '종합추천',
       };
 }
 
@@ -48,7 +52,7 @@ class CategoryDetailScreen extends ConsumerStatefulWidget {
 }
 
 class _CategoryDetailScreenState extends ConsumerState<CategoryDetailScreen> {
-  _SortMode _sort = _SortMode.fit;
+  _SortMode _sort = _SortMode.popularity;
 
   @override
   Widget build(BuildContext context) {
@@ -94,9 +98,14 @@ class _CategoryDetailScreenState extends ConsumerState<CategoryDetailScreen> {
             )
             .recommended;
 
+    // 종합추천 tier needs the user's full deficit set so it can score
+    // candidates by how much of that set each product covers.
+    final deficitKeys = analysis.deficits.map((d) => d.nutrient).toList();
+
     final recommender = NutrientRecommender(repo);
     final recos = recommender.recommend(
       member: member,
+      deficitNutrients: deficitKeys,
       nutrients: [
         (
           key: widget.categoryKey,
@@ -117,13 +126,16 @@ class _CategoryDetailScreenState extends ConsumerState<CategoryDetailScreen> {
               ? p.category == widget.categoryKey
               : (p.ingredients[widget.categoryKey] ?? 0) > 0;
           if (!relevant) return false;
-          // Honor persona exclusion. The recommender already does this for
-          // the top picks; the full list should respect it too.
           return targetMatchScore(product: p, member: member) >= 0;
         })
         .toList(growable: true);
 
-    matching.sort((a, b) => _compare(a, b, _sort, widget.categoryKey, recommended, isCategoryKey));
+    matching.sort((a, b) => _compare(
+          a,
+          b,
+          _sort,
+          deficitKeys,
+        ));
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -471,53 +483,38 @@ String _categoryDisplayFallback(String category) {
   };
 }
 
-/// Maps a curated DB category to its "primary" nutrient key. Used by the
-/// "적정 함량" sort on category-keyed pages (간 건강 → silymarin_mg etc.) so
-/// the result diverges from the popularity sort. Categories not listed here
-/// fall back to "ingredient richness" (more distinct nutrients = better
-/// balanced product), which suits broad combos like multivitamin / sports.
-const Map<String, String> _kCategoryPrimaryNutrient = {
-  'liver': 'silymarin_mg',
-  'sleep': 'melatonin_mg',
-  'magnesium': 'magnesium_mg',
-  'calcium': 'calcium_mg',
-  'iron': 'iron_mg',
-  'vitamin_d': 'vitamin_d_iu',
-  'vitamin_c': 'vitamin_c_mg',
-  'omega3': 'omega3_total_mg',
-  'probiotics': 'probiotics_billion_cfu',
-  'probiotic': 'probiotics_billion_cfu',
-  'biotin': 'biotin_mcg',
-  'lutein': 'lutein_mg',
-  'eye': 'lutein_mg',
-  'collagen': 'collagen_mg',
-  'prenatal': 'vitamin_b9_mcg',
-  'pregnancy': 'vitamin_b9_mcg',
-  'circulation': 'omega3_total_mg',
-  'immune': 'vitamin_c_mg',
-  'immunity': 'vitamin_c_mg',
-};
+/// Mirror of the screen's private [_SortMode] enum so tests can drive the
+/// comparator without the widget. Order must stay aligned with [_SortMode]:
+/// 판매량 → 가성비 → 종합추천.
+@visibleForTesting
+enum SortModeApi { popularity, value, comprehensive }
 
 @visibleForTesting
 int compareForSortMode({
   required Product a,
   required Product b,
   required SortModeApi mode,
-  required String key,
-  required double recommended,
-  required bool isCategoryKey,
+  required List<String> deficitNutrients,
 }) {
   switch (mode) {
-    case SortModeApi.fit:
-      return _fitCompare(a, b, key, recommended, isCategoryKey);
     case SortModeApi.popularity:
       return _popRank(a).compareTo(_popRank(b));
     case SortModeApi.value:
-      // Without retail prices we approximate "가성비" by package size per
-      // daily dose — bigger bottle = more days of stock = better value.
+      // No retail prices → "가성비" approximated by days of stock at the
+      // recommended daily dose. Bigger bottle / smaller dose = better value.
+      // Ties fall back to popularity ascending so the order stays stable.
       final ad = a.dailyDose <= 0 ? 0 : a.packageSize ~/ a.dailyDose;
       final bd = b.dailyDose <= 0 ? 0 : b.packageSize ~/ b.dailyDose;
-      return bd.compareTo(ad);
+      if (ad != bd) return bd.compareTo(ad);
+      return _popRank(a).compareTo(_popRank(b));
+    case SortModeApi.comprehensive:
+      // Coverage of the user's deficit list, descending. Multivit /
+      // prenatal / mineral categories get a small bonus, mirroring the
+      // recommender's 종합추천 tier scoring. Ties fall back to popularity.
+      final ascore = _comprehensiveScoreForSort(a, deficitNutrients);
+      final bscore = _comprehensiveScoreForSort(b, deficitNutrients);
+      if (ascore != bscore) return bscore.compareTo(ascore);
+      return _popRank(a).compareTo(_popRank(b));
   }
 }
 
@@ -525,60 +522,36 @@ int _compare(
   Product a,
   Product b,
   _SortMode mode,
-  String key,
-  double recommended,
-  bool isCategoryKey,
+  List<String> deficitNutrients,
 ) =>
     compareForSortMode(
       a: a,
       b: b,
       mode: SortModeApi.values[mode.index],
-      key: key,
-      recommended: recommended,
-      isCategoryKey: isCategoryKey,
+      deficitNutrients: deficitNutrients,
     );
 
-/// "적정 함량" comparator. Three branches:
-///   1. Nutrient-keyed page (vitamin_d_iu) → distance from RDI ascending
-///      (closer to recommended = better fit).
-///   2. Category page with a known primary nutrient (liver→silymarin_mg) →
-///      higher amount per daily dose wins. Ties (or zero amounts) fall back
-///      to popularity so the order stays stable.
-///   3. Category page without a primary nutrient (sports / kids_multivitamin)
-///      → ingredient richness (more distinct nutrients) wins. Ties fall back
-///      to popularity.
-int _fitCompare(
-  Product a,
-  Product b,
-  String key,
-  double recommended,
-  bool isCategoryKey,
-) {
-  if (!isCategoryKey && recommended > 0) {
-    final ad = ((a.ingredients[key] ?? 0) * a.dailyDose - recommended).abs();
-    final bd = ((b.ingredients[key] ?? 0) * b.dailyDose - recommended).abs();
-    if (ad != bd) return ad.compareTo(bd);
-    return _popRank(a).compareTo(_popRank(b));
-  }
-
-  final primary = _kCategoryPrimaryNutrient[key];
-  if (primary != null) {
-    final av = (a.ingredients[primary] ?? 0) * a.dailyDose;
-    final bv = (b.ingredients[primary] ?? 0) * b.dailyDose;
-    if (av != bv) return bv.compareTo(av); // more = better
-    return _popRank(a).compareTo(_popRank(b));
-  }
-
-  // Broad-spectrum categories — richer ingredient profile wins.
-  final ac = a.ingredients.values.where((v) => v > 0).length;
-  final bc = b.ingredients.values.where((v) => v > 0).length;
-  if (ac != bc) return bc.compareTo(ac);
-  return _popRank(a).compareTo(_popRank(b));
+/// Coverage score (matched / total) plus a small bonus for products that
+/// self-identify as multi-nutrient (multivitamin / prenatal / mineral /
+/// kids_multivitamin). When the deficit list is empty the score collapses
+/// to the bonus alone so multivitamins still float to the top of the sort.
+double _comprehensiveScoreForSort(Product p, List<String> deficits) {
+  final score = deficits.isEmpty
+      ? 0.0
+      : () {
+          var matched = 0;
+          for (final key in deficits) {
+            if ((p.ingredients[key] ?? 0) > 0) matched++;
+          }
+          return matched / deficits.length;
+        }();
+  final bonus = (p.category == 'multivitamin' ||
+          p.category == 'prenatal' ||
+          p.category == 'kids_multivitamin' ||
+          p.category == 'mineral')
+      ? 0.15
+      : 0.0;
+  return score + bonus;
 }
-
-/// Mirror of the private [_SortMode] enum so tests don't have to depend on
-/// the screen's internal enum. Order must stay aligned with [_SortMode].
-@visibleForTesting
-enum SortModeApi { fit, popularity, value }
 
 int _popRank(Product p) => p.popularityRank ?? 9999;

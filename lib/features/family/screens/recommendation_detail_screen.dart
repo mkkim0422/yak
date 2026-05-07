@@ -46,9 +46,14 @@ class RecommendationDetailScreen extends ConsumerWidget {
         ? analysis.deficits
         : analysis.priority.map((p) => p.deficit).toList();
 
+    // 종합추천 tier needs the full deficit nutrient set so it can score
+    // candidates by how much of the deficit list each product covers.
+    final deficitKeys = analysis.deficits.map((d) => d.nutrient).toList();
+
     final recommender = NutrientRecommender(repo);
     final nutrientRecos = recommender.recommend(
       member: member,
+      deficitNutrients: deficitKeys,
       nutrients: [
         for (final d in nutrientList)
           (
@@ -62,6 +67,7 @@ class RecommendationDetailScreen extends ConsumerWidget {
 
     final lifestyleRecos = recommender.recommend(
       member: member,
+      deficitNutrients: deficitKeys,
       nutrients: [
         for (final s in analysis.lifestyleSuggestions)
           (key: s.category, displayName: s.displayName, recommended: 0.0, unit: ''),
