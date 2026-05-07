@@ -84,26 +84,10 @@ void main() {
       () {
     final repo = _MemoRepo([_p('dummy')]);
 
-    test('weekly drinker → 간 건강 (liver) suggestion', () {
+    // KDRIs 2025 정렬 — drinking / sleep 라이프스타일 카테고리 추천 제거.
+    // 의학적 근거가 필요한 경우 면책에서 의사 상담을 안내합니다.
+    test('weekly drinker → no 간 건강 suggestion (KDRIs alignment)', () {
       final m = _baseMember(drinkingFrequency: DrinkingFrequency.weekly);
-      final analysis = analyzeMember(m, repo);
-      expect(
-        analysis.lifestyleSuggestions.any((s) => s.category == 'liver'),
-        isTrue,
-      );
-    });
-
-    test('daily drinker → 간 건강', () {
-      final m = _baseMember(drinkingFrequency: DrinkingFrequency.daily);
-      final analysis = analyzeMember(m, repo);
-      expect(
-        analysis.lifestyleSuggestions.any((s) => s.category == 'liver'),
-        isTrue,
-      );
-    });
-
-    test('non-drinker → no liver suggestion', () {
-      final m = _baseMember(drinkingFrequency: DrinkingFrequency.never);
       final analysis = analyzeMember(m, repo);
       expect(
         analysis.lifestyleSuggestions.any((s) => s.category == 'liver'),
@@ -111,12 +95,21 @@ void main() {
       );
     });
 
-    test('sleep <5h → 수면 보조 (sleep) suggestion', () {
+    test('daily drinker → no 간 건강 suggestion', () {
+      final m = _baseMember(drinkingFrequency: DrinkingFrequency.daily);
+      final analysis = analyzeMember(m, repo);
+      expect(
+        analysis.lifestyleSuggestions.any((s) => s.category == 'liver'),
+        isFalse,
+      );
+    });
+
+    test('sleep <5h → no 수면 보조 suggestion (KDRIs alignment)', () {
       final m = _baseMember(sleepHours: SleepHours.less5);
       final analysis = analyzeMember(m, repo);
       expect(
         analysis.lifestyleSuggestions.any((s) => s.category == 'sleep'),
-        isTrue,
+        isFalse,
       );
     });
 

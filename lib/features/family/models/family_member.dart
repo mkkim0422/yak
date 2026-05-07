@@ -248,6 +248,17 @@ class FamilyMember {
   final bool isPregnant;
   final bool isBreastfeeding;
 
+  /// ABO + Rh blood type — `'A+' / 'B-' / 'O+' / 'AB+' / ...`. Optional;
+  /// purely informational (not used by the recommender or KDRIs analysis).
+  /// `null` means the user skipped the question.
+  final String? bloodType;
+
+  /// User-reported chronic conditions ("고혈압", "당뇨", "갑상선" 등).
+  /// Optional. Surfaced in the UI as "의사 상담 우선" guidance — the
+  /// recommender does NOT branch on these because KDRIs has no
+  /// condition-specific RDAs.
+  final List<String> chronicConditions;
+
   // Current supplements
   final List<String> currentProductIds;
   final List<ManualProductEntry> manualProducts;
@@ -288,6 +299,8 @@ class FamilyMember {
     this.medications = const [],
     this.isPregnant = false,
     this.isBreastfeeding = false,
+    this.bloodType,
+    this.chronicConditions = const [],
     this.currentProductIds = const [],
     this.manualProducts = const [],
     this.activeSymptomIds = const [],
@@ -419,6 +432,8 @@ class FamilyMember {
         'medications': medications,
         'is_pregnant': isPregnant,
         'is_breastfeeding': isBreastfeeding,
+        'blood_type': bloodType,
+        'chronic_conditions': chronicConditions,
         'current_product_ids': currentProductIds,
         'manual_products': manualProducts.map((p) => p.toJson()).toList(),
         'active_symptom_ids': activeSymptomIds,
@@ -470,6 +485,10 @@ class FamilyMember {
           .toList(),
       isPregnant: (json['is_pregnant'] as bool?) ?? false,
       isBreastfeeding: (json['is_breastfeeding'] as bool?) ?? false,
+      bloodType: json['blood_type'] as String?,
+      chronicConditions: ((json['chronic_conditions'] as List?) ?? const [])
+          .map((e) => e.toString())
+          .toList(),
       currentProductIds: ((json['current_product_ids'] as List?) ?? const [])
           .map((e) => e.toString())
           .toList(),
@@ -508,6 +527,8 @@ class FamilyMember {
     List<String>? medications,
     bool? isPregnant,
     bool? isBreastfeeding,
+    Object? bloodType = _unset,
+    List<String>? chronicConditions,
     List<String>? currentProductIds,
     List<ManualProductEntry>? manualProducts,
     List<String>? activeSymptomIds,
@@ -533,6 +554,10 @@ class FamilyMember {
         medications: medications ?? this.medications,
         isPregnant: isPregnant ?? this.isPregnant,
         isBreastfeeding: isBreastfeeding ?? this.isBreastfeeding,
+        bloodType: identical(bloodType, _unset)
+            ? this.bloodType
+            : bloodType as String?,
+        chronicConditions: chronicConditions ?? this.chronicConditions,
         currentProductIds: currentProductIds ?? this.currentProductIds,
         manualProducts: manualProducts ?? this.manualProducts,
         activeSymptomIds: activeSymptomIds ?? this.activeSymptomIds,

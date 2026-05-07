@@ -215,19 +215,20 @@ void main() {
       );
     });
 
-    test('current smoker → vitamin C / E reasons mention 흡연', () {
+    test('current smoker → no lifestyle boost (KDRIs 2025 정렬)', () {
+      // 흡연/음주/수면/스트레스 점수 가중은 KDRIs에 별도 권장량이 없어
+      // 제거됨. smoker 페르소나도 reasons에 '흡연' 단어가 더 이상 노출되지
+      // 않습니다 — 면책에서 의사 상담을 안내하는 방식으로 대체.
       final analysis = analyzeMember(
         _member(smoking: SmokingStatus.current),
         emptyRepo,
       );
       final all = [...analysis.priority, ...analysis.secondary];
-      final c = all
-          .where((s) =>
-              s.deficit.nutrient == 'vitamin_c_mg' ||
-              s.deficit.nutrient == 'vitamin_e_mg')
+      final smokerReasons = all
+          .expand((s) => s.reasons)
+          .where((r) => r.contains('흡연'))
           .toList();
-      expect(c, isNotEmpty);
-      expect(c.first.reasons.any((r) => r.contains('흡연')), true);
+      expect(smokerReasons, isEmpty);
     });
 
     test('pregnant member → folate boosted into priority', () {

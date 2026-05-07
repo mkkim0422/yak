@@ -248,17 +248,14 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
         return '키와 몸무게를 알려주세요 (선택)';
       case 7:
         return '임신 또는 수유 중이신가요?';
-      // step 8 is intentionally a no-op (kept for step-counter back-compat).
-      case 9:
-        return '흡연하시나요?';
-      case 10:
-        return '음주는 어떠세요?';
+      case 8:
+        return '혈액형을 알려주세요 (선택)';
+      // step 9 (smoking) / 10 (drinking) — KDRIs에 별도 권장량 없음. 채팅
+      // 흐름에서 제거됨. 봇 프롬프트는 도달 시 빈 문자열 폴백.
       case 11:
         return '평소 식단은 어떠신가요?';
-      case 12:
-        return '보통 몇 시간 주무세요?';
-      case 13:
-        return '스트레스 정도는?';
+      // step 12 (sleep) / 13 (stress) — KDRIs에 별도 권장량 없음. 채팅
+      // 흐름에서 제거됨.
       case 14:
         return '알레르기 있으시나요? (선택)';
       case 15:
@@ -300,6 +297,7 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
       medications: List.unmodifiable(_draft.medications),
       isPregnant: _draft.isPregnant,
       isBreastfeeding: _draft.isBreastfeeding,
+      bloodType: _draft.bloodType,
       currentProductIds: List.unmodifiable(_draft.pendingCuratedProductIds),
       lastCheckupDate: _draft.lastCheckupDate,
       checkupNote: _draft.checkupNote,
@@ -392,6 +390,9 @@ class _Draft {
   final List<String> medications = [];
   final List<_AnsweredEntry> answers = [];
 
+  /// ABO + Rh blood type (선택). null = 입력 건너뜀 / 모름.
+  String? bloodType;
+
   /// Curated 250-DB product ids that the user picked in the chat-end product
   /// sheet. Applied to `member.currentProductIds` on save.
   List<String> pendingCuratedProductIds = const [];
@@ -432,10 +433,16 @@ Sex? debugImpliedSex(Relationship r) => _impliedSex(r);
 ///   * Step 7 (pregnancy + lactation, combined): female 20–50.
 ///   * Step 8: deprecated no-op (kept so the step counter stays at 17 in
 ///     existing UX dialogs).
-///   * Step 9, 10 (smoking/drinking): 19+ (Korean legal age).
-///   * Step 11, 12 (diet, sleep): 4+.
-///   * Step 13 (stress): 13+.
+///   * Step 8 (blood type): all ages, optional.
+///   * Step 9, 10, 12, 13 (smoking / drinking / sleep / stress): DROPPED in
+///     KDRIs 2025 alignment — Korean dietary references don't define
+///     condition-specific RDAs for these lifestyle variables, so asking
+///     them only added noise. The fields stay on FamilyMember (defaults)
+///     so legacy member rosters still deserialize cleanly.
+///   * Step 11 (diet): 4+, simplified to 균형/부족 2-choice.
+///   * Step 14 (allergies): all ages.
 ///   * Step 15 (medications): 1+.
+///   * Step 17 (checkup): 20+.
 bool _shouldShow(int step, _Draft d) {
   switch (step) {
     case 1:
@@ -452,16 +459,16 @@ bool _shouldShow(int step, _Draft d) {
       return true;
     case 7: // combined pregnancy + lactation
       return d.sex == Sex.female && d.age >= 20 && d.age <= 50;
-    case 8: // deprecated — was separate "lactation" question
-      return false;
+    case 8: // blood type (NEW, optional)
+      return true;
     case 9:
     case 10:
-      return d.age >= 19;
+      return false; // smoking / drinking — KDRIs 정렬로 제거
     case 11:
+      return d.age >= 4; // 식단 (간소화: 균형/부족)
     case 12:
-      return d.age >= 4;
     case 13:
-      return d.age >= 13;
+      return false; // sleep / stress — KDRIs 정렬로 제거
     case 14:
       return true;
     case 15:
@@ -588,38 +595,21 @@ class _StepInput extends StatelessWidget {
           },
         );
         break;
-      case 9:
-        child = _ChoiceRow(
-          options: const [
-            ('안 함', SmokingStatus.never),
-            ('끊었어요', SmokingStatus.former),
-            ('현재 흡연', SmokingStatus.current),
-          ],
-          onPick: (label, value) {
-            onSubmitDraft((d) => d.smokingStatus = value);
-            onAnswer(label);
+      case 8:
+        child = _BloodTypePicker(
+          onPick: (bt) {
+            onSubmitDraft((d) => d.bloodType = bt);
+            onAnswer(bt ?? '모름');
           },
         );
         break;
-      case 10:
-        child = _ChoiceRow(
-          options: const [
-            ('안 함', DrinkingFrequency.never),
-            ('주 1-2회', DrinkingFrequency.weekly),
-            ('거의 매일', DrinkingFrequency.daily),
-          ],
-          onPick: (label, value) {
-            onSubmitDraft((d) => d.drinkingFrequency = value);
-            onAnswer(label);
-          },
-        );
-        break;
+      // step 9 (smoking) / step 10 (drinking) — 채팅 흐름에서 제거됨.
+      // _shouldShow에서 false 반환하므로 도달하지 않습니다.
       case 11:
         child = _ChoiceRow(
           options: const [
-            ('좋음 (균형)', DietQuality.good),
-            ('보통', DietQuality.average),
-            ('부족함', DietQuality.poor),
+            ('균형 잡혀요', DietQuality.good),
+            ('부족해요 (편식·외식 잦음)', DietQuality.poor),
           ],
           onPick: (label, value) {
             onSubmitDraft((d) => d.dietQuality = value);
@@ -627,33 +617,8 @@ class _StepInput extends StatelessWidget {
           },
         );
         break;
-      case 12:
-        child = _ChoiceRow(
-          options: const [
-            ('5h 미만', SleepHours.less5),
-            ('5–7h', SleepHours.fiveToSeven),
-            ('7–9h', SleepHours.sevenToNine),
-            ('9h+', SleepHours.more9),
-          ],
-          onPick: (label, value) {
-            onSubmitDraft((d) => d.sleepHours = value);
-            onAnswer(label);
-          },
-        );
-        break;
-      case 13:
-        child = _ChoiceRow(
-          options: const [
-            ('낮음', StressLevel.low),
-            ('보통', StressLevel.medium),
-            ('높음', StressLevel.high),
-          ],
-          onPick: (label, value) {
-            onSubmitDraft((d) => d.stressLevel = value);
-            onAnswer(label);
-          },
-        );
-        break;
+      // step 12 (sleep) / step 13 (stress) — 채팅 흐름에서 제거됨.
+      // _shouldShow에서 false 반환하므로 도달하지 않습니다.
       case 14:
         child = _MultiSelect(
           options: const ['우유', '갑각류', '생선', '대두', '효모', '땅콩', '밀', '기타'],
@@ -830,6 +795,72 @@ class _RelationTile extends StatelessWidget {
                 style: AppTypography.title.copyWith(fontSize: 13),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Blood-type picker — 8 ABO+Rh combinations + "모름". Pure information,
+/// not used by the recommender; surfaces only on the profile.
+class _BloodTypePicker extends StatelessWidget {
+  /// `null` payload = the user chose "모름 / 입력 안 함".
+  final void Function(String? bloodType) onPick;
+  const _BloodTypePicker({required this.onPick});
+
+  static const _options = <String>['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final bt in _options)
+              _BloodTypeChip(label: bt, onTap: () => onPick(bt)),
+          ],
+        ),
+        const SizedBox(height: 8),
+        OutlinedButton(
+          onPressed: () => onPick(null),
+          child: const Text('모름 / 건너뛰기'),
+        ),
+      ],
+    );
+  }
+}
+
+class _BloodTypeChip extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+  const _BloodTypeChip({required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppRadius.r12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.r12),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.r12),
+            border: Border.all(color: AppColors.hairline, width: 1.5),
+          ),
+          child: Text(
+            label,
+            style: AppTypography.title.copyWith(
+              fontSize: 14.5,
+              fontWeight: FontWeight.w700,
+            ),
           ),
         ),
       ),

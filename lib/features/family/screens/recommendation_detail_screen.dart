@@ -129,6 +129,8 @@ class RecommendationDetailScreen extends ConsumerWidget {
             ],
           ],
           const SizedBox(height: 16),
+          const KdrisRecommendationDisclaimer(),
+          const SizedBox(height: 8),
           const _RecommendationDisclaimer(),
           const DisclaimerFooter(),
         ],

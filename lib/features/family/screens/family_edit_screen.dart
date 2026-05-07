@@ -374,57 +374,19 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
             ],
           ),
           const SizedBox(height: 20),
-          _section('라이프스타일'),
-          _dropdown<SmokingStatus>(
-            label: '흡연',
-            value: _smoking,
-            items: const {
-              SmokingStatus.never: '안함',
-              SmokingStatus.former: '끊었음',
-              SmokingStatus.current: '현재',
-            },
-            onChanged: (v) => setState(() => _smoking = v),
-          ),
-          _dropdown<DrinkingFrequency>(
-            label: '음주',
-            value: _drinking,
-            items: const {
-              DrinkingFrequency.never: '안함',
-              DrinkingFrequency.weekly: '주 1-2회',
-              DrinkingFrequency.daily: '거의 매일',
-            },
-            onChanged: (v) => setState(() => _drinking = v),
-          ),
+          _section('생활'),
+          // 흡연 / 음주 / 수면 / 스트레스 입력은 KDRIs 2025 정렬로 제거
+          // (한국 영양소 섭취기준에 별도 권장량이 없습니다). 식단만
+          // 종합비타민 일반 권고 분기 용도로 유지하고, 균형/부족 2지선으로
+          // 단순화합니다.
           _dropdown<DietQuality>(
             label: '식단',
             value: _diet,
             items: const {
-              DietQuality.good: '좋음',
-              DietQuality.average: '보통',
-              DietQuality.poor: '부족',
+              DietQuality.good: '균형 잡힘',
+              DietQuality.poor: '부족 (편식·외식 잦음)',
             },
             onChanged: (v) => setState(() => _diet = v),
-          ),
-          _dropdown<SleepHours>(
-            label: '수면',
-            value: _sleep,
-            items: const {
-              SleepHours.less5: '<5h',
-              SleepHours.fiveToSeven: '5-7h',
-              SleepHours.sevenToNine: '7-9h',
-              SleepHours.more9: '>9h',
-            },
-            onChanged: (v) => setState(() => _sleep = v),
-          ),
-          _dropdown<StressLevel>(
-            label: '스트레스',
-            value: _stress,
-            items: const {
-              StressLevel.low: '낮음',
-              StressLevel.medium: '보통',
-              StressLevel.high: '높음',
-            },
-            onChanged: (v) => setState(() => _stress = v),
           ),
           if (isAdultWoman) ...[
             const SizedBox(height: 20),

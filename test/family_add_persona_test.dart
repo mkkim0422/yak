@@ -1,11 +1,14 @@
-// Locks the persona-driven branching of the family-add chat:
-//   * sex (step 4) is skipped when the relationship implies a sex
+// Persona-driven branching of the family-add chat after the KDRIs 2025
+// alignment cleanup:
+//
+//   * sex (step 4) skipped when relationship implies a sex
 //   * pregnancy/lactation (step 7) only for female 20–50
-//   * step 8 is a permanent no-op (collapsed into 7)
-//   * smoking/drinking (9, 10) only for 19+
-//   * diet/sleep (11, 12) only for 4+
-//   * stress (13) only for 13+
-//   * medications (15) only for 1+
+//   * blood type (step 8) NEW — asked for everyone, optional
+//   * smoking / drinking (steps 9, 10) — DROPPED (no KDRIs RDA)
+//   * diet (step 11) only for 4+, simplified to 균형/부족
+//   * sleep / stress (steps 12, 13) — DROPPED (no KDRIs RDA)
+//   * medications (step 15) only for 1+
+//   * checkup (step 17) only for 20+
 
 import 'package:flutter_test/flutter_test.dart';
 
@@ -77,56 +80,67 @@ void main() {
     });
   });
 
-  test('step 8 is a permanent no-op (collapsed into 7)', () {
-    for (final age in [10, 25, 35, 60]) {
-      expect(
-        _show(8, rel: Relationship.wife, sex: Sex.female, age: age),
-        isFalse,
-        reason: 'age $age',
-      );
-    }
-  });
-
-  group('step 9, 10 (smoking, drinking) — 19+', () {
-    test('15-year-old → skipped', () {
-      expect(_show(9, rel: Relationship.son, sex: Sex.male, age: 15),
-          isFalse);
-      expect(_show(10, rel: Relationship.son, sex: Sex.male, age: 15),
-          isFalse);
-    });
-
-    test('19-year-old → asked', () {
-      expect(_show(9, rel: Relationship.son, sex: Sex.male, age: 19),
-          isTrue);
-      expect(_show(10, rel: Relationship.son, sex: Sex.male, age: 19),
-          isTrue);
+  group('step 8 (blood type) — NEW, asked for all ages', () {
+    test('shown for everyone — newborn through elderly', () {
+      for (final age in [0, 1, 10, 35, 60, 80]) {
+        expect(
+          _show(8, rel: Relationship.son, sex: Sex.male, age: age),
+          isTrue,
+          reason: 'age $age',
+        );
+      }
     });
   });
 
-  group('step 11, 12 (diet, sleep) — 4+', () {
+  group('steps 9, 10, 12, 13 — DROPPED in KDRIs alignment', () {
+    test('smoking (9) never shown', () {
+      for (final age in [10, 19, 35, 60]) {
+        expect(_show(9, rel: Relationship.son, sex: Sex.male, age: age),
+            isFalse,
+            reason: 'smoking age $age');
+      }
+    });
+
+    test('drinking (10) never shown', () {
+      for (final age in [10, 19, 35, 60]) {
+        expect(_show(10, rel: Relationship.son, sex: Sex.male, age: age),
+            isFalse,
+            reason: 'drinking age $age');
+      }
+    });
+
+    test('sleep (12) never shown', () {
+      for (final age in [4, 19, 35, 60]) {
+        expect(_show(12, rel: Relationship.son, sex: Sex.male, age: age),
+            isFalse,
+            reason: 'sleep age $age');
+      }
+    });
+
+    test('stress (13) never shown', () {
+      for (final age in [13, 19, 35, 60]) {
+        expect(_show(13, rel: Relationship.son, sex: Sex.male, age: age),
+            isFalse,
+            reason: 'stress age $age');
+      }
+    });
+  });
+
+  group('step 11 (diet) — simplified, 4+', () {
     test('1-year-old → skipped', () {
       expect(_show(11, rel: Relationship.son, sex: Sex.male, age: 1),
-          isFalse);
-      expect(_show(12, rel: Relationship.son, sex: Sex.male, age: 1),
           isFalse);
     });
 
     test('4-year-old → asked', () {
       expect(_show(11, rel: Relationship.son, sex: Sex.male, age: 4),
           isTrue);
-      expect(_show(12, rel: Relationship.son, sex: Sex.male, age: 4),
+    });
+
+    test('adult / elderly → asked', () {
+      expect(_show(11, rel: Relationship.wife, sex: Sex.female, age: 35),
           isTrue);
-    });
-  });
-
-  group('step 13 (stress) — 13+', () {
-    test('child → skipped', () {
-      expect(_show(13, rel: Relationship.son, sex: Sex.male, age: 8),
-          isFalse);
-    });
-
-    test('teen → asked', () {
-      expect(_show(13, rel: Relationship.son, sex: Sex.male, age: 13),
+      expect(_show(11, rel: Relationship.mother, sex: Sex.female, age: 70),
           isTrue);
     });
   });
@@ -158,7 +172,7 @@ void main() {
   });
 
   // ── Persona scenarios — end-to-end "what does this person see?" ──
-  group('persona scenarios', () {
+  group('persona scenarios — KDRIs 2025 cleaned up', () {
     int countSteps({
       required Relationship rel,
       required Sex sex,
@@ -174,55 +188,75 @@ void main() {
       return n;
     }
 
-    test('newborn (1세 son): no diet/sleep/stress, no smoking/drinking', () {
+    test('newborn (1세 son) → 9 steps', () {
       // Steps shown: 1 rel, 2 name, 3 birth, 5 disclaimer, 6 height,
-      // 14 allergies, 15 meds, 16 products, 18 complete = 9
-      // Not shown: 4 (implied), 7 (male), 8 (no-op), 9-13 (under-age),
-      // 17 checkup (under 20).
-      expect(_show(4, rel: Relationship.son, sex: Sex.male, age: 1), isFalse);
-      expect(_show(5, rel: Relationship.son, sex: Sex.male, age: 1), isTrue);
+      // 8 blood, 14 allergies, 15 meds, 16 products, 18 complete = 10
+      // Not shown: 4 (implied), 7 (male), 9 / 10 / 12 / 13 (dropped),
+      // 11 (under 4), 17 (under 20).
       expect(_show(11, rel: Relationship.son, sex: Sex.male, age: 1),
           isFalse);
-      expect(_show(15, rel: Relationship.son, sex: Sex.male, age: 1), isTrue);
       expect(_show(17, rel: Relationship.son, sex: Sex.male, age: 1),
           isFalse);
-      expect(countSteps(rel: Relationship.son, sex: Sex.male, age: 1), 9);
+      expect(countSteps(rel: Relationship.son, sex: Sex.male, age: 1), 10);
     });
 
-    test('teen (15세 daughter): no preg, no smoking/drinking, no stress', () {
-      expect(_show(4, rel: Relationship.daughter, sex: Sex.female, age: 15),
-          isFalse);
+    test('teen (15세 daughter) → 11 steps', () {
+      // Steps shown: 1, 2, 3, 6, 8, 11, 14, 15, 16, 18 — and now 4? No —
+      // daughter implies female. = 10 steps shown.
+      // 5 disclaimer skipped (over 4), 7 preg skipped (under 20),
+      // 9/10/12/13 dropped, 17 checkup skipped (under 20).
       expect(_show(7, rel: Relationship.daughter, sex: Sex.female, age: 15),
           isFalse);
       expect(_show(9, rel: Relationship.daughter, sex: Sex.female, age: 15),
           isFalse);
-      expect(_show(13, rel: Relationship.daughter, sex: Sex.female, age: 15),
-          isTrue);
+      expect(
+        countSteps(rel: Relationship.daughter, sex: Sex.female, age: 15),
+        10,
+      );
     });
 
-    test('wife 35: full adult panel', () {
-      expect(_show(4, rel: Relationship.wife, sex: Sex.female, age: 35),
-          isFalse); // skipped, implied
+    test('wife 35 (full adult panel) → 11 steps', () {
+      // Steps shown: 1, 2, 3, 6, 7 (preg), 8 (blood), 11 (diet),
+      // 14, 15, 16, 17 (checkup), 18. 4 implied. = 12.
       expect(_show(7, rel: Relationship.wife, sex: Sex.female, age: 35),
           isTrue);
-      expect(_show(9, rel: Relationship.wife, sex: Sex.female, age: 35),
-          isTrue);
-      expect(_show(13, rel: Relationship.wife, sex: Sex.female, age: 35),
-          isTrue);
+      expect(
+        countSteps(rel: Relationship.wife, sex: Sex.female, age: 35),
+        12,
+      );
     });
 
-    test('mother 60: no pregnancy', () {
+    test('mother 60 (no pregnancy) → 10 steps', () {
+      // Steps shown: 1, 2, 3, 6, 8, 11, 14, 15, 16, 17, 18. 4 implied,
+      // 7 skipped (>50), 9-13 dropped. = 11.
       expect(_show(7, rel: Relationship.mother, sex: Sex.female, age: 60),
           isFalse);
       expect(_show(9, rel: Relationship.mother, sex: Sex.female, age: 60),
-          isTrue);
+          isFalse);
+      expect(
+        countSteps(rel: Relationship.mother, sex: Sex.female, age: 60),
+        11,
+      );
     });
 
-    test('self (35세, female): asks sex + everything else', () {
+    test('self (35세, female) — sex asked too → 12 steps', () {
+      // Steps: 1, 2, 3, 4 (sex asked, self), 6, 7, 8, 11, 14, 15, 16, 17,
+      // 18 = 13.
       expect(_show(4, rel: Relationship.self, sex: Sex.female, age: 35),
-          isTrue); // not implied
-      expect(_show(7, rel: Relationship.self, sex: Sex.female, age: 35),
           isTrue);
+      expect(
+        countSteps(rel: Relationship.self, sex: Sex.female, age: 35),
+        13,
+      );
+    });
+
+    test('70세 grandparent → 10 steps', () {
+      // 1, 2, 3, 6, 8, 11, 14, 15, 16, 17, 18. 4 implied (mother).
+      // 7 skipped (>50), 9-13 dropped. = 11.
+      expect(
+        countSteps(rel: Relationship.mother, sex: Sex.female, age: 70),
+        11,
+      );
     });
   });
 }

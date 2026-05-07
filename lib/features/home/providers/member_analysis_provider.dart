@@ -223,77 +223,49 @@ MemberAnalysis analyzeMember(FamilyMember member, ProductRepository repo) {
       score += 40;
     }
 
-    // Lifestyle boosts (no checkup data — we removed that feature).
-    if (member.smokingStatus == SmokingStatus.current) {
-      if (d.nutrient == 'vitamin_c_mg' || d.nutrient == 'vitamin_e_mg') {
-        score += 30;
-        reasons.add('흡연으로 항산화 영양소 손실');
-      }
-    }
-    if (member.drinkingFrequency == DrinkingFrequency.daily) {
-      if (d.nutrient == 'vitamin_b12_mcg' ||
-          d.nutrient == 'vitamin_b9_mcg' ||
-          d.nutrient == 'vitamin_b1_mg') {
-        score += 25;
-        reasons.add('잦은 음주로 B군 손실');
-      }
-    }
+    // KDRIs 2025-aligned boosts only. 라이프스타일 변수(흡연/음주/수면/
+    // 스트레스)는 한국 영양소 섭취기준에 별도 권장량이 없으므로 점수
+    // 가중을 적용하지 않습니다. 임신·수유는 KDRIs 표 안에 가산치가
+    // 정의되어 있고, 본 점수 부스트는 우선순위 노출에만 영향.
     if (member.dietQuality == DietQuality.poor) {
+      // 식단 부족 → 종합비타민 일반 권고. 점수 가중은 가벼운 수준.
       if (d.nutrient == 'vitamin_b9_mcg' ||
           d.nutrient == 'iron_mg' ||
           d.nutrient == 'calcium_mg' ||
           d.nutrient == 'zinc_mg') {
-        score += 30;
-        reasons.add('식단 부족으로 보충 필요');
+        score += 25;
+        reasons.add('식단이 불규칙하시면 종합비타민으로 보충하시면 좋아요');
       }
     }
-    if (member.stressLevel == StressLevel.high) {
-      if (d.nutrient == 'magnesium_mg' ||
-          d.nutrient == 'vitamin_b1_mg' ||
-          d.nutrient == 'vitamin_b9_mcg' ||
-          d.nutrient == 'vitamin_c_mg') {
-        score += 20;
-        reasons.add('스트레스 시 영양소 소모 증가');
-      }
-    }
-    if (member.sleepHours == SleepHours.less5) {
-      if (d.nutrient == 'magnesium_mg') {
-        score += 20;
-        reasons.add('수면 부족 — 근육 이완에 도움');
-      }
-      if (d.nutrient == 'vitamin_b6_mg') {
-        score += 15;
-        reasons.add('수면 호르몬 합성에 관여');
-      }
-    }
-    // 음주 (주 1회+) — B군 / 엽산 추가 보충
-    if (member.drinkingFrequency == DrinkingFrequency.weekly ||
-        member.drinkingFrequency == DrinkingFrequency.daily) {
-      if (d.nutrient == 'vitamin_b1_mg' ||
-          d.nutrient == 'vitamin_b6_mg') {
-        score += 15;
-        reasons.add('음주 시 B군 손실');
-      }
-    }
-    // Pregnancy / breastfeeding: very strong boost.
+    // 임신 — KDRIs 2025 표의 가산치는 권장량 자체에 이미 반영됨. 본
+    // 점수 부스트는 우선순위 정렬용 (먼저 보여주기 위함).
     if (member.isPregnant) {
       if (d.nutrient == 'vitamin_b9_mcg' ||
           d.nutrient == 'iron_mg' ||
+          d.nutrient == 'choline_mg' ||
           d.nutrient == 'omega3_total_mg') {
         score += 80;
-        reasons.add('임신 중 — 꼭 보충해야 해요');
+        reasons.add('임신 중 — 꼭 보충해야 해요 (의사 상담 권장)');
       }
     }
     if (member.isBreastfeeding) {
       if (d.nutrient == 'calcium_mg' ||
           d.nutrient == 'vitamin_d_iu' ||
+          d.nutrient == 'choline_mg' ||
           d.nutrient == 'omega3_total_mg') {
         score += 80;
-        reasons.add('수유 중 — 모유 영양에 도움');
+        reasons.add('수유 중 — 모유 영양에 도움 (의사 상담 권장)');
       }
     }
-    // Age-based boosts.
-    if (member.age >= 50) {
+    // KDRIs 2025: 65+ 비타민D AI 15μg(=600IU) / 칼슘 50+ 여성 800.
+    if (member.age >= 65) {
+      if (d.nutrient == 'calcium_mg' ||
+          d.nutrient == 'vitamin_d_iu' ||
+          d.nutrient == 'vitamin_b12_mcg') {
+        score += 30;
+        reasons.add('65세 이상 — 골 건강 / B12 흡수 저하');
+      }
+    } else if (member.age >= 50) {
       if (d.nutrient == 'calcium_mg' || d.nutrient == 'vitamin_d_iu') {
         score += 25;
         reasons.add('50세 이상 — 골 건강 우선');
@@ -327,34 +299,20 @@ MemberAnalysis analyzeMember(FamilyMember member, ProductRepository repo) {
   );
 }
 
-/// Build category-level supplement suggestions from the persona's lifestyle.
-/// These render alongside nutrient deficits on the recommendation screen so
-/// users see context-appropriate categories (간 건강 for drinkers, 수면 for
-/// sleep-deprived, 운동 보조 for athletes etc.) even when no RDI deficit
-/// would otherwise surface them.
+/// Build category-level supplement suggestions from the persona — restricted
+/// to KDRIs-grounded cases only.
+///
+/// 라이프스타일 변수(흡연/음주/수면/스트레스)는 한국 KDRIs에 별도 권장량이
+/// 없습니다. 따라서 "간 건강"(음주 → silymarin) / "수면 보조"(sleep →
+/// melatonin) 같은 카테고리 추천은 제거합니다. 의학적 근거가 필요한 경우
+/// 의사 상담을 권장하도록 면책에서 안내합니다.
+///
+/// 유지: 임신부 전용(prenatal) — KDRIs 가산치 + 비타민A 안전 함량 이슈,
+/// 식단 부족(multivitamin) — KDRIs는 표준 식단을 가정하므로 결식이 잦을
+/// 때만 종합비타민을 일반 권고합니다.
 List<LifestyleSuggestion> _lifestyleSuggestions(FamilyMember m) {
   final out = <LifestyleSuggestion>[];
 
-  // 음주: 간 건강. 주 1회 이상이면 surface.
-  if (m.drinkingFrequency == DrinkingFrequency.weekly ||
-      m.drinkingFrequency == DrinkingFrequency.daily) {
-    out.add(const LifestyleSuggestion(
-      category: 'liver',
-      displayName: '간 건강',
-      reason: '음주가 잦으시면 간 보호 영양제를 챙기시면 좋아요.',
-    ));
-  }
-
-  // 수면 부족: 수면 보조 (5시간 미만).
-  if (m.sleepHours == SleepHours.less5) {
-    out.add(const LifestyleSuggestion(
-      category: 'sleep',
-      displayName: '수면 보조',
-      reason: '수면 시간이 짧으시면 멜라토닌·마그네슘이 도움될 수 있어요.',
-    ));
-  }
-
-  // 임산부 전용 종합 — 일반 멀티는 비타민A 함량 위험.
   if (m.isPregnant) {
     out.add(const LifestyleSuggestion(
       category: 'prenatal',
@@ -363,7 +321,6 @@ List<LifestyleSuggestion> _lifestyleSuggestions(FamilyMember m) {
     ));
   }
 
-  // 식단 부족: 종합비타민으로 전반 보충.
   if (m.dietQuality == DietQuality.poor) {
     out.add(const LifestyleSuggestion(
       category: 'multivitamin',
