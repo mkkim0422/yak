@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:flutter/services.dart';
+
 import '../../../core/notifications/notification_provider.dart';
 import '../../../core/security/secure_storage.dart';
+import '../../../core/services/data_export_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_shadows.dart';
@@ -125,6 +128,39 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       }
     });
     await _persistDaily();
+  }
+
+  Future<void> _exportData() async {
+    final members = ref.read(familyMembersProvider);
+    if (members.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('내보낼 가족 정보가 없어요')),
+      );
+      return;
+    }
+    try {
+      final path = await DataExportService.writeToExternalStorage(members);
+      // 사용자가 파일 경로를 수동 복사할 수 있도록 클립보드에도 같이 적재.
+      // share_plus 패키지 추가 시 share sheet으로 교체 예정 (V1.1).
+      await Clipboard.setData(ClipboardData(text: path));
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('백업 파일 저장됨\n경로: $path\n(클립보드 복사됨)'),
+          duration: const Duration(seconds: 6),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('내보내기에 실패했어요: $e'),
+          backgroundColor: AppColors.danger,
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
   }
 
   Future<void> _confirmWipe() async {
@@ -302,6 +338,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 title: '가족 추가',
                 onTap: () => context.push('/onboarding/family-add'),
               ),
+              _SettingItem(
+                emoji: '📥',
+                title: '내 데이터 내보내기',
+                sub: 'JSON 파일로 백업',
+                onTap: _exportData,
+              ),
             ],
           ),
           _SectionLabel('정보'),
@@ -317,6 +359,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 emoji: '🔒',
                 title: '개인정보 처리방침',
                 onTap: () => context.push('/privacy-policy'),
+              ),
+              _SettingItem(
+                emoji: '📋',
+                title: '이용약관',
+                onTap: () => context.push('/terms'),
               ),
               _SettingItem(
                 emoji: '⚠️',

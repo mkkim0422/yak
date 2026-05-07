@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../core/l10n/app_strings.dart';
+import '../core/legal/legal_documents.dart';
 import '../core/security/secure_storage.dart';
 import '../core/security/session_guard.dart';
 import '../core/theme/app_colors.dart';
@@ -87,6 +88,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/disclaimer',
         builder: (context, state) => const _DisclaimerScreen(),
+      ),
+      GoRoute(
+        path: '/terms',
+        builder: (context, state) => const _TermsScreen(),
       ),
       GoRoute(
         path: '/onboarding',
@@ -248,27 +253,20 @@ class _PrivacyPolicyScreen extends StatelessWidget {
   const _PrivacyPolicyScreen();
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(title: const Text('개인정보 처리방침')),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          Text('개인정보 처리방침', style: AppTypography.heading2),
-          const SizedBox(height: 12),
-          Text(AppStrings.privacyDataLocal, style: AppTypography.body1),
-          const SizedBox(height: 8),
-          Text(AppStrings.privacyEncryption, style: AppTypography.body1),
-          const SizedBox(height: 8),
-          Text(AppStrings.privacyMedicalNote, style: AppTypography.body1),
-          const SizedBox(height: 24),
-          Text(
-            '※ 본 앱은 모든 데이터를 사용자 기기 내에 암호화하여 저장하며, '
-            '외부 서버로 전송하지 않습니다.',
-            style: AppTypography.body2,
-          ),
-        ],
-      ),
+    return _LegalDocScreen(
+      title: '개인정보 처리방침',
+      body: kPrivacyPolicyMarkdown,
+    );
+  }
+}
+
+class _TermsScreen extends StatelessWidget {
+  const _TermsScreen();
+  @override
+  Widget build(BuildContext context) {
+    return _LegalDocScreen(
+      title: '이용약관',
+      body: kTermsOfServiceMarkdown,
     );
   }
 }
@@ -280,19 +278,94 @@ class _DisclaimerScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(title: const Text('면책 조항')),
-      body: Padding(
+      body: ListView(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(AppStrings.disclaimerNotMedicalAdvice,
-                style: AppTypography.body1),
-            const SizedBox(height: 12),
-            Text(AppStrings.disclaimerText, style: AppTypography.body2),
-            const SizedBox(height: 12),
-            Text(AppStrings.disclaimerNutrient, style: AppTypography.body2),
-          ],
-        ),
+        children: [
+          Text(AppStrings.disclaimerNotMedicalAdvice,
+              style: AppTypography.body1),
+          const SizedBox(height: 12),
+          Text(AppStrings.disclaimerText, style: AppTypography.body2),
+          const SizedBox(height: 12),
+          Text(AppStrings.disclaimerNutrient, style: AppTypography.body2),
+          const SizedBox(height: 24),
+          Text(
+            kMedicalDisclaimerShort,
+            style: AppTypography.body2.copyWith(
+              fontSize: 13,
+              height: 1.6,
+              color: AppColors.ink2,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 약관 / 처리방침 등 긴 본문을 가독성 있는 단순 ListView로 렌더.
+/// Markdown 패키지 의존을 피하기 위해 단순 분할 + 굵은 헤더 처리.
+class _LegalDocScreen extends StatelessWidget {
+  final String title;
+  final String body;
+  const _LegalDocScreen({required this.title, required this.body});
+
+  @override
+  Widget build(BuildContext context) {
+    final blocks = body.split('\n\n');
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      appBar: AppBar(title: Text(title)),
+      body: ListView.builder(
+        padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
+        itemCount: blocks.length,
+        itemBuilder: (_, i) {
+          final block = blocks[i].trim();
+          if (block.isEmpty) return const SizedBox(height: 4);
+          if (block.startsWith('---')) {
+            return const Padding(
+              padding: EdgeInsets.symmetric(vertical: 12),
+              child: Divider(color: AppColors.divider, thickness: 1),
+            );
+          }
+          // **굵은 헤더** 처리.
+          if (block.startsWith('**') && block.endsWith('**')) {
+            final txt = block.substring(2, block.length - 2);
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(0, 16, 0, 8),
+              child: Text(
+                txt,
+                style: AppTypography.heading3.copyWith(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            );
+          }
+          // 시행일/버전 같은 메타 라인.
+          if (block.startsWith('시행일:') || block.startsWith('버전:')) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 2),
+              child: Text(
+                block,
+                style: AppTypography.caption.copyWith(
+                  fontSize: 12,
+                  color: AppColors.muted,
+                ),
+              ),
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Text(
+              block,
+              style: AppTypography.body2.copyWith(
+                fontSize: 13.5,
+                color: AppColors.ink2,
+                height: 1.7,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
