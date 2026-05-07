@@ -471,27 +471,48 @@ String _categoryDisplayFallback(String category) {
   };
 }
 
-int _compare(
-  Product a,
-  Product b,
-  _SortMode mode,
-  String key,
-  double recommended,
-  bool isCategoryKey,
-) {
+/// Maps a curated DB category to its "primary" nutrient key. Used by the
+/// "적정 함량" sort on category-keyed pages (간 건강 → silymarin_mg etc.) so
+/// the result diverges from the popularity sort. Categories not listed here
+/// fall back to "ingredient richness" (more distinct nutrients = better
+/// balanced product), which suits broad combos like multivitamin / sports.
+const Map<String, String> _kCategoryPrimaryNutrient = {
+  'liver': 'silymarin_mg',
+  'sleep': 'melatonin_mg',
+  'magnesium': 'magnesium_mg',
+  'calcium': 'calcium_mg',
+  'iron': 'iron_mg',
+  'vitamin_d': 'vitamin_d_iu',
+  'vitamin_c': 'vitamin_c_mg',
+  'omega3': 'omega3_total_mg',
+  'probiotics': 'probiotics_billion_cfu',
+  'probiotic': 'probiotics_billion_cfu',
+  'biotin': 'biotin_mcg',
+  'lutein': 'lutein_mg',
+  'eye': 'lutein_mg',
+  'collagen': 'collagen_mg',
+  'prenatal': 'vitamin_b9_mcg',
+  'pregnancy': 'vitamin_b9_mcg',
+  'circulation': 'omega3_total_mg',
+  'immune': 'vitamin_c_mg',
+  'immunity': 'vitamin_c_mg',
+};
+
+@visibleForTesting
+int compareForSortMode({
+  required Product a,
+  required Product b,
+  required SortModeApi mode,
+  required String key,
+  required double recommended,
+  required bool isCategoryKey,
+}) {
   switch (mode) {
-    case _SortMode.fit:
-      // Closest to recommended daily delivery wins. For category-only keys
-      // (no recommended), fall back to popularity.
-      if (isCategoryKey || recommended <= 0) {
-        return _popRank(a).compareTo(_popRank(b));
-      }
-      final ad = ((a.ingredients[key] ?? 0) * a.dailyDose - recommended).abs();
-      final bd = ((b.ingredients[key] ?? 0) * b.dailyDose - recommended).abs();
-      return ad.compareTo(bd);
-    case _SortMode.popularity:
+    case SortModeApi.fit:
+      return _fitCompare(a, b, key, recommended, isCategoryKey);
+    case SortModeApi.popularity:
       return _popRank(a).compareTo(_popRank(b));
-    case _SortMode.value:
+    case SortModeApi.value:
       // Without retail prices we approximate "가성비" by package size per
       // daily dose — bigger bottle = more days of stock = better value.
       final ad = a.dailyDose <= 0 ? 0 : a.packageSize ~/ a.dailyDose;
@@ -499,5 +520,65 @@ int _compare(
       return bd.compareTo(ad);
   }
 }
+
+int _compare(
+  Product a,
+  Product b,
+  _SortMode mode,
+  String key,
+  double recommended,
+  bool isCategoryKey,
+) =>
+    compareForSortMode(
+      a: a,
+      b: b,
+      mode: SortModeApi.values[mode.index],
+      key: key,
+      recommended: recommended,
+      isCategoryKey: isCategoryKey,
+    );
+
+/// "적정 함량" comparator. Three branches:
+///   1. Nutrient-keyed page (vitamin_d_iu) → distance from RDI ascending
+///      (closer to recommended = better fit).
+///   2. Category page with a known primary nutrient (liver→silymarin_mg) →
+///      higher amount per daily dose wins. Ties (or zero amounts) fall back
+///      to popularity so the order stays stable.
+///   3. Category page without a primary nutrient (sports / kids_multivitamin)
+///      → ingredient richness (more distinct nutrients) wins. Ties fall back
+///      to popularity.
+int _fitCompare(
+  Product a,
+  Product b,
+  String key,
+  double recommended,
+  bool isCategoryKey,
+) {
+  if (!isCategoryKey && recommended > 0) {
+    final ad = ((a.ingredients[key] ?? 0) * a.dailyDose - recommended).abs();
+    final bd = ((b.ingredients[key] ?? 0) * b.dailyDose - recommended).abs();
+    if (ad != bd) return ad.compareTo(bd);
+    return _popRank(a).compareTo(_popRank(b));
+  }
+
+  final primary = _kCategoryPrimaryNutrient[key];
+  if (primary != null) {
+    final av = (a.ingredients[primary] ?? 0) * a.dailyDose;
+    final bv = (b.ingredients[primary] ?? 0) * b.dailyDose;
+    if (av != bv) return bv.compareTo(av); // more = better
+    return _popRank(a).compareTo(_popRank(b));
+  }
+
+  // Broad-spectrum categories — richer ingredient profile wins.
+  final ac = a.ingredients.values.where((v) => v > 0).length;
+  final bc = b.ingredients.values.where((v) => v > 0).length;
+  if (ac != bc) return bc.compareTo(ac);
+  return _popRank(a).compareTo(_popRank(b));
+}
+
+/// Mirror of the private [_SortMode] enum so tests don't have to depend on
+/// the screen's internal enum. Order must stay aligned with [_SortMode].
+@visibleForTesting
+enum SortModeApi { fit, popularity, value }
 
 int _popRank(Product p) => p.popularityRank ?? 9999;
