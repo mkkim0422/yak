@@ -31,10 +31,19 @@ enum KAgeBracket {
   elderly75plus, // 75세+
 }
 
-/// `age` (만 나이) → 13구간 연령 코드.
+/// `age` (만 나이, 정수) → 13구간 연령 코드.
+///
+/// V1 한계: 만 0세는 0-5개월(`infant0to5`)로 단일화합니다. 한국 채팅 흐름이
+/// 출생연도만 받고 출생월은 받지 않으므로 6-11개월 구간을 정확히 분기할 수
+/// 없습니다. 이로 인해 6-11개월 영아의 권장량(예: 철 6 mg)을 0-5개월 값
+/// (철 0.3 mg)으로 비교하게 되며, 영양제 추천에서 일부 보수적 결과가
+/// 나올 수 있습니다. V1.1에서 출생월(또는 만 N개월) 입력을 추가하면
+/// `infant6to11` 행이 활성화됩니다.
+///
+/// 참고: 영아 영양제는 채팅 step 5에서 의학 면책을 띄워 소아과 상담을
+/// 우선하도록 안내하므로, 본 추천이 단독 의사결정 기준이 되지 않습니다.
 KAgeBracket bracketForAge(int age) {
-  if (age < 1) return KAgeBracket.infant0to5;
-  if (age < 1) return KAgeBracket.infant6to11; // 0살 미만은 위에서 처리
+  if (age <= 0) return KAgeBracket.infant0to5;
   if (age <= 2) return KAgeBracket.child1to2;
   if (age <= 5) return KAgeBracket.child3to5;
   if (age <= 8) return KAgeBracket.child6to8;

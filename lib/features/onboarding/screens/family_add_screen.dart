@@ -383,7 +383,9 @@ class _Draft {
   bool isBreastfeeding = false;
   SmokingStatus smokingStatus = SmokingStatus.never;
   DrinkingFrequency drinkingFrequency = DrinkingFrequency.never;
-  DietQuality dietQuality = DietQuality.average;
+  // Default 'good' — 채팅 step 11이 균형/부족 2지선만 받으므로 average는
+  // 도달 불가. legacy enum 호환을 위해 enum 자체는 남깁니다.
+  DietQuality dietQuality = DietQuality.good;
   SleepHours sleepHours = SleepHours.sevenToNine;
   StressLevel stressLevel = StressLevel.low;
   final List<String> allergies = [];

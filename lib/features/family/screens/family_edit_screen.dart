@@ -36,7 +36,9 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
   Sex _sex = Sex.male;
   SmokingStatus _smoking = SmokingStatus.never;
   DrinkingFrequency _drinking = DrinkingFrequency.never;
-  DietQuality _diet = DietQuality.average;
+  // Default 'good' — edit 화면 dropdown items가 good/poor 2개라
+  // 'average'는 hydrate 폴백에서 'good'으로 정규화됩니다.
+  DietQuality _diet = DietQuality.good;
   SleepHours _sleep = SleepHours.sevenToNine;
   StressLevel _stress = StressLevel.low;
   bool _isPregnant = false;
@@ -77,7 +79,12 @@ class _FamilyEditScreenState extends ConsumerState<FamilyEditScreen> {
     _sex = m.sex;
     _smoking = m.smokingStatus;
     _drinking = m.drinkingFrequency;
-    _diet = m.dietQuality;
+    // dropdown items가 good/poor 2개로 단순화됐으므로 legacy 'average'는
+    // 'good'으로 정규화 (DropdownButtonFormField initialValue가 items에
+    // 없을 때의 assertion을 막기 위함).
+    _diet = m.dietQuality == DietQuality.average
+        ? DietQuality.good
+        : m.dietQuality;
     _sleep = m.sleepHours;
     _stress = m.stressLevel;
     _isPregnant = m.isPregnant;

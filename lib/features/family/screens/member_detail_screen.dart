@@ -215,6 +215,7 @@ class _CurrentSupplementsSection extends ConsumerWidget {
       manuals: member.manualProducts,
     );
 
+    final manualCount = member.manualProducts.length;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -224,6 +225,21 @@ class _CurrentSupplementsSection extends ConsumerWidget {
             onTap: () => _openAddSheet(context, member.id),
           ),
         ),
+        // 직접 입력 제품은 사용자가 함량을 입력하지 않으므로 영양 분석에
+        // 반영되지 않음을 명시 (V1 한계 — V1.1에서 ingredients 입력 UI).
+        if (manualCount > 0)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              '※ 직접 입력 $manualCount개는 영양 분석에 반영되지 않아요. '
+              '추천/충돌 계산은 검증된 제품 기준입니다.',
+              style: AppTypography.caption.copyWith(
+                fontSize: 11.5,
+                color: AppColors.muted,
+                height: 1.45,
+              ),
+            ),
+          ),
         if (taking == 0)
           _AddSupplementCard(
             empty: true,
@@ -437,7 +453,12 @@ class _CompactSupplementCard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 6),
-                        _SourcePill(curated: occ.isCurated),
+                        _SourcePill(
+                          curated: occ.isCurated,
+                          hasIngredients:
+                              (occ.product?.ingredients.isNotEmpty ?? false) ||
+                                  (occ.manual?.ingredients.isNotEmpty ?? false),
+                        ),
                       ],
                     ),
                   ],
@@ -461,13 +482,32 @@ class _CompactSupplementCard extends StatelessWidget {
 
 class _SourcePill extends StatelessWidget {
   final bool curated;
-  const _SourcePill({required this.curated});
+  final bool hasIngredients;
+  const _SourcePill({
+    required this.curated,
+    required this.hasIngredients,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final label = curated ? '✅ 검증' : '📝 직접';
-    final bg = curated ? AppColors.okBg : AppColors.surfaceMuted;
-    final fg = curated ? AppColors.okInk : AppColors.ink2;
+    // 3분기: ✅ 검증(분석 가능), 📋 라벨 정보 없음(검증 제품인데 성분
+    // 비어있음 - DB 26개), 📝 직접(사용자 입력).
+    final String label;
+    final Color bg;
+    final Color fg;
+    if (!curated) {
+      label = '📝 직접';
+      bg = AppColors.surfaceMuted;
+      fg = AppColors.ink2;
+    } else if (hasIngredients) {
+      label = '✅ 검증';
+      bg = AppColors.okBg;
+      fg = AppColors.okInk;
+    } else {
+      label = '📋 라벨 정보 없음';
+      bg = AppColors.warnBg;
+      fg = AppColors.warnInk;
+    }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
       decoration: BoxDecoration(

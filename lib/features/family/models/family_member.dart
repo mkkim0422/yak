@@ -292,7 +292,11 @@ class FamilyMember {
     this.weightKg,
     this.smokingStatus = SmokingStatus.never,
     this.drinkingFrequency = DrinkingFrequency.never,
-    this.dietQuality = DietQuality.average,
+    // KDRIs 2025 정렬 — 채팅이 균형/부족 2지선만 받으므로 default를 'good'
+    // 으로 변경. 'average'는 legacy 멤버 호환을 위해 enum에 남겨두지만,
+    // edit 화면 dropdown items는 good/poor 2개라 average는 hydrate에서
+    // 정규화해 dropdown assertion을 피합니다 (family_edit_screen 참조).
+    this.dietQuality = DietQuality.good,
     this.sleepHours = SleepHours.sevenToNine,
     this.stressLevel = StressLevel.low,
     this.allergies = const [],
@@ -471,8 +475,10 @@ class FamilyMember {
           SmokingStatus.values, json['smoking_status'], SmokingStatus.never),
       drinkingFrequency: _enumByName(DrinkingFrequency.values,
           json['drinking_frequency'], DrinkingFrequency.never),
+      // Legacy 멤버는 'average'로 저장돼 있을 수 있음 — fromJson은 그대로
+       // 보존하되, 신규/누락 케이스의 폴백은 'good'으로 변경.
       dietQuality: _enumByName(
-          DietQuality.values, json['diet_quality'], DietQuality.average),
+          DietQuality.values, json['diet_quality'], DietQuality.good),
       sleepHours: _enumByName(
           SleepHours.values, json['sleep_hours'], SleepHours.sevenToNine),
       stressLevel:

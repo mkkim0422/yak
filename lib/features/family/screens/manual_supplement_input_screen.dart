@@ -302,11 +302,15 @@ class _ManualSupplementInputScreenState
     if (messenger != null) {
       messenger.showSnackBar(
         SnackBar(
+          // 추가 시 영양 분석 미반영 사실을 함께 안내해 사용자가 추천 결과
+          // 변동을 잘못 기대하지 않도록 함. 수정 시는 짧게 표기.
           content: Text(
-            isEditing ? '$name 정보가 수정됐어요' : '$name이(가) 추가됐어요',
+            isEditing
+                ? '$name 정보가 수정됐어요'
+                : '$name이(가) 추가됐어요\n※ 직접 입력 제품은 영양 분석에 반영되지 않아요',
           ),
           backgroundColor: AppColors.okInk,
-          duration: const Duration(seconds: 3),
+          duration: const Duration(seconds: 4),
           behavior: SnackBarBehavior.floating,
         ),
       );

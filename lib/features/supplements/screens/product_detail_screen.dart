@@ -142,6 +142,15 @@ class _IntakeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 라벨 정보 유무 — 검증된 250개 DB 중 26개는 ingredients가 비어 있어
+    // 영양 분석 비교 대상에서 제외됩니다. 사용자가 그 사실을 인지할 수
+    // 있도록 뱃지를 분기.
+    final hasLabel = product.ingredients.isNotEmpty;
+    final pillColor = hasLabel ? AppColors.okBg : AppColors.warnBg;
+    final pillInk = hasLabel ? AppColors.okInk : AppColors.warnInk;
+    final pillText =
+        hasLabel ? '✅ 라벨 검증 / 분석 가능' : '📋 라벨 정보 없음';
+
     return AlyakCard(
       padding: const EdgeInsets.all(14),
       child: Column(
@@ -163,18 +172,31 @@ class _IntakeSection extends StatelessWidget {
             padding:
                 const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: AppColors.okBg,
+              color: pillColor,
               borderRadius: BorderRadius.circular(999),
             ),
             child: Text(
-              '✅ 검증된 정보',
+              pillText,
               style: AppTypography.micro.copyWith(
                 fontSize: 11,
                 fontWeight: FontWeight.w800,
-                color: AppColors.okInk,
+                color: pillInk,
               ),
             ),
           ),
+          if (!hasLabel) ...[
+            const SizedBox(height: 8),
+            Text(
+              '본 제품은 공개 라벨에서 영양 성분을 확보하지 못했습니다. '
+              '추천·충돌 분석에는 제외되며, 정확한 함량은 제품 라벨을 직접 '
+              '확인해 주세요.',
+              style: AppTypography.caption.copyWith(
+                fontSize: 11.5,
+                color: AppColors.warnInk,
+                height: 1.5,
+              ),
+            ),
+          ],
         ],
       ),
     );
