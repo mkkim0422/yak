@@ -22,6 +22,7 @@ import '../features/family/screens/supplement_search_screen.dart';
 import '../features/home/screens/home_screen.dart';
 import '../features/onboarding/screens/family_add_screen.dart';
 import '../features/onboarding/screens/notification_setup_screen.dart';
+import '../features/onboarding/screens/onboarding_screen.dart';
 import '../features/onboarding/screens/privacy_consent_screen.dart';
 import '../features/onboarding/screens/welcome_screen.dart';
 import '../features/settings/screens/settings_screen.dart';
@@ -43,6 +44,13 @@ Future<_BootDecision> _decideBootRoute() async {
 
   final consent = await SecureStorage.read(SecureKeys.privacyConsent);
   if (consent != '1') return const _BootDecision('/privacy-consent');
+
+  // First-run education tour. Sits between privacy consent and the welcome
+  // chat — once shown, we never replay it on boot. Settings exposes a
+  // "다시 보기" entry that pushes /onboarding directly with `fromSettings`.
+  final onboardingDone =
+      await SecureStorage.read(SecureKeys.onboardingComplete);
+  if (onboardingDone != '1') return const _BootDecision('/onboarding');
 
   final familyIndex = await SecureStorage.read(kFamilyMembersListKey);
   final hasFamily = familyIndex != null &&
@@ -79,6 +87,14 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/disclaimer',
         builder: (context, state) => const _DisclaimerScreen(),
+      ),
+      GoRoute(
+        path: '/onboarding',
+        builder: (context, state) {
+          final fromSettings =
+              state.uri.queryParameters['from'] == 'settings';
+          return OnboardingScreen(fromSettings: fromSettings);
+        },
       ),
       GoRoute(
         path: '/onboarding/welcome',

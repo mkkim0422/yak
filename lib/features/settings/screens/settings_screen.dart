@@ -308,6 +308,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           _SectionGroup(
             children: [
               _SettingItem(
+                emoji: '👋',
+                title: '온보딩 다시 보기',
+                sub: '앱 소개 4슬라이드',
+                onTap: () => context.push('/onboarding?from=settings'),
+              ),
+              _SettingItem(
                 emoji: '🔒',
                 title: '개인정보 처리방침',
                 onTap: () => context.push('/privacy-policy'),
