@@ -157,6 +157,54 @@ class AppTheme {
           return AppColors.hairline;
         }),
       ),
+      // SnackBar — soft floating pill so it doesn't visually clash with the
+      // surface cards. Pretendard explicit so the inherited fontFamily survives
+      // Material's default theme-merge in MaterialApp.
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: AppColors.ink,
+        contentTextStyle: AppTypography.body1.copyWith(
+          color: Colors.white,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r12),
+        ),
+        elevation: 4,
+      ),
+      // Dialog — same radius as cards so AlertDialog fits the surface system.
+      dialogTheme: DialogThemeData(
+        backgroundColor: AppColors.surface,
+        elevation: 8,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r20),
+        ),
+        titleTextStyle: AppTypography.heading3.copyWith(fontSize: 17),
+        contentTextStyle: AppTypography.body2.copyWith(fontSize: 14),
+      ),
+      // BottomSheet — pulls handle + radius from the design system so every
+      // showModalBottomSheet site doesn't need to repeat the shape config.
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: AppColors.surface,
+        surfaceTintColor: AppColors.surface,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        modalElevation: 8,
+        showDragHandle: true,
+        dragHandleColor: AppColors.hairline,
+      ),
+      // PopupMenu — used by the category-detail sort toggle.
+      popupMenuTheme: PopupMenuThemeData(
+        color: AppColors.surface,
+        surfaceTintColor: AppColors.surface,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r12),
+        ),
+        textStyle: AppTypography.body1.copyWith(fontSize: 14),
+      ),
     );
   }
 }

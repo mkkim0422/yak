@@ -302,14 +302,28 @@ class _SortToggle extends StatelessWidget {
       onSelected: onChanged,
       itemBuilder: (_) => [
         for (final m in _SortMode.values)
-          PopupMenuItem(value: m, child: Text(m.label)),
+          PopupMenuItem(
+            value: m,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (m == value)
+                  const Padding(
+                    padding: EdgeInsets.only(right: 8),
+                    child: Icon(Icons.check, size: 16, color: AppColors.primary),
+                  )
+                else
+                  const SizedBox(width: 24),
+                Text(m.label),
+              ],
+            ),
+          ),
       ],
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: AppColors.primarySoft,
           borderRadius: BorderRadius.circular(999),
-          border: Border.all(color: AppColors.hairline, width: 1),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -319,10 +333,12 @@ class _SortToggle extends StatelessWidget {
               style: AppTypography.title.copyWith(
                 fontSize: 12.5,
                 fontWeight: FontWeight.w700,
+                color: AppColors.primaryInk,
               ),
             ),
             const SizedBox(width: 4),
-            const Icon(Icons.unfold_more, size: 16, color: AppColors.muted),
+            const Icon(Icons.unfold_more,
+                size: 16, color: AppColors.primaryInk),
           ],
         ),
       ),

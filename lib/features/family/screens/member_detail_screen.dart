@@ -484,9 +484,9 @@ class _SourcePill extends StatelessWidget {
   }
 }
 
-/// Time-of-day section header (🌅 아침 (3개) etc.). Stays simple even
-/// when the slot is empty so the user keeps a sense of the daily
-/// rhythm — empty slots render with a faint "(없음)" hint.
+/// Time-of-day section header (🌅 아침 · 3개). The screen now hides empty
+/// slots entirely (caller-side guard), so this header always renders with
+/// at least one product and never carries a "(없음)" fallback.
 class _SlotHeader extends StatelessWidget {
   final IntakeSlot slot;
   final int count;
@@ -494,18 +494,37 @@ class _SlotHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final label = count == 0
-        ? '${slot.emoji} ${slot.label} (없음)'
-        : '${slot.emoji} ${slot.label} ($count개)';
     return Padding(
-      padding: const EdgeInsets.only(top: 4, bottom: 2, left: 2),
-      child: Text(
-        label,
-        style: AppTypography.title.copyWith(
-          fontSize: 14,
-          fontWeight: FontWeight.w800,
-          color: count == 0 ? AppColors.faint : AppColors.ink,
-        ),
+      padding: const EdgeInsets.only(top: 6, bottom: 4, left: 2),
+      child: Row(
+        children: [
+          Text(slot.emoji, style: const TextStyle(fontSize: 16)),
+          const SizedBox(width: 6),
+          Text(
+            slot.label,
+            style: AppTypography.title.copyWith(
+              fontSize: 14.5,
+              fontWeight: FontWeight.w800,
+              letterSpacing: -0.2,
+            ),
+          ),
+          const SizedBox(width: 6),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceMuted,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Text(
+              '$count',
+              style: AppTypography.micro.copyWith(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                color: AppColors.muted,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
