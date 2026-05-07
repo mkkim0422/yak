@@ -206,6 +206,11 @@ class _CategoryDetailScreenState extends ConsumerState<CategoryDetailScreen> {
                 ),
               ),
           const SizedBox(height: 16),
+          // 카테고리 더보기 화면도 KDRIs 면책 카드 노출 — 추천 본 화면과
+          // 일관성. 사용자가 더보기로 들어와 "이 추천이 어떤 기준이지?"라며
+          // 의구심을 가지지 않도록 출처를 명시.
+          const KdrisRecommendationDisclaimer(),
+          const SizedBox(height: 8),
           const DisclaimerFooter(),
         ],
       ),

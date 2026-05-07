@@ -118,7 +118,50 @@ const Map<String, String> _kBaseLabels = {
   'inositol': '이노시톨',
   'nac': 'NAC',
   '_5htp': '5-HTP',
+  'htp_5': '5-HTP',
   'cla': 'CLA',
+  'gla': '감마리놀렌산',
+  'hca': 'HCA (가르시니아)',
+
+  // ── Carotenoids / antioxidants (250 DB ingredient grep 보강) ─
+  'beta_carotene': '베타카로틴',
+  'alpha_lipoic_acid': '알파리포산',
+  'anthocyanoside': '안토시아노사이드',
+  'flavonoids': '플라보노이드',
+  'flavonol_glycosides': '플라보놀 배당체',
+  'chlorophyll': '엽록소',
+
+  // ── Branched-chain amino acids + others ────────────────────
+  'leucine': '류신',
+  'isoleucine': '이소류신',
+  'valine': '발린',
+  'l_citrulline': 'L-시트룰린',
+
+  // ── Probiotic CFU 변형 ────────────────────────────────────
+  'guaranteed_cfu_billion': '보장균수',
+  'label_cfu_billion': '표시균수',
+
+  // ── Herbal extracts (한국 시장 흔한 라벨 표기) ────────────────
+  'ginkgo_extract': '은행잎 추출물',
+  'ginsenoside': '진세노사이드',
+  'ginsenoside_mg_per': '진세노사이드 (g당)',
+  'ginsenoside_rg1_rb1_rg3': '진세노사이드 Rg1+Rb1+Rg3',
+  'evening_primrose_oil': '달맞이꽃 종자유',
+  'maca_extract': '마카 추출물',
+  'cranberry_extract': '크랜베리 추출물',
+  'saw_palmetto_extract': '쏘팔메토 추출물',
+  'saw_palmetto_lauric_acid': '쏘팔메토 라우르산',
+  'boswellia_extract': '보스웰리아 추출물',
+  'hovenia_extract': '헛개나무 추출물',
+  'estrog100': '에스트로지100',
+
+  // ── Other ─────────────────────────────────────────────────
+  'collagen_peptide': '콜라겐 펩타이드',
+  'phospholipid': '인지질',
+  'octacosanol': '옥타코사놀',
+  'piperine': '피페린',
+  'heme_iron': '헴철',
+  'dietary_fiber': '식이섬유',
 };
 
 /// Strip a trailing `_iu`, `_mg`, `_mcg`, `_g`, `_billion_cfu` suffix and
