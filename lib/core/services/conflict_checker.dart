@@ -116,8 +116,12 @@ const Map<String, double> _kKDRIsAliasUls = {
   // Folate aliases.
   'folate_mcg': 1000,
   'folic_acid_mcg': 1000,
+  // niacin_mg legacy alias — products.json은 'vitamin_b3_mg'를 사용하지만
+  // 일부 외부 라벨은 niacin_mg로 적힐 수 있어 alias 보존.
+  'niacin_mg': 35,
   // Copper alias (KDRIs is in μg; some DB rows use mg).
-  'copper_mg': 10,
+  // 매트릭스는 copper_mg 키로 등록. mcg 변형은 사용처 없지만 안전 폴백.
+  'copper_mcg': 10000,
   // Caffeine — non-KDRIs but tracked for pregnancy / safety.
   'caffeine_mg': 400,
 };

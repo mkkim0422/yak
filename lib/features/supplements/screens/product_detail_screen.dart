@@ -247,6 +247,17 @@ class _IngredientsSection extends StatelessWidget {
     final m = member;
     final headerSuffix =
         m != null ? ' (${m.name}님 권장량 대비)' : '';
+
+    // 베타카로틴 → 비타민A 환산. β-carotene 12 μg = 비타민A 1 μg RAE
+    // (식이 기준, 보수적). 비타민A 행에 합산해 표시합니다.
+    final dailyAmounts = <String, double>{
+      for (final e in entries) e.key: e.value * product.dailyDose,
+    };
+    final betaCaroteneMg = dailyAmounts['beta_carotene_mg'] ?? 0;
+    final vitaminAFromBeta = betaCaroteneMg * 1000 / 12; // mg → μg / 12
+    final hasVitaminA = (dailyAmounts['vitamin_a_mcg'] ?? 0) > 0;
+    final hasBetaCarotene = betaCaroteneMg > 0;
+
     return AlyakCard(
       padding: const EdgeInsets.all(14),
       child: Column(
@@ -255,12 +266,29 @@ class _IngredientsSection extends StatelessWidget {
         children: [
           _SectionTitle('📊 영양 성분 (${entries.length}종)$headerSuffix'),
           const SizedBox(height: 8),
-          for (final e in entries) _IngredientRow(
-            nutrientKey: e.key,
-            // dailyDose 곱은 사용자에게 와닿는 "1일 섭취량" 기준.
-            dailyAmount: e.value * product.dailyDose,
-            member: m,
-          ),
+          for (final e in entries)
+            _IngredientRow(
+              nutrientKey: e.key,
+              dailyAmount: e.value * product.dailyDose,
+              // 비타민A 행에는 베타카로틴 환산 추가량을 더함.
+              extraAmount: e.key == 'vitamin_a_mcg' && hasBetaCarotene
+                  ? vitaminAFromBeta
+                  : 0,
+              extraNote: e.key == 'vitamin_a_mcg' && hasBetaCarotene
+                  ? '+ β-카로틴 환산 ${vitaminAFromBeta.toStringAsFixed(0)} mcg'
+                  : null,
+              member: m,
+            ),
+          // 베타카로틴만 있고 비타민A는 없는 경우 — 환산값을 별도 가상행으로
+          // 노출해 사용자가 "이 제품의 비타민A 활성도"를 인지하도록.
+          if (!hasVitaminA && hasBetaCarotene)
+            _IngredientRow(
+              nutrientKey: 'vitamin_a_mcg',
+              dailyAmount: vitaminAFromBeta,
+              extraNote: '※ β-카로틴 $betaCaroteneMg mg 환산',
+              member: m,
+              isDerived: true,
+            ),
           const SizedBox(height: 6),
           Text(
             m == null
@@ -280,31 +308,47 @@ class _IngredientsSection extends StatelessWidget {
   }
 }
 
-/// One row of the ingredients card. Renders "비타민D 400IU" alone or, when
-/// a member context is present, "비타민D 400IU / 800IU 권장 (50%)".
+/// 영양 성분 한 줄. 멤버 컨텍스트가 있으면 KDRIs 권장량 대비 % 표시.
+///
+/// UX 가드:
+///   * 200% 초과 → "충분 (200%+)" 회색으로 캡 — "999%" 같은 충격 노출 차단.
+///   * UL 초과 → "주의 (UL 초과)" 빨강으로 강조.
+///   * KDRIs에 없는 영양소(콜라겐·진세노사이드 등) → 함량만 + "권장량 정보
+///     없음" 회색.
 class _IngredientRow extends StatelessWidget {
   final String nutrientKey;
   final double dailyAmount;
+  final double extraAmount; // 베타카로틴 환산 등 추가 합산.
+  final String? extraNote;
   final FamilyMember? member;
+  final bool isDerived; // 베타카로틴→비타민A 같은 파생 행
+
   const _IngredientRow({
     required this.nutrientKey,
     required this.dailyAmount,
+    this.extraAmount = 0,
+    this.extraNote,
     required this.member,
+    this.isDerived = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final base = '· ${formatIngredientLine(nutrientKey, dailyAmount)}';
     final m = member;
+    final totalAmount = dailyAmount + extraAmount;
+
+    // 파생 행은 nutrientKey의 함량 라벨이 아닌 "비타민A 환산" 형태로 표시.
+    final base = isDerived
+        ? '· (환산) ${formatIngredientLine(nutrientKey, totalAmount)}'
+        : '· ${formatIngredientLine(nutrientKey, totalAmount)}';
+
     if (m == null) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 3),
-        child: Text(
+        child: _rowText(
           base,
-          style: AppTypography.body2.copyWith(
-            fontSize: 13,
-            color: AppColors.ink2,
-          ),
+          extraNote: extraNote,
+          extraNoteColor: AppColors.muted,
         ),
       );
     }
@@ -316,29 +360,58 @@ class _IngredientRow extends StatelessWidget {
       isPregnant: m.isPregnant,
       isLactating: m.isBreastfeeding,
     );
+    final upperLimit = upperLimitKDRIs2025(nutrientKey);
+
+    // 권장량 정보 없음 — 함량만 + 안내.
     if (recommended == null || recommended <= 0) {
-      // KDRIs 표에 없는 영양소(보충제 키 등)는 권장량 비교 X.
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 3),
-        child: Text(
+        child: _rowText(
           base,
-          style: AppTypography.body2.copyWith(
-            fontSize: 13,
-            color: AppColors.ink2,
-          ),
+          tail: ' · 권장량 정보 없음',
+          tailColor: AppColors.faint,
+          extraNote: extraNote,
+          extraNoteColor: AppColors.muted,
         ),
       );
     }
 
-    final pct = (dailyAmount / recommended * 100).round().clamp(0, 999);
-    final pctColor = pct >= 100
-        ? AppColors.okInk
-        : pct >= 50
-            ? AppColors.warnInk
-            : AppColors.muted;
+    // UL 초과 우선 — 빨강 "주의".
+    if (upperLimit != null && totalAmount > upperLimit) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3),
+        child: _rowText(
+          base,
+          tail: ' · 주의 (UL 초과)',
+          tailColor: AppColors.danger,
+          tailBold: true,
+          extraNote: extraNote,
+          extraNoteColor: AppColors.muted,
+        ),
+      );
+    }
+
+    final pctRaw = totalAmount / recommended * 100;
     final unit = _splitUnit(nutrientKey);
     final recStr = _formatRec(recommended, unit);
 
+    // 200% 초과 캡 — "충분 (200%+)" 회색 (수용성 비타민에서 999% 노출 방지).
+    if (pctRaw > 200) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3),
+        child: _rowText(
+          base,
+          tail: ' / $recStr 권장 · 충분 (200%+)',
+          tailColor: AppColors.muted,
+          tailBold: false,
+          extraNote: extraNote,
+          extraNoteColor: AppColors.muted,
+        ),
+      );
+    }
+
+    final pct = pctRaw.round();
+    final pctColor = _percentColor(pct);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 3),
       child: Text.rich(
@@ -351,7 +424,7 @@ class _IngredientRow extends StatelessWidget {
             TextSpan(text: base),
             TextSpan(
               text: ' / $recStr 권장',
-              style: TextStyle(color: AppColors.muted),
+              style: const TextStyle(color: AppColors.muted),
             ),
             TextSpan(
               text: ' ($pct%)',
@@ -360,11 +433,71 @@ class _IngredientRow extends StatelessWidget {
                 fontWeight: FontWeight.w700,
               ),
             ),
+            if (extraNote != null)
+              TextSpan(
+                text: '\n  $extraNote',
+                style: AppTypography.caption.copyWith(
+                  fontSize: 11,
+                  color: AppColors.muted,
+                ),
+              ),
           ],
         ),
       ),
     );
   }
+
+  Widget _rowText(
+    String base, {
+    String? tail,
+    Color? tailColor,
+    bool tailBold = false,
+    String? extraNote,
+    Color? extraNoteColor,
+  }) {
+    return Text.rich(
+      TextSpan(
+        style: AppTypography.body2.copyWith(
+          fontSize: 13,
+          color: AppColors.ink2,
+        ),
+        children: [
+          TextSpan(text: base),
+          if (tail != null)
+            TextSpan(
+              text: tail,
+              style: TextStyle(
+                color: tailColor ?? AppColors.muted,
+                fontWeight:
+                    tailBold ? FontWeight.w700 : FontWeight.w500,
+              ),
+            ),
+          if (extraNote != null)
+            TextSpan(
+              text: '\n  $extraNote',
+              style: AppTypography.caption.copyWith(
+                fontSize: 11,
+                color: extraNoteColor ?? AppColors.muted,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// % → 색상 5단계.
+///   * 50% 미만 = 주황 (보충 필요)
+///   * 50-99% = 녹색 (적정 진입)
+///   * 100% = 청록 (정상)
+///   * 101-200% = 청록 (충분)
+///   * 200%+ = 회색 (캡 표시, 별도 처리됨)
+///
+/// UL 초과는 본 함수 호출 전 별도 분기에서 빨강으로 처리.
+Color _percentColor(int pct) {
+  if (pct >= 100) return AppColors.primary;
+  if (pct >= 50) return AppColors.okInk;
+  return AppColors.warnInk;
 }
 
 String _splitUnit(String key) {
