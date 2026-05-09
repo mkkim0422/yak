@@ -329,7 +329,9 @@ class _ManualSupplementInputScreenState
     if (_editing != null) {
       // copyWith의 `imagePath ?? this.imagePath` 패턴이 null 전달을 흡수하므로
       // 사진 제거 케이스를 위해 명시적으로 새 인스턴스 구성. ingredients /
-      // priceKrw / startedAt은 기존 값을 그대로 보존.
+      // priceKrw / startedAt 등은 기존 값을 그대로 보존. V1.x 예정 필드
+      // (userPhotoPath / endedAt / review)도 편집 시 손실되지 않도록 그대로
+      // 전달 — V1엔 UI 노출이 없어 사용자가 직접 변경할 수 없음.
       final updatedEntry = ManualProductEntry(
         id: _editing!.id,
         name: name,
@@ -339,8 +341,11 @@ class _ManualSupplementInputScreenState
         packageSize: packageSize,
         priceKrw: _editing!.priceKrw,
         imagePath: _imagePath,
+        userPhotoPath: _editing!.userPhotoPath,
         ingredients: _editing!.ingredients,
         startedAt: _editing!.startedAt,
+        endedAt: _editing!.endedAt,
+        review: _editing!.review,
         intakeTiming: timing,
         dosePerIntake: dose,
         intakesPerDay: intakes,

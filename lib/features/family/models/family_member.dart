@@ -84,9 +84,36 @@ class ManualProductEntry {
   final int dailyDose;
   final int packageSize;
   final int? priceKrw;
+
+  /// V1 active. 직접 입력 항목의 약통 사진 — 본인 식별용 private 사진.
+  /// `<appDocs>/manual_products/<id>_<ts>.jpg`에 저장되며 외부 전송 X.
+  /// V1.x에서도 본인 카드/시간대 그룹 썸네일에서만 사용.
   final String? imagePath;
+
+  /// V1.x 예정 (미활성). 사용자가 "다른 사용자에게도 도움될 수 있다"고
+  /// 명시 동의한 사진의 경로. [imagePath]와 분리해 동의 게이팅을 명확히
+  /// 하기 위함 — UI에서 "공유할게요" 토글 후 별도 저장. 클라우드 동기화
+  /// 시 본 필드만 업로드 후보가 됨.
+  ///
+  /// 참고: 큐레이션 [Product] (250 DB 항목)에 사용자 사진을 부착하려면
+  /// [UserProductPhoto] 컬렉션을 사용. ManualProductEntry의 본 필드는
+  /// 직접 입력 항목 자체에 한정.
+  final String? userPhotoPath;
+
   final Map<String, double> ingredients;
   final DateTime startedAt;
+
+  /// V1.x 예정 (미활성, 모델만 보유). 복용 종료일 — 사용자가 "더 이상
+  /// 안 먹어요"를 누르면 기록. null = 진행 중. V1.x에서 누적 기록·재구매
+  /// 분석에 활용.
+  final DateTime? endedAt;
+
+  /// V1.x 예정 (미활성, 모델만 보유). 사용자 후기 메모 — 200자 제한,
+  /// sanitize 후 저장. null/빈 문자열 = 후기 없음.
+  ///
+  /// 참고: 큐레이션 [Product]에 대한 후기는 [UserProductReview] 컬렉션을
+  /// 사용. 본 필드는 직접 입력 항목 자체에 한정.
+  final String? review;
 
   /// When the user takes the product. Defaults to anyTimeAfterMeal for
   /// legacy entries that predate this field.
@@ -103,6 +130,9 @@ class ManualProductEntry {
   /// 메모를 그대로 보존.
   final String? intakeNote;
 
+  /// 후기 메모 최대 길이 — UI 측에서도 동일 상수를 참조하여 강제.
+  static const int kMaxReviewLength = 200;
+
   const ManualProductEntry({
     required this.id,
     required this.name,
@@ -112,8 +142,11 @@ class ManualProductEntry {
     required this.packageSize,
     this.priceKrw,
     this.imagePath,
+    this.userPhotoPath,
     required this.ingredients,
     required this.startedAt,
+    this.endedAt,
+    this.review,
     this.intakeTiming = IntakeTiming.anyTimeAfterMeal,
     this.dosePerIntake = 1,
     this.intakesPerDay = 1,
@@ -129,8 +162,11 @@ class ManualProductEntry {
         'package_size': packageSize,
         'price_krw': priceKrw,
         'image_path': imagePath,
+        'user_photo_path': userPhotoPath,
         'ingredients': ingredients,
         'started_at': startedAt.toIso8601String(),
+        'ended_at': endedAt?.toIso8601String(),
+        'review': review,
         'intake_timing': intakeTiming.name,
         'dose_per_intake': dosePerIntake,
         'intakes_per_day': intakesPerDay,
@@ -157,6 +193,13 @@ class ManualProductEntry {
           )
         : IntakeTiming.anyTimeAfterMeal;
 
+    // V1.x에 활성화될 옵셔널 필드 — legacy entry는 누락 → null로 안전하게
+    // 폴백. ended_at은 ISO8601 문자열 또는 null.
+    final endedAtRaw = json['ended_at'];
+    final endedAt = endedAtRaw is String && endedAtRaw.isNotEmpty
+        ? DateTime.tryParse(endedAtRaw)
+        : null;
+
     return ManualProductEntry(
       id: json['id'] as String,
       name: (json['name'] as String?) ?? '',
@@ -166,10 +209,13 @@ class ManualProductEntry {
       packageSize: (json['package_size'] as num?)?.toInt() ?? 0,
       priceKrw: (json['price_krw'] as num?)?.toInt(),
       imagePath: json['image_path'] as String?,
+      userPhotoPath: json['user_photo_path'] as String?,
       ingredients: ing.map(
         (key, value) => MapEntry(key, (value as num?)?.toDouble() ?? 0),
       ),
       startedAt: DateTime.parse(json['started_at'] as String),
+      endedAt: endedAt,
+      review: json['review'] as String?,
       intakeTiming: timing,
       dosePerIntake: resolvedDose < 1 ? 1 : resolvedDose,
       intakesPerDay: resolvedN < 1 ? 1 : resolvedN,
@@ -185,7 +231,10 @@ class ManualProductEntry {
     int? packageSize,
     int? priceKrw,
     String? imagePath,
+    String? userPhotoPath,
     Map<String, double>? ingredients,
+    DateTime? endedAt,
+    String? review,
     IntakeTiming? intakeTiming,
     int? dosePerIntake,
     int? intakesPerDay,
@@ -200,8 +249,11 @@ class ManualProductEntry {
         packageSize: packageSize ?? this.packageSize,
         priceKrw: priceKrw ?? this.priceKrw,
         imagePath: imagePath ?? this.imagePath,
+        userPhotoPath: userPhotoPath ?? this.userPhotoPath,
         ingredients: ingredients ?? this.ingredients,
         startedAt: startedAt,
+        endedAt: endedAt ?? this.endedAt,
+        review: review ?? this.review,
         intakeTiming: intakeTiming ?? this.intakeTiming,
         dosePerIntake: dosePerIntake ?? this.dosePerIntake,
         intakesPerDay: intakesPerDay ?? this.intakesPerDay,
