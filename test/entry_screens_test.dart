@@ -215,13 +215,34 @@ void main() {
     });
   });
 
-  group('처리방침 v1.2', () {
-    test('버전 1.2, 30일 자동 삭제 조항 포함, 검진 미언급, 외부 SDK 명칭 미포함', () {
-      expect(kPrivacyPolicyVersion, '1.2');
+  group('처리방침 v1.3', () {
+    test('버전 1.3, 30일 자동 삭제, 검진 미언급, Anthropic 미포함', () {
+      expect(kPrivacyPolicyVersion, '1.3');
       expect(kPrivacyPolicyMarkdown, contains('30일 이상'));
       expect(kPrivacyPolicyMarkdown, contains('자동으로 삭제'));
       expect(kPrivacyPolicyMarkdown, isNot(contains('건강검진')));
       expect(kPrivacyPolicyMarkdown.toLowerCase(), isNot(contains('anthropic')));
+    });
+
+    test('약통 사진 항목이 선택 수집에 명시', () {
+      expect(kPrivacyPolicyMarkdown, contains('약통 사진'));
+      expect(kPrivacyPolicyMarkdown, contains('기기 내 저장'));
+    });
+
+    test('Supabase 클라우드 동기화는 V1.x 예정으로 명시', () {
+      expect(kPrivacyPolicyMarkdown, contains('Supabase'));
+      expect(kPrivacyPolicyMarkdown, contains('V1.x'));
+      expect(kPrivacyPolicyMarkdown, contains('클라우드 동기화'));
+    });
+
+    test('후기 메모 공유는 V1.x 예정 + 별도 동의 명시', () {
+      expect(kPrivacyPolicyMarkdown, contains('후기 메모'));
+      expect(kPrivacyPolicyMarkdown, contains('별도 동의'));
+    });
+
+    test('이미지 파일 저장 경로가 명시 — appDocs', () {
+      expect(kPrivacyPolicyMarkdown, contains('manual_products'));
+      expect(kPrivacyPolicyMarkdown, contains('profiles'));
     });
   });
 }
