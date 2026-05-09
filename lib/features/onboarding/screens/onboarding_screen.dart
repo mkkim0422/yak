@@ -31,7 +31,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     _Slide(
       emoji: '👨‍👩‍👧‍👦',
       accentColor: AppColors.primarySoft,
-      title: '우리 가족 영양제,\n한 번에 관리해요',
+      title: '우리 가족 영양제,\n한 번에 챙겨요',
       body: '엄마, 아빠, 아이, 조부모까지\n각자에게 맞는 영양제를 찾아드려요.',
     ),
     _Slide(

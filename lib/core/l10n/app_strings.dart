@@ -93,7 +93,7 @@ class AppStrings {
   // Empty state
   static const String emptyFamilyTitle = '아직 등록된 가족이 없어요';
   static const String emptyFamilyDescription =
-      '가족을 추가하면 영양제 관리를 시작할 수 있어요';
+      '가족을 추가하면 영양제 챙기기를 시작할 수 있어요';
   static const String addFamilyButton = '+ 가족 추가하기';
 
   // Card status
