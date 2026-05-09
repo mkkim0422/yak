@@ -12,30 +12,17 @@ import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_card.dart';
 import '../../../core/widgets/disclaimer_footer.dart';
+import '../../../core/widgets/intake_timing_badge.dart';
 import '../../../core/widgets/product_image.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../home/providers/member_analysis_provider.dart';
 import '../providers/family_provider.dart';
 
 /// "더보기" page for one category — both nutrient deficits (vitamin_d_iu) and
-/// lifestyle categories (liver, sleep). Shows the 3-tier recommendation row
-/// up top (판매량 / 가성비 / 종합추천), then the entire matching product
-/// list with a sort toggle in the same order. Tapping any card opens the
-/// product detail page.
-///
-/// Enum order matters — [_SortMode.values] is what populates the toggle
-/// menu, so it must match the user-facing 판매량 → 가성비 → 종합추천 order.
-enum _SortMode { popularity, value, comprehensive }
-
-extension on _SortMode {
-  String get label => switch (this) {
-        _SortMode.popularity => '판매량',
-        _SortMode.value => '가성비',
-        _SortMode.comprehensive => '종합추천',
-      };
-}
-
-class CategoryDetailScreen extends ConsumerStatefulWidget {
+/// lifestyle categories (liver, sleep). Shows the 1·2·3위 추천 row 위쪽,
+/// 그리고 카테고리 hard filter 통과 제품 전체 리스트를 판매량 순으로
+/// 단일 정렬해 표시합니다. Tapping any card opens the product detail page.
+class CategoryDetailScreen extends ConsumerWidget {
   final String memberId;
 
   /// Either a nutrient key (`vitamin_d_iu`) or a category name (`liver`).
@@ -48,16 +35,8 @@ class CategoryDetailScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<CategoryDetailScreen> createState() =>
-      _CategoryDetailScreenState();
-}
-
-class _CategoryDetailScreenState extends ConsumerState<CategoryDetailScreen> {
-  _SortMode _sort = _SortMode.popularity;
-
-  @override
-  Widget build(BuildContext context) {
-    final member = ref.watch(familyControllerProvider).getMember(widget.memberId);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final member = ref.watch(familyControllerProvider).getMember(memberId);
     if (member == null) {
       return Scaffold(
         backgroundColor: AppColors.background,
@@ -70,11 +49,11 @@ class _CategoryDetailScreenState extends ConsumerState<CategoryDetailScreen> {
       );
     }
     final repo = ref.watch(productRepositoryProvider);
-    final analysis = ref.watch(memberNutrientAnalysisProvider(widget.memberId));
-    final isCategoryKey = !_looksLikeNutrientKey(widget.categoryKey);
+    final analysis = ref.watch(memberNutrientAnalysisProvider(memberId));
+    final isCategoryKey = !_looksLikeNutrientKey(categoryKey);
 
     final displayName = _displayNameFor(
-      key: widget.categoryKey,
+      key: categoryKey,
       isCategory: isCategoryKey,
       analysis: analysis,
     );
@@ -83,13 +62,13 @@ class _CategoryDetailScreenState extends ConsumerState<CategoryDetailScreen> {
         ? 0.0
         : analysis.deficits
             .firstWhere(
-              (d) => d.nutrient == widget.categoryKey,
+              (d) => d.nutrient == categoryKey,
               orElse: () => analysis.priority
                   .map((p) => p.deficit)
                   .firstWhere(
-                    (d) => d.nutrient == widget.categoryKey,
+                    (d) => d.nutrient == categoryKey,
                     orElse: () => NutrientDeficit(
-                      nutrient: widget.categoryKey,
+                      nutrient: categoryKey,
                       displayName: displayName,
                       current: 0,
                       recommended: 0,
@@ -99,44 +78,33 @@ class _CategoryDetailScreenState extends ConsumerState<CategoryDetailScreen> {
             )
             .recommended;
 
-    // 종합추천 tier needs the user's full deficit set so it can score
-    // candidates by how much of that set each product covers.
-    final deficitKeys = analysis.deficits.map((d) => d.nutrient).toList();
-
     final recommender = NutrientRecommender(repo);
     final recos = recommender.recommend(
       member: member,
-      deficitNutrients: deficitKeys,
       nutrients: [
         (
-          key: widget.categoryKey,
+          key: categoryKey,
           displayName: displayName,
           recommended: recommended,
-          unit: _unitFor(widget.categoryKey),
+          unit: _unitFor(categoryKey),
         ),
       ],
     );
     final picks = recos.isEmpty ? const <RankedProduct>[] : recos.first.picks;
 
-    // Full list of matching products, filtered by persona target match
-    // (drops "센트룸 맨" for a female persona, etc.) and sorted.
+    // 카테고리 hard filter 통과 제품 전체 — 판매량 순 정렬. 추천 카드의
+    // 1·2·3위는 이 리스트의 상위 3개와 동일합니다(분리 X).
     final all = repo.all();
     final matching = all
         .where((p) {
-          final relevant = isCategoryKey
-              ? p.category == widget.categoryKey
-              : (p.ingredients[widget.categoryKey] ?? 0) > 0;
-          if (!relevant) return false;
+          if (!_categoryHardMatchScreen(p, categoryKey, isCategoryKey)) {
+            return false;
+          }
           return targetMatchScore(product: p, member: member) >= 0;
         })
         .toList(growable: true);
 
-    matching.sort((a, b) => _compare(
-          a,
-          b,
-          _sort,
-          deficitKeys,
-        ));
+    matching.sort((a, b) => _popRank(a).compareTo(_popRank(b)));
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -165,24 +133,42 @@ class _CategoryDetailScreenState extends ConsumerState<CategoryDetailScreen> {
                 fontWeight: FontWeight.w800,
               ),
             ),
+            const SizedBox(height: 2),
+            Text(
+              '판매량 순',
+              style: AppTypography.caption.copyWith(
+                fontSize: 11.5,
+                color: AppColors.muted,
+              ),
+            ),
             const SizedBox(height: 10),
-            _RecPickGrid(picks: picks, memberId: widget.memberId),
+            _RecPickGrid(picks: picks, memberId: memberId),
             const SizedBox(height: 24),
           ],
           Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Expanded(
-                child: Text(
-                  '전체 리스트 (${matching.length}개)',
-                  style: AppTypography.title.copyWith(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w800,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '전체 리스트 (${matching.length}개)',
+                      style: AppTypography.title.copyWith(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      '판매량 순',
+                      style: AppTypography.caption.copyWith(
+                        fontSize: 11.5,
+                        color: AppColors.muted,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              _SortToggle(
-                value: _sort,
-                onChanged: (v) => setState(() => _sort = v),
               ),
             ],
           ),
@@ -195,22 +181,18 @@ class _CategoryDetailScreenState extends ConsumerState<CategoryDetailScreen> {
               padding: EdgeInsets.symmetric(horizontal: 0, vertical: 24),
             )
           else
-            for (final p in matching)
+            for (var i = 0; i < matching.length; i++)
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: _ListRow(
-                  product: p,
+                  product: matching[i],
+                  rank: i < 3 ? i + 1 : null,
                   onTap: () => context.push(
-                    '/product/${p.id}?member=${widget.memberId}',
+                    '/product/${matching[i].id}?member=$memberId',
                   ),
                 ),
               ),
           const SizedBox(height: 16),
-          // 카테고리 더보기 화면도 KDRIs 면책 카드 노출 — 추천 본 화면과
-          // 일관성. 사용자가 더보기로 들어와 "이 추천이 어떤 기준이지?"라며
-          // 의구심을 가지지 않도록 출처를 명시.
-          const KdrisRecommendationDisclaimer(),
-          const SizedBox(height: 8),
           const DisclaimerFooter(),
         ],
       ),
@@ -232,7 +214,7 @@ class _RecPickGrid extends StatelessWidget {
           if (i > 0) const SizedBox(width: 8),
           Expanded(
             child: _PickTile(
-              tier: picks[i].tier,
+              rank: picks[i].rank,
               product: picks[i].product,
               onTap: () => context.push(
                 '/product/${picks[i].product.id}?member=$memberId',
@@ -251,11 +233,11 @@ class _RecPickGrid extends StatelessWidget {
 }
 
 class _PickTile extends StatelessWidget {
-  final String tier;
+  final int rank;
   final Product product;
   final VoidCallback onTap;
   const _PickTile({
-    required this.tier,
+    required this.rank,
     required this.product,
     required this.onTap,
   });
@@ -287,7 +269,7 @@ class _PickTile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: Text(
-                  tier,
+                  '$rank위',
                   style: AppTypography.micro.copyWith(
                     fontSize: 10,
                     fontWeight: FontWeight.w800,
@@ -312,67 +294,15 @@ class _PickTile extends StatelessWidget {
   }
 }
 
-class _SortToggle extends StatelessWidget {
-  final _SortMode value;
-  final ValueChanged<_SortMode> onChanged;
-  const _SortToggle({required this.value, required this.onChanged});
-
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton<_SortMode>(
-      tooltip: '정렬',
-      initialValue: value,
-      onSelected: onChanged,
-      itemBuilder: (_) => [
-        for (final m in _SortMode.values)
-          PopupMenuItem(
-            value: m,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (m == value)
-                  const Padding(
-                    padding: EdgeInsets.only(right: 8),
-                    child: Icon(Icons.check, size: 16, color: AppColors.primary),
-                  )
-                else
-                  const SizedBox(width: 24),
-                Text(m.label),
-              ],
-            ),
-          ),
-      ],
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: AppColors.primarySoft,
-          borderRadius: BorderRadius.circular(999),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              value.label,
-              style: AppTypography.title.copyWith(
-                fontSize: 12.5,
-                fontWeight: FontWeight.w700,
-                color: AppColors.primaryInk,
-              ),
-            ),
-            const SizedBox(width: 4),
-            const Icon(Icons.unfold_more,
-                size: 16, color: AppColors.primaryInk),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 class _ListRow extends StatelessWidget {
   final Product product;
+  final int? rank;
   final VoidCallback onTap;
-  const _ListRow({required this.product, required this.onTap});
+  const _ListRow({
+    required this.product,
+    required this.onTap,
+    this.rank,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -390,19 +320,52 @@ class _ListRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  product.name,
-                  style: AppTypography.title.copyWith(fontSize: 14),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                Row(
+                  children: [
+                    if (rank != null) ...[
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: AppColors.primarySoft,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Text(
+                          '$rank위',
+                          style: AppTypography.micro.copyWith(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.primaryInk,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 6),
+                    ],
+                    Expanded(
+                      child: Text(
+                        product.name,
+                        style: AppTypography.title.copyWith(fontSize: 14),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  product.scheduleLabel,
-                  style: AppTypography.caption.copyWith(
-                    fontSize: 12,
-                    color: AppColors.ink2,
-                  ),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(
+                      product.scheduleLabel,
+                      style: AppTypography.caption.copyWith(
+                        fontSize: 12,
+                        color: AppColors.ink2,
+                      ),
+                    ),
+                    IntakeTimingBadge(timing: product.intakeTiming),
+                  ],
                 ),
                 if (ingredients.isNotEmpty) ...[
                   const SizedBox(height: 2),
@@ -495,75 +458,45 @@ String _categoryDisplayFallback(String category) {
   };
 }
 
-/// Mirror of the screen's private [_SortMode] enum so tests can drive the
-/// comparator without the widget. Order must stay aligned with [_SortMode]:
-/// 판매량 → 가성비 → 종합추천.
-@visibleForTesting
-enum SortModeApi { popularity, value, comprehensive }
+/// 화면 측에서 전체 리스트를 거를 때 쓰는 hard filter — 추천 엔진과 동일
+/// 규칙을 재현해 카드 1·2·3위와 전체 리스트 1·2·3위가 일치하도록 보장.
+/// 엔진의 private `_categoryHardMatch`을 화면에서도 호출할 수 있게 그대로
+/// 옮겨둡니다.
+bool _categoryHardMatchScreen(Product p, String key, bool isCategoryKey) {
+  if (isCategoryKey) return p.category == key;
 
-@visibleForTesting
-int compareForSortMode({
-  required Product a,
-  required Product b,
-  required SortModeApi mode,
-  required List<String> deficitNutrients,
-}) {
-  switch (mode) {
-    case SortModeApi.popularity:
-      return _popRank(a).compareTo(_popRank(b));
-    case SortModeApi.value:
-      // No retail prices → "가성비" approximated by days of stock at the
-      // recommended daily dose. Bigger bottle / smaller dose = better value.
-      // Ties fall back to popularity ascending so the order stays stable.
-      final ad = a.dailyDose <= 0 ? 0 : a.packageSize ~/ a.dailyDose;
-      final bd = b.dailyDose <= 0 ? 0 : b.packageSize ~/ b.dailyDose;
-      if (ad != bd) return bd.compareTo(ad);
-      return _popRank(a).compareTo(_popRank(b));
-    case SortModeApi.comprehensive:
-      // Coverage of the user's deficit list, descending. Multivit /
-      // prenatal / mineral categories get a small bonus, mirroring the
-      // recommender's 종합추천 tier scoring. Ties fall back to popularity.
-      final ascore = _comprehensiveScoreForSort(a, deficitNutrients);
-      final bscore = _comprehensiveScoreForSort(b, deficitNutrients);
-      if (ascore != bscore) return bscore.compareTo(ascore);
-      return _popRank(a).compareTo(_popRank(b));
+  final amount = p.ingredients[key] ?? 0;
+  if (amount <= 0) return false;
+
+  final keyBase = _baseFromNutrientKey(key);
+  if (keyBase != null) {
+    if (p.category == keyBase) return true;
+    if (p.category.startsWith(keyBase)) return true;
+    if (keyBase == 'omega3' &&
+        (p.category == 'omega3' || p.category == 'krill_oil')) {
+      return true;
+    }
   }
+
+  final ingredientCount = p.ingredients.values.where((v) => v > 0).length;
+  if (ingredientCount <= 2) return true;
+
+  return false;
 }
 
-int _compare(
-  Product a,
-  Product b,
-  _SortMode mode,
-  List<String> deficitNutrients,
-) =>
-    compareForSortMode(
-      a: a,
-      b: b,
-      mode: SortModeApi.values[mode.index],
-      deficitNutrients: deficitNutrients,
-    );
-
-/// Coverage score (matched / total) plus a small bonus for products that
-/// self-identify as multi-nutrient (multivitamin / prenatal / mineral /
-/// kids_multivitamin). When the deficit list is empty the score collapses
-/// to the bonus alone so multivitamins still float to the top of the sort.
-double _comprehensiveScoreForSort(Product p, List<String> deficits) {
-  final score = deficits.isEmpty
-      ? 0.0
-      : () {
-          var matched = 0;
-          for (final key in deficits) {
-            if ((p.ingredients[key] ?? 0) > 0) matched++;
-          }
-          return matched / deficits.length;
-        }();
-  final bonus = (p.category == 'multivitamin' ||
-          p.category == 'prenatal' ||
-          p.category == 'kids_multivitamin' ||
-          p.category == 'mineral')
-      ? 0.15
-      : 0.0;
-  return score + bonus;
+String? _baseFromNutrientKey(String key) {
+  for (final suffix in const [
+    '_billion_cfu',
+    '_mcg',
+    '_mg',
+    '_iu',
+    '_g',
+  ]) {
+    if (key.endsWith(suffix)) {
+      return key.substring(0, key.length - suffix.length);
+    }
+  }
+  return null;
 }
 
 int _popRank(Product p) => p.popularityRank ?? 9999;

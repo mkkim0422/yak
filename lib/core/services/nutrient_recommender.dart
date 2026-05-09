@@ -3,34 +3,9 @@ import '../data/product_repository.dart';
 import '../../features/family/models/family_member.dart';
 import 'product_targeting.dart';
 
-/// Tier label constants — kept stable across the codebase. Card UIs and
-/// sort toggles render these verbatim.
-const String kTierBestseller = '판매량';
-const String kTierValue = '가성비';
-const String kTierComprehensive = '종합추천';
-
-/// Minimum fraction of the user's deficit list a product must cover before
-/// it can claim the 종합추천 tier. Spec: "점수 70% 미만 = 표시 X".
-const double kComprehensiveMinScore = 0.7;
-
-/// Multivitamin / prenatal categories get a small bonus when ranking the
-/// 종합추천 pick, since they're designed to broadly cover deficits.
-const double kComprehensiveMultiBonus = 0.15;
-
-/// 가성비 (value) tier requires the candidate's main-nutrient amount to be
-/// within ±30% of the bestseller's. "Same effect at a different price point".
-/// Loosened from ±20% in V1 release polish — 어린이 카테고리처럼 후보 풀이
-/// 적은 곳에서 가성비 카드 미표시 빈도 줄이기 위함.
-const double kValueAmountTolerance = 0.30;
-
-/// 가성비 (value) tier requires the candidate to be less heavily promoted
-/// than the bestseller. Anything ranked 6+ counts as "low ad budget".
-const int kValueMinPopularityRank = 6;
-
 /// 카테고리 포커스 — 단일 / 주력 영양제(성분 1-3개)는 100점, 5개 이하는
-/// 70점, 8개+ 종합비타민은 30점. 판매량 / 가성비 카드에 가중 합산되며
-/// 종합추천 카드에는 적용되지 않습니다 — 종합추천은 multi가 본질적으로
-/// 더 적합하기 때문.
+/// 70점, 8개+ 종합비타민은 30점. `_pickBy` 점수에 가중 합산되어 카테고리
+/// 정합도가 높은 제품이 상위에 노출되도록 합니다.
 int _categoryFocusScore(Product p, String mainNutrient) {
   if ((p.ingredients[mainNutrient] ?? 0) <= 0) return 0;
   final n = p.ingredients.values.where((v) => v > 0).length;
@@ -58,14 +33,16 @@ class NutrientRecommendation {
 }
 
 class RankedProduct {
-  /// Why we picked it: [kTierBestseller], [kTierValue], [kTierComprehensive].
-  final String tier;
+  /// 카테고리 내 판매량 순위 (1 / 2 / 3). 후보가 부족하면 1만, 또는 1·2만
+  /// 반환되며 빈 자리는 채우지 않습니다.
+  final int rank;
   final Product product;
-  const RankedProduct({required this.tier, required this.product});
+  const RankedProduct({required this.rank, required this.product});
 }
 
 /// Build top-N nutrient recommendations for a persona, drawing from the
-/// curated 250 products. Each row gets up to 3 picks with distinct tiers.
+/// curated 250 products. 카테고리 hard filter 통과 후보 중 판매량 점수
+/// 상위 3개를 1·2·3위로 반환합니다.
 class NutrientRecommender {
   final ProductRepository repo;
   NutrientRecommender(this.repo);
@@ -74,14 +51,12 @@ class NutrientRecommender {
   /// nutrient ids (e.g. `vitamin_d_iu`) or category names (`liver`,
   /// `sleep`) the analysis flagged as worth recommending, in priority order.
   ///
-  /// [deficitNutrients] is the user's full deficit set — used to score the
-  /// 종합추천 pick. Pass an empty list when no analysis is available; the
-  /// 종합추천 tier will then be skipped (showing only 판매량 / 가성비).
+  /// [deficitNutrients]는 호환성을 위해 시그니처에 남겨두지만 사용되지
+  /// 않습니다 (V2 — 가성비/종합추천 폐기 후). 호출처에서 빈 리스트를
+  /// 전달해도 동일하게 동작합니다.
   ///
   /// Returns one row per nutrient, capped to [picksPerNutrient] picks per
-  /// row. Tier order: 판매량 → 가성비 → 종합추천. Picks that don't qualify
-  /// are silently dropped — the screen surfaces only what passes the
-  /// thresholds.
+  /// row. 후보가 부족하면 1·2개만 반환 — 빈 자리는 채우지 않습니다.
   List<NutrientRecommendation> recommend({
     required FamilyMember member,
     required List<({String key, String displayName, double recommended, String unit})>
@@ -95,87 +70,42 @@ class NutrientRecommender {
     for (final n in nutrients) {
       final isCategoryKey = !_looksLikeNutrientKey(n.key);
 
-      // 두 후보 풀:
-      //   * tight (hard filter) — 사용자가 "비타민D 추천에 락토핏이 왜?"라고
-      //     혼란스러워하지 않도록 단일/주력 제품 또는 영양소 카테고리 정합
-      //     제품만. bestseller + value 티어에 사용.
-      //   * broad — 메인 영양소를 함유하기만 하면 OK. multivitamin/prenatal
-      //     같은 종합 제품이 종합추천 티어에 surface 될 수 있게 함.
-      final tightCandidates = all
+      // 카테고리 hard filter 통과 후보만 — "비타민D 추천에 락토핏(유산균
+      // 위주 multi-성분)이 왜?"라는 사용자 혼란을 row 진입 단계에서 차단.
+      final candidates = all
           .where((p) => _categoryHardMatch(p, n.key, isCategoryKey))
           .toList(growable: false);
-      final broadCandidates = isCategoryKey
-          ? tightCandidates // 카테고리 키는 둘 다 동일
-          : all
-              .where((p) => (p.ingredients[n.key] ?? 0) > 0)
-              .toList(growable: false);
 
-      if (broadCandidates.isEmpty) continue;
+      if (candidates.isEmpty) continue;
 
-      _ScoredCandidate score(Product p) => _ScoredCandidate(
-            product: p,
-            targetScore: targetMatchScore(product: p, member: member),
-            popularityScore: _popularityScore(p),
-            focusScore: isCategoryKey
-                ? 50
-                : _categoryFocusScore(p, n.key),
-          );
-
-      final tightScored = tightCandidates
-          .map(score)
-          .where((c) => c.targetScore >= 0)
-          .toList(growable: true);
-      final broadScored = broadCandidates
-          .map(score)
+      final scored = candidates
+          .map((p) => _ScoredCandidate(
+                product: p,
+                targetScore: targetMatchScore(product: p, member: member),
+                popularityScore: _popularityScore(p),
+                focusScore: isCategoryKey
+                    ? 50
+                    : _categoryFocusScore(p, n.key),
+              ))
           .where((c) => c.targetScore >= 0)
           .toList(growable: true);
 
-      final picks = <RankedProduct>[];
-      final used = <String>{};
+      // 판매량 점수식 = popularity + target + focus. 기존 1위 선정 로직을
+      // 그대로 재사용해 상위 N개로 확장합니다.
+      scored.sort((a, b) {
+        final av = a.popularityScore + a.targetScore + a.focusScore;
+        final bv = b.popularityScore + b.targetScore + b.focusScore;
+        return bv.compareTo(av);
+      });
 
-      // 1. 판매량 — tight pool에서. 카테고리에 단일/주력 제품 후보가 없으면
-      // bestseller도 없는 것이 맞습니다 (사용자 혼란 방지).
-      final bestseller = _pickBy(
-        tightScored,
-        used,
-        (c) => c.popularityScore + c.targetScore + c.focusScore,
-      );
-      if (bestseller != null) {
-        picks.add(RankedProduct(tier: kTierBestseller, product: bestseller));
-        used.add(bestseller.id);
-      }
+      final top = scored.take(picksPerNutrient).toList();
+      if (top.isEmpty) continue;
 
-      // 2. 가성비 — tight pool에서, 다른 브랜드 우선.
-      if (bestseller != null && picks.length < picksPerNutrient) {
-        final value = _pickValueAlternative(
-          bestseller: bestseller,
-          mainNutrient: n.key,
-          isCategoryKey: isCategoryKey,
-          scored: tightScored,
-          used: used,
-        );
-        if (value != null) {
-          picks.add(RankedProduct(tier: kTierValue, product: value));
-          used.add(value.id);
-        }
-      }
+      final picks = <RankedProduct>[
+        for (var i = 0; i < top.length; i++)
+          RankedProduct(rank: i + 1, product: top[i].product),
+      ];
 
-      // 3. 종합추천 — broad pool에서. multivitamin이 비타민D row에서 종합
-      // 추천 카드로 surface 되도록 hard filter를 거치지 않습니다.
-      // 70% 임계 + multi 보너스로 자연스러운 노출.
-      if (deficitNutrients.isNotEmpty && picks.length < picksPerNutrient) {
-        final comp = _pickComprehensive(
-          scored: broadScored,
-          used: used,
-          deficits: deficitNutrients,
-        );
-        if (comp != null) {
-          picks.add(RankedProduct(tier: kTierComprehensive, product: comp));
-          used.add(comp.id);
-        }
-      }
-
-      if (picks.isEmpty) continue;
       out.add(NutrientRecommendation(
         nutrient: n.key,
         displayName: n.displayName,
@@ -200,131 +130,6 @@ class _ScoredCandidate {
     required this.popularityScore,
     required this.focusScore,
   });
-}
-
-Product? _pickBy(
-  List<_ScoredCandidate> scored,
-  Set<String> used,
-  int Function(_ScoredCandidate) projection,
-) {
-  _ScoredCandidate? best;
-  var bestScore = -1 << 30;
-  for (final c in scored) {
-    if (used.contains(c.product.id)) continue;
-    final v = projection(c);
-    if (v > bestScore) {
-      best = c;
-      bestScore = v;
-    }
-  }
-  return best?.product;
-}
-
-/// 가성비 candidate. Conditions (모두 만족해야 함):
-///   1. 판매량 1위와 다른 제품 (`used` 필터로 보장)
-///   2. main nutrient 함유량이 판매량 1위와 ±30% 이내 (V1.1 완화 — 어린이
-///      카테고리 등 후보 풀이 적은 곳에서 매칭률 ↑)
-///   3. popularity_rank ≥ 6 (광고/마케팅 영향 약함 추정)
-///   4. 카테고리 포커스가 30점 이상 (종합비타민으로 빠지지 않게)
-///   5. **다른 브랜드 우선** — 동일 브랜드의 라인업(예: GNC 비타민D 1000 vs
-///      GNC 비타민D 5000)이 가성비로 잡혀 1위와 사실상 같은 출처를 보여주는
-///      이슈 차단. 다른 브랜드 후보가 있으면 그 안에서, 없으면 동일 브랜드
-///      후보로 폴백.
-///
-/// 매칭 후보가 없으면 `null` — UI는 가성비 카드를 표시하지 않습니다.
-Product? _pickValueAlternative({
-  required Product bestseller,
-  required String mainNutrient,
-  required bool isCategoryKey,
-  required List<_ScoredCandidate> scored,
-  required Set<String> used,
-}) {
-  final targetAmount =
-      isCategoryKey ? 0.0 : (bestseller.ingredients[mainNutrient] ?? 0.0);
-
-  final candidates = <({Product product, int popRank, int focusScore})>[];
-  for (final c in scored) {
-    final p = c.product;
-    if (used.contains(p.id)) continue;
-
-    final rank = p.popularityRank ?? 9999;
-    if (rank < kValueMinPopularityRank) continue;
-    if (c.focusScore < 30) continue;
-
-    if (isCategoryKey) {
-      candidates.add((product: p, popRank: rank, focusScore: c.focusScore));
-    } else {
-      if (targetAmount <= 0) continue;
-      final amount = p.ingredients[mainNutrient] ?? 0;
-      if (amount <= 0) continue;
-      final diff = (amount - targetAmount).abs() / targetAmount;
-      if (diff > kValueAmountTolerance) continue;
-      candidates.add((product: p, popRank: rank, focusScore: c.focusScore));
-    }
-  }
-  if (candidates.isEmpty) return null;
-
-  // 다른 브랜드 우선 분리. 빈 풀이면 동일 브랜드 폴백.
-  final differentBrand = candidates
-      .where((c) => c.product.brand != bestseller.brand)
-      .toList();
-  final pool = differentBrand.isNotEmpty ? differentBrand : candidates;
-
-  // 우선순위: 카테고리 포커스 desc → popularity rank desc(더 무명).
-  pool.sort((a, b) {
-    final f = b.focusScore.compareTo(a.focusScore);
-    if (f != 0) return f;
-    return b.popRank.compareTo(a.popRank);
-  });
-  return pool.first.product;
-}
-
-/// 종합추천 candidate: maximises the fraction of the user's deficits that
-/// the candidate covers (treats any positive amount as "covers"). Multivit /
-/// prenatal categories get a small score bonus. Returns null when the best
-/// score falls below [kComprehensiveMinScore].
-Product? _pickComprehensive({
-  required List<_ScoredCandidate> scored,
-  required Set<String> used,
-  required List<String> deficits,
-}) {
-  if (deficits.isEmpty) return null;
-  Product? best;
-  var bestScore = -1.0;
-  for (final c in scored) {
-    if (used.contains(c.product.id)) continue;
-    final raw = _comprehensiveScore(c.product, deficits);
-    final bonus = _isMultiCategory(c.product.category)
-        ? kComprehensiveMultiBonus
-        : 0.0;
-    final score = raw + bonus;
-    if (score > bestScore) {
-      bestScore = score;
-      best = c.product;
-    }
-  }
-  if (best == null) return null;
-  if (bestScore < kComprehensiveMinScore) return null;
-  return best;
-}
-
-/// Fraction of [deficits] keys that [p] supplies a positive amount of. Uses
-/// the daily-dose multiplier so a 2-cap-per-day product gets credit only for
-/// nutrients that meaningfully arrive at the body.
-double _comprehensiveScore(Product p, List<String> deficits) {
-  if (deficits.isEmpty) return 0;
-  var matched = 0;
-  for (final key in deficits) {
-    if ((p.ingredients[key] ?? 0) > 0) matched++;
-  }
-  return matched / deficits.length;
-}
-
-bool _isMultiCategory(String category) {
-  return category == 'multivitamin' ||
-      category == 'prenatal' ||
-      category == 'kids_multivitamin' ||
-      category == 'mineral';
 }
 
 /// Returns true when the key is an RDI nutrient (suffix `_mg`/`_iu`/`_mcg`/
@@ -352,8 +157,7 @@ bool _looksLikeNutrientKey(String key) {
 ///   3) **성분 가짓수 ≤ 2** 면 OK — 사실상 단일 영양제(센트룸 멘 같은
 ///      함량 없는 단순 라벨도 포함)
 ///   4) 그 외(probiotics 위주에 비타민D 곁들인 락토핏, 종합비타민 14성분
-///      센트룸 등) → 카테고리에서 제외. 종합비타민은 별도의 종합추천
-///      카드에서 surface 됩니다.
+///      센트룸 등) → 카테고리에서 제외.
 bool _categoryHardMatch(Product p, String key, bool isCategoryKey) {
   if (isCategoryKey) return p.category == key;
 

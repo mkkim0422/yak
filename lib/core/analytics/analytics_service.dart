@@ -35,7 +35,6 @@ class AnalyticsEvents {
   static const String productClicked = 'product_clicked';
   static const String externalShopOpened = 'external_shop_opened';
   static const String conflictDetected = 'conflict_detected';
-  static const String checkupRegistered = 'checkup_registered';
   static const String dataExported = 'data_exported';
   static const String dataWiped = 'data_wiped';
 }

@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/data/models/product_model.dart';
-import '../../../core/data/nutrient_labels.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/data/supplement_repository.dart';
 import '../../../core/l10n/app_strings.dart';
@@ -57,14 +56,12 @@ class CurrentCheckScreen extends ConsumerWidget {
             for (final p in products)
               _ProductBrief(
                 title: p.name,
-                summary: '${p.dailyDose}${p.unit}/일 · '
-                    '${p.ingredients.keys.take(3).map(nutrientLabel).join(', ')}',
+                summary: '하루 ${p.dailyDose}${p.unit}',
               ),
             for (final m in member.manualProducts)
               _ProductBrief(
                 title: m.name,
-                summary:
-                    '${m.dailyDose}/일 · ${m.ingredients.keys.take(3).map(nutrientLabel).join(', ')}',
+                summary: '하루 ${m.dailyDose}정',
               ),
           ],
           const SizedBox(height: 20),
@@ -73,9 +70,9 @@ class CurrentCheckScreen extends ConsumerWidget {
             Text('아직 분석할 데이터가 없어요', style: AppTypography.body2)
           else
             for (final n in analysis.sufficient.take(8))
-              _NutrientLine(
-                name: n.displayName,
-                detail: '${n.percentage}% (${n.sourceProductNames.join(', ')})',
+              NutrientStatusLine(
+                deficit: n,
+                sourceFallback: '식이로 섭취 중',
               ),
           const SizedBox(height: 20),
           _section('⚠️ 충돌 / 과다 경고'),
@@ -95,11 +92,7 @@ class CurrentCheckScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             NutrientCollapsibleSection(
               title: '🟡 추가로 챙기시면 좋아요',
-              count: analysis.secondary.length,
-              items: [
-                for (final s in analysis.secondary)
-                  ' · ${s.deficit.displayName}  ${s.deficit.percentage}%',
-              ],
+              deficits: [for (final s in analysis.secondary) s.deficit],
             ),
           ],
           if (analysis.priority.isNotEmpty) ...[
@@ -147,19 +140,6 @@ class _ProductBrief extends StatelessWidget {
           Text(summary, style: AppTypography.caption),
         ],
       ),
-    );
-  }
-}
-
-class _NutrientLine extends StatelessWidget {
-  final String name;
-  final String detail;
-  const _NutrientLine({required this.name, required this.detail});
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Text(' · $name  $detail', style: AppTypography.body1),
     );
   }
 }

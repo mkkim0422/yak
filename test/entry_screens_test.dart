@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:alyak/core/legal/legal_documents.dart';
 import 'package:alyak/core/notifications/notification_provider.dart';
 import 'package:alyak/core/notifications/notification_service.dart';
 import 'package:alyak/features/family/models/family_member.dart';
@@ -113,7 +114,7 @@ FamilyMember _member({
 
 void main() {
   group('PrivacyConsentScreen', () {
-    testWidgets('proceed button is disabled until both checkboxes ticked',
+    testWidgets('proceed button is disabled until all three checkboxes ticked',
         (tester) async {
       // Tall viewport so the entire ListView fits — no lazy clipping.
       tester.view.physicalSize = const Size(800, 2400);
@@ -134,6 +135,10 @@ void main() {
       expect(btn().onPressed, isNull);
 
       await tester.tap(find.byKey(const Key('consent-checkbox')));
+      await tester.pumpAndSettle();
+      expect(btn().onPressed, isNull);
+
+      await tester.tap(find.byKey(const Key('sensitive-checkbox')));
       await tester.pumpAndSettle();
       expect(btn().onPressed, isNull);
 
@@ -207,6 +212,16 @@ void main() {
       expect(find.text('취소'), findsOneWidget);
       // Two "삭제" texts now: button in row + button in dialog
       expect(find.text('삭제'), findsNWidgets(2));
+    });
+  });
+
+  group('처리방침 v1.2', () {
+    test('버전 1.2, 30일 자동 삭제 조항 포함, 검진 미언급, 외부 SDK 명칭 미포함', () {
+      expect(kPrivacyPolicyVersion, '1.2');
+      expect(kPrivacyPolicyMarkdown, contains('30일 이상'));
+      expect(kPrivacyPolicyMarkdown, contains('자동으로 삭제'));
+      expect(kPrivacyPolicyMarkdown, isNot(contains('건강검진')));
+      expect(kPrivacyPolicyMarkdown.toLowerCase(), isNot(contains('anthropic')));
     });
   });
 }

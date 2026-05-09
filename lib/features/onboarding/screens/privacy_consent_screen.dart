@@ -23,10 +23,12 @@ class PrivacyConsentScreen extends ConsumerStatefulWidget {
 
 class _PrivacyConsentScreenState extends ConsumerState<PrivacyConsentScreen> {
   bool _consentChecked = false;
+  bool _sensitiveChecked = false;
   bool _ageChecked = false;
   bool _saving = false;
 
-  bool get _canProceed => _consentChecked && _ageChecked && !_saving;
+  bool get _canProceed =>
+      _consentChecked && _sensitiveChecked && _ageChecked && !_saving;
 
   Future<void> _onProceed() async {
     if (!_canProceed) return;
@@ -37,8 +39,9 @@ class _PrivacyConsentScreenState extends ConsumerState<PrivacyConsentScreen> {
       jsonEncode({
         'consented': true,
         'consentedAt': DateTime.now().toIso8601String(),
-        'version': '1.0',
+        'version': '1.1',
         'ageAcknowledged': true,
+        'sensitiveDataConsent': true,
       }),
     );
     if (!mounted) return;
@@ -126,6 +129,15 @@ class _PrivacyConsentScreenState extends ConsumerState<PrivacyConsentScreen> {
                       label: '위 내용에 동의합니다 (필수)',
                       onChanged: (v) =>
                           setState(() => _consentChecked = v),
+                    ),
+                    const SizedBox(height: 6),
+                    _ConsentCheckbox(
+                      key: const Key('sensitive-checkbox'),
+                      value: _sensitiveChecked,
+                      label: '건강정보(임신/수유, 만성질환, 복약, 알레르기, '
+                          '혈액형, 검진결과) 수집·이용에 동의합니다 (필수)',
+                      onChanged: (v) =>
+                          setState(() => _sensitiveChecked = v),
                     ),
                     const SizedBox(height: 6),
                     _ConsentCheckbox(

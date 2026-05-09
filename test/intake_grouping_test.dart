@@ -108,8 +108,8 @@ void main() {
     });
   });
 
-  group('buildGroupedSchedule 분복', () {
-    test('intakesPerDay=2 → 아침 + 저녁 (중복)', () {
+  group('buildGroupedSchedule 분복 — 아침 묶음', () {
+    test('intakesPerDay=2 morningAfter → 아침 1건, dose=2', () {
       final s = buildGroupedSchedule(
         curatedProducts: [
           _product(
@@ -122,30 +122,30 @@ void main() {
         manuals: const [],
       );
       expect(s.morning.length, 1);
-      expect(s.evening.length, 1);
-      expect(s.morning.first.entryId, 'duo');
-      expect(s.evening.first.entryId, 'duo');
       expect(s.lunch, isEmpty);
+      expect(s.evening, isEmpty);
+      expect(s.morning.first.entryId, 'duo');
+      expect(s.morning.first.dose, 2);
     });
 
-    test('intakesPerDay=3 → 아침 + 점심 + 저녁', () {
+    test('intakesPerDay=3 multiple → 아침 1건, dose=3', () {
       final s = buildGroupedSchedule(
         curatedProducts: [
           _product(
             'triple',
-            timing: IntakeTiming.morningAfter,
+            timing: IntakeTiming.multiple,
             dosePerIntake: 1,
             intakesPerDay: 3,
           ),
         ],
         manuals: const [],
       );
+      expect(s.total, 1);
       expect(s.morning.length, 1);
-      expect(s.lunch.length, 1);
-      expect(s.evening.length, 1);
+      expect(s.morning.first.dose, 3);
     });
 
-    test('intakesPerDay=4 → 세 슬롯 모두 표시 (best-effort)', () {
+    test('intakesPerDay=4 multiple → 아침 1건, dose=4', () {
       final s = buildGroupedSchedule(
         curatedProducts: [
           _product(
@@ -157,7 +157,63 @@ void main() {
         ],
         manuals: const [],
       );
-      expect(s.total, 3);
+      expect(s.total, 1);
+      expect(s.morning.length, 1);
+      expect(s.morning.first.dose, 4);
+    });
+
+    test('lunchAfter는 분복이라도 점심 슬롯 유지', () {
+      final s = buildGroupedSchedule(
+        curatedProducts: [
+          _product(
+            'lunch_pair',
+            timing: IntakeTiming.lunchAfter,
+            dosePerIntake: 1,
+            intakesPerDay: 2,
+          ),
+        ],
+        manuals: const [],
+      );
+      expect(s.lunch.length, 1);
+      expect(s.lunch.first.dose, 2);
+      expect(s.morning, isEmpty);
+      expect(s.evening, isEmpty);
+    });
+
+    test('dosePerIntake=2 × intakesPerDay=3 → 아침 1건, dose=6', () {
+      final s = buildGroupedSchedule(
+        curatedProducts: [
+          _product(
+            'big',
+            timing: IntakeTiming.multiple,
+            dosePerIntake: 2,
+            intakesPerDay: 3,
+          ),
+        ],
+        manuals: const [],
+      );
+      expect(s.morning.length, 1);
+      expect(s.morning.first.dose, 6);
+    });
+  });
+
+  group('IntakeOccurrence.timing 노출 (badge용)', () {
+    test('curated product timing이 그대로 occurrence에 전달됨', () {
+      final s = buildGroupedSchedule(
+        curatedProducts: [
+          _product('p', timing: IntakeTiming.beforeSleep),
+        ],
+        manuals: const [],
+      );
+      expect(s.evening.first.timing, IntakeTiming.beforeSleep);
+    });
+
+    test('manual entry timing도 occurrence에 전달됨', () {
+      final s = buildGroupedSchedule(
+        curatedProducts: const [],
+        manuals: [_manual('m', timing: IntakeTiming.morningEmpty)],
+      );
+      expect(s.morning.first.timing, IntakeTiming.morningEmpty);
     });
   });
 

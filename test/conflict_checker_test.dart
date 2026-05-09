@@ -168,6 +168,37 @@ void main() {
       expect(hit, isNotEmpty);
     });
 
+    test('마그네슘 UL 초과 (분복 라벨이라도 dailyDose 기준) → warning', () {
+      // 시간대 그룹 화면이 아침 묶음으로 단순화돼도, 충돌 검사기는 dailyDose
+      // 기반이라 영향 없음을 회귀 검증. 마그네슘 UL = 350mg/day.
+      final m = _member();
+      final p1 = _product(
+        id: 'mg_a',
+        name: '솔가 마그네슘 200',
+        ingredients: const {'magnesium_mg': 200},
+        timing: IntakeTiming.multiple,
+        dailyDose: 1,
+      );
+      final p2 = _product(
+        id: 'mg_b',
+        name: '나우 마그네슘 200',
+        ingredients: const {'magnesium_mg': 200},
+        timing: IntakeTiming.multiple,
+        dailyDose: 1,
+      );
+      final out = ConflictChecker.check(
+        member: m,
+        products: [p1, p2],
+        manuals: const [],
+      );
+      final hit = out.where(
+        (c) => c.title.contains('마그네슘') &&
+            c.severity == ConflictSeverity.warning,
+      );
+      expect(hit, isNotEmpty,
+          reason: '아침 묶음 변경 후에도 마그네슘 UL 초과는 여전히 경고');
+    });
+
     test('within RDI single product → no overdose conflict', () {
       final m = _member();
       final p = _product(

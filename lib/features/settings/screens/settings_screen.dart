@@ -25,7 +25,6 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _dailyEnabled = true;
   bool _reorderEnabled = true;
-  bool _checkupEnabled = true;
   TimeOfDay _morning = const TimeOfDay(hour: 7, minute: 30);
   TimeOfDay _evening = const TimeOfDay(hour: 20, minute: 0);
   int _reorderLeadDays = 3;
@@ -38,7 +37,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final eveningRaw = await SecureStorage.read(kNotifEveningKey);
     final enabledRaw = await SecureStorage.read(kNotifEnabledKey);
     final reorderRaw = await SecureStorage.read(kReorderEnabledKey);
-    final checkupRaw = await SecureStorage.read(kCheckupEnabledKey);
     final reorderDaysRaw = await SecureStorage.read(kReorderDaysKey);
     if (!mounted) return;
     setState(() {
@@ -46,7 +44,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       _evening = parseStoredTime(eveningRaw, _evening);
       _dailyEnabled = enabledRaw != '0';
       _reorderEnabled = reorderRaw != '0';
-      _checkupEnabled = checkupRaw != '0';
       _reorderLeadDays = int.tryParse(reorderDaysRaw ?? '') ?? 3;
     });
   }
@@ -90,28 +87,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
     setState(() => _dailyEnabled = v);
     await _persistDaily();
-  }
-
-  Future<void> _toggleCheckup(bool v) async {
-    if (v) {
-      final granted =
-          await ref.read(notificationServiceProvider).requestPermission();
-      if (!granted) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('알림 권한이 거부되었어요. 설정에서 켜주세요'),
-              backgroundColor: AppColors.warnInk,
-            ),
-          );
-        }
-        if (mounted) setState(() => _checkupEnabled = false);
-        await SecureStorage.write(kCheckupEnabledKey, '0');
-        return;
-      }
-    }
-    setState(() => _checkupEnabled = v);
-    await SecureStorage.write(kCheckupEnabledKey, v ? '1' : '0');
   }
 
   Future<void> _pickTime(bool morning) async {
@@ -173,7 +148,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ),
         title: const Text('정말로 삭제하시겠어요?'),
         content: const Text(
-          '모든 가족 정보, 영양제, 검진 기록이 삭제됩니다.\n되돌릴 수 없어요.',
+          '모든 가족 정보와 영양제 기록이 삭제됩니다.\n되돌릴 수 없어요.',
         ),
         actions: [
           TextButton(
@@ -314,15 +289,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     },
                   ),
                 ),
-              _SettingItem(
-                emoji: '🩺',
-                title: '건강검진 알림',
-                sub: '가족별 1년에 한 번',
-                trailing: Switch(
-                  value: _checkupEnabled,
-                  onChanged: _toggleCheckup,
-                ),
-              ),
             ],
           ),
           _SectionLabel('가족'),

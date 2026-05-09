@@ -15,6 +15,17 @@ ProductBrandType _brandTypeFrom(String? raw) {
 ///
 /// `multiple` is reserved for products with `intakes_per_day >= 2` whose
 /// servings are spread across the day (e.g. 1+2 = 아침/저녁 분산).
+// AppStrings 의존을 피하기 위해 본 파일 내부에 뱃지 텍스트를 직접 보유.
+// 단일 출처는 AppStrings — 두 정의가 같은 한국어 문구로 유지되도록 동기화.
+const String _kBadgeAnyTimeAfterMeal = '식후 아무 때나';
+const String _kBadgeMultiple = '묶어 드셔도 OK';
+const String _kBadgeMorningEmpty = '공복 권장';
+const String _kBadgeMorningAfter = '아침 식후';
+const String _kBadgeLunchAfter = '점심 식후';
+const String _kBadgeDinnerAfter = '저녁 식후';
+const String _kBadgeBeforeSleep = '잠들기 전';
+const String _kBadgeWithMeal = '식사 중';
+
 enum IntakeTiming {
   morningEmpty,
   morningAfter,
@@ -54,6 +65,29 @@ extension IntakeTimingX on IntakeTiming {
         return '⏰ 1일 여러 회 분산';
     }
   }
+
+  /// 사용자 친화 한 줄 뱃지. 시간대 그룹 카드 / 검색 결과 / 카테고리 카드에
+  /// 권장 복용 시점을 톤다운된 형태로 노출.
+  String get badgeText {
+    switch (this) {
+      case IntakeTiming.anyTimeAfterMeal:
+        return _kBadgeAnyTimeAfterMeal;
+      case IntakeTiming.multiple:
+        return _kBadgeMultiple;
+      case IntakeTiming.morningEmpty:
+        return _kBadgeMorningEmpty;
+      case IntakeTiming.morningAfter:
+        return _kBadgeMorningAfter;
+      case IntakeTiming.lunchAfter:
+        return _kBadgeLunchAfter;
+      case IntakeTiming.dinnerAfter:
+        return _kBadgeDinnerAfter;
+      case IntakeTiming.beforeSleep:
+        return _kBadgeBeforeSleep;
+      case IntakeTiming.withMeal:
+        return _kBadgeWithMeal;
+    }
+  }
 }
 
 IntakeTiming _intakeTimingFrom(Object? raw) {
@@ -67,6 +101,11 @@ IntakeTiming _intakeTimingFrom(Object? raw) {
 class Product {
   final String id;
   final String name;
+
+  /// Optional English-language product name (e.g. "Centrum For Men"). Surfaces
+  /// for search only — users typing the bottle's English label should match.
+  /// Empty string when the JSON entry has no `english_name`.
+  final String englishName;
   final String brand;
   final ProductBrandType brandType;
   final String category;
@@ -104,6 +143,7 @@ class Product {
   const Product({
     required this.id,
     required this.name,
+    this.englishName = '',
     required this.brand,
     required this.brandType,
     required this.category,
@@ -137,6 +177,7 @@ class Product {
     return Product(
       id: (json['id'] as String?) ?? '',
       name: (json['name'] as String?) ?? '',
+      englishName: (json['english_name'] as String?) ?? '',
       brand: (json['brand'] as String?) ?? '',
       brandType: _brandTypeFrom(json['brand_type'] as String?),
       category: (json['category'] as String?) ?? '',
@@ -175,26 +216,12 @@ class Product {
     return DateTime.tryParse(raw);
   }
 
-  /// Compose a Korean-language schedule line for the card UI.
-  ///
-  /// 1회/일 → "🌙 취침 전 1정"
-  /// 2회/일 → "🌅 아침 1정 / 🌙 저녁 1정"
-  /// 3회/일 → "🌅 아침 1정 / 🌞 점심 1정 / 🌙 저녁 1정"
-  /// 4회 이상 → "1일 N회 (라벨 참조)"
+  /// 사용자 행동(아침에 한 번에) 정렬 — 분산 표시("아침 1정 / 점심 1정")
+  /// 대신 "하루 N정" 단순 형태. 시점 정보는 [IntakeTimingX.badgeText] 뱃지로
+  /// 별도 노출.
   String get scheduleLabel {
-    final n = intakesPerDay;
-    final dose = dosePerIntake;
     final u = unit.isEmpty ? '정' : unit;
-    if (n <= 1) {
-      return '${intakeTiming.koreanLabel} $dose$u';
-    }
-    if (n == 2) {
-      return '🌅 아침 $dose$u / 🌙 저녁 $dose$u';
-    }
-    if (n == 3) {
-      return '🌅 아침 $dose$u / 🌞 점심 $dose$u / 🌙 저녁 $dose$u';
-    }
-    return '⏰ 1일 $n회 (라벨 참조)';
+    return '하루 $dailyDose$u';
   }
 }
 

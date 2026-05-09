@@ -98,14 +98,14 @@ void main() {
       expect(find.textContaining('본인'), findsWidgets);
     });
 
-    testWidgets('count == 2 → two compact cards', (tester) async {
+    testWidgets('count == 2 → two large cards stacked', (tester) async {
       final members = [member('m1', name: 'A'), member('m2', name: 'B')];
       await tester.pumpWidget(_wrap(members, const FamilyCardsSection()));
       await tester.pump();
       expect(find.byType(FamilyMemberCard), findsNWidgets(2));
     });
 
-    testWidgets('count == 3 → 1 main + 2 compact', (tester) async {
+    testWidgets('count == 3 → three large cards stacked', (tester) async {
       final members = [
         member('m1', name: 'A'),
         member('m2', name: 'B'),
@@ -116,7 +116,7 @@ void main() {
       expect(find.byType(FamilyMemberCard), findsNWidgets(3));
     });
 
-    testWidgets('count == 4 → 2x2 grid', (tester) async {
+    testWidgets('count == 4 → four large cards stacked', (tester) async {
       final members =
           List.generate(4, (i) => member('m$i', name: 'M$i'));
       await tester.pumpWidget(_wrap(members, const FamilyCardsSection()));
@@ -124,7 +124,7 @@ void main() {
       expect(find.byType(FamilyMemberCard), findsNWidgets(4));
     });
 
-    testWidgets('count == 5 → grid renders 5 cards', (tester) async {
+    testWidgets('count == 5 → 5명부터 compact 2-col 그리드', (tester) async {
       final members =
           List.generate(5, (i) => member('m$i', name: 'M$i'));
       await tester.pumpWidget(_wrap(members, const FamilyCardsSection()));

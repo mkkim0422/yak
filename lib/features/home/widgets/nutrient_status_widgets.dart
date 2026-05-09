@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/data/nutrient_evaluation.dart' show softGradeLabel;
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_shadows.dart';
@@ -54,18 +55,110 @@ String formatNutrientList(List<String> names) {
   return '${names.take(3).join(', ')} 외 ${names.length - 3}개';
 }
 
-/// Tier 2 / 3: collapsible bullet list.
+/// 영양소 한 줄. 기본은 이름 + 등급 라벨만 노출하고, 탭하면 펼쳐서
+/// 출처 제품명을 보여줍니다. 시각 노이즈를 줄이면서도 출처 정보는
+/// 잃지 않는 패턴.
+///
+/// PART 9 컨벤션 — 사용자 노출 텍스트에 % / 영문 괄호 금지. 등급은
+/// [softGradeLabel]에서 한국어 4단계로 받아옵니다.
+class NutrientStatusLine extends StatefulWidget {
+  final NutrientDeficit deficit;
+
+  /// `null`이면 출처 비어 있을 때 자동 메시지("아직 섭취 중이 아니에요"
+  /// 또는 "식이로 섭취 중") 사용. 외부에서 강제 텍스트 주입 가능.
+  final String? sourceFallback;
+
+  const NutrientStatusLine({
+    super.key,
+    required this.deficit,
+    this.sourceFallback,
+  });
+
+  @override
+  State<NutrientStatusLine> createState() => _NutrientStatusLineState();
+}
+
+class _NutrientStatusLineState extends State<NutrientStatusLine> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final d = widget.deficit;
+    final grade = softGradeLabel(d.percentage);
+    final sources = d.sourceProductNames;
+    final sourceText = sources.isEmpty
+        ? (widget.sourceFallback ?? '아직 섭취 중이 아니에요')
+        : '${sources.join(' · ')}에서 섭취 중';
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(AppRadius.r10),
+      onTap: () => setState(() => _open = !_open),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 6),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    d.displayName,
+                    style: AppTypography.body1.copyWith(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Text(
+                  grade,
+                  style: AppTypography.body2.copyWith(
+                    fontSize: 13,
+                    color: AppColors.muted,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Icon(
+                  _open ? Icons.expand_less : Icons.expand_more,
+                  size: 18,
+                  color: AppColors.faint,
+                ),
+              ],
+            ),
+            if (_open) ...[
+              const SizedBox(height: 4),
+              Text(
+                sourceText,
+                style: AppTypography.caption.copyWith(
+                  fontSize: 12,
+                  color: AppColors.muted,
+                  height: 1.4,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Tier 2 / 3: collapsible bullet list backed by [NutrientDeficit]s.
+/// 각 행은 [NutrientStatusLine]으로 렌더되어 탭 expand로 출처를 보여줍니다.
 class NutrientCollapsibleSection extends StatefulWidget {
   final String title;
-  final int count;
-  final List<String> items;
+  final List<NutrientDeficit> deficits;
   final bool initiallyOpen;
+
+  /// 각 행의 출처 비어 있을 때 보여줄 폴백 ("식이로 섭취 중" 등).
+  /// `null`이면 [NutrientStatusLine] 기본값 사용.
+  final String? sourceFallback;
+
   const NutrientCollapsibleSection({
     super.key,
     required this.title,
-    required this.count,
-    required this.items,
+    required this.deficits,
     this.initiallyOpen = false,
+    this.sourceFallback,
   });
 
   @override
@@ -115,7 +208,7 @@ class _NutrientCollapsibleSectionState
                           ),
                           const SizedBox(height: 2),
                           Text(
-                            '${widget.count}개 영양소',
+                            '${widget.deficits.length}개 영양소',
                             style: AppTypography.micro.copyWith(fontSize: 11.5),
                           ),
                         ],
@@ -132,15 +225,16 @@ class _NutrientCollapsibleSectionState
             ),
             if (_open)
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: widget.items
-                      .map((line) => Padding(
-                            padding: const EdgeInsets.only(bottom: 4),
-                            child: Text(line, style: AppTypography.body2),
-                          ))
-                      .toList(),
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    for (final d in widget.deficits)
+                      NutrientStatusLine(
+                        deficit: d,
+                        sourceFallback: widget.sourceFallback,
+                      ),
+                  ],
                 ),
               ),
           ],
@@ -148,18 +242,4 @@ class _NutrientCollapsibleSectionState
       ),
     );
   }
-}
-
-/// Helpers to build secondary/sufficient line strings in a uniform way.
-String formatSecondaryLine(NutrientStatus s) {
-  final source = s.deficit.sourceProductNames.isEmpty
-      ? '안 드심'
-      : s.deficit.sourceProductNames.join(', ');
-  return ' · ${s.deficit.displayName}  ${s.deficit.percentage}% ($source)';
-}
-
-String formatSufficientLine(NutrientDeficit d) {
-  final source =
-      d.sourceProductNames.isEmpty ? '식이' : d.sourceProductNames.join(', ');
-  return ' · ${d.displayName}  ${d.percentage}% ($source)';
 }

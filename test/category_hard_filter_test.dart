@@ -3,9 +3,12 @@
 // 이슈를 발견했습니다. 본 테스트는:
 //   * 락토핏 시뮬레이션이 비타민D row에서 빠지는지
 //   * 단일 비타민D 제품(락피도)은 통과하는지
-//   * 가성비 카드가 다른 브랜드를 우선 선택하는지
+//   * 영양소 카테고리(vitamin_d) 정합 제품은 성분 多여도 통과
+//   * 카테고리 키(prenatal/sleep)는 p.category 직접 매칭
 //   * 후보 0개일 때 카테고리 자체가 surface되지 않는지
 // 를 검증합니다.
+//
+// V2 — 가성비/종합추천 티어 폐기. hard filter 자체 회귀 가드만 남김.
 
 import 'package:flutter_test/flutter_test.dart';
 
@@ -187,85 +190,6 @@ void main() {
       final picked = recs.first.picks.map((r) => r.product.id).toList();
       expect(picked, contains('elevit'));
       expect(picked, isNot(contains('regular_multi')));
-    });
-  });
-
-  group('가성비 — 다른 브랜드 우선 + 후보 0개 시 카드 미표시', () {
-    test('동일 브랜드 vs 다른 브랜드 → 다른 브랜드 우선', () {
-      final repo = _MemoRepo([
-        _p('gnc_d_1000',
-            category: 'vitamin_d', brand: 'GNC',
-            ingredients: {'vitamin_d_iu': 1000}, popularityRank: 1),
-        // 같은 브랜드 (GNC) 라인업 — 가성비로는 X
-        _p('gnc_d_2000',
-            category: 'vitamin_d', brand: 'GNC',
-            ingredients: {'vitamin_d_iu': 1100}, popularityRank: 30),
-        // 다른 브랜드 — 가성비 우선
-        _p('solgar_d_1000',
-            category: 'vitamin_d', brand: 'Solgar',
-            ingredients: {'vitamin_d_iu': 1000}, popularityRank: 50),
-      ]);
-      final recs = NutrientRecommender(repo).recommend(
-        member: _adultFemale(),
-        nutrients: const [
-          (key: 'vitamin_d_iu', displayName: '비타민D',
-              recommended: 800.0, unit: 'IU'),
-        ],
-      );
-      final value = recs.first.picks
-          .where((r) => r.tier == kTierValue)
-          .toList();
-      expect(value, isNotEmpty);
-      expect(value.first.product.id, 'solgar_d_1000',
-          reason: '다른 브랜드 우선');
-    });
-
-    test('동일 브랜드만 있을 때 폴백 (카드 자체는 표시)', () {
-      // 다른 브랜드 후보가 없고, 동일 브랜드 후보가 popularity 기준을
-      // 충족하면 그 후보를 가성비로 surface (카드 자체 미표시는 너무 엄격).
-      final repo = _MemoRepo([
-        _p('gnc_d_1000',
-            category: 'vitamin_d', brand: 'GNC',
-            ingredients: {'vitamin_d_iu': 1000}, popularityRank: 1),
-        _p('gnc_d_other',
-            category: 'vitamin_d', brand: 'GNC',
-            ingredients: {'vitamin_d_iu': 1100}, popularityRank: 50),
-      ]);
-      final recs = NutrientRecommender(repo).recommend(
-        member: _adultFemale(),
-        nutrients: const [
-          (key: 'vitamin_d_iu', displayName: '비타민D',
-              recommended: 800.0, unit: 'IU'),
-        ],
-      );
-      final value = recs.first.picks
-          .where((r) => r.tier == kTierValue)
-          .toList();
-      expect(value, isNotEmpty);
-      expect(value.first.product.id, 'gnc_d_other');
-    });
-
-    test('함량 매칭 X 시 가성비 카드 미표시', () {
-      // 1위: vitamin_d_iu = 1000. 후보들은 모두 ±30% 밖 → 가성비 X.
-      final repo = _MemoRepo([
-        _p('lead', category: 'vitamin_d', brand: 'A',
-            ingredients: {'vitamin_d_iu': 1000}, popularityRank: 1),
-        _p('too_low', category: 'vitamin_d', brand: 'B',
-            ingredients: {'vitamin_d_iu': 200}, popularityRank: 30),
-        _p('too_high', category: 'vitamin_d', brand: 'C',
-            ingredients: {'vitamin_d_iu': 5000}, popularityRank: 40),
-      ]);
-      final recs = NutrientRecommender(repo).recommend(
-        member: _adultFemale(),
-        nutrients: const [
-          (key: 'vitamin_d_iu', displayName: '비타민D',
-              recommended: 1000.0, unit: 'IU'),
-        ],
-      );
-      final value = recs.first.picks
-          .where((r) => r.tier == kTierValue)
-          .toList();
-      expect(value, isEmpty);
     });
   });
 

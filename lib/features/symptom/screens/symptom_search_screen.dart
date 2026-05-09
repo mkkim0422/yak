@@ -8,6 +8,7 @@ import '../../../core/l10n/app_strings.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_shadows.dart';
+import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_card.dart';
 import '../../../core/widgets/disclaimer_footer.dart';
@@ -54,22 +55,46 @@ class _SymptomSearchScreenState extends ConsumerState<SymptomSearchScreen> {
           onPressed: () =>
               context.canPop() ? context.pop() : context.go('/home'),
         ),
-        title: const Text('증상에 맞는 영양제'),
+        title: const Text('컨디션별 영양 가이드'),
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
         children: [
+          Container(
+            key: const Key('condition-legal-disclaimer'),
+            margin: const EdgeInsets.only(
+              top: AppSpacing.m,
+              bottom: AppSpacing.sm,
+            ),
+            padding: const EdgeInsets.all(AppSpacing.sm),
+            decoration: BoxDecoration(
+              color: AppColors.primarySoft,
+              borderRadius: BorderRadius.circular(AppRadius.r12),
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('ℹ️', style: TextStyle(fontSize: 14)),
+                const SizedBox(width: AppSpacing.s),
+                Expanded(
+                  child: Text(
+                    AppStrings.conditionScreenLegalDisclaimer,
+                    style: AppTypography.body2.copyWith(
+                      fontSize: 12.5,
+                      color: AppColors.primaryInk,
+                      height: 1.45,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
           Text(
-            '어떤 증상이 있으세요?',
+            '어떤 컨디션이세요?',
             style: AppTypography.heading1.copyWith(
               fontSize: 22,
               fontWeight: FontWeight.w800,
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            '여러 개 선택할 수 있어요',
-            style: AppTypography.caption.copyWith(fontSize: 13),
           ),
           const SizedBox(height: 16),
           _SearchBar(
@@ -114,30 +139,16 @@ class _SymptomSearchScreenState extends ConsumerState<SymptomSearchScreen> {
           const SizedBox(height: 16),
           AlyakCard(
             padding: const EdgeInsets.all(14),
-            background: AppColors.warnBg,
+            background: AppColors.primarySoft,
             shadow: const [],
             border: Border.all(
-                color: AppColors.warnBorder.withValues(alpha: 0.2)),
-            child: Text.rich(
-              TextSpan(
-                style: AppTypography.body2.copyWith(
-                  fontSize: 13,
-                  color: AppColors.ink2,
-                ),
-                children: [
-                  TextSpan(
-                    text: '⚠️ 잠깐  ',
-                    style: AppTypography.title.copyWith(
-                      fontSize: 13,
-                      color: AppColors.warnInk,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  const TextSpan(
-                    text:
-                        '· 2주 이상 지속되거나 심한 증상은 병원 진료를 받으세요. 영양제는 보조 수단이에요.',
-                  ),
-                ],
+                color: AppColors.primary.withValues(alpha: 0.15)),
+            child: Text(
+              'ℹ️ 2주 이상 지속되거나 심한 증상은 병원 진료를 받으세요. '
+              '영양제는 보조 수단이에요.',
+              style: AppTypography.body2.copyWith(
+                fontSize: 13,
+                color: AppColors.primaryInk,
               ),
             ),
           ),

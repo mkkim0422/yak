@@ -757,7 +757,7 @@
       },
       "good_for": [
         "뼈 건강",
-        "골다공증 예방"
+        "뼈 건강 유지"
       ],
       "alternatives": [
         "dikamax_1000"
@@ -2305,7 +2305,7 @@
       },
       "good_for": [
         "여성 갱년기",
-        "PMS 완화"
+        "여성 컨디션 유지"
       ],
       "alternatives": [
         "estrog100"
@@ -2537,7 +2537,7 @@
         "msm_mg": 750
       },
       "good_for": [
-        "관절 통증 완화"
+        "관절 컨디션 유지"
       ],
       "alternatives": [
         "glucosamine_general"
@@ -2830,7 +2830,7 @@
       },
       "good_for": [
         "고흡수율 비타민C",
-        "위장 부담 완화"
+        "위장 컨디션 유지"
       ],
       "alternatives": [
         "ckd_vit_c_1000",
@@ -3348,7 +3348,7 @@
       },
       "good_for": [
         "피부 보습",
-        "자외선 손상 예방"
+        "피부 컨디션 유지"
       ],
       "alternatives": [
         "bblab_collagen_1500",
@@ -3529,7 +3529,7 @@
       },
       "good_for": [
         "시니어 단백질",
-        "근감소 예방"
+        "근육 기능 유지"
       ],
       "alternatives": [
         "myprotein_the_whey",
@@ -3826,7 +3826,7 @@
         "l_theanine_mg": 150
       },
       "good_for": [
-        "스트레스 완화",
+        "스트레스 대응",
         "수면 보조"
       ],
       "alternatives": [
@@ -3856,7 +3856,7 @@
         "l_theanine_mg": 200
       },
       "good_for": [
-        "스트레스 완화",
+        "스트레스 대응",
         "수면 질"
       ],
       "alternatives": [
@@ -4264,7 +4264,7 @@
         "vitamin_d_iu": 800
       },
       "good_for": [
-        "여성 빈혈 예방",
+        "여성 적혈구 형성에 필요",
         "임산부 보조"
       ],
       "alternatives": [
@@ -4295,7 +4295,7 @@
         "iron_mg": 40
       },
       "good_for": [
-        "임산부 철분 결핍 예방"
+        "임산부 철분 보충"
       ],
       "alternatives": [
         "elevit",
@@ -4685,7 +4685,7 @@
       },
       "good_for": [
         "면역",
-        "괴혈병 예방",
+        "비타민C 보충",
         "일반의약품"
       ],
       "alternatives": [
@@ -5058,7 +5058,7 @@
         "now_zinc_50"
       ],
       "popularity_rank": 165,
-      "notes": "글루콘산아연 + 구리 (장기 복용 시 구리 결핍 예방)",
+      "notes": "글루콘산아연 + 구리 (장기 복용 시 구리 보충)",
       "data_source": "https://www.ckdhc.com/",
       "verified_date": "2026-05-06",
       "image_url": "https://img.danuri.io/catalog-image/799/275/029/49948e396cd14adc8cca23e61b4f0492.jpg?v=20260506154643"
@@ -5842,7 +5842,7 @@
       "good_for": [
         "근육 안정",
         "수면 질",
-        "PMS 완화"
+        "여성 컨디션 유지"
       ],
       "alternatives": [
         "drbest_high_abs_mg_200",
@@ -7738,7 +7738,7 @@
       },
       "good_for": [
         "뼈 발육",
-        "구루병 예방",
+        "비타민D 보충",
         "임신/수유기"
       ],
       "alternatives": [

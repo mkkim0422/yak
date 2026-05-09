@@ -70,7 +70,7 @@ class AppStrings {
   static const String onboardingWelcome = '우리 가족 영양제 챙기기,\n알약과 함께 시작해요';
   static const String onboardingDesc1 = '가족 한 명 한 명에 맞는 영양제를 추천해드려요';
   static const String onboardingDesc2 = '복용 시간과 조합도 알려드릴게요';
-  static const String onboardingDesc3 = '건강검진 결과까지 반영한 맞춤 추천이에요';
+  static const String onboardingDesc3 = '복용 중인 약과 충돌하는 영양제도 알려드려요';
 
   // Home
   static const String homeGreeting = '안녕하세요 👋';
@@ -82,10 +82,9 @@ class AppStrings {
   static const String homeStartRecommendation = '추천 받기';
 
   // Home entry points
-  static const String entryCheckup = '🔍 검진 결과';
   static const String entryBuySupplements = '🛒 영양제 새로 사기';
   static const String entryCurrentCheck = '⚠️ 지금 점검';
-  static const String entrySymptomSearch = '🩺 증상 검색';
+  static const String entrySymptomSearch = '🥗 컨디션별 영양 가이드';
   static const String entryFamilyManage = '👨‍👩‍👧 가족 관리';
 
   // Home notifications
@@ -101,8 +100,6 @@ class AppStrings {
   static const String cardStatusEnough = '충분히 섭취중';
   static const String cardStatusFewDeficitTemplate = '%d개 부족';
   static const String cardCurrentlyTakingTemplate = '%d개 섭취중';
-  static const String cardLastCheckupTemplate = '검진: %s';
-  static const String cardNoCheckup = '검진 정보 없음';
   static const String cardSeeDetail = '상세 보기 →';
   static const String moreItemsCountTemplate = '+%d개 더';
   static const String cardDeficientNutrients = '부족한 영양소';
@@ -111,7 +108,6 @@ class AppStrings {
   // Quick actions
   static const String quickActionRecommend = '💊 영양제 새로 추천받기';
   static const String quickActionCheck = '⚠️ 지금 먹는 것 점검';
-  static const String quickActionCheckup = '🔍 검진 결과 입력/보기';
   static const String quickActionEdit = '📝 정보 수정';
   static const String quickActionRemove = '🗑️ 가족에서 제거';
   static const String quickActionManageProducts = '💊 섭취중인 영양제 관리';
@@ -169,20 +165,6 @@ class AppStrings {
   static const String symptomTypeBNotice =
       '병원 진료가 필요한 증상이에요. 빠른 시일 내에 의사와 상담하세요';
 
-  // Health checkup
-  static const String checkupTitle = '건강검진 결과';
-  static const String checkupDate = '검진일';
-  static const String checkupCholesterol = '총 콜레스테롤';
-  static const String checkupLdl = 'LDL 콜레스테롤';
-  static const String checkupHdl = 'HDL 콜레스테롤';
-  static const String checkupBloodSugar = '공복 혈당';
-  static const String checkupHemoglobin = '헤모글로빈';
-  static const String checkupAlt = 'ALT';
-  static const String checkupAst = 'AST';
-  static const String checkupVitaminD = '비타민D';
-  static const String checkupBpSystolic = '수축기 혈압';
-  static const String checkupBpDiastolic = '이완기 혈압';
-
   // Settings
   static const String settingsTitle = '설정';
   static const String settingsNotification = '알림';
@@ -190,9 +172,28 @@ class AppStrings {
   static const String settingsAbout = '앱 정보';
   static const String settingsVersion = '버전';
 
+  // Intake-timing badges — 시간대 그룹 카드 / 검색 결과 / 카테고리 카드에서
+  // 영양제별 권장 복용 시점을 사용자 친화 한 줄로 노출. AppColors.primarySoft
+  // 배경에 IntakeTimingBadge 위젯이 그대로 사용.
+  static const String intakeBadgeAnyTimeAfterMeal = '식후 아무 때나';
+  static const String intakeBadgeMultiple = '묶어 드셔도 OK';
+  static const String intakeBadgeMorningEmpty = '공복 권장';
+  static const String intakeBadgeMorningAfter = '아침 식후';
+  static const String intakeBadgeLunchAfter = '점심 식후';
+  static const String intakeBadgeDinnerAfter = '저녁 식후';
+  static const String intakeBadgeBeforeSleep = '잠들기 전';
+  static const String intakeBadgeWithMeal = '식사 중';
+
   // Disclaimer
   static const String disclaimerNotMedicalAdvice =
       '의료 조언이 아니에요. 복용 전 의사 또는 약사와 상의하세요';
+
+  /// 식품표시광고법 시행령 별표1 면제 조건 충족 문구.
+  /// 가이드라인 핵심 표현 "제품과 직접적인 관련이 없습니다"를 반드시 포함.
+  static const String conditionScreenLegalDisclaimer =
+      '본 화면의 컨디션 정보는 일반 영양학 정보이며, '
+      '표시되는 영양제 제품의 기능성·효과와는 직접적인 관련이 없습니다. '
+      '컨디션이 지속되면 의료진과 상담하세요.';
 
   // Errors
   static const String errorGeneric = '문제가 발생했어요. 다시 시도해주세요';

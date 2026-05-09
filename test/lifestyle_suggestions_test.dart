@@ -35,8 +35,6 @@ FamilyMember _baseMember({
       isPregnant: isPregnant,
       isBreastfeeding: isBreastfeeding,
       currentProductIds: const [],
-      lastCheckupDate: null,
-      checkupNote: null,
       createdAt: DateTime(2026, 5, 6),
       updatedAt: DateTime(2026, 5, 6),
     );

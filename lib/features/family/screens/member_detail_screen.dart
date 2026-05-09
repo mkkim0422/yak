@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,23 +7,20 @@ import 'package:go_router/go_router.dart';
 import '../../../core/data/models/product_model.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/notifications/notification_provider.dart';
-import '../../../core/security/secure_storage.dart';
 import '../../../core/services/conflict_checker.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_shadows.dart';
 import '../../../core/theme/app_typography.dart';
-import '../../../core/widgets/alyak_buttons.dart';
-import '../../../core/widgets/alyak_card.dart';
 import '../../../core/widgets/conflict_section.dart';
 import '../../../core/widgets/disclaimer_footer.dart';
+import '../../../core/widgets/intake_timing_badge.dart';
 import '../../../core/widgets/product_image.dart';
 import '../../../core/widgets/profile_avatar.dart';
 import '../../../core/widgets/section_header.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../home/providers/member_analysis_provider.dart';
 import '../../home/widgets/nutrient_status_widgets.dart';
-import '../../onboarding/screens/notification_setup_screen.dart';
 import '../models/family_member.dart';
 import '../providers/family_provider.dart';
 import '../services/intake_grouping.dart';
@@ -92,8 +91,6 @@ class MemberDetailScreen extends ConsumerWidget {
             ConflictSection(conflicts: conflicts),
           ],
           const SizedBox(height: 20),
-          _CheckupSection(member: member),
-          const SizedBox(height: 20),
           _NutritionStatusSection(
             analysis: analysis,
             memberId: memberId,
@@ -102,31 +99,8 @@ class MemberDetailScreen extends ConsumerWidget {
           const SizedBox(height: 20),
           _BuyCta(memberId: memberId),
           const SizedBox(height: 12),
-          const _IntakeSourceDisclaimer(),
           const DisclaimerFooter(),
         ],
-      ),
-    );
-  }
-}
-
-class _IntakeSourceDisclaimer extends StatelessWidget {
-  const _IntakeSourceDisclaimer();
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-      child: Text(
-        '표시된 복용 정보는 라벨 또는 사용자 입력 기반입니다.\n'
-        '정확한 정보는 제품 라벨과 의사·약사 지시를 우선하세요.',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          fontSize: 11,
-          height: 1.55,
-          color: AppColors.muted.withValues(alpha: 0.85),
-          fontWeight: FontWeight.w500,
-        ),
       ),
     );
   }
@@ -216,14 +190,19 @@ class _CurrentSupplementsSection extends ConsumerWidget {
     );
 
     final manualCount = member.manualProducts.length;
+    // CTA 중복 제거: 영양제 0개일 때는 큰 점선 박스만 노출(우상단 pill 숨김),
+    // 1개 이상일 때는 우상단 pill만 노출(점선 박스 숨김). 둘 다 노출하던
+    // 기존 패턴은 시각 정보가 과다해 사용자 시선을 분산시켰음.
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(
           title: '💊 섭취중인 영양제 · $taking개',
-          action: _AddPill(
-            onTap: () => _openAddSheet(context, member.id),
-          ),
+          action: taking == 0
+              ? null
+              : _AddPill(
+                  onTap: () => context.push('/supplement/search?member=${member.id}'),
+                ),
         ),
         // 직접 입력 제품은 사용자가 함량을 입력하지 않으므로 영양 분석에
         // 반영되지 않음을 명시 (V1 한계 — V1.1에서 ingredients 입력 UI).
@@ -243,9 +222,9 @@ class _CurrentSupplementsSection extends ConsumerWidget {
         if (taking == 0)
           _AddSupplementCard(
             empty: true,
-            onTap: () => _openAddSheet(context, member.id),
+            onTap: () => context.push('/supplement/search?member=${member.id}'),
           )
-        else ...[
+        else
           for (final slot in IntakeSlot.values)
             if (schedule.forSlot(slot).isNotEmpty) ...[
               _SlotHeader(slot: slot, count: schedule.forSlot(slot).length),
@@ -262,10 +241,6 @@ class _CurrentSupplementsSection extends ConsumerWidget {
                 ),
               const SizedBox(height: 10),
             ],
-          _AddSupplementCard(
-            onTap: () => _openAddSheet(context, member.id),
-          ),
-        ],
       ],
     );
   }
@@ -389,10 +364,7 @@ class _CompactSupplementCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final occ = occurrence;
     final unit = occ.unit.isEmpty ? '정' : occ.unit;
-    final mealLabel = occ.mealRelation.label;
-    final doseLine = mealLabel.isEmpty
-        ? '${occ.dose}$unit'
-        : '$mealLabel ${occ.dose}$unit';
+    final doseLine = '${occ.dose}$unit';
 
     return Material(
       color: AppColors.surface,
@@ -409,22 +381,7 @@ class _CompactSupplementCard extends StatelessWidget {
           ),
           child: Row(
             children: [
-              if (occ.isCurated && occ.product != null)
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(AppRadius.r10),
-                  child: ProductImage(product: occ.product!, size: 60),
-                )
-              else
-                Container(
-                  width: 60,
-                  height: 60,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: AppColors.surfaceMuted,
-                    borderRadius: BorderRadius.circular(AppRadius.r10),
-                  ),
-                  child: const Text('💊', style: TextStyle(fontSize: 24)),
-                ),
+              _OccurrenceThumbnail(occ: occ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -438,21 +395,20 @@ class _CompactSupplementCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
-                    Row(
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 4,
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        Flexible(
-                          child: Text(
-                            doseLine,
-                            style: AppTypography.body2.copyWith(
-                              fontSize: 12.5,
-                              color: AppColors.ink2,
-                              fontWeight: FontWeight.w600,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                        Text(
+                          doseLine,
+                          style: AppTypography.body2.copyWith(
+                            fontSize: 12.5,
+                            color: AppColors.ink2,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(width: 6),
+                        IntakeTimingBadge(timing: occ.timing),
                         _SourcePill(
                           curated: occ.isCurated,
                           hasIngredients:
@@ -777,200 +733,6 @@ class _DashedRectPainter extends CustomPainter {
       old.strokeWidth != strokeWidth;
 }
 
-class _CheckupSection extends ConsumerStatefulWidget {
-  final FamilyMember member;
-  const _CheckupSection({required this.member});
-
-  @override
-  ConsumerState<_CheckupSection> createState() => _CheckupSectionState();
-}
-
-class _CheckupSectionState extends ConsumerState<_CheckupSection> {
-  Future<void> _editCheckup() async {
-    final result = await showCheckupEditor(
-      context: context,
-      initialDate: widget.member.lastCheckupDate,
-      initialNote: widget.member.checkupNote,
-    );
-    if (result == null) return;
-    final updated = widget.member.copyWith(
-      lastCheckupDate: result.date,
-      checkupNote: result.note,
-    );
-    await ref.read(familyControllerProvider).updateMember(updated);
-    // Re-anchor the annual checkup notification on the new date — but only
-    // when the user has the checkup-reminder toggle enabled.
-    final svc = ref.read(notificationServiceProvider);
-    await svc.cancelAnnualCheckupReminder(updated.id);
-    final checkupOn =
-        (await SecureStorage.read(kCheckupEnabledKey)) != '0';
-    if (checkupOn) {
-      await svc.scheduleAnnualCheckupReminder(
-        memberId: updated.id,
-        from: result.date,
-        memberName: updated.name,
-      );
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (widget.member.age < 20) return const SizedBox.shrink();
-    final date = widget.member.lastCheckupDate;
-    final note = widget.member.checkupNote;
-
-    if (date == null) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SectionHeader(title: '🏥 최근 건강검진'),
-          AlyakCard(
-            padding: const EdgeInsets.all(16),
-            onTap: _editCheckup,
-            child: Row(
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: AppColors.primarySoft,
-                    borderRadius: BorderRadius.circular(AppRadius.r10),
-                  ),
-                  child: const Text('🏥', style: TextStyle(fontSize: 20)),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '건강검진을 받으셨어요?',
-                        style: AppTypography.title.copyWith(fontSize: 14),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        '검진일을 등록하면 1년 뒤 알려드려요',
-                        style: AppTypography.caption.copyWith(fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-                const Icon(Icons.chevron_right,
-                    color: AppColors.faint, size: 18),
-              ],
-            ),
-          ),
-        ],
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SectionHeader(
-          title: '🏥 최근 건강검진',
-          action: AlyakTextButton(
-            label: '수정',
-            onPressed: _editCheckup,
-          ),
-        ),
-        AlyakCard(
-          padding: const EdgeInsets.all(14),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '검진일 ${_formatCheckupDate(date)}',
-                style: AppTypography.title.copyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              if (note != null && note.isNotEmpty) ...[
-                const SizedBox(height: 6),
-                Text(
-                  '메모 · $note',
-                  style: AppTypography.body2.copyWith(
-                    fontSize: 13,
-                    color: AppColors.ink2,
-                    height: 1.4,
-                  ),
-                ),
-              ],
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-String _formatCheckupDate(DateTime d) =>
-    '${d.year}년 ${d.month}월 ${d.day}일';
-
-class CheckupEditorResult {
-  final DateTime date;
-  final String? note;
-  const CheckupEditorResult({required this.date, this.note});
-}
-
-/// Reusable checkup editor — used by the member screen + family-add chat.
-/// Returns `null` if the user cancels.
-Future<CheckupEditorResult?> showCheckupEditor({
-  required BuildContext context,
-  DateTime? initialDate,
-  String? initialNote,
-}) async {
-  final picked = await showDatePicker(
-    context: context,
-    initialDate: initialDate ?? DateTime.now(),
-    firstDate: DateTime(DateTime.now().year - 5),
-    lastDate: DateTime.now(),
-    helpText: '건강검진 받으신 날짜',
-  );
-  if (picked == null) return null;
-  if (!context.mounted) return null;
-
-  final controller = TextEditingController(text: initialNote ?? '');
-  final note = await showDialog<String>(
-    context: context,
-    builder: (dctx) => AlertDialog(
-      backgroundColor: AppColors.surface,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppRadius.r20),
-      ),
-      title: const Text('메모 (선택)'),
-      content: TextField(
-        controller: controller,
-        autofocus: true,
-        maxLength: 200,
-        maxLines: 3,
-        decoration: const InputDecoration(
-          hintText: '예: 콜레스테롤 200, 정상',
-          border: OutlineInputBorder(),
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(dctx).pop(''),
-          child: const Text('건너뛰기'),
-        ),
-        FilledButton(
-          onPressed: () => Navigator.of(dctx).pop(controller.text.trim()),
-          child: const Text('저장'),
-        ),
-      ],
-    ),
-  );
-  if (note == null) return null;
-  return CheckupEditorResult(
-    date: picked,
-    note: note.isEmpty ? null : note,
-  );
-}
-
 class _NutritionStatusSection extends StatelessWidget {
   final MemberAnalysis analysis;
   final String memberId;
@@ -989,12 +751,16 @@ class _NutritionStatusSection extends StatelessWidget {
     // 영양소"라는 일반 안내로 압박감을 줄입니다.
     final hasIntake = member.currentProductIds.isNotEmpty ||
         member.manualProducts.isNotEmpty;
+    // 영양제 0개 상태에서 헤더가 단순히 "이 연령대에 자주 부족한 영양소"
+    // 라고만 보이면 사용자가 "내가 부족한 영양소"로 오인하기 쉬움. 본인
+    // 입력이 아직 없다는 점을 헤더 자체에 명시해 압박감을 줄입니다.
     final title = hasIntake
         ? '보충 필요 영양소'
-        : '이 연령대에 자주 부족한 영양소';
+        : '아직 입력 전이에요';
+    final sexFull = member.sex == Sex.male ? '남성' : '여성';
     final subtitle = hasIntake
         ? '권장량 대비 부족한 영양소입니다'
-        : '${member.ageLabel} ${member.sex.label}에게 권장되는 영양소 (KDRIs 2025)';
+        : '같은 ${member.ageLabel} $sexFull이 흔히 부족한 영양소예요';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1091,134 +857,54 @@ class _BuyCta extends StatelessWidget {
   }
 }
 
-void _openAddSheet(BuildContext context, String memberId) {
-  showModalBottomSheet<void>(
-    context: context,
-    showDragHandle: true,
-    backgroundColor: AppColors.surface,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-    ),
-    builder: (sheetCtx) {
-      return SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text('영양제 추가',
-                  style: AppTypography.heading2.copyWith(fontSize: 18)),
-              const SizedBox(height: 4),
-              Text(
-                '드시는 영양제를 추가해요',
-                style: AppTypography.caption.copyWith(fontSize: 13),
-              ),
-              const SizedBox(height: 16),
-              _AddSheetTile(
-                emoji: '🔍',
-                title: '이름으로 검색',
-                sub: '검증된 제품 중 찾기',
-                primary: true,
-                onTap: () {
-                  Navigator.of(sheetCtx).pop();
-                  sheetCtx.push('/supplement/search?member=$memberId');
-                },
-              ),
-              const SizedBox(height: 8),
-              _AddSheetTile(
-                emoji: '✏️',
-                title: '직접 입력',
-                sub: '검증된 DB에 없을 때',
-                onTap: () {
-                  Navigator.of(sheetCtx).pop();
-                  sheetCtx.push('/supplement/manual?member=$memberId');
-                },
-              ),
-              const SizedBox(height: 16),
-              SecondaryButton(
-                label: '닫기',
-                full: true,
-                size: AlyakButtonSize.md,
-                onPressed: () => Navigator.of(sheetCtx).pop(),
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-  );
-}
-
-class _AddSheetTile extends StatelessWidget {
-  final String emoji;
-  final String title;
-  final String sub;
-  final bool primary;
-  final VoidCallback onTap;
-
-  const _AddSheetTile({
-    required this.emoji,
-    required this.title,
-    required this.sub,
-    required this.onTap,
-    this.primary = false,
-  });
+/// 시간대 카드 좌측 썸네일 — 검증 제품은 ProductImage, 직접 입력은 사용자가
+/// 찍은 약통 사진(`imagePath`) 우선 + 없으면 💊 placeholder.
+class _OccurrenceThumbnail extends StatelessWidget {
+  final IntakeOccurrence occ;
+  const _OccurrenceThumbnail({required this.occ});
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: primary ? AppColors.primarySoft : AppColors.surface,
-      borderRadius: BorderRadius.circular(AppRadius.r14),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(AppRadius.r14),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: primary ? AppColors.primarySoft : AppColors.surface,
-            borderRadius: BorderRadius.circular(AppRadius.r14),
-            border: Border.all(
-              color: primary ? AppColors.primary : AppColors.hairline,
-              width: 1.5,
-            ),
-          ),
-          child: Row(
-            children: [
-              Text(emoji, style: const TextStyle(fontSize: 24)),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      title,
-                      style: AppTypography.title.copyWith(
-                        fontSize: 15,
-                        color: primary ? AppColors.primaryInk : AppColors.ink,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      sub,
-                      style: AppTypography.caption.copyWith(
-                        fontSize: 12,
-                        color: AppColors.ink2,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(
-                Icons.chevron_right,
-                size: 18,
-                color: primary ? AppColors.primary : AppColors.faint,
-              ),
-            ],
+    if (occ.isCurated && occ.product != null) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadius.r10),
+        child: ProductImage(product: occ.product!, size: 60),
+      );
+    }
+    final manualPath = occ.manual?.imagePath;
+    if (manualPath != null && manualPath.isNotEmpty) {
+      return ClipRRect(
+        borderRadius: BorderRadius.circular(AppRadius.r10),
+        child: SizedBox(
+          width: 60,
+          height: 60,
+          child: Image.file(
+            File(manualPath),
+            fit: BoxFit.cover,
+            errorBuilder: (_, _, _) => const _ManualThumbFallback(),
           ),
         ),
+      );
+    }
+    return const _ManualThumbFallback();
+  }
+}
+
+class _ManualThumbFallback extends StatelessWidget {
+  const _ManualThumbFallback();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 60,
+      height: 60,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: AppColors.surfaceMuted,
+        borderRadius: BorderRadius.circular(AppRadius.r10),
       ),
+      child: const Text('💊', style: TextStyle(fontSize: 24)),
     );
   }
 }
+

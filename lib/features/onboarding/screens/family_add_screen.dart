@@ -6,30 +6,27 @@ import 'package:go_router/go_router.dart';
 import '../../../core/data/models/product_model.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/notifications/notification_provider.dart';
-import '../../../core/security/secure_storage.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_buttons.dart';
 import '../../../core/widgets/alyak_card.dart';
+import '../../../core/widgets/intake_timing_badge.dart';
 import '../../../core/widgets/product_image.dart';
 import '../../../core/widgets/step_indicator.dart';
 import '../../family/models/family_member.dart';
 import '../../family/providers/family_provider.dart';
-import '../../family/screens/member_detail_screen.dart' show showCheckupEditor;
 import '../widgets/chat_message.dart';
-import 'notification_setup_screen.dart';
 
 /// Toss-style chat to register a new family member.
-/// Steps (max 18 — most users see fewer because of age/sex skips):
+/// Steps (max 17 — most users see fewer because of age/sex skips):
 ///   1 relationship · 2 name · 3 birthYear · 4 sex (only when relationship
-///   doesn't imply it) · 5 medical disclaimer (only when age < 4) ·
+///   doesn't imply it) · 5 medical disclaimer (only when age < 14) ·
 ///   6 height/weight · 7 pregnancy/lactation (combined, female 20–50) ·
-///   8 (no-op, retained for back-compat in the step counter) ·
-///   9 smoking · 10 drinking (both 19+) · 11 diet · 12 sleep (both 4+) ·
-///   13 stress (13+) · 14 allergies · 15 medications (1+) ·
-///   16 products (opens inline picker sheet) · 17 checkup (date + memo, 20+) ·
-///   18 complete.
+///   8 blood type (optional, all ages) ·
+///   9 smoking · 10 drinking (dropped) · 11 diet (4+) · 12 sleep · 13 stress
+///   (dropped) · 14 allergies · 15 medications (1+) ·
+///   16 products (opens inline picker sheet) · 17 complete.
 class FamilyAddScreen extends ConsumerStatefulWidget {
   /// Optional preset relationship — when entering from the welcome
   /// screen's "나부터 등록하기" CTA we skip step 1.
@@ -44,7 +41,7 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
   final _scrollCtrl = ScrollController();
   final _draft = _Draft();
   int _step = 1;
-  static const int _totalSteps = 18;
+  static const int _totalSteps = 17;
 
   @override
   void initState() {
@@ -72,6 +69,68 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
 
   bool shouldShowStep(int step) => _shouldShow(step, _draft);
 
+  /// step 7 임신/수유 선택 (해당 없음 외) — 산부인과 상담 동의 게이트
+  Future<void> _onPickPregLact(String label) async {
+    await _gateAndNext(
+      title: '🤰 임신·수유 중 영양제 안내',
+      body: '· 비타민A·D·E 등은 과다 시 태아·영아에 영향을 줄 수 있어요\n'
+          '· 한방 영양제는 산부인과와 반드시 상의하세요\n'
+          '· 본 앱 추천은 한국인 영양소 섭취기준 기반 일반 정보이며,\n'
+          '  개인 임신·수유 상태별 처방을 대체하지 않습니다',
+      checkLabel: '산부인과와 상의 후 영양제 복용을 결정하겠습니다',
+      answer: label,
+    );
+  }
+
+  /// step 15 약물 1개 이상 선택 — 약사·의사 상담 동의 게이트
+  Future<void> _onPickMedications(List<String> picked, String label) async {
+    if (picked.isEmpty) {
+      _next(answer: label);
+      return;
+    }
+    await _gateAndNext(
+      title: '💊 복용 중인 약 — 영양제 상호작용',
+      body: '선택하신 약: ${picked.join(", ")}\n\n'
+          '· 혈압약 + 칼슘/마그네슘 → 혈압 변동 가능\n'
+          '· 갑상선약 + 철분/칼슘 → 흡수 방해\n'
+          '· 항응고제 + 오메가3/비타민K → 출혈 위험\n'
+          '· 당뇨약 + 크롬/베르베린 → 혈당 변동\n\n'
+          '본 앱은 일반 정보를 제공하며,\n'
+          '약물 상호작용은 약사·의사와 반드시 상의하세요.',
+      checkLabel: '영양제 복용 전 약사·의사와 상의하겠습니다',
+      answer: label,
+    );
+  }
+
+  /// step 14 알레르기 1개 이상 선택 — 라벨 확인 안내 (체크박스 없음)
+  Future<void> _onPickAllergies(List<String> picked, String label) async {
+    if (picked.isEmpty) {
+      _next(answer: label);
+      return;
+    }
+    await showDialog<void>(
+      context: context,
+      builder: (dctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r20),
+        ),
+        title: const Text('ℹ️ 영양제 라벨을 꼭 확인해주세요'),
+        content: const Text(
+          '영양제 캡슐·코팅·보조제에 유당·대두·갑각류·효모 등이 포함될 수 '
+          '있어요. 알레르기 성분이 들어 있는지 라벨을 확인 후 복용하세요.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dctx).pop(),
+            child: const Text('알겠어요'),
+          ),
+        ],
+      ),
+    );
+    if (mounted) _next(answer: label);
+  }
+
   void _next({String? answer}) {
     if (answer != null) _draft.answers.add(_AnsweredEntry(_step, answer));
     var next = _step + 1;
@@ -80,6 +139,26 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
     }
     setState(() => _step = next);
     _scrollToEnd();
+  }
+
+  /// 모달로 면책 동의를 받고 동의 시 _next() 진행. 거부/취소 시 step 유지.
+  /// title/body/checkLabel은 화면별 컨텍스트.
+  Future<void> _gateAndNext({
+    required String title,
+    required String body,
+    required String checkLabel,
+    required String answer,
+  }) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dctx) => _ConsentGateDialog(
+        title: title,
+        body: body,
+        checkLabel: checkLabel,
+      ),
+    );
+    if (ok == true && mounted) _next(answer: answer);
   }
 
   void _back() {
@@ -183,6 +262,9 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
               onComplete: _save,
               onSkip: () => _next(answer: null),
               onOpenProductSheet: _openProductSheet,
+              onPickHighRiskPregLact: _onPickPregLact,
+              onPickMedications: _onPickMedications,
+              onPickAllergies: _onPickAllergies,
             ),
           ],
         ),
@@ -241,9 +323,15 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
               '영아 영양제는 반드시 소아과 상담을 받으세요.\n'
               '이 앱은 정보 참고용이며 의학적 진단을 대체하지 않습니다.';
         }
+        if (_draft.age < 4) {
+          return '⚠️ 알려드릴게요\n'
+              '이 시기는 정상 식단으로 충분한 경우가 많아요.\n'
+              '영양제 필요 여부는 소아과와 상담하세요.';
+        }
         return '⚠️ 알려드릴게요\n'
-            '이 시기는 정상 식단으로 충분한 경우가 많아요.\n'
-            '영양제 필요 여부는 소아과와 상담하세요.';
+            '어린이 영양제는 성장·발달에 영향을 줄 수 있어요.\n'
+            '복용 전 소아과·약사 상담을 권장해요.\n'
+            '본 앱은 정보 참고용이며 의학적 진단을 대체하지 않습니다.';
       case 6:
         return '키와 몸무게를 알려주세요 (선택)';
       case 7:
@@ -262,8 +350,6 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
         return '현재 복용 중인 약이 있나요? (선택)';
       case 16:
         return '현재 드시는 영양제가 있나요? (선택)';
-      case 17:
-        return '최근 건강검진 받으신 날짜를 알려주세요 (선택)';
       default:
         return '${_draft.name}님 등록 완료! 🎉';
     }
@@ -299,8 +385,6 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
       isBreastfeeding: _draft.isBreastfeeding,
       bloodType: _draft.bloodType,
       currentProductIds: List.unmodifiable(_draft.pendingCuratedProductIds),
-      lastCheckupDate: _draft.lastCheckupDate,
-      checkupNote: _draft.checkupNote,
       createdAt: now,
       updatedAt: now,
     );
@@ -326,20 +410,6 @@ class _FamilyAddScreenState extends ConsumerState<FamilyAddScreen> {
       } catch (_) {
         // Reminder scheduling is best-effort — do not block sign-up.
       }
-    }
-
-    // Annual checkup nudge — only when the user has the toggle on. Anchor
-    // on the entered checkup date if any, else 1 year from now.
-    final checkupOn =
-        (await SecureStorage.read(kCheckupEnabledKey)) != '0';
-    if (checkupOn) {
-      await ref
-          .read(notificationServiceProvider)
-          .scheduleAnnualCheckupReminder(
-            memberId: member.id,
-            from: member.lastCheckupDate,
-            memberName: member.name,
-          );
     }
 
     if (!mounted) return;
@@ -399,10 +469,6 @@ class _Draft {
   /// sheet. Applied to `member.currentProductIds` on save.
   List<String> pendingCuratedProductIds = const [];
 
-  /// Last health checkup the user reports having taken (optional).
-  DateTime? lastCheckupDate;
-  String? checkupNote;
-
   /// Live age = currentYear - birthYear.
   int get age => DateTime.now().year - birthYear;
 
@@ -444,7 +510,6 @@ Sex? debugImpliedSex(Relationship r) => _impliedSex(r);
 ///   * Step 11 (diet): 4+, simplified to 균형/부족 2-choice.
 ///   * Step 14 (allergies): all ages.
 ///   * Step 15 (medications): 1+.
-///   * Step 17 (checkup): 20+.
 bool _shouldShow(int step, _Draft d) {
   switch (step) {
     case 1:
@@ -455,8 +520,8 @@ bool _shouldShow(int step, _Draft d) {
       // Skip when relationship implies sex.
       final r = d.relationship;
       return r == null || _impliedSex(r) == null;
-    case 5: // medical disclaimer
-      return d.age < 4;
+    case 5: // medical disclaimer (만 14세 미만 자녀)
+      return d.age < 14;
     case 6: // height/weight
       return true;
     case 7: // combined pregnancy + lactation
@@ -478,9 +543,6 @@ bool _shouldShow(int step, _Draft d) {
     case 16:
       return true;
     case 17:
-      // Checkup date capture — only meaningful for adults.
-      return d.age >= 20;
-    case 18:
       return true;
     default:
       return true;
@@ -501,6 +563,9 @@ class _StepInput extends StatelessWidget {
   final VoidCallback onComplete;
   final VoidCallback onSkip;
   final VoidCallback onOpenProductSheet;
+  final void Function(String label) onPickHighRiskPregLact;
+  final void Function(List<String> picked, String label) onPickMedications;
+  final void Function(List<String> picked, String label) onPickAllergies;
 
   const _StepInput({
     required this.step,
@@ -510,6 +575,9 @@ class _StepInput extends StatelessWidget {
     required this.onComplete,
     required this.onSkip,
     required this.onOpenProductSheet,
+    required this.onPickHighRiskPregLact,
+    required this.onPickMedications,
+    required this.onPickAllergies,
   });
 
   @override
@@ -540,9 +608,27 @@ class _StepInput extends StatelessWidget {
         break;
       case 3:
         child = _BirthYearInput(
-          onSubmit: (year) {
+          onSubmit: (year) async {
             onSubmitDraft((d) => d.birthYear = year);
-            onAnswer('$year년생 (만 ${DateTime.now().year - year}세)');
+            final age = DateTime.now().year - year;
+            final answerText = '$year년생 (만 $age세)';
+            // 만 14세 미만 자녀 등록 시 법정대리인 동의 필수
+            // (개인정보 보호법 제22조의2)
+            if (age < 14 && context.mounted) {
+              final ok = await showDialog<bool>(
+                context: context,
+                barrierDismissible: false,
+                builder: (dctx) => const _ConsentGateDialog(
+                  title: '🧒 보호자 동의가 필요해요',
+                  body: '「개인정보 보호법」 제22조의2에 따라 만 14세 미만 가족 '
+                      '구성원의 개인정보는 법정대리인의 동의가 필요해요.',
+                  checkLabel: '본인은 이 가족 구성원의 보호자(법정대리인)이며, '
+                      '개인정보 처리에 동의합니다',
+                ),
+              );
+              if (ok != true) return; // 거부 시 step 3 유지
+            }
+            onAnswer(answerText);
           },
         );
         break;
@@ -556,12 +642,8 @@ class _StepInput extends StatelessWidget {
         );
         break;
       case 5:
-        child = SizedBox(
-          width: double.infinity,
-          child: FilledButton(
-            onPressed: () => onAnswer('확인했어요'),
-            child: const Text('확인했어요'),
-          ),
+        child = _MinorGuardianCheckbox(
+          onConfirm: () => onAnswer('확인 · 보호자 동의'),
         );
         break;
       case 6:
@@ -593,7 +675,11 @@ class _StepInput extends StatelessWidget {
               d.isBreastfeeding = value == _PregLact.lactating ||
                   value == _PregLact.both;
             });
-            onAnswer(label);
+            if (value == _PregLact.none) {
+              onAnswer(label);
+            } else {
+              onPickHighRiskPregLact(label);
+            }
           },
         );
         break;
@@ -632,7 +718,8 @@ class _StepInput extends StatelessWidget {
                 ..clear()
                 ..addAll(picked);
             });
-            onAnswer(picked.isEmpty ? '없음' : picked.join(', '));
+            final label = picked.isEmpty ? '없음' : picked.join(', ');
+            onPickAllergies(picked, label);
           },
         );
         break;
@@ -649,7 +736,8 @@ class _StepInput extends StatelessWidget {
                 ..clear()
                 ..addAll(picked);
             });
-            onAnswer(picked.isEmpty ? '없음' : picked.join(', '));
+            final label = picked.isEmpty ? '없음' : picked.join(', ');
+            onPickMedications(picked, label);
           },
         );
         break;
@@ -670,24 +758,6 @@ class _StepInput extends StatelessWidget {
               ),
             ),
           ],
-        );
-        break;
-      case 17:
-        child = _CheckupStepInput(
-          onSubmit: (date, note) {
-            onSubmitDraft((d) {
-              d.lastCheckupDate = date;
-              d.checkupNote = note;
-            });
-            if (date == null) {
-              onAnswer('건너뛰기');
-            } else {
-              final memoSuffix =
-                  note == null || note.isEmpty ? '' : ' · $note';
-              onAnswer(
-                  '${date.year}년 ${date.month}월 ${date.day}일$memoSuffix');
-            }
-          },
         );
         break;
       default:
@@ -1175,42 +1245,6 @@ class _MultiSelectState extends State<_MultiSelect> {
 
 enum _PregLact { pregnant, lactating, both, none }
 
-class _CheckupStepInput extends StatelessWidget {
-  final void Function(DateTime? date, String? note) onSubmit;
-  const _CheckupStepInput({required this.onSubmit});
-
-  Future<void> _pick(BuildContext context) async {
-    final result = await showCheckupEditor(context: context);
-    if (result == null) {
-      onSubmit(null, null);
-      return;
-    }
-    onSubmit(result.date, result.note);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton(
-            onPressed: () => onSubmit(null, null),
-            child: const Text('건너뛰기'),
-          ),
-        ),
-        const SizedBox(width: 8),
-        Expanded(
-          child: FilledButton.icon(
-            icon: const Icon(Icons.calendar_today, size: 16),
-            label: const Text('날짜 선택'),
-            onPressed: () => _pick(context),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 /// Inline product picker shown at the end of the family-add chat. Lets the
 /// user search the curated 250-DB and pile up several products in one shot,
 /// then apply them to `member.currentProductIds` when the family member is
@@ -1446,13 +1480,21 @@ class _ResultRow extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  product.scheduleLabel,
-                  style: AppTypography.caption.copyWith(
-                    fontSize: 12,
-                    color: AppColors.ink2,
-                  ),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(
+                      product.scheduleLabel,
+                      style: AppTypography.caption.copyWith(
+                        fontSize: 12,
+                        color: AppColors.ink2,
+                      ),
+                    ),
+                    IntakeTimingBadge(timing: product.intakeTiming),
+                  ],
                 ),
               ],
             ),
@@ -1523,6 +1565,171 @@ class _PickedSummary extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+/// step 5 어린이 영양제 면책 — 보호자 동의 체크박스 + 다음 버튼.
+/// 만 14세 미만 등록 시 노출됨.
+class _MinorGuardianCheckbox extends StatefulWidget {
+  final VoidCallback onConfirm;
+  const _MinorGuardianCheckbox({required this.onConfirm});
+
+  @override
+  State<_MinorGuardianCheckbox> createState() =>
+      _MinorGuardianCheckboxState();
+}
+
+class _MinorGuardianCheckboxState extends State<_MinorGuardianCheckbox> {
+  bool _checked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        InkWell(
+          onTap: () => setState(() => _checked = !_checked),
+          borderRadius: BorderRadius.circular(AppRadius.r12),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: Checkbox(
+                    value: _checked,
+                    onChanged: (v) => setState(() => _checked = v ?? false),
+                    activeColor: AppColors.primary,
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    side:
+                        const BorderSide(color: AppColors.hairline, width: 1.5),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    '보호자로서 위 내용을 확인했고, 영양제 복용은 전문가와 '
+                    '상담 후 결정하겠습니다 (필수)',
+                    style: AppTypography.body2.copyWith(fontSize: 13),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        SizedBox(
+          width: double.infinity,
+          child: FilledButton(
+            onPressed: _checked ? widget.onConfirm : null,
+            child: const Text('다음'),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// 임신/수유, 약물 등 고위험군 진입 시 띄우는 동의 모달.
+/// `Navigator.pop(true)` = 동의, `Navigator.pop(false)` = 취소(step 유지).
+class _ConsentGateDialog extends StatefulWidget {
+  final String title;
+  final String body;
+  final String checkLabel;
+
+  const _ConsentGateDialog({
+    required this.title,
+    required this.body,
+    required this.checkLabel,
+  });
+
+  @override
+  State<_ConsentGateDialog> createState() => _ConsentGateDialogState();
+}
+
+class _ConsentGateDialogState extends State<_ConsentGateDialog> {
+  bool _checked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.r20),
+      ),
+      title: Text(widget.title),
+      content: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.55,
+          maxWidth: 360,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.body,
+                style: AppTypography.body2.copyWith(fontSize: 13.5, height: 1.55),
+              ),
+              const SizedBox(height: 14),
+              InkWell(
+                onTap: () => setState(() => _checked = !_checked),
+                borderRadius: BorderRadius.circular(AppRadius.r12),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 22,
+                        height: 22,
+                        child: Checkbox(
+                          value: _checked,
+                          onChanged: (v) =>
+                              setState(() => _checked = v ?? false),
+                          activeColor: AppColors.primary,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          visualDensity: VisualDensity.compact,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          side: const BorderSide(
+                              color: AppColors.hairline, width: 1.5),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          widget.checkLabel,
+                          style: AppTypography.body2.copyWith(fontSize: 13),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('취소'),
+        ),
+        FilledButton(
+          onPressed: _checked ? () => Navigator.of(context).pop(true) : null,
+          child: const Text('확인'),
+        ),
+      ],
     );
   }
 }

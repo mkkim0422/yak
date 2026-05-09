@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +9,7 @@ import '../../../core/data/models/product_model.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/notifications/notification_provider.dart';
 import '../../../core/services/conflict_checker.dart';
+import '../../../core/services/profile_photo_service.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_typography.dart';
@@ -59,25 +62,33 @@ class _ManualSupplementInputScreenState
   final _packageSize = TextEditingController(text: '60');
   final _customDose = TextEditingController();
   final _customIntakes = TextEditingController();
+  final _customCategory = TextEditingController();
   final _intakeNote = TextEditingController();
 
   String _category = _categories.first;
   IntakeTiming _timing = IntakeTiming.anyTimeAfterMeal;
-  // Selected radio for dose-per-intake. -1 means "직접 입력".
+  // Selected chip for dose-per-intake. -1 means "직접 입력".
   int _doseChoice = 1;
-  // Selected radio for intakes-per-day. -1 means "직접 입력".
+  // Selected chip for intakes-per-day. -1 means "직접 입력".
   int _intakeChoice = 1;
+
+  /// 약통 사진 — `<appDocs>/manual_products/<id>_<ts>.jpg`. 입력 화면에서
+  /// 미리 저장하고 _save 시 ManualProductEntry.imagePath로 전달.
+  String? _imagePath;
+  final ProfilePhotoService _photoService = ProfilePhotoService();
 
   ManualProductEntry? _editing;
 
   // Validation error messages keyed by field id. Empty / missing = OK.
   String? _errName;
+  String? _errCategory;
   String? _errDose;
   String? _errIntakes;
   String? _errPackage;
 
   // Anchors for scroll-to-first-error.
   final _nameKey = GlobalKey();
+  final _categoryKey = GlobalKey();
   final _doseKey = GlobalKey();
   final _intakesKey = GlobalKey();
   final _packageKey = GlobalKey();
@@ -105,9 +116,13 @@ class _ManualSupplementInputScreenState
         _name.text = entry.name;
         _brand.text = entry.brand ?? '';
         _packageSize.text = entry.packageSize.toString();
-        _category = _categories.contains(entry.category)
-            ? entry.category
-            : _categories.first;
+        // 카테고리가 사전 정의 목록에 없으면 '기타' + custom 으로 hydrate.
+        if (_categories.contains(entry.category)) {
+          _category = entry.category;
+        } else {
+          _category = '기타';
+          _customCategory.text = entry.category;
+        }
         _timing = entry.intakeTiming;
         _doseChoice = const [1, 2, 3].contains(entry.dosePerIntake)
             ? entry.dosePerIntake
@@ -122,9 +137,9 @@ class _ManualSupplementInputScreenState
           _customIntakes.text = entry.intakesPerDay.toString();
         }
         _intakeNote.text = entry.intakeNote ?? '';
+        _imagePath = entry.imagePath;
       }
     }
-
   }
 
   @override
@@ -134,8 +149,98 @@ class _ManualSupplementInputScreenState
     _packageSize.dispose();
     _customDose.dispose();
     _customIntakes.dispose();
+    _customCategory.dispose();
     _intakeNote.dispose();
     super.dispose();
+  }
+
+  /// 카테고리 '기타' 선택 시 custom 입력값을, 그 외에는 dropdown 값을 반환.
+  /// 미입력 / 공백은 null.
+  String? _resolvedCategory() {
+    if (_category == '기타') {
+      final t = _customCategory.text.trim();
+      return t.isEmpty ? null : t;
+    }
+    return _category;
+  }
+
+  Future<void> _pickPhoto() async {
+    final choice = await showModalBottomSheet<_PhotoAction>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      showDragHandle: true,
+      builder: (sheetCtx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 4, 20, 20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text('약통 사진',
+                  style: AppTypography.heading2.copyWith(fontSize: 17)),
+              const SizedBox(height: 12),
+              _photoTile(
+                emoji: '📷',
+                title: '카메라로 찍기',
+                onTap: () => Navigator.of(sheetCtx).pop(_PhotoAction.camera),
+              ),
+              const SizedBox(height: 8),
+              _photoTile(
+                emoji: '🖼️',
+                title: '갤러리에서 선택',
+                onTap: () => Navigator.of(sheetCtx).pop(_PhotoAction.gallery),
+              ),
+              if (_imagePath != null) ...[
+                const SizedBox(height: 8),
+                _photoTile(
+                  emoji: '🗑️',
+                  title: '사진 제거',
+                  onTap: () => Navigator.of(sheetCtx).pop(_PhotoAction.remove),
+                ),
+              ],
+              const SizedBox(height: 12),
+              TextButton(
+                onPressed: () => Navigator.of(sheetCtx).pop(),
+                child: const Text('취소'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (choice == null) return;
+
+    if (choice == _PhotoAction.remove) {
+      final old = _imagePath;
+      setState(() => _imagePath = null);
+      await _photoService.deleteIfExists(old);
+      return;
+    }
+
+    try {
+      final picked = choice == _PhotoAction.camera
+          ? await _photoService.pickFromCamera(maxDim: 800, quality: 85)
+          : await _photoService.pickFromGallery(maxDim: 800, quality: 85);
+      if (picked == null) return;
+      // 신규 항목은 임시 id 시드로, 편집 모드는 기존 entry id로 파일명 구성.
+      final idHint = _editing?.id ?? 'm_${DateTime.now().microsecondsSinceEpoch}';
+      final saved = await _photoService.saveForManualProduct(
+        idHint: idHint,
+        src: picked,
+      );
+      final old = _imagePath;
+      setState(() => _imagePath = saved);
+      // 이전 사진이 있었다면 best-effort 삭제.
+      await _photoService.deleteIfExists(old);
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('사진을 가져올 수 없어요. 권한을 확인해주세요')),
+      );
+    }
   }
 
   int? _resolvedDose() {
@@ -158,6 +263,7 @@ class _ManualSupplementInputScreenState
 
   Future<void> _save() async {
     final name = _name.text.trim();
+    final category = _resolvedCategory();
     final dose = _resolvedDose();
     final intakes = _resolvedIntakes();
     final packageSizeRaw = _packageSize.text.trim();
@@ -165,6 +271,7 @@ class _ManualSupplementInputScreenState
 
     setState(() {
       _errName = name.isEmpty ? '제품명을 입력해주세요' : null;
+      _errCategory = category == null ? '카테고리를 입력해주세요' : null;
       _errDose = dose == null
           ? (_doseChoice == -1
               ? '1회 복용량을 입력해주세요'
@@ -182,6 +289,7 @@ class _ManualSupplementInputScreenState
 
     final firstError = <(String?, GlobalKey)>[
       (_errName, _nameKey),
+      (_errCategory, _categoryKey),
       (_errDose, _doseKey),
       (_errIntakes, _intakesKey),
       (_errPackage, _packageKey),
@@ -200,7 +308,12 @@ class _ManualSupplementInputScreenState
     }
 
     // Re-cast to non-nullable now that validation has passed.
-    if (dose == null || intakes == null || packageSize == null) return;
+    if (dose == null ||
+        intakes == null ||
+        packageSize == null ||
+        category == null) {
+      return;
+    }
 
     final dailyDose = dose * intakes;
     // If 1일 2회 이상이면 multiple로 보고 — UI에서 분복 라벨이 합성되도록.
@@ -214,12 +327,20 @@ class _ManualSupplementInputScreenState
     if (member == null) return;
 
     if (_editing != null) {
-      final updatedEntry = _editing!.copyWith(
+      // copyWith의 `imagePath ?? this.imagePath` 패턴이 null 전달을 흡수하므로
+      // 사진 제거 케이스를 위해 명시적으로 새 인스턴스 구성. ingredients /
+      // priceKrw / startedAt은 기존 값을 그대로 보존.
+      final updatedEntry = ManualProductEntry(
+        id: _editing!.id,
         name: name,
         brand: _brand.text.trim().isEmpty ? null : _brand.text.trim(),
-        category: _category,
+        category: category,
         dailyDose: dailyDose,
         packageSize: packageSize,
+        priceKrw: _editing!.priceKrw,
+        imagePath: _imagePath,
+        ingredients: _editing!.ingredients,
+        startedAt: _editing!.startedAt,
         intakeTiming: timing,
         dosePerIntake: dose,
         intakesPerDay: intakes,
@@ -237,9 +358,10 @@ class _ManualSupplementInputScreenState
         id: 'manual_${DateTime.now().microsecondsSinceEpoch}',
         name: name,
         brand: _brand.text.trim().isEmpty ? null : _brand.text.trim(),
-        category: _category,
+        category: category,
         dailyDose: dailyDose,
         packageSize: packageSize,
+        imagePath: _imagePath,
         ingredients: const {},
         startedAt: DateTime.now(),
         intakeTiming: timing,
@@ -372,6 +494,12 @@ class _ManualSupplementInputScreenState
             ),
           ),
           const SizedBox(height: 16),
+          _label('약통 사진 (선택)'),
+          _PhotoSection(
+            imagePath: _imagePath,
+            onTap: _pickPhoto,
+          ),
+          const SizedBox(height: 16),
           KeyedSubtree(key: _nameKey, child: _label('제품명 *')),
           TextField(
             controller: _name,
@@ -386,17 +514,37 @@ class _ManualSupplementInputScreenState
             },
           ),
           const SizedBox(height: 12),
-          _label('카테고리 *'),
+          KeyedSubtree(key: _categoryKey, child: _label('카테고리 *')),
           DropdownButtonFormField<String>(
             initialValue: _category,
             items: [
               for (final c in _categories)
                 DropdownMenuItem(value: c, child: Text(c)),
             ],
-            onChanged: (v) =>
-                setState(() => _category = v ?? _categories.first),
+            onChanged: (v) => setState(() {
+              _category = v ?? _categories.first;
+              if (_category != '기타') _errCategory = null;
+            }),
             decoration: const InputDecoration(border: OutlineInputBorder()),
           ),
+          if (_category == '기타') ...[
+            const SizedBox(height: 8),
+            TextField(
+              controller: _customCategory,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                hintText: '카테고리 직접 입력 (예: 콜라겐, 프로폴리스)',
+                errorText: _errCategory,
+                errorBorder: _errorOutline,
+                focusedErrorBorder: _errorOutline,
+              ),
+              onChanged: (_) {
+                if (_errCategory != null) {
+                  setState(() => _errCategory = null);
+                }
+              },
+            ),
+          ],
           const SizedBox(height: 16),
           _label('복용 시간 *'),
           _TimingPicker(
@@ -405,7 +553,7 @@ class _ManualSupplementInputScreenState
           ),
           const SizedBox(height: 16),
           KeyedSubtree(key: _doseKey, child: _label('1회 복용량 *')),
-          _RadioWithCustom(
+          _ChipPicker(
             options: const [1, 2, 3],
             optionLabel: (n) => '$n정',
             selected: _doseChoice,
@@ -419,7 +567,7 @@ class _ManualSupplementInputScreenState
           ),
           const SizedBox(height: 16),
           KeyedSubtree(key: _intakesKey, child: _label('1일 횟수 *')),
-          _RadioWithCustom(
+          _ChipPicker(
             options: const [1, 2, 3],
             optionLabel: (n) => '$n회',
             selected: _intakeChoice,
@@ -558,7 +706,10 @@ class _RadioRow extends StatelessWidget {
   }
 }
 
-class _RadioWithCustom extends StatelessWidget {
+/// 1회 복용량 / 1일 횟수 단일 라인 칩 선택기. [1] [2] [3] [직접] 가로 배치.
+/// "직접" 선택 시 그 아래 한 줄 숫자 입력 노출. 기존 세로 라디오 4행을
+/// 한 줄로 압축해 시각 복잡도 감소.
+class _ChipPicker extends StatelessWidget {
   final List<int> options;
   final String Function(int) optionLabel;
   final int selected;
@@ -567,7 +718,7 @@ class _RadioWithCustom extends StatelessWidget {
   final String customSuffix;
   final String? errorText;
 
-  const _RadioWithCustom({
+  const _ChipPicker({
     required this.options,
     required this.optionLabel,
     required this.selected,
@@ -582,20 +733,26 @@ class _RadioWithCustom extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        for (final n in options)
-          _RadioRow(
-            selected: n == selected,
-            label: optionLabel(n),
-            onTap: () => onSelect(n),
-          ),
-        _RadioRow(
-          selected: selected == -1,
-          label: '직접 입력',
-          onTap: () => onSelect(-1),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            for (final n in options)
+              _Chip(
+                label: optionLabel(n),
+                selected: n == selected,
+                onTap: () => onSelect(n),
+              ),
+            _Chip(
+              label: '직접 입력',
+              selected: selected == -1,
+              onTap: () => onSelect(-1),
+            ),
+          ],
         ),
         if (selected == -1)
           Padding(
-            padding: const EdgeInsets.fromLTRB(34, 4, 0, 0),
+            padding: const EdgeInsets.only(top: 8),
             child: TextField(
               controller: customController,
               keyboardType: TextInputType.number,
@@ -611,7 +768,7 @@ class _RadioWithCustom extends StatelessWidget {
                 suffixText: customSuffix,
                 errorBorder: _errorOutline,
                 focusedErrorBorder: _errorOutline,
-                errorText: errorText != null ? '' : null, // border-only
+                errorText: errorText != null ? '' : null,
               ),
             ),
           ),
@@ -630,4 +787,168 @@ class _RadioWithCustom extends StatelessWidget {
       ],
     );
   }
+}
+
+class _Chip extends StatelessWidget {
+  final String label;
+  final bool selected;
+  final VoidCallback onTap;
+  const _Chip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: selected ? AppColors.primary : AppColors.surface,
+      borderRadius: BorderRadius.circular(AppRadius.r10),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.r10),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+          decoration: BoxDecoration(
+            color: selected ? AppColors.primary : AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.r10),
+            border: Border.all(
+              color: selected ? AppColors.primary : AppColors.hairline,
+              width: 1.5,
+            ),
+          ),
+          child: Text(
+            label,
+            style: AppTypography.title.copyWith(
+              fontSize: 13.5,
+              fontWeight: FontWeight.w700,
+              color: selected ? Colors.white : AppColors.ink,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+enum _PhotoAction { camera, gallery, remove }
+
+class _PhotoSection extends StatelessWidget {
+  final String? imagePath;
+  final VoidCallback onTap;
+  const _PhotoSection({required this.imagePath, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    final hasImage = imagePath != null && imagePath!.isNotEmpty;
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppRadius.r12),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppRadius.r12),
+        child: Container(
+          height: 110,
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.r12),
+            border: Border.all(
+              color: hasImage ? AppColors.primary : AppColors.hairline,
+              width: 1.5,
+            ),
+          ),
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(AppRadius.r10),
+                child: SizedBox(
+                  width: 92,
+                  height: 92,
+                  child: hasImage
+                      ? Image.file(
+                          File(imagePath!),
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, _, _) => const _PhotoEmpty(),
+                        )
+                      : const _PhotoEmpty(),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      hasImage ? '사진 변경' : '약통 사진 추가',
+                      style: AppTypography.title.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        color: hasImage
+                            ? AppColors.primaryInk
+                            : AppColors.ink,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      hasImage
+                          ? '눌러서 다시 찍거나 제거할 수 있어요'
+                          : '카메라 또는 갤러리에서 선택',
+                      style: AppTypography.caption.copyWith(
+                        fontSize: 11.5,
+                        color: AppColors.muted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right, color: AppColors.faint, size: 18),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PhotoEmpty extends StatelessWidget {
+  const _PhotoEmpty();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: AppColors.surfaceMuted,
+      alignment: Alignment.center,
+      child: const Text('📷', style: TextStyle(fontSize: 28)),
+    );
+  }
+}
+
+Widget _photoTile({
+  required String emoji,
+  required String title,
+  required VoidCallback onTap,
+}) {
+  return Material(
+    color: AppColors.surfaceMuted,
+    borderRadius: BorderRadius.circular(AppRadius.r12),
+    child: InkWell(
+      borderRadius: BorderRadius.circular(AppRadius.r12),
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        child: Row(
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 22)),
+            const SizedBox(width: 12),
+            Text(
+              title,
+              style: AppTypography.title.copyWith(fontSize: 14.5),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

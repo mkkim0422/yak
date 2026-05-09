@@ -16,7 +16,6 @@ const String kNotifEveningKey = 'notif.evening.time';
 const String kNotifEnabledKey = 'notif.enabled';
 const String kReorderEnabledKey = 'notif.reorder.enabled';
 const String kReorderDaysKey = 'notif.reorder.days';
-const String kCheckupEnabledKey = 'notif.checkup.enabled';
 
 String _formatTime(TimeOfDay t) =>
     '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
@@ -43,7 +42,6 @@ class _NotificationSetupScreenState
   TimeOfDay _morning = const TimeOfDay(hour: 7, minute: 30);
   TimeOfDay _evening = const TimeOfDay(hour: 20, minute: 0);
   bool _reorderEnabled = true;
-  bool _checkupEnabled = true;
   bool _doseEnabled = false;
   bool _saving = false;
 
@@ -131,15 +129,6 @@ class _NotificationSetupScreenState
                       value: _reorderEnabled,
                       onChanged: (v) =>
                           setState(() => _reorderEnabled = v),
-                    ),
-                    const SizedBox(height: 10),
-                    _NotifToggle(
-                      emoji: '🩺',
-                      title: '건강검진 때가 됐을 때',
-                      sub: '1년에 한 번',
-                      value: _checkupEnabled,
-                      onChanged: (v) =>
-                          setState(() => _checkupEnabled = v),
                     ),
                     const SizedBox(height: 10),
                     _NotifToggle(

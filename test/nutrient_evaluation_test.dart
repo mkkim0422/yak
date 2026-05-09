@@ -192,6 +192,35 @@ void main() {
     });
   });
 
+  group('softGradeLabel — 대시보드용 4단계 등급', () {
+    test('pct < 30 → 많이 부족', () {
+      expect(softGradeLabel(0), '많이 부족');
+      expect(softGradeLabel(29), '많이 부족');
+    });
+
+    test('30 ≤ pct < 70 → 조금 부족', () {
+      expect(softGradeLabel(30), '조금 부족');
+      expect(softGradeLabel(69), '조금 부족');
+    });
+
+    test('70 ≤ pct < 110 → 충분', () {
+      expect(softGradeLabel(70), '충분');
+      expect(softGradeLabel(100), '충분');
+      expect(softGradeLabel(109), '충분');
+    });
+
+    test('pct ≥ 110 → 넉넉', () {
+      expect(softGradeLabel(110), '넉넉');
+      expect(softGradeLabel(200), '넉넉');
+    });
+
+    test('PART 9 — 어떤 입력값에서도 % 기호 미포함', () {
+      for (var i = 0; i <= 200; i += 5) {
+        expect(softGradeLabel(i), isNot(contains('%')));
+      }
+    });
+  });
+
   group('formatAmount — 숫자 포맷', () {
     test('정수면 정수로', () {
       expect(formatAmount(5.0), '5');

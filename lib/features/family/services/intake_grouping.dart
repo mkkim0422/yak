@@ -19,9 +19,9 @@ extension IntakeSlotX on IntakeSlot {
       };
 }
 
-/// One product or manual entry rendered into a specific slot. The same
-/// underlying entry may appear in multiple slots when [intakesPerDay] >= 2
-/// (분복) — each [IntakeOccurrence] carries its own [dose] for that slot.
+/// One product or manual entry rendered into a specific slot. V1+에서는
+/// 사용자가 보통 아침에 한 번에 복용하는 행동 패턴에 맞춰, 1일 N회 분산
+/// 라벨이라도 단일 슬롯에 [dailyDose]만큼 묶어 표시합니다.
 class IntakeOccurrence {
   /// Stable id of the entry — product id or manual entry id. Used by the
   /// caller to remove or open the detail page.
@@ -34,17 +34,21 @@ class IntakeOccurrence {
   /// Display name shown on the card.
   final String name;
 
-  /// Doses taken at this slot (e.g. 1정, 2캡슐). Always ≥ 1.
+  /// Total daily doses 묶음 (= dailyDose, 즉 dosePerIntake × intakesPerDay).
+  /// 분복 라벨이라도 시간대 카드는 단일 슬롯에 합산해 표시합니다.
   final int dose;
 
   /// Unit string ("정", "캡슐", "포", ...). Empty falls back to "정"
   /// at render time.
   final String unit;
 
-  /// Pre-meal / post-meal / 식사 중 — used to render "식후 2정" inside
-  /// the card. The slot emoji/label lives in the section header; this
-  /// only adds a meal-relative hint.
+  /// Pre-meal / post-meal / 식사 중. 사용자 노출 라벨 뱃지(`timing.badgeText`)
+  /// 가 표시 본문이며, 본 필드는 mealRelation 기반 회귀 검증용으로 유지.
   final MealRelation mealRelation;
+
+  /// Original IntakeTiming — 카드 측에서 [IntakeTimingX.badgeText] 뱃지를
+  /// 렌더할 때 사용.
+  final IntakeTiming timing;
 
   /// Backing curated [Product] when [isCurated]. Null for manuals.
   final Product? product;
@@ -59,6 +63,7 @@ class IntakeOccurrence {
     required this.dose,
     required this.unit,
     required this.mealRelation,
+    required this.timing,
     this.product,
     this.manual,
   });
@@ -111,35 +116,33 @@ IntakeGroupedSchedule buildGroupedSchedule({
 
   for (final p in curatedProducts) {
     final unit = p.unit.isEmpty ? '정' : p.unit;
-    final slots = _slotsFor(p.intakeTiming, p.intakesPerDay);
-    for (final slot in slots) {
-      final occ = IntakeOccurrence(
-        entryId: p.id,
-        isCurated: true,
-        name: p.name,
-        dose: p.dosePerIntake,
-        unit: unit,
-        mealRelation: _mealRelationFor(p.intakeTiming),
-        product: p,
-      );
-      _bucketFor(slot, morning, lunch, evening).add(occ);
-    }
+    final slot = _slotFor(p.intakeTiming);
+    final occ = IntakeOccurrence(
+      entryId: p.id,
+      isCurated: true,
+      name: p.name,
+      dose: p.dailyDose,
+      unit: unit,
+      mealRelation: _mealRelationFor(p.intakeTiming),
+      timing: p.intakeTiming,
+      product: p,
+    );
+    _bucketFor(slot, morning, lunch, evening).add(occ);
   }
 
   for (final m in manuals) {
-    final slots = _slotsFor(m.intakeTiming, m.intakesPerDay);
-    for (final slot in slots) {
-      final occ = IntakeOccurrence(
-        entryId: m.id,
-        isCurated: false,
-        name: m.name,
-        dose: m.dosePerIntake,
-        unit: '정',
-        mealRelation: _mealRelationFor(m.intakeTiming),
-        manual: m,
-      );
-      _bucketFor(slot, morning, lunch, evening).add(occ);
-    }
+    final slot = _slotFor(m.intakeTiming);
+    final occ = IntakeOccurrence(
+      entryId: m.id,
+      isCurated: false,
+      name: m.name,
+      dose: m.dailyDose,
+      unit: '정',
+      mealRelation: _mealRelationFor(m.intakeTiming),
+      timing: m.intakeTiming,
+      manual: m,
+    );
+    _bucketFor(slot, morning, lunch, evening).add(occ);
   }
 
   return IntakeGroupedSchedule(
@@ -149,36 +152,22 @@ IntakeGroupedSchedule buildGroupedSchedule({
   );
 }
 
-/// Returns the list of slots in which a product/manual should appear,
-/// based on its [IntakeTiming] and [intakesPerDay].
-///
-/// Single-shot products land in exactly one slot. `multiple` and any
-/// timing with `intakesPerDay >= 2` is split:
-///   * 2 → morning + evening
-///   * 3 → morning + lunch + evening
-///   * 4+ → morning + lunch + evening (best-effort; the card carries a
-///     "1일 N회 (라벨 참조)" note in the schedule label).
-List<IntakeSlot> _slotsFor(IntakeTiming timing, int intakesPerDay) {
-  if (intakesPerDay >= 2) {
-    if (intakesPerDay == 2) {
-      return const [IntakeSlot.morning, IntakeSlot.evening];
-    }
-    return const [IntakeSlot.morning, IntakeSlot.lunch, IntakeSlot.evening];
-  }
+/// IntakeTiming → 단일 슬롯 매핑. 사용자(30-40대 엄마)는 보통 아침에 한 번에
+/// 복용하므로, 라벨에 "1일 N회 분산"이 있어도 슬롯은 단일로 묶고 dose는
+/// dailyDose로 합산합니다 (intake_grouping의 buildGroupedSchedule 참조).
+IntakeSlot _slotFor(IntakeTiming timing) {
   switch (timing) {
     case IntakeTiming.morningEmpty:
     case IntakeTiming.morningAfter:
     case IntakeTiming.anyTimeAfterMeal:
     case IntakeTiming.withMeal:
-      return const [IntakeSlot.morning];
+    case IntakeTiming.multiple:
+      return IntakeSlot.morning;
     case IntakeTiming.lunchAfter:
-      return const [IntakeSlot.lunch];
+      return IntakeSlot.lunch;
     case IntakeTiming.dinnerAfter:
     case IntakeTiming.beforeSleep:
-      return const [IntakeSlot.evening];
-    case IntakeTiming.multiple:
-      // Should not reach here when intakesPerDay == 1, but be defensive.
-      return const [IntakeSlot.morning];
+      return IntakeSlot.evening;
   }
 }
 

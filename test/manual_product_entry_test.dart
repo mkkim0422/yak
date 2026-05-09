@@ -88,37 +88,35 @@ void main() {
     });
   });
 
-  group('ManualProductEntry.scheduleLabel', () {
-    test('1+1 → 단일 라인', () {
+  group('ManualProductEntry.scheduleLabel — V1+ 단순 묶음', () {
+    test('1+1 → "하루 1정"', () {
       final e = _entry(timing: IntakeTiming.anyTimeAfterMeal, dose: 1, n: 1);
-      expect(e.scheduleLabel, contains('식후'));
-      expect(e.scheduleLabel, contains('1정'));
+      expect(e.scheduleLabel, '하루 1정');
     });
 
-    test('1+2 분복', () {
+    test('1+2 분복 → "하루 2정"', () {
       final e = _entry(timing: IntakeTiming.multiple, dose: 1, n: 2);
-      expect(e.scheduleLabel, '🌅 아침 1정 / 🌙 저녁 1정');
+      expect(e.scheduleLabel, '하루 2정');
     });
 
-    test('1+3 분복', () {
+    test('1+3 분복 → "하루 3정"', () {
       final e = _entry(timing: IntakeTiming.multiple, dose: 1, n: 3);
-      expect(e.scheduleLabel, '🌅 아침 1정 / 🌞 점심 1정 / 🌙 저녁 1정');
+      expect(e.scheduleLabel, '하루 3정');
     });
 
-    test('2+1 통합 (1일 1회 2정)', () {
+    test('2+1 → "하루 2정"', () {
       final e = _entry(timing: IntakeTiming.morningAfter, dose: 2, n: 1);
-      expect(e.scheduleLabel, contains('오전 식사 후'));
-      expect(e.scheduleLabel, contains('2정'));
+      expect(e.scheduleLabel, '하루 2정');
     });
 
-    test('1+5 → "1일 5회 (라벨 참조)"', () {
+    test('1+5 → "하루 5정"', () {
       final e = _entry(timing: IntakeTiming.multiple, dose: 1, n: 5);
-      expect(e.scheduleLabel, '⏰ 1일 5회 (라벨 참조)');
+      expect(e.scheduleLabel, '하루 5정');
     });
 
-    test('취침 전 1정', () {
+    test('취침 전 1정 → "하루 1정"', () {
       final e = _entry(timing: IntakeTiming.beforeSleep, dose: 1, n: 1);
-      expect(e.scheduleLabel, '🌙 취침 전 1정');
+      expect(e.scheduleLabel, '하루 1정');
     });
   });
 

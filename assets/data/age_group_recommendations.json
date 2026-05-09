@@ -219,9 +219,9 @@
       "age_group": "elderly",
       "gender": "male",
       "must_take": [
-        {"name": "비타민D", "priority": 1, "reason": "골다공증 예방에 좋아요"},
+        {"name": "비타민D", "priority": 1, "reason": "뼈 건강 유지에 좋아요"},
         {"name": "칼슘", "priority": 1, "reason": "뼈 건강 유지에 좋아요"},
-        {"name": "오메가3", "priority": 2, "reason": "심혈관·인지 기능에 좋아요"}
+        {"name": "오메가3", "priority": 2, "reason": "혈중 중성지방·인지 기능에 좋아요"}
       ],
       "highly_recommended": [
         {"name": "비타민B12", "reason": "위산 감소로 흡수가 떨어져요"},
@@ -244,9 +244,9 @@
       "age_group": "elderly",
       "gender": "female",
       "must_take": [
-        {"name": "칼슘", "priority": 1, "reason": "갱년기 골 손실 예방에 좋아요"},
+        {"name": "칼슘", "priority": 1, "reason": "갱년기 시기 뼈 건강 유지에 좋아요"},
         {"name": "비타민D", "priority": 1, "reason": "칼슘 흡수와 면역에 좋아요"},
-        {"name": "오메가3", "priority": 2, "reason": "심혈관·인지 기능에 좋아요"}
+        {"name": "오메가3", "priority": 2, "reason": "혈중 중성지방·인지 기능에 좋아요"}
       ],
       "highly_recommended": [
         {"name": "비타민B12", "reason": "위산 감소로 흡수가 떨어져요"},
@@ -386,7 +386,7 @@
       ],
       "highly_recommended": [
         {"name": "마그네슘", "reason": "근육과 수면 안정에 도움돼요"},
-        {"name": "이소플라본", "reason": "갱년기 변화 완화에 도움돼요"},
+        {"name": "이소플라본", "reason": "갱년기 컨디션 유지에 도움돼요"},
         {"name": "유산균", "reason": "장 건강 유지에 좋아요"}
       ],
       "consider_if": [

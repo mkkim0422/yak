@@ -31,7 +31,7 @@ const Map<String, ProductCategoryMeta> _kCategoryMeta = {
   ),
   'omega3': ProductCategoryMeta(
     label: '오메가-3',
-    benefit: 'EPA·DHA가 들어 있어 심혈관 건강과 혈중 중성지방 관리에 도움이 돼요',
+    benefit: 'EPA·DHA가 들어 있어 혈중 중성지방·혈행 개선에 도움이 돼요',
     cautions: ['항응고제 복용 시 약사·의사와 상의'],
   ),
   'krill_oil': ProductCategoryMeta(
@@ -175,12 +175,12 @@ const Map<String, ProductCategoryMeta> _kCategoryMeta = {
   ),
   'kids_korean_herbal': ProductCategoryMeta(
     label: '어린이 한방',
-    benefit: '한방 처방 기반으로 아이의 체질·면역에 도움을 줘요',
+    benefit: '전통 한방 원리에 따라 조성된 어린이 영양 보충제예요',
     cautions: ['만성 질환·복용 약 있는 아이는 한의사와 상의'],
   ),
   'korean_herbal': ProductCategoryMeta(
     label: '한방',
-    benefit: '한방 처방 기반 영양제예요',
+    benefit: '전통 한방 원리에 따라 조성된 영양제예요',
     cautions: ['임산부 복용 전 한의사와 상의'],
   ),
   'ginseng': ProductCategoryMeta(

@@ -20,7 +20,6 @@ class NotificationService {
   static const int _morningId = 1001;
   static const int _eveningId = 1002;
   static const int _reorderIdBase = 2000;
-  static const int _checkupIdBase = 3000;
 
   /// Stable id derived from the member id, used to scope per-member
   /// schedules so we can cancel them all when the member is removed.
@@ -179,46 +178,6 @@ class NotificationService {
     );
   }
 
-  /// Annual checkup nudge — fires 1 year after [from] (defaults to now).
-  /// When [memberName] is supplied the title is personalised so users with
-  /// multiple family members can tell whose nudge it is.
-  Future<void> scheduleAnnualCheckupReminder({
-    required String memberId,
-    DateTime? from,
-    String? memberName,
-  }) async {
-    await ensureInitialized();
-    final id = _idFor(memberId, _checkupIdBase, 'annual_checkup');
-    final base = from ?? DateTime.now();
-    var fireAt = tz.TZDateTime.from(
-      base.add(const Duration(days: 365)),
-      tz.local,
-    );
-    final now = tz.TZDateTime.now(tz.local);
-    if (!fireAt.isAfter(now)) {
-      fireAt = now.add(const Duration(days: 1));
-    }
-    final title = memberName != null && memberName.isNotEmpty
-        ? '$memberName님 건강검진 받으신 지 1년이 되었어요'
-        : '1년에 한 번 건강검진 받으세요';
-    await _plugin.zonedSchedule(
-      id,
-      title,
-      '국가 건강검진을 챙겨보세요',
-      fireAt,
-      _details(),
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      payload: 'annual_checkup:$memberId',
-    );
-  }
-
-  Future<void> cancelAnnualCheckupReminder(String memberId) async {
-    await ensureInitialized();
-    await _plugin.cancel(_idFor(memberId, _checkupIdBase, 'annual_checkup'));
-  }
-
   /// Cancels every member-scoped notification, regardless of payload.
   /// Used when a family member is removed.
   Future<void> cancelAllForMember(String memberId) async {
@@ -231,7 +190,6 @@ class NotificationService {
         await _plugin.cancel(p.id);
       }
     }
-    await cancelAnnualCheckupReminder(memberId);
   }
 
   Future<void> cancelAll() async {

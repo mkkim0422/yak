@@ -18,7 +18,7 @@ import '../providers/family_provider.dart';
 
 /// Recommendation surface — exploration-only.
 /// Each row = one nutrient deficit or one lifestyle category. Each row shows
-/// up to 3 picks tagged 적정 함량 / 판매량 / 가성비. Tapping a card opens
+/// up to 3 picks labelled 1위 / 2위 / 3위 (판매량 순). Tapping a card opens
 /// the product detail page; the [+ 추가] button has been removed entirely
 /// (adding now happens from the product detail page or the search flow).
 class RecommendationDetailScreen extends ConsumerWidget {
@@ -46,14 +46,9 @@ class RecommendationDetailScreen extends ConsumerWidget {
         ? analysis.deficits
         : analysis.priority.map((p) => p.deficit).toList();
 
-    // 종합추천 tier needs the full deficit nutrient set so it can score
-    // candidates by how much of the deficit list each product covers.
-    final deficitKeys = analysis.deficits.map((d) => d.nutrient).toList();
-
     final recommender = NutrientRecommender(repo);
     final nutrientRecos = recommender.recommend(
       member: member,
-      deficitNutrients: deficitKeys,
       nutrients: [
         for (final d in nutrientList)
           (
@@ -67,7 +62,6 @@ class RecommendationDetailScreen extends ConsumerWidget {
 
     final lifestyleRecos = recommender.recommend(
       member: member,
-      deficitNutrients: deficitKeys,
       nutrients: [
         for (final s in analysis.lifestyleSuggestions)
           (key: s.category, displayName: s.displayName, recommended: 0.0, unit: ''),
@@ -131,9 +125,6 @@ class RecommendationDetailScreen extends ConsumerWidget {
             ],
           ],
           const SizedBox(height: 16),
-          const KdrisRecommendationDisclaimer(),
-          const SizedBox(height: 8),
-          const _RecommendationDisclaimer(),
           const DisclaimerFooter(),
         ],
       ),
@@ -241,7 +232,15 @@ class _CategoryCard extends StatelessWidget {
               ),
             ),
           ],
-          const SizedBox(height: 12),
+          const SizedBox(height: 4),
+          Text(
+            '판매량 순',
+            style: AppTypography.caption.copyWith(
+              fontSize: 11.5,
+              color: AppColors.muted,
+            ),
+          ),
+          const SizedBox(height: 8),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -249,7 +248,7 @@ class _CategoryCard extends StatelessWidget {
                 if (i > 0) const SizedBox(width: 8),
                 Expanded(
                   child: _TierTile(
-                    tier: picks[i].tier,
+                    rank: picks[i].rank,
                     product: picks[i].product,
                     onTap: () => context.push(
                       '/product/${picks[i].product.id}?member=$memberId',
@@ -307,12 +306,12 @@ class _MoreButton extends StatelessWidget {
 }
 
 class _TierTile extends StatelessWidget {
-  final String tier;
+  final int rank;
   final Product product;
   final VoidCallback onTap;
 
   const _TierTile({
-    required this.tier,
+    required this.rank,
     required this.product,
     required this.onTap,
   });
@@ -344,7 +343,7 @@ class _TierTile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(
-                    tier,
+                    '$rank위',
                     style: AppTypography.micro.copyWith(
                       fontSize: 10,
                       fontWeight: FontWeight.w800,
@@ -372,26 +371,6 @@ class _TierTile extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _RecommendationDisclaimer extends StatelessWidget {
-  const _RecommendationDisclaimer();
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4),
-      child: Text(
-        '표시된 정보는 일반 권장이며, 의학적 진단을 대체하지 않습니다.\n'
-        '복용 결정 전 의사·약사와 상담하세요.',
-        textAlign: TextAlign.center,
-        style: AppTypography.caption.copyWith(
-          fontSize: 11,
-          color: AppColors.muted,
-          height: 1.5,
         ),
       ),
     );

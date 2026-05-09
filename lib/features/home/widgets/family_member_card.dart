@@ -12,8 +12,9 @@ import '../../family/models/family_member.dart';
 import '../../family/providers/family_provider.dart';
 import '../providers/member_analysis_provider.dart';
 
-/// Card variants for the home grid (matches design/screens-home.jsx).
-enum FamilyCardVariant { large, compact, mini }
+/// Card variants for the home grid. `large`는 1~4명 구간(세로 스택),
+/// `compact`은 5명+ 2-col 그리드용 작은 카드.
+enum FamilyCardVariant { large, compact }
 
 class FamilyMemberCard extends ConsumerWidget {
   final FamilyMember member;
@@ -48,8 +49,6 @@ class FamilyMemberCard extends ConsumerWidget {
         _LargeBody(member: member, analysis: analysis, status: status),
       FamilyCardVariant.compact =>
         _CompactBody(member: member, analysis: analysis, status: status),
-      FamilyCardVariant.mini =>
-        _MiniBody(member: member, analysis: analysis, status: status),
     };
 
     return Material(
@@ -84,7 +83,6 @@ class FamilyMemberCard extends ConsumerWidget {
   static double _radiusFor(FamilyCardVariant v) => switch (v) {
         FamilyCardVariant.large => AppRadius.r20,
         FamilyCardVariant.compact => AppRadius.r16,
-        FamilyCardVariant.mini => AppRadius.r14,
       };
 }
 
@@ -100,15 +98,13 @@ class _LargeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final defs = analysis.deficits;
-    final hasDeficits = defs.isNotEmpty;
     return Padding(
       padding: const EdgeInsets.all(18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Header — avatar + name + meta. No status pill, no top stripe.
+          // Header — avatar + name + meta.
           Row(
             children: [
               ProfileAvatar(member: member, size: 56),
@@ -136,7 +132,8 @@ class _LargeBody extends StatelessWidget {
           const SizedBox(height: 16),
           Container(height: 1, color: AppColors.divider),
           const SizedBox(height: 14),
-          // Primary info — what they're taking. Plain text, no boxes.
+          // Primary info — 섭취중인 영양제 개수만. 부족 영양소 요약은 멤버
+          // 상세에서만 노출 (홈 카드는 톤다운).
           Row(
             children: [
               const Text('💊', style: TextStyle(fontSize: 14)),
@@ -151,41 +148,9 @@ class _LargeBody extends StatelessWidget {
               ),
             ],
           ),
-          if (hasDeficits) ...[
-            const SizedBox(height: 12),
-            Container(height: 1, color: AppColors.divider),
-            const SizedBox(height: 10),
-            // Secondary info — deficits, calmly. Greyed body, no badge,
-            // no colored box, no exclamation marks.
-            Text(
-              '보충 필요 영양소',
-              style: AppTypography.caption.copyWith(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: AppColors.muted,
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              _deficitSummary(defs),
-              style: AppTypography.body2.copyWith(
-                fontSize: 13,
-                color: AppColors.muted,
-                fontWeight: FontWeight.w500,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
         ],
       ),
     );
-  }
-
-  static String _deficitSummary(List<NutrientDeficit> deficits) {
-    final top = deficits.take(2).map((d) => d.displayName).join(', ');
-    final extra = deficits.length - 2;
-    return extra > 0 ? '$top 외 $extra개' : top;
   }
 }
 
@@ -274,58 +239,6 @@ class _StatusDot extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         shape: BoxShape.circle,
-      ),
-    );
-  }
-}
-
-class _MiniBody extends StatelessWidget {
-  final FamilyMember member;
-  final MemberAnalysis analysis;
-  final HealthStatus status;
-  const _MiniBody({
-    required this.member,
-    required this.analysis,
-    required this.status,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final taking = analysis.currentProductCount;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(12, 14, 12, 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ProfileAvatar(member: member, size: 36),
-          const SizedBox(height: 8),
-          Text(
-            member.name,
-            style: AppTypography.title.copyWith(fontSize: 13),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-          Text(
-            '${member.age}세 ${member.sex.label}',
-            style: AppTypography.micro.copyWith(fontSize: 10.5),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Text(
-                '💊 $taking개',
-                style: AppTypography.body2.copyWith(
-                  fontSize: 11.5,
-                  color: AppColors.ink2,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const Spacer(),
-              _StatusDot(status: status, hasProducts: taking > 0),
-            ],
-          ),
-        ],
       ),
     );
   }

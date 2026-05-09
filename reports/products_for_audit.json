@@ -1,0 +1,1752 @@
+[
+ {
+  "id": "centrum_woman",
+  "name": "센트룸 우먼",
+  "english_name": "Centrum For Women",
+  "brand": "센트룸",
+  "category": "multivitamin"
+ },
+ {
+  "id": "centrum_man",
+  "name": "센트룸 맨",
+  "english_name": "Centrum For Men",
+  "brand": "센트룸",
+  "category": "multivitamin"
+ },
+ {
+  "id": "centrum_silver_man",
+  "name": "센트룸 실버 맨 50+",
+  "english_name": "Centrum Silver Men 50+",
+  "brand": "센트룸",
+  "category": "multivitamin"
+ },
+ {
+  "id": "solgar_multi_woman",
+  "name": "솔가 여성용 멀티비타민&미네랄",
+  "english_name": "Solgar Female Multiple",
+  "brand": "솔가",
+  "category": "multivitamin"
+ },
+ {
+  "id": "solgar_multi_man",
+  "name": "솔가 남성용 멀티비타민&미네랄",
+  "english_name": "Solgar Male Multiple",
+  "brand": "솔가",
+  "category": "multivitamin"
+ },
+ {
+  "id": "imp_premium",
+  "name": "임팩타민 프리미엄",
+  "english_name": "Impactamin Premium",
+  "brand": "임팩타민",
+  "category": "multivitamin"
+ },
+ {
+  "id": "imp_premium_ones",
+  "name": "임팩타민 프리미엄 원스",
+  "english_name": "Impactamin Premium Ones",
+  "brand": "임팩타민",
+  "category": "multivitamin"
+ },
+ {
+  "id": "dikamax_1000",
+  "name": "디카맥스 1000",
+  "english_name": "Dicamax 1000",
+  "brand": "다림바이오텍",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "dikamax_d",
+  "name": "디카맥스디",
+  "english_name": "Dicamax D",
+  "brand": "다림바이오텍",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "solgar_d3_1000",
+  "name": "솔가 비타민D3 1000IU",
+  "english_name": "Solgar Vitamin D3 1000 IU",
+  "brand": "솔가",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "solgar_d3_chewable",
+  "name": "솔가 츄어블 비타민D3 1000IU",
+  "english_name": "Solgar Chewable Vitamin D3 1000 IU",
+  "brand": "솔가",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "solgar_d3_5000",
+  "name": "솔가 비타민D3 5000IU",
+  "english_name": "Solgar Vitamin D3 5000 IU",
+  "brand": "솔가",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "now_d3_1000",
+  "name": "나우푸드 비타민D3 1000IU",
+  "english_name": "Now Foods Vitamin D-3 1000 IU",
+  "brand": "나우푸드",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "lactofit_gold",
+  "name": "락토핏 생유산균 골드",
+  "english_name": "Lactofit Gold",
+  "brand": "종근당건강",
+  "category": "probiotic"
+ },
+ {
+  "id": "lactofit_core",
+  "name": "락토핏 생유산균 코어",
+  "english_name": "Lactofit Core",
+  "brand": "종근당건강",
+  "category": "probiotic"
+ },
+ {
+  "id": "lactofit_kids",
+  "name": "락토핏 생유산균 키즈",
+  "english_name": "Lactofit Kids",
+  "brand": "종근당건강",
+  "category": "probiotic"
+ },
+ {
+  "id": "duolac_gold",
+  "name": "듀오락 골드",
+  "english_name": "Duolac Gold",
+  "brand": "듀오락",
+  "category": "probiotic"
+ },
+ {
+  "id": "duolac_kids",
+  "name": "듀오락 키즈",
+  "english_name": "Duolac Kids",
+  "brand": "듀오락",
+  "category": "probiotic"
+ },
+ {
+  "id": "ckd_vit_c_1000",
+  "name": "종근당 비타민C 1000",
+  "english_name": "Chong Kun Dang Vitamin C 1000",
+  "brand": "종근당건강",
+  "category": "vitamin_c"
+ },
+ {
+  "id": "eundan_vit_c_1000",
+  "name": "고려은단 비타민C 1000",
+  "english_name": "Korea Eundan Vitamin C 1000",
+  "brand": "고려은단",
+  "category": "vitamin_c"
+ },
+ {
+  "id": "eundan_megadose_c",
+  "name": "고려은단 메가도스C 3000",
+  "english_name": "Eundan Megadose C 3000",
+  "brand": "고려은단",
+  "category": "vitamin_c"
+ },
+ {
+  "id": "solgar_mg_citrate",
+  "name": "솔가 마그네슘 시트레이트",
+  "english_name": "Solgar Magnesium Citrate",
+  "brand": "솔가",
+  "category": "magnesium"
+ },
+ {
+  "id": "solgar_mg_b6",
+  "name": "솔가 마그네슘 위드 비타민B6",
+  "english_name": "Solgar Magnesium with Vitamin B6",
+  "brand": "솔가",
+  "category": "magnesium"
+ },
+ {
+  "id": "oscal_calcium_d",
+  "name": "오스칼 칼슘+D3",
+  "english_name": "OsCal Calcium 500 + Vitamin D3 200",
+  "brand": "한독",
+  "category": "calcium"
+ },
+ {
+  "id": "nordic_ultimate_omega",
+  "name": "노르딕 내추럴스 얼티메이트 오메가",
+  "english_name": "Nordic Naturals Ultimate Omega",
+  "brand": "노르딕내추럴스",
+  "category": "omega3"
+ },
+ {
+  "id": "nordic_omega3_basic",
+  "name": "노르딕 내추럴스 오메가-3",
+  "english_name": "Nordic Naturals Omega-3",
+  "brand": "노르딕내추럴스",
+  "category": "omega3"
+ },
+ {
+  "id": "nordic_baby_dha",
+  "name": "노르딕 내추럴스 베이비 DHA",
+  "english_name": "Nordic Naturals Baby's DHA",
+  "brand": "노르딕내추럴스",
+  "category": "kids_omega3"
+ },
+ {
+  "id": "nordic_kids_dha",
+  "name": "노르딕 내추럴스 어린이 DHA 리퀴드",
+  "english_name": "Nordic Naturals Children's DHA Liquid",
+  "brand": "노르딕내추럴스",
+  "category": "kids_omega3"
+ },
+ {
+  "id": "promega_dual",
+  "name": "프로메가 알티지 오메가3 듀얼",
+  "english_name": "Promega rTG Omega-3 Dual",
+  "brand": "종근당건강",
+  "category": "omega3"
+ },
+ {
+  "id": "promega_triple",
+  "name": "프로메가 오메가3 트리플",
+  "english_name": "Promega Omega-3 Triple",
+  "brand": "종근당건강",
+  "category": "omega3"
+ },
+ {
+  "id": "atomy_rtg_omega3",
+  "name": "애터미 알티지 오메가3",
+  "english_name": "Atomy rTG Omega-3",
+  "brand": "애터미",
+  "category": "omega3"
+ },
+ {
+  "id": "hurum_lutein",
+  "name": "휴럼 아이편안 루테인 지아잔틴",
+  "english_name": "Hurum Eye Comfort Lutein Zeaxanthin",
+  "brand": "휴럼",
+  "category": "eye"
+ },
+ {
+  "id": "ckd_lutein_zeaxanthin_astaxanthin",
+  "name": "종근당 아이클리어 루테인지아잔틴아스타잔틴 플러스",
+  "english_name": "CKD Eye Clear Lutein Zeaxanthin Astaxanthin Plus",
+  "brand": "종근당건강",
+  "category": "eye"
+ },
+ {
+  "id": "elevit",
+  "name": "엘레비트",
+  "english_name": "Elevit",
+  "brand": "바이엘",
+  "category": "prenatal"
+ },
+ {
+  "id": "elenew_1",
+  "name": "바이엘 엘레뉴 1단계",
+  "english_name": "Bayer Elenew Stage 1",
+  "brand": "바이엘",
+  "category": "prenatal"
+ },
+ {
+  "id": "elenew_2",
+  "name": "바이엘 엘레뉴 2단계",
+  "english_name": "Bayer Elenew Stage 2",
+  "brand": "바이엘",
+  "category": "prenatal"
+ },
+ {
+  "id": "ginexin_f_40",
+  "name": "기넥신에프정 40mg",
+  "english_name": "Ginexin-F Tab 40mg",
+  "brand": "SK케미칼",
+  "category": "circulation"
+ },
+ {
+  "id": "ginexin_f_80",
+  "name": "기넥신에프정 80mg",
+  "english_name": "Ginexin-F Tab 80mg",
+  "brand": "SK케미칼",
+  "category": "circulation"
+ },
+ {
+  "id": "ginexin_f_120",
+  "name": "기넥신에프정 120mg",
+  "english_name": "Ginexin-F Tab 120mg",
+  "brand": "SK케미칼",
+  "category": "circulation"
+ },
+ {
+  "id": "atomy_hemohim",
+  "name": "애터미 헤모힘",
+  "english_name": "Atomy HemoHIM",
+  "brand": "애터미",
+  "category": "immunity"
+ },
+ {
+  "id": "doctorlin_melavine",
+  "name": "닥터린 멜라바인 (식물성 멜라토닌)",
+  "english_name": "Doctorlin Melavine",
+  "brand": "닥터린",
+  "category": "sleep"
+ },
+ {
+  "id": "estrog100",
+  "name": "EstroG-100 (백수오 등 복합추출물)",
+  "english_name": "EstroG-100",
+  "brand": "내츄럴엔도텍",
+  "category": "menopause_female"
+ },
+ {
+  "id": "jks_red_ginseng_extract",
+  "name": "정관장 홍삼정 (홍삼농축액)",
+  "english_name": "JKS Red Ginseng Extract",
+  "brand": "정관장",
+  "category": "korean_herbal"
+ },
+ {
+  "id": "jks_everytime_limited",
+  "name": "정관장 에브리타임 리미티드",
+  "english_name": "JKS Everytime Limited",
+  "brand": "정관장",
+  "category": "korean_herbal"
+ },
+ {
+  "id": "kidsten_multi",
+  "name": "키즈텐 어린이 종합비타민 미네랄",
+  "english_name": "KidsTen Children's Multivitamin Mineral",
+  "brand": "키즈텐",
+  "category": "kids_multivitamin"
+ },
+ {
+  "id": "eundan_kids_multi",
+  "name": "고려은단 키즈 멀티비타민 츄정",
+  "english_name": "Eundan Kids Multivitamin Chewable",
+  "brand": "고려은단",
+  "category": "kids_multivitamin"
+ },
+ {
+  "id": "atomy_kids_gummy",
+  "name": "애터미 키즈 비건 구미 멀티비타민",
+  "english_name": "Atomy Kids Vegan Gummy Multivitamin",
+  "brand": "애터미",
+  "category": "kids_multivitamin"
+ },
+ {
+  "id": "imp_gold",
+  "name": "임팩타민 골드",
+  "english_name": "Impactamin Gold",
+  "brand": "임팩타민",
+  "category": "vitamin_b"
+ },
+ {
+  "id": "imp_active",
+  "name": "임팩타민 액티브",
+  "english_name": "Impactamin Active",
+  "brand": "임팩타민",
+  "category": "vitamin_b"
+ },
+ {
+  "id": "ckd_milk_thistle",
+  "name": "종근당 밀크씨슬",
+  "english_name": "CKD Milk Thistle",
+  "brand": "종근당건강",
+  "category": "liver"
+ },
+ {
+  "id": "gnm_milk_thistle",
+  "name": "지엔엠 건강한 간 밀크씨슬",
+  "english_name": "GNM Healthy Liver Milk Thistle",
+  "brand": "GNM자연의품격",
+  "category": "liver"
+ },
+ {
+  "id": "now_milk_thistle",
+  "name": "나우푸드 실리마린 밀크씨슬 익스트랙",
+  "english_name": "Now Foods Silymarin Milk Thistle Extract",
+  "brand": "나우푸드",
+  "category": "liver"
+ },
+ {
+  "id": "ckd_coq10",
+  "name": "종근당 코큐텐 플러스",
+  "english_name": "CKD CoQ10 Plus",
+  "brand": "종근당건강",
+  "category": "antioxidant"
+ },
+ {
+  "id": "garcinia_general",
+  "name": "가르시니아 캄보지아 추출물 (일반)",
+  "english_name": "Garcinia Cambogia Extract",
+  "brand": "다브랜드",
+  "category": "weight"
+ },
+ {
+  "id": "astaxanthin_general",
+  "name": "아스타잔틴 영양제 (일반)",
+  "english_name": "Astaxanthin Supplement",
+  "brand": "다브랜드",
+  "category": "antioxidant"
+ },
+ {
+  "id": "creatine_monohydrate",
+  "name": "크레아틴 모노하이드레이트 (일반)",
+  "english_name": "Creatine Monohydrate",
+  "brand": "다브랜드",
+  "category": "sports"
+ },
+ {
+  "id": "bblab_collagen_1500",
+  "name": "비비랩 더 콜라겐 1500",
+  "english_name": "BB Lab The Collagen 1500",
+  "brand": "뉴트리원 비비랩",
+  "category": "collagen"
+ },
+ {
+  "id": "evercollagen_time",
+  "name": "에버콜라겐 타임",
+  "english_name": "Evercollagen Time",
+  "brand": "뉴트리",
+  "category": "collagen"
+ },
+ {
+  "id": "evercollagen_time_biotin",
+  "name": "에버콜라겐 타임 비오틴",
+  "english_name": "Evercollagen Time Biotin",
+  "brand": "뉴트리",
+  "category": "collagen"
+ },
+ {
+  "id": "solgar_b_complex_100",
+  "name": "솔가 B-콤플렉스 100",
+  "english_name": "Solgar B-Complex 100",
+  "brand": "솔가",
+  "category": "vitamin_b"
+ },
+ {
+  "id": "now_b50",
+  "name": "나우푸드 B-50",
+  "english_name": "Now Foods Vitamin B-50",
+  "brand": "나우푸드",
+  "category": "vitamin_b"
+ },
+ {
+  "id": "gnc_megaman",
+  "name": "GNC 메가맨 멀티비타민",
+  "english_name": "GNC Mega Men Multivitamin",
+  "brand": "GNC",
+  "category": "multivitamin"
+ },
+ {
+  "id": "gnc_womens_ultra_mega",
+  "name": "GNC 우먼스 울트라메가",
+  "english_name": "GNC Women's Ultra Mega",
+  "brand": "GNC",
+  "category": "multivitamin"
+ },
+ {
+  "id": "now_adam",
+  "name": "나우푸드 ADAM 슈피리어 맨스 멀티",
+  "english_name": "Now Foods ADAM Superior Men's Multi",
+  "brand": "나우푸드",
+  "category": "multivitamin"
+ },
+ {
+  "id": "now_eve",
+  "name": "나우푸드 EVE 슈페리어 우먼스 멀티",
+  "english_name": "Now Foods EVE Superior Women's Multi",
+  "brand": "나우푸드",
+  "category": "multivitamin"
+ },
+ {
+  "id": "solgar_ca_mg_zn",
+  "name": "솔가 칼슘 마그네슘 플러스 아연",
+  "english_name": "Solgar Calcium Magnesium Plus Zinc",
+  "brand": "솔가",
+  "category": "calcium"
+ },
+ {
+  "id": "solgar_ca_mg_d3",
+  "name": "솔가 칼슘 마그네슘 위드 비타민D3",
+  "english_name": "Solgar Calcium Magnesium with Vitamin D3",
+  "brand": "솔가",
+  "category": "calcium"
+ },
+ {
+  "id": "ckd_vit_d_1000",
+  "name": "종근당 비타민D 1000IU",
+  "english_name": "CKD Vitamin D 1000 IU",
+  "brand": "종근당건강",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "ckd_vit_d_2000",
+  "name": "종근당 비타민D 2000IU (아임비타)",
+  "english_name": "CKD I'm Vita Vitamin D 2000 IU",
+  "brand": "종근당건강",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "atomy_spirulina",
+  "name": "애터미 퓨어 스피루리나 100%",
+  "english_name": "Atomy Pure Spirulina 100%",
+  "brand": "애터미",
+  "category": "superfood"
+ },
+ {
+  "id": "atomy_propolis_gummy",
+  "name": "애터미 그린 프로폴리스 면역 구미",
+  "english_name": "Atomy Green Propolis Immune Gummy",
+  "brand": "애터미",
+  "category": "immunity"
+ },
+ {
+  "id": "ckd_boswellia_7days",
+  "name": "종근당 보스웰리아 7Days",
+  "english_name": "CKD Boswellia 7Days",
+  "brand": "종근당건강",
+  "category": "joint"
+ },
+ {
+  "id": "esther_boswellia",
+  "name": "여에스더 관절엔 보스웰리아",
+  "english_name": "Esther Joint Boswellia",
+  "brand": "에스더포뮬러",
+  "category": "joint"
+ },
+ {
+  "id": "frombio_joint_boswellia",
+  "name": "프롬바이오 관절연골엔 보스웰리아",
+  "english_name": "From Bio Joint Cartilage Boswellia",
+  "brand": "프롬바이오",
+  "category": "joint"
+ },
+ {
+  "id": "natures_way_evening_primrose_1300",
+  "name": "네이처스웨이 이브닝프림로즈 1300",
+  "english_name": "Nature's Way EFAGold Evening Primrose 1300mg",
+  "brand": "네이처스웨이",
+  "category": "menopause_female"
+ },
+ {
+  "id": "black_maca_general",
+  "name": "블랙 마카 (일반)",
+  "english_name": "Black Maca",
+  "brand": "다브랜드",
+  "category": "menopause_male"
+ },
+ {
+  "id": "gnc_zinc_30",
+  "name": "GNC 아연 30",
+  "english_name": "GNC Zinc 30",
+  "brand": "GNC",
+  "category": "mineral"
+ },
+ {
+  "id": "now_zinc_50",
+  "name": "나우푸드 아연 50mg",
+  "english_name": "Now Foods Zinc 50",
+  "brand": "나우푸드",
+  "category": "mineral"
+ },
+ {
+  "id": "ckd_krill_oil",
+  "name": "종근당 크릴 오일 1000mg",
+  "english_name": "CKD Krill Oil 1000mg",
+  "brand": "종근당건강",
+  "category": "krill_oil"
+ },
+ {
+  "id": "lcarnitine_2000",
+  "name": "엘카슬림 L-카르니틴 2000mg (일반)",
+  "english_name": "L-Carnitine 2000mg",
+  "brand": "다브랜드",
+  "category": "weight"
+ },
+ {
+  "id": "glucosamine_general",
+  "name": "글루코사민 1500 (일반)",
+  "english_name": "Glucosamine 1500",
+  "brand": "다브랜드",
+  "category": "joint"
+ },
+ {
+  "id": "chondroitin_general",
+  "name": "콘드로이틴 1200 (일반)",
+  "english_name": "Chondroitin 1200",
+  "brand": "다브랜드",
+  "category": "joint"
+ },
+ {
+  "id": "msm_general",
+  "name": "MSM (식이유황, 일반)",
+  "english_name": "MSM 1500",
+  "brand": "다브랜드",
+  "category": "joint"
+ },
+ {
+  "id": "hanmi_mothers_general",
+  "name": "한미 마더스 임산부 종합",
+  "english_name": "Hanmi Mothers Prenatal Multi",
+  "brand": "한미",
+  "category": "prenatal"
+ },
+ {
+  "id": "atomy_psyllium",
+  "name": "애터미 차전자피 식이섬유",
+  "english_name": "Atomy Psyllium Husk Fiber",
+  "brand": "애터미",
+  "category": "fiber"
+ },
+ {
+  "id": "meditree_psyllium",
+  "name": "메디트리 비움 차전자피 식이섬유",
+  "english_name": "Meditree Bium Psyllium Husk",
+  "brand": "메디트리",
+  "category": "fiber"
+ },
+ {
+  "id": "jks_everytime_balance",
+  "name": "정관장 홍삼정 에브리타임 밸런스",
+  "english_name": "JKS Everytime Balance",
+  "brand": "정관장",
+  "category": "korean_herbal"
+ },
+ {
+  "id": "jks_everytime_soft",
+  "name": "정관장 홍삼정 에브리타임 소프트",
+  "english_name": "JKS Everytime Soft",
+  "brand": "정관장",
+  "category": "korean_herbal"
+ },
+ {
+  "id": "solgar_selenium_200",
+  "name": "솔가 셀레늄 200mcg",
+  "english_name": "Solgar Selenium 200 mcg",
+  "brand": "솔가",
+  "category": "mineral"
+ },
+ {
+  "id": "now_selenium_100",
+  "name": "나우푸드 셀레늄 100mcg",
+  "english_name": "Now Foods Selenium 100 mcg",
+  "brand": "나우푸드",
+  "category": "mineral"
+ },
+ {
+  "id": "myprotein_the_whey",
+  "name": "마이프로틴 THE 웨이",
+  "english_name": "Myprotein THE Whey",
+  "brand": "마이프로틴",
+  "category": "sports"
+ },
+ {
+  "id": "alpha_lipoic_acid_general",
+  "name": "알파리포산 600mg (일반)",
+  "english_name": "Alpha Lipoic Acid 600mg",
+  "brand": "다브랜드",
+  "category": "antioxidant"
+ },
+ {
+  "id": "lipo_vit_c_general",
+  "name": "리포좀 비타민C 1000 (일반)",
+  "english_name": "Liposomal Vitamin C 1000",
+  "brand": "다브랜드",
+  "category": "vitamin_c"
+ },
+ {
+  "id": "ckd_glucosamine_plus",
+  "name": "종근당건강 글루코사민 플러스",
+  "english_name": "CKD Glucosamine Plus",
+  "brand": "종근당건강",
+  "category": "joint"
+ },
+ {
+  "id": "gnc_lutein_20",
+  "name": "GNC 루테인 20mg",
+  "english_name": "GNC Lutein 20mg",
+  "brand": "GNC",
+  "category": "eye"
+ },
+ {
+  "id": "gnc_lutein_40",
+  "name": "GNC 루테인 40mg",
+  "english_name": "GNC Lutein 40mg",
+  "brand": "GNC",
+  "category": "eye"
+ },
+ {
+  "id": "doctorlin_lutein_zeaxanthin_24",
+  "name": "닥터린 루테인 지아잔틴 24",
+  "english_name": "Doctorlin Lutein Zeaxanthin 24",
+  "brand": "닥터린",
+  "category": "eye"
+ },
+ {
+  "id": "tanacia_q",
+  "name": "타나시아큐",
+  "english_name": "Tanacia Q",
+  "brand": "유유제약",
+  "category": "circulation"
+ },
+ {
+  "id": "solgar_milk_thistle_300",
+  "name": "솔가 밀크씨슬 300",
+  "english_name": "Solgar Milk Thistle 300mg",
+  "brand": "솔가",
+  "category": "liver"
+ },
+ {
+  "id": "movita_iron_chewable",
+  "name": "메디포스트 모비타 철분 츄어블",
+  "english_name": "Medipost Movita Iron Chewable",
+  "brand": "메디포스트",
+  "category": "mineral"
+ },
+ {
+  "id": "choa_vit_d_4000_chewable",
+  "name": "조아제약 츄어블 비타민D 4000IU",
+  "english_name": "Choa Chewable Vitamin D 4000 IU",
+  "brand": "조아제약",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "cj_byocore_500",
+  "name": "CJ 바이오코어 건강한 생유산균 500억",
+  "english_name": "CJ BYOCORE Premium Probiotics 500",
+  "brand": "CJ 웰케어",
+  "category": "probiotic"
+ },
+ {
+  "id": "cj_byocore_100",
+  "name": "CJ 바이오코어 건강한 생유산균 100억",
+  "english_name": "CJ BYOCORE Probiotics 100",
+  "brand": "CJ 웰케어",
+  "category": "probiotic"
+ },
+ {
+  "id": "cj_byocore_skin_immune",
+  "name": "CJ 바이오코어 피부면역 유산균",
+  "english_name": "CJ BYOCORE Skin Immune Probiotics",
+  "brand": "CJ 웰케어",
+  "category": "probiotic"
+ },
+ {
+  "id": "bblab_zino_free_vag",
+  "name": "비비랩 지노프리 질유산균 리스펙타프로",
+  "english_name": "BB Lab Zino Free Vaginal Probiotic",
+  "brand": "뉴트리원 비비랩",
+  "category": "probiotic"
+ },
+ {
+  "id": "atomy_b_complex",
+  "name": "애터미 비타민B 컴플렉스",
+  "english_name": "Atomy Vitamin B Complex",
+  "brand": "애터미",
+  "category": "vitamin_b"
+ },
+ {
+  "id": "atomy_proactamin",
+  "name": "애터미 프로팩타민",
+  "english_name": "Atomy Proactamin",
+  "brand": "애터미",
+  "category": "multivitamin"
+ },
+ {
+  "id": "atomy_vital_color",
+  "name": "애터미 바이탈컬러 멀티비타민",
+  "english_name": "Atomy Vital Color Multivitamin",
+  "brand": "애터미",
+  "category": "multivitamin"
+ },
+ {
+  "id": "atomy_inner_collagen",
+  "name": "애터미 이너콜라겐",
+  "english_name": "Atomy Inner Collagen",
+  "brand": "애터미",
+  "category": "collagen"
+ },
+ {
+  "id": "nac_general",
+  "name": "N-아세틸시스테인 NAC 600 (일반)",
+  "english_name": "N-Acetyl Cysteine 600",
+  "brand": "다브랜드",
+  "category": "antioxidant"
+ },
+ {
+  "id": "curcumin_general",
+  "name": "강황 추출물 커큐민 95% (일반)",
+  "english_name": "Turmeric Curcumin 95% 500mg",
+  "brand": "다브랜드",
+  "category": "antioxidant"
+ },
+ {
+  "id": "resveratrol_general",
+  "name": "트랜스 레스베라트롤 (일반)",
+  "english_name": "Trans-Resveratrol",
+  "brand": "다브랜드",
+  "category": "antioxidant"
+ },
+ {
+  "id": "solgar_zinc_50",
+  "name": "솔가 아연 50",
+  "english_name": "Solgar Zinc 50",
+  "brand": "솔가",
+  "category": "mineral"
+ },
+ {
+  "id": "pilly_red_ginseng_octacosanol",
+  "name": "필리 홍삼 옥타코사놀",
+  "english_name": "Pilly Red Ginseng Octacosanol",
+  "brand": "필리",
+  "category": "korean_herbal"
+ },
+ {
+  "id": "selex_core_protein_pro",
+  "name": "셀렉스 코어 프로틴 프로",
+  "english_name": "Selex Core Protein Pro",
+  "brand": "매일헬스뉴트리션",
+  "category": "sports"
+ },
+ {
+  "id": "selex_core_protein_plus",
+  "name": "셀렉스 코어 프로틴 플러스 (액상)",
+  "english_name": "Selex Core Protein Plus Liquid",
+  "brand": "매일헬스뉴트리션",
+  "category": "sports"
+ },
+ {
+  "id": "ckd_allatme_collagen_3270",
+  "name": "종근당건강 올앳미 어린슈퍼콜라겐 3270",
+  "english_name": "CKD All At Me Young Super Collagen 3270",
+  "brand": "종근당건강",
+  "category": "collagen"
+ },
+ {
+  "id": "ckd_elastin_collagen",
+  "name": "종근당 엘라스틴 저분자 피쉬 콜라겐",
+  "english_name": "CKD Elastin Low-MW Fish Collagen",
+  "brand": "종근당건강",
+  "category": "collagen"
+ },
+ {
+  "id": "jks_everytime_regular",
+  "name": "정관장 홍삼정 에브리타임 레귤러",
+  "english_name": "JKS Everytime Regular",
+  "brand": "정관장",
+  "category": "korean_herbal"
+ },
+ {
+  "id": "atomy_chinaeng_lacto",
+  "name": "애터미 친생유산균",
+  "english_name": "Atomy Chinaeng Probiotics",
+  "brand": "애터미",
+  "category": "probiotic"
+ },
+ {
+  "id": "atomy_kids_probiotics",
+  "name": "애터미 키즈 프로바이오틱스",
+  "english_name": "Atomy Kids Probiotics",
+  "brand": "애터미",
+  "category": "probiotic"
+ },
+ {
+  "id": "ckd_belderwell_omega3",
+  "name": "종근당 벨더웰 초임계 알티지 오메가3",
+  "english_name": "CKD Belderwell Supercritical rTG Omega-3",
+  "brand": "종근당건강",
+  "category": "omega3"
+ },
+ {
+  "id": "promega_dual_plus",
+  "name": "프로메가 알티지 오메가3 듀얼 플러스",
+  "english_name": "Promega rTG Omega-3 Dual Plus",
+  "brand": "종근당건강",
+  "category": "omega3"
+ },
+ {
+  "id": "melatonin_general",
+  "name": "멜라토닌 3mg (일반)",
+  "english_name": "Melatonin 3mg",
+  "brand": "다브랜드",
+  "category": "sleep"
+ },
+ {
+  "id": "solgar_l_theanine_150",
+  "name": "솔가 L-테아닌 150mg",
+  "english_name": "Solgar L-Theanine 150mg",
+  "brand": "솔가",
+  "category": "sleep"
+ },
+ {
+  "id": "now_l_theanine_200",
+  "name": "나우푸드 L-테아닌 200mg",
+  "english_name": "Now Foods L-Theanine 200mg",
+  "brand": "나우푸드",
+  "category": "sleep"
+ },
+ {
+  "id": "neworigin_vit_d_mushroom",
+  "name": "뉴오리진 비타민D (버섯 비타민D)",
+  "english_name": "New Origin Mushroom Vitamin D",
+  "brand": "유한양행 뉴오리진",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "now_coq10_100",
+  "name": "나우푸드 CoQ10 100mg",
+  "english_name": "Now Foods CoQ10 100mg",
+  "brand": "나우푸드",
+  "category": "antioxidant"
+ },
+ {
+  "id": "solgar_coq10_200",
+  "name": "솔가 코엔자임 큐텐 200mg",
+  "english_name": "Solgar CoQ10 200mg",
+  "brand": "솔가",
+  "category": "antioxidant"
+ },
+ {
+  "id": "aminovital_pro_3800",
+  "name": "아미노바이탈 프로 3800",
+  "english_name": "Amino Vital Pro 3800",
+  "brand": "아지노모토",
+  "category": "sports"
+ },
+ {
+  "id": "bcaa_general",
+  "name": "BCAA 분지사슬 아미노산 (일반)",
+  "english_name": "BCAA Branched-Chain Amino Acids",
+  "brand": "다브랜드",
+  "category": "sports"
+ },
+ {
+  "id": "now_psyllium_husk",
+  "name": "나우푸드 차전자피 분말",
+  "english_name": "Now Foods Psyllium Husk Powder",
+  "brand": "나우푸드",
+  "category": "fiber"
+ },
+ {
+  "id": "5htp_general",
+  "name": "5-HTP 100 (일반)",
+  "english_name": "5-HTP 100mg",
+  "brand": "다브랜드",
+  "category": "sleep"
+ },
+ {
+  "id": "myprotein_citrulline_malate",
+  "name": "마이프로틴 시트룰린 말레이트",
+  "english_name": "Myprotein Citrulline Malate",
+  "brand": "마이프로틴",
+  "category": "sports"
+ },
+ {
+  "id": "myprotein_aakg",
+  "name": "마이프로틴 아르기닌 알파 케토글루타레이트 (AAKG)",
+  "english_name": "Myprotein Arginine AAKG",
+  "brand": "마이프로틴",
+  "category": "sports"
+ },
+ {
+  "id": "solgar_lutein_40",
+  "name": "솔가 루테인 40mg",
+  "english_name": "Solgar Lutein 40mg",
+  "brand": "솔가",
+  "category": "eye"
+ },
+ {
+  "id": "neworigin_lutein_zeaxanthin_astaxanthin",
+  "name": "뉴오리진 루테인지아잔틴 & 아스타잔틴",
+  "english_name": "New Origin Lutein Zeaxanthin Astaxanthin",
+  "brand": "유한양행 뉴오리진",
+  "category": "eye"
+ },
+ {
+  "id": "neworigin_lutein_astaxanthin",
+  "name": "뉴오리진 루테인 아스타잔틴",
+  "english_name": "New Origin Lutein Astaxanthin",
+  "brand": "유한양행 뉴오리진",
+  "category": "eye"
+ },
+ {
+  "id": "ckd_iron_folate_d_plus",
+  "name": "종근당 철분 엽산 비타민D 플러스",
+  "english_name": "CKD Iron + Folate + Vitamin D Plus",
+  "brand": "종근당건강",
+  "category": "mineral"
+ },
+ {
+  "id": "ckd_bolgre_prenatal",
+  "name": "종근당 볼그레 (임산부 철분제)",
+  "english_name": "CKD Bolgre Prenatal Iron",
+  "brand": "종근당",
+  "category": "prenatal"
+ },
+ {
+  "id": "jks_hongijanggun_2",
+  "name": "정관장 홍이장군 2단계 (어린이 홍삼)",
+  "english_name": "JKS Hong-i-Janggun Stage 2",
+  "brand": "정관장",
+  "category": "kids_korean_herbal"
+ },
+ {
+  "id": "cla_general",
+  "name": "공액리놀레산 CLA 다이어트 (일반)",
+  "english_name": "Conjugated Linoleic Acid (CLA)",
+  "brand": "다브랜드",
+  "category": "weight"
+ },
+ {
+  "id": "spirulina_powder_general",
+  "name": "스피루리나 분말 (일반)",
+  "english_name": "Spirulina Powder",
+  "brand": "다브랜드",
+  "category": "superfood"
+ },
+ {
+  "id": "lacfido_kids_d_1000",
+  "name": "락피도 비타민D 츄어블 1000IU 키즈",
+  "english_name": "Lacfido Kids Chewable Vitamin D 1000",
+  "brand": "락피도",
+  "category": "kids_vitamin_d"
+ },
+ {
+  "id": "celltrion_kids_d_2000",
+  "name": "셀트리온 츄어블 비타민D 2000IU",
+  "english_name": "Celltrion Chewable Vitamin D 2000",
+  "brand": "셀트리온",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "jamieson_kids_d_chewable",
+  "name": "자미에슨 키즈 츄어블 비타민D",
+  "english_name": "Jamieson Kids Chewable Vitamin D",
+  "brand": "자미에슨",
+  "category": "kids_vitamin_d"
+ },
+ {
+  "id": "myprotein_beta_alanine",
+  "name": "마이프로틴 베타알라닌 파우더",
+  "english_name": "Myprotein 100% Beta-Alanine Powder",
+  "brand": "마이프로틴",
+  "category": "sports"
+ },
+ {
+  "id": "myprotein_l_glutamine",
+  "name": "마이프로틴 L-글루타민 파우더",
+  "english_name": "Myprotein L-Glutamine Powder",
+  "brand": "마이프로틴",
+  "category": "sports"
+ },
+ {
+  "id": "ckd_coq10_plus_30",
+  "name": "종근당 코엔자임 Q10 플러스 (30캡슐)",
+  "english_name": "CKD CoQ10 Plus 30",
+  "brand": "종근당",
+  "category": "antioxidant"
+ },
+ {
+  "id": "hamsoa_kids_red_ginseng",
+  "name": "함소아 홍키통키 프리미어 블루 (어린이 홍삼)",
+  "english_name": "Hamsoa Hongki Tonki Premier Blue Kids",
+  "brand": "함소아제약",
+  "category": "kids_korean_herbal"
+ },
+ {
+  "id": "krill_oil_general",
+  "name": "남극 크릴 오일 1000mg (일반)",
+  "english_name": "Antarctic Krill Oil 1000mg",
+  "brand": "다브랜드",
+  "category": "krill_oil"
+ },
+ {
+  "id": "iherb_lcarnitine",
+  "name": "L-카르니틴 타르트레이트 500 (일반)",
+  "english_name": "L-Carnitine Tartrate 500mg",
+  "brand": "다브랜드",
+  "category": "sports"
+ },
+ {
+  "id": "yuhan_vit_c_1000",
+  "name": "유한 비타민C 정 1000mg",
+  "english_name": "Yuhan Vitamin C Tab 1000mg",
+  "brand": "유한양행",
+  "category": "vitamin_c"
+ },
+ {
+  "id": "ckd_ca_mg_d_zn",
+  "name": "종근당 칼슘 앤 마그네슘 비타민D 아연",
+  "english_name": "CKD Calcium Magnesium Vitamin D Zinc",
+  "brand": "종근당건강",
+  "category": "calcium"
+ },
+ {
+  "id": "gnc_selenium_100",
+  "name": "GNC 셀레늄 100mcg",
+  "english_name": "GNC Selenium 100",
+  "brand": "GNC",
+  "category": "mineral"
+ },
+ {
+  "id": "eaa_general",
+  "name": "EAA 필수 아미노산 9종 (일반)",
+  "english_name": "EAA Essential Amino Acids",
+  "brand": "다브랜드",
+  "category": "sports"
+ },
+ {
+  "id": "solgar_l_arginine_1000",
+  "name": "솔가 L-아르기닌 1000mg",
+  "english_name": "Solgar L-Arginine 1000mg",
+  "brand": "솔가",
+  "category": "sports"
+ },
+ {
+  "id": "now_arginine_1000",
+  "name": "나우푸드 L-아르기닌 1000mg",
+  "english_name": "Now Foods L-Arginine 1000mg",
+  "brand": "나우푸드",
+  "category": "sports"
+ },
+ {
+  "id": "ckd_joint_pain_quick",
+  "name": "종근당 관절통쾌 콘드로이친",
+  "english_name": "CKD Joint Pain Quick Chondroitin",
+  "brand": "종근당건강",
+  "category": "joint"
+ },
+ {
+  "id": "atomy_saw_palmetto",
+  "name": "애터미 오-쏘팔메토",
+  "english_name": "Atomy O-Saw Palmetto",
+  "brand": "애터미",
+  "category": "men_health"
+ },
+ {
+  "id": "gnc_saw_palmetto",
+  "name": "GNC 맨스 쏘팔메토 포뮬러",
+  "english_name": "GNC Men's Saw Palmetto Formula",
+  "brand": "GNC",
+  "category": "men_health"
+ },
+ {
+  "id": "njorigin_saw_palmetto_1100",
+  "name": "엔젯오리진 쏘팔메토 파워맥스 1100",
+  "english_name": "NJ Origin Saw Palmetto Power Max 1100",
+  "brand": "엔젯오리진",
+  "category": "men_health"
+ },
+ {
+  "id": "cranberry_general",
+  "name": "크랜베리 추출물 (Cran-Max) 500 (일반)",
+  "english_name": "Cranberry Extract (Cran-Max) 500mg",
+  "brand": "다브랜드",
+  "category": "women_health"
+ },
+ {
+  "id": "active_folate_general",
+  "name": "활성형 엽산 5-MTHF (일반)",
+  "english_name": "Active Folate 5-MTHF",
+  "brand": "다브랜드",
+  "category": "prenatal"
+ },
+ {
+  "id": "ckd_zinc_plus_30",
+  "name": "종근당 아연 플러스 30mg",
+  "english_name": "CKD Zinc Plus 30mg",
+  "brand": "종근당",
+  "category": "mineral"
+ },
+ {
+  "id": "thegm_more_heme_iron_woman",
+  "name": "더헴철포우먼 (가용성 헴철)",
+  "english_name": "The Heme Iron For Woman",
+  "brand": "지엠팜",
+  "category": "prenatal"
+ },
+ {
+  "id": "evercollagen_in_up_plus",
+  "name": "에버콜라겐 인앤업 플러스",
+  "english_name": "Evercollagen In&Up Plus",
+  "brand": "뉴트리",
+  "category": "collagen"
+ },
+ {
+  "id": "solgar_collagen_hyaluronic",
+  "name": "솔가 콜라겐 히알루론산 콤플렉스",
+  "english_name": "Solgar Collagen Hyaluronic Acid Complex",
+  "brand": "솔가",
+  "category": "collagen"
+ },
+ {
+  "id": "hansamin_kids_redginseng",
+  "name": "농협 한삼인 아이홍삼",
+  "english_name": "Hansamin Kids Red Ginseng",
+  "brand": "농협홍삼 한삼인",
+  "category": "kids_korean_herbal"
+ },
+ {
+  "id": "nordic_kids_dha_capsule",
+  "name": "노르딕 내추럴스 어린이 DHA (캡슐)",
+  "english_name": "Nordic Naturals Children's DHA Capsule",
+  "brand": "노르딕내추럴스",
+  "category": "kids_omega3"
+ },
+ {
+  "id": "nordic_complete_junior",
+  "name": "노르딕 내추럴스 컴플리트 주니어 오메가3",
+  "english_name": "Nordic Naturals Complete Junior Omega-3",
+  "brand": "노르딕내추럴스",
+  "category": "kids_omega3"
+ },
+ {
+  "id": "nordic_omega_2x_mini",
+  "name": "노르딕 내추럴스 얼티메이트 오메가 2X 미니",
+  "english_name": "Nordic Naturals Ultimate Omega 2X Mini",
+  "brand": "노르딕내추럴스",
+  "category": "omega3"
+ },
+ {
+  "id": "ckd_ca_mg_d_zn_v2",
+  "name": "종근당 칼슘 앤 마그네슘 비타민D 아연 (1000mg)",
+  "english_name": "CKD Calcium & Magnesium D Zinc 1000mg",
+  "brand": "종근당건강",
+  "category": "calcium"
+ },
+ {
+  "id": "orthomol_immun",
+  "name": "오쏘몰 이뮨 (동아제약)",
+  "english_name": "Orthomol Immun",
+  "brand": "동아제약 / Orthomol",
+  "category": "multivitamin"
+ },
+ {
+  "id": "ckd_allatme_303_lcarnitine",
+  "name": "종근당건강 올앳미 303 L-카르니틴 다이어트",
+  "english_name": "CKD All At Me 303 L-Carnitine Diet",
+  "brand": "종근당건강",
+  "category": "weight"
+ },
+ {
+  "id": "imp_power_a_plus",
+  "name": "임팩타민 파워 에이플러스",
+  "english_name": "Impactamin Power A Plus",
+  "brand": "대웅제약",
+  "category": "vitamin_b"
+ },
+ {
+  "id": "yuhan_vit_cd",
+  "name": "유한 비타민C·D정",
+  "english_name": "Yuhan Vitamin C·D Tab",
+  "brand": "유한양행",
+  "category": "vitamin_c"
+ },
+ {
+  "id": "ckd_active_vit_b_plus",
+  "name": "종근당 활력 비타민B 플러스",
+  "english_name": "CKD Active Vitamin B Plus",
+  "brand": "종근당건강",
+  "category": "vitamin_b"
+ },
+ {
+  "id": "denps_truvitamin",
+  "name": "덴프스 트루바이타민",
+  "english_name": "Denps TruVitamin",
+  "brand": "덴프스",
+  "category": "multivitamin"
+ },
+ {
+  "id": "ckd_imbita_daily",
+  "name": "아임비타 멀티비타민 데일리",
+  "english_name": "I'mVita Multivitamin Daily",
+  "brand": "종근당건강",
+  "category": "multivitamin"
+ },
+ {
+  "id": "eundan_vit_c_gold_plus",
+  "name": "고려은단 비타민C 골드플러스",
+  "english_name": "Korea Eundan Vitamin C Gold Plus",
+  "brand": "고려은단",
+  "category": "vitamin_c"
+ },
+ {
+  "id": "gnc_womens_ultramega",
+  "name": "GNC 우먼스 울트라메가",
+  "english_name": "GNC Women's Ultra Mega",
+  "brand": "GNC",
+  "category": "multivitamin"
+ },
+ {
+  "id": "gnc_megamen",
+  "name": "GNC 메가맨",
+  "english_name": "GNC MegaMen",
+  "brand": "GNC",
+  "category": "multivitamin"
+ },
+ {
+  "id": "solgar_camg_citrate",
+  "name": "솔가 칼슘 마그네슘 시트레이트",
+  "english_name": "Solgar Calcium Magnesium Citrate",
+  "brand": "Solgar",
+  "category": "calcium"
+ },
+ {
+  "id": "solgar_coq10_100",
+  "name": "솔가 코엔자임 Q10 100mg",
+  "english_name": "Solgar CoQ-10 100mg",
+  "brand": "Solgar",
+  "category": "antioxidant"
+ },
+ {
+  "id": "tobicom_lutein_zeaxanthin",
+  "name": "토비콤 루테인 지아잔틴",
+  "english_name": "Tobicom Lutein Zeaxanthin",
+  "brand": "안국약품",
+  "category": "lutein"
+ },
+ {
+  "id": "drbest_high_abs_mg_200",
+  "name": "닥터스베스트 고흡수 마그네슘",
+  "english_name": "Doctor's Best High Absorption Magnesium 200mg",
+  "brand": "Doctor's Best",
+  "category": "magnesium"
+ },
+ {
+  "id": "ckd_mg_plus",
+  "name": "종근당 마그네슘 플러스",
+  "english_name": "CKD Magnesium Plus",
+  "brand": "종근당건강",
+  "category": "magnesium"
+ },
+ {
+  "id": "bblab_low_collagen_5000",
+  "name": "비비랩 저분자 콜라겐 5000",
+  "english_name": "BB Lab Low Molecular Collagen 5000",
+  "brand": "비비랩",
+  "category": "collagen"
+ },
+ {
+  "id": "ckd_eyeclear_lutein_zea",
+  "name": "아이클리어 루테인지아잔틴",
+  "english_name": "EyeClear Lutein Zeaxanthin",
+  "brand": "종근당건강",
+  "category": "lutein"
+ },
+ {
+  "id": "gnm_milk_thistle_full",
+  "name": "GNM 건강한 간 밀크씨슬 (풀 패널)",
+  "english_name": "GNM Healthy Liver Milk Thistle (full panel)",
+  "brand": "GNM자연의품격",
+  "category": "liver"
+ },
+ {
+  "id": "yuhan_beecom_c",
+  "name": "삐콤씨정",
+  "english_name": "Beecom-C Tab",
+  "brand": "유한양행",
+  "category": "vitamin_b"
+ },
+ {
+  "id": "aronamin_c_plus",
+  "name": "아로나민 씨플러스",
+  "english_name": "Aronamin C Plus",
+  "brand": "일동제약",
+  "category": "vitamin_b"
+ },
+ {
+  "id": "aronamin_gold",
+  "name": "아로나민 골드",
+  "english_name": "Aronamin Gold",
+  "brand": "일동제약",
+  "category": "vitamin_b"
+ },
+ {
+  "id": "centrum_kids",
+  "name": "센트룸 포 키즈",
+  "english_name": "Centrum For Kids",
+  "brand": "센트룸",
+  "category": "kids"
+ },
+ {
+  "id": "ckd_kids_multivit",
+  "name": "종근당 키즈 멀티비타민 미네랄",
+  "english_name": "CKD Kids Multivitamin & Mineral",
+  "brand": "종근당건강",
+  "category": "kids"
+ },
+ {
+  "id": "atomy_hemohim_v2",
+  "name": "애터미 헤모힘",
+  "english_name": "Atomy HemoHIM (variant)",
+  "brand": "애터미",
+  "category": "immune"
+ },
+ {
+  "id": "lactofit_kids_v2",
+  "name": "락토핏 생유산균 키즈",
+  "english_name": "Lactofit Kids (variant)",
+  "brand": "종근당건강",
+  "category": "probiotics"
+ },
+ {
+  "id": "elevit_pregnancy",
+  "name": "엘레비트 임산부 종합비타민",
+  "english_name": "Elevit Pre-conception & Pregnancy",
+  "brand": "바이엘",
+  "category": "pregnancy"
+ },
+ {
+  "id": "elenew_1_full",
+  "name": "엘레뉴 1단계 (풀 패널)",
+  "english_name": "Elenew Stage 1 (full panel)",
+  "brand": "바이엘",
+  "category": "pregnancy"
+ },
+ {
+  "id": "cenovis_kids_multi",
+  "name": "세노비스 키즈 멀티비타민미네랄",
+  "english_name": "Cenovis Kids Multivitamin Mineral",
+  "brand": "세노비스",
+  "category": "kids"
+ },
+ {
+  "id": "now_vit_d3_2000",
+  "name": "NOW 비타민 D3 2000IU",
+  "english_name": "NOW Vitamin D-3 High Potency 2000 IU",
+  "brand": "NOW Foods",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "now_biotin_5000",
+  "name": "NOW 비오틴 5000mcg",
+  "english_name": "NOW Biotin 5000 mcg",
+  "brand": "NOW Foods",
+  "category": "biotin"
+ },
+ {
+  "id": "solgar_omega3_950",
+  "name": "솔가 오메가3 EPA & DHA 950",
+  "english_name": "Solgar Triple Strength Omega-3 950mg",
+  "brand": "Solgar",
+  "category": "omega3"
+ },
+ {
+  "id": "ckd_camgd_zn_v2",
+  "name": "종근당 칼슘 앤 마그네슘 비타민D 아연",
+  "english_name": "CKD Calcium & Magnesium Vitamin D Zinc",
+  "brand": "종근당건강",
+  "category": "calcium"
+ },
+ {
+  "id": "evercollagen_time_full",
+  "name": "에버콜라겐 타임 (풀 패널)",
+  "english_name": "EverCollagen Time (full panel)",
+  "brand": "뉴트리",
+  "category": "collagen"
+ },
+ {
+  "id": "centrum_advance_50plus",
+  "name": "센트룸 어드밴스 50+",
+  "english_name": "Centrum Advance 50+",
+  "brand": "센트룸",
+  "category": "multivitamin"
+ },
+ {
+  "id": "frombio_boswellia",
+  "name": "프롬바이오 관절연골엔 보스웰리아",
+  "english_name": "Frombio Joint & Cartilage Boswellia",
+  "brand": "프롬바이오",
+  "category": "joint"
+ },
+ {
+  "id": "ckd_glucosamine_premium",
+  "name": "종근당 글루코사민 프리미엄",
+  "english_name": "CKD Glucosamine Premium",
+  "brand": "종근당건강",
+  "category": "joint"
+ },
+ {
+  "id": "gnm_multi_15",
+  "name": "GNM 종합비타민 미네랄 15",
+  "english_name": "GNM Multivitamin Mineral 15",
+  "brand": "GNM자연의품격",
+  "category": "multivitamin"
+ },
+ {
+  "id": "cenovis_men_multi",
+  "name": "세노비스 남성 멀티비타민 미네랄",
+  "english_name": "Cenovis Men's Multivitamin Mineral",
+  "brand": "세노비스",
+  "category": "multivitamin"
+ },
+ {
+  "id": "thorne_basic_b",
+  "name": "쏜리서치 베이직 B 컴플렉스",
+  "english_name": "Thorne Basic B Complex",
+  "brand": "Thorne Research",
+  "category": "vitamin_b"
+ },
+ {
+  "id": "lifeextension_bcomplex",
+  "name": "라이프익스텐션 바이오액티브 컴플리트 B-컴플렉스",
+  "english_name": "Life Extension BioActive Complete B-Complex",
+  "brand": "Life Extension",
+  "category": "vitamin_b"
+ },
+ {
+  "id": "naturebon_vit_d_5000",
+  "name": "네이처본 비타민D 5000IU",
+  "english_name": "NatureBon Vitamin D 5000IU",
+  "brand": "네이처본",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "centrum_man_kr",
+  "name": "센트룸 맨 (국내)",
+  "english_name": "Centrum For Men (Korea)",
+  "brand": "센트룸",
+  "category": "multivitamin"
+ },
+ {
+  "id": "ckd_vit_c_1000_v2",
+  "name": "종근당 비타민C 1000",
+  "english_name": "CKD Vitamin C 1000mg (variant)",
+  "brand": "종근당건강",
+  "category": "vitamin_c"
+ },
+ {
+  "id": "atomy_propolis_gummy_v2",
+  "name": "애터미 그린 프로폴리스 면역 구미",
+  "english_name": "Atomy Green Propolis Immune Gummy (variant)",
+  "brand": "애터미",
+  "category": "immune"
+ },
+ {
+  "id": "solgar_men_multi",
+  "name": "솔가 남성용 멀티비타민&미네랄",
+  "english_name": "Solgar Male Multiple",
+  "brand": "Solgar",
+  "category": "multivitamin"
+ },
+ {
+  "id": "solgar_women_multi",
+  "name": "솔가 여성용 멀티비타민&미네랄",
+  "english_name": "Solgar Female Multiple",
+  "brand": "Solgar",
+  "category": "multivitamin"
+ },
+ {
+  "id": "huons_menolacto",
+  "name": "엘루비 메노락토 프로바이오틱스",
+  "english_name": "Huons Eluvi Menolacto Probiotics",
+  "brand": "휴온스",
+  "category": "probiotics"
+ },
+ {
+  "id": "ckd_promega_triple",
+  "name": "프로메가 오메가3 트리플",
+  "english_name": "CKD Promega Omega-3 Triple",
+  "brand": "종근당건강",
+  "category": "omega3"
+ },
+ {
+  "id": "centrum_woman_double_up",
+  "name": "센트룸 우먼 더블업",
+  "english_name": "Centrum For Women Double Up",
+  "brand": "센트룸",
+  "category": "multivitamin"
+ },
+ {
+  "id": "ckd_iron_folate_d",
+  "name": "종근당 철분 엽산 비타민D 플러스",
+  "english_name": "CKD Iron Folate Vitamin D Plus",
+  "brand": "종근당건강",
+  "category": "iron"
+ },
+ {
+  "id": "bnr17_bienalsin_pro",
+  "name": "BNR17 다이어트 유산균 비에날씬 프로",
+  "english_name": "BNR17 Diet Probiotics Bienalsin Pro",
+  "brand": "에이스바이옴",
+  "category": "probiotics"
+ },
+ {
+  "id": "eundan_vit_c_easy_d",
+  "name": "고려은단 비타민C 1000 이지 + 비타민D",
+  "english_name": "Korea Eundan Vitamin C 1000 Easy + D",
+  "brand": "고려은단",
+  "category": "vitamin_c"
+ },
+ {
+  "id": "now_magtein",
+  "name": "NOW 마그테인 마그네슘 L-트레오네이트",
+  "english_name": "NOW Magtein Magnesium L-Threonate",
+  "brand": "NOW Foods",
+  "category": "magnesium"
+ },
+ {
+  "id": "atomy_megavit_c_2000",
+  "name": "애터미 바이탈 메가비타민C 2000",
+  "english_name": "Atomy Vital Mega Vitamin C 2000",
+  "brand": "애터미",
+  "category": "vitamin_c"
+ },
+ {
+  "id": "atomy_color_multi",
+  "name": "애터미 컬러푸드 멀티비타민",
+  "english_name": "Atomy Color Food Multivitamin",
+  "brand": "애터미",
+  "category": "multivitamin"
+ },
+ {
+  "id": "desimone_capsule",
+  "name": "드시모네 캡슐",
+  "english_name": "DeSimone Capsule (Visbiome)",
+  "brand": "바이오일레븐",
+  "category": "probiotics"
+ },
+ {
+  "id": "cenovis_vit_d_2000",
+  "name": "세노비스 비타민D 2000IU",
+  "english_name": "Cenovis Vitamin D 2000IU",
+  "brand": "세노비스",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "ckd_imbita_high_b",
+  "name": "아임비타 고함량 비타민B 컴플렉스",
+  "english_name": "I'mVita High-Potency Vitamin B Complex",
+  "brand": "종근당건강",
+  "category": "vitamin_b"
+ },
+ {
+  "id": "ckd_olallme_collagen_3270",
+  "name": "종근당 올앳미 콜라겐 3270",
+  "english_name": "CKD All At Me Collagen 3270",
+  "brand": "종근당건강",
+  "category": "collagen"
+ },
+ {
+  "id": "sportsresearch_omega3_triple",
+  "name": "스포츠리서치 트리플 스트렝스 오메가3",
+  "english_name": "Sports Research Triple Strength Omega-3",
+  "brand": "Sports Research",
+  "category": "omega3"
+ },
+ {
+  "id": "trueen_rtg_omega3",
+  "name": "트루엔 알티지 오메가3",
+  "english_name": "TrueN rTG Omega-3",
+  "brand": "트루엔",
+  "category": "omega3"
+ },
+ {
+  "id": "centrum_kids_gummy",
+  "name": "센트룸 멀티 구미 키즈",
+  "english_name": "Centrum Multi Gummies Kids",
+  "brand": "센트룸",
+  "category": "kids"
+ },
+ {
+  "id": "berocca_bayer",
+  "name": "바이엘 베로카",
+  "english_name": "Bayer Berocca",
+  "brand": "바이엘",
+  "category": "vitamin_b"
+ },
+ {
+  "id": "ckd_vit_d_2000_zn",
+  "name": "종근당 비타민D 2000IU + 아연",
+  "english_name": "CKD Vitamin D 2000IU + Zinc",
+  "brand": "종근당건강",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "ckd_vit_d_1000_v2",
+  "name": "종근당 비타민D 1000IU",
+  "english_name": "CKD Vitamin D 1000IU (variant)",
+  "brand": "종근당건강",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "ckd_coq10_99",
+  "name": "종근당 코엔자임Q10",
+  "english_name": "CKD Coenzyme Q10",
+  "brand": "종근당건강",
+  "category": "antioxidant"
+ },
+ {
+  "id": "vitalbeautie_probio_gold",
+  "name": "바이탈뷰티 프로바이오틱스 골드",
+  "english_name": "Vitalbeautie Probiotics Gold",
+  "brand": "바이탈뷰티",
+  "category": "probiotics"
+ },
+ {
+  "id": "kwangdong_vita500_stick",
+  "name": "광동 비타500 데일리 스틱",
+  "english_name": "Kwangdong Vita500 Daily Stick",
+  "brand": "광동제약",
+  "category": "vitamin_c"
+ },
+ {
+  "id": "donga_dicamax_d",
+  "name": "디카맥스디정",
+  "english_name": "Dicamax D Tab",
+  "brand": "다림바이오텍",
+  "category": "vitamin_d"
+ },
+ {
+  "id": "orthomol_immun_kr",
+  "name": "오쏘몰 이뮨",
+  "english_name": "Orthomol Immun",
+  "brand": "동아제약",
+  "category": "multivitamin"
+ },
+ {
+  "id": "yakult_cuperz",
+  "name": "한국야쿠르트 헛개나무 프로젝트 쿠퍼스",
+  "english_name": "Yakult Cuperz Hovenia Project",
+  "brand": "한국야쿠르트",
+  "category": "liver"
+ },
+ {
+  "id": "atomy_vital_color_multi",
+  "name": "애터미 바이탈컬러 멀티비타민",
+  "english_name": "Atomy Vital Color Multivitamin",
+  "brand": "애터미",
+  "category": "multivitamin"
+ },
+ {
+  "id": "centrum_woman_kr_v2",
+  "name": "센트룸 우먼 (국내, 풀 패널)",
+  "english_name": "Centrum For Women (Korea full panel)",
+  "brand": "센트룸",
+  "category": "multivitamin"
+ },
+ {
+  "id": "kgc_hongsam_jung",
+  "name": "정관장 홍삼정",
+  "english_name": "KGC Korean Red Ginseng Extract",
+  "brand": "정관장",
+  "category": "ginseng"
+ },
+ {
+  "id": "tobicom_gold",
+  "name": "토비콤 골드",
+  "english_name": "Tobicom Gold",
+  "brand": "안국약품",
+  "category": "multivitamin"
+ },
+ {
+  "id": "ckd_imbita_allinone",
+  "name": "아임비타 멀티비타민미네랄 올인원",
+  "english_name": "I'mVita Multivitamin Mineral All-in-One",
+  "brand": "종근당건강",
+  "category": "multivitamin"
+ },
+ {
+  "id": "solgar_b_complex_100_v2",
+  "name": "솔가 비타민B 컴플렉스 100 (정확 패널)",
+  "english_name": "Solgar B-Complex 100 (verified panel)",
+  "brand": "Solgar",
+  "category": "vitamin_b"
+ }
+]

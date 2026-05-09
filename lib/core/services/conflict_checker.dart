@@ -371,14 +371,123 @@ List<ConflictItem> _timingPileupConflicts(List<_IntakeRow> rows) {
   return out;
 }
 
-// ── Rule 4: drug interaction stub (Phase 2) ─────────────────────────────
+// ── Rule 4: drug interaction (V1 보수적 룰) ─────────────────────────────
+//
+// V1 동작: 위험 조합 감지 시 ConflictItem만 추가. 추천 결과에서 제품 제외는
+// 안 함 — 모달 동의 + 화면 경고 + 면책의 3중 방어로 V1 충분하다는 판단.
+// V1.x 후속에서 본 룰을 추천 결과 자동 차단까지 확장 예정.
+//
+// 임계값 출처:
+//   · 오메가3 2000mg/일: NIH ODS 권장(EPA+DHA 합산), 와파린 등 항응고제 동시
+//     복용 시 출혈 위험 증가 보고 다수.
+//   · 비타민E 200mg/일: 임상영양학 일반 통설(α-tocopherol). UL 540mg 미만이나
+//     항응고제와의 상호작용은 200mg부터 보수 임계.
+//   · 은행잎(ginkgo) 함유 자체: 항응고제 환자에게 임상적으로 명백한 출혈
+//     위험으로 함량 무관 보수적 차단.
+//   · 갑상선약 + Ca/Fe: 식약처 의약품 첨부문서상 흡수 방해 명시, 4시간
+//     분리 권고.
+class _DrugInteractionRule {
+  final String drugKeyword;
+  final String nutrientKey;
+  final double threshold; // 0 = 함유 자체 경고, >0 = 누적 임계
+  final ConflictSeverity severity;
+  final String title;
+  final String message;
+  const _DrugInteractionRule({
+    required this.drugKeyword,
+    required this.nutrientKey,
+    required this.threshold,
+    required this.severity,
+    required this.title,
+    required this.message,
+  });
+}
+
+const List<_DrugInteractionRule> _kV1DrugRules = [
+  _DrugInteractionRule(
+    drugKeyword: '항응고제',
+    nutrientKey: 'omega3_total_mg',
+    threshold: 2000,
+    severity: ConflictSeverity.danger,
+    title: '항응고제와 오메가3 고용량',
+    message: '항응고제 복용 중 오메가3 2000mg 이상은 출혈 위험을 높일 수 있어요. '
+        '의사·약사 상담 후 섭취하세요.',
+  ),
+  _DrugInteractionRule(
+    drugKeyword: '항응고제',
+    nutrientKey: 'ginkgo_extract_mg',
+    threshold: 0,
+    severity: ConflictSeverity.danger,
+    title: '항응고제와 은행잎',
+    message: '항응고제 복용 중 은행잎은 출혈 위험을 크게 높일 수 있어요. '
+        '의사·약사 상담 전 섭취 중단을 권장해요.',
+  ),
+  _DrugInteractionRule(
+    drugKeyword: '항응고제',
+    nutrientKey: 'vitamin_e_mg',
+    threshold: 200,
+    severity: ConflictSeverity.warning,
+    title: '항응고제와 비타민E',
+    message: '항응고제 복용 시 비타민E 200mg 이상은 출혈 경향을 높일 수 있어요. '
+        '의사 상담을 권장해요.',
+  ),
+  _DrugInteractionRule(
+    drugKeyword: '갑상선',
+    nutrientKey: 'calcium_mg',
+    threshold: 0,
+    severity: ConflictSeverity.warning,
+    title: '갑상선약과 칼슘',
+    message: '갑상선약과 칼슘은 4시간 이상 간격을 두고 복용하세요. '
+        '함께 먹으면 갑상선약 흡수가 떨어질 수 있어요.',
+  ),
+  _DrugInteractionRule(
+    drugKeyword: '갑상선',
+    nutrientKey: 'iron_mg',
+    threshold: 0,
+    severity: ConflictSeverity.warning,
+    title: '갑상선약과 철분',
+    message: '갑상선약과 철분은 4시간 이상 간격을 두고 복용하세요. '
+        '동시 복용 시 갑상선약 효과가 약해질 수 있어요.',
+  ),
+];
+
 List<ConflictItem> _drugInteractionConflicts(
   FamilyMember member,
   List<_IntakeRow> rows,
 ) {
-  // Phase 1 ships with the structural hook only — once we add a medication
-  // database, this becomes a real check. Keep the function signature stable.
-  return const [];
+  if (member.medications.isEmpty || rows.isEmpty) return const [];
+
+  final totals = <String, double>{};
+  final sources = <String, List<String>>{};
+  for (final r in rows) {
+    r.dailyAmounts.forEach((key, amount) {
+      if (amount <= 0) return;
+      totals.update(key, (e) => e + amount, ifAbsent: () => amount);
+      sources.putIfAbsent(key, () => <String>[]).add(r.displayName);
+    });
+  }
+
+  final out = <ConflictItem>[];
+  for (final rule in _kV1DrugRules) {
+    final hasMatch = member.medications.any(
+      (m) => m.contains(rule.drugKeyword),
+    );
+    if (!hasMatch) continue;
+
+    final total = totals[rule.nutrientKey] ?? 0;
+    final triggered =
+        rule.threshold == 0 ? total > 0 : total >= rule.threshold;
+    if (!triggered) continue;
+
+    out.add(ConflictItem(
+      severity: rule.severity,
+      emoji: rule.severity == ConflictSeverity.danger ? '🚨' : '⚠️',
+      title: rule.title,
+      message: rule.message,
+      sourceProductNames: sources[rule.nutrientKey] ?? const [],
+    ));
+  }
+  return out;
 }
 
 // ── Rule 5: pregnancy / lactation ───────────────────────────────────────

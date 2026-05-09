@@ -118,53 +118,87 @@ void main() {
       );
     }
 
-    test('1회 1정 → "🍴 식후 1정"', () {
-      expect(mk().scheduleLabel, '🍴 식후 1정');
+    // V1+ 사용자 행동 정렬 — 분산 표시 대신 "하루 N{unit}" 단순 형태.
+    // 시점은 IntakeTimingBadge로 분리 노출.
+    test('1회 1정 → "하루 1정"', () {
+      expect(mk().scheduleLabel, '하루 1정');
     });
 
-    test('1회 2정 / 1일 1회 → 통합 라인', () {
+    test('1회 2정 / 1일 1회 → "하루 2정"', () {
       final p = mk(
         dailyDose: 2,
         dose: 2,
         n: 1,
         timing: IntakeTiming.anyTimeAfterMeal,
       );
-      expect(p.scheduleLabel, '🍴 식후 2정');
+      expect(p.scheduleLabel, '하루 2정');
     });
 
-    test('1+2 분산 → 아침/저녁', () {
+    test('1+2 분복 → "하루 2정" (묶음)', () {
       final p = mk(
         dailyDose: 2,
         dose: 1,
         n: 2,
         timing: IntakeTiming.multiple,
       );
-      expect(p.scheduleLabel, '🌅 아침 1정 / 🌙 저녁 1정');
+      expect(p.scheduleLabel, '하루 2정');
     });
 
-    test('1+3 분산 → 아침/점심/저녁', () {
+    test('1+3 분복 → "하루 3정"', () {
       final p = mk(
         dailyDose: 3,
         dose: 1,
         n: 3,
         timing: IntakeTiming.multiple,
       );
-      expect(p.scheduleLabel, '🌅 아침 1정 / 🌞 점심 1정 / 🌙 저녁 1정');
+      expect(p.scheduleLabel, '하루 3정');
     });
 
-    test('4회 이상 → 라벨 참조', () {
+    test('5회 분복 → "하루 5정"', () {
       final p = mk(
         dailyDose: 5,
         dose: 1,
         n: 5,
         timing: IntakeTiming.multiple,
       );
-      expect(p.scheduleLabel, '⏰ 1일 5회 (라벨 참조)');
+      expect(p.scheduleLabel, '하루 5정');
     });
 
-    test('취침 전 1정', () {
+    test('취침 전 1정 → "하루 1정"', () {
       final p = mk(timing: IntakeTiming.beforeSleep);
-      expect(p.scheduleLabel, '🌙 취침 전 1정');
+      expect(p.scheduleLabel, '하루 1정');
+    });
+
+    test('unit이 캡슐이면 "하루 1캡슐"', () {
+      final p = mk(unit: '캡슐');
+      expect(p.scheduleLabel, '하루 1캡슐');
+    });
+  });
+
+  group('IntakeTimingX.badgeText — 8 분기', () {
+    test('anyTimeAfterMeal → 식후 아무 때나', () {
+      expect(IntakeTiming.anyTimeAfterMeal.badgeText, '식후 아무 때나');
+    });
+    test('multiple → 묶어 드셔도 OK', () {
+      expect(IntakeTiming.multiple.badgeText, '묶어 드셔도 OK');
+    });
+    test('morningEmpty → 공복 권장', () {
+      expect(IntakeTiming.morningEmpty.badgeText, '공복 권장');
+    });
+    test('morningAfter → 아침 식후', () {
+      expect(IntakeTiming.morningAfter.badgeText, '아침 식후');
+    });
+    test('lunchAfter → 점심 식후', () {
+      expect(IntakeTiming.lunchAfter.badgeText, '점심 식후');
+    });
+    test('dinnerAfter → 저녁 식후', () {
+      expect(IntakeTiming.dinnerAfter.badgeText, '저녁 식후');
+    });
+    test('beforeSleep → 잠들기 전', () {
+      expect(IntakeTiming.beforeSleep.badgeText, '잠들기 전');
+    });
+    test('withMeal → 식사 중', () {
+      expect(IntakeTiming.withMeal.badgeText, '식사 중');
     });
   });
 

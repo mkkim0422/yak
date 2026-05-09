@@ -121,3 +121,21 @@ String formatAmount(double amount) {
   if (amount >= 10) return amount.toStringAsFixed(1);
   return amount.toStringAsFixed(2);
 }
+
+/// 대시보드용 4단계 부드러운 등급 라벨.
+///
+/// 정확한 mg 양은 product_detail의 [statusLabelFor]에 맡기고, 멤버 대시
+/// 보드/현재 점검 화면은 "충격 숫자" 없이 직관 라벨만 노출합니다.
+/// PART 9 컨벤션 — 사용자 노출 텍스트에 % 표시 금지.
+///
+/// 임계값:
+///   * pct <  30 → "많이 부족"
+///   * pct <  70 → "조금 부족"
+///   * pct < 110 → "충분"
+///   * pct >= 110 → "넉넉"
+String softGradeLabel(int percentage) {
+  if (percentage < 30) return '많이 부족';
+  if (percentage < 70) return '조금 부족';
+  if (percentage < 110) return '충분';
+  return '넉넉';
+}

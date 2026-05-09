@@ -101,7 +101,7 @@ void main() {
     expect(find.text('+ 가족 추가하기'), findsOneWidget);
   });
 
-  testWidgets('compact family card shows positive copy only', (tester) async {
+  testWidgets('large family card shows positive copy only', (tester) async {
     final members = [
       _member('m1', '본인'),
       _member('m2', '아내'),
@@ -114,10 +114,12 @@ void main() {
 
     expect(find.byType(FamilyMemberCard), findsNWidgets(2));
 
-    // No "{N}개 부족" pill, no "충분" pill — just the takings count.
+    // 부족/충분 톤은 카드에서 제거됨. "섭취중인 영양제 N개"만 노출.
+    // 보충 필요 영양소는 멤버 상세에서만 확인 가능.
     expect(find.textContaining('개 부족'), findsNothing);
     expect(find.text('충분'), findsNothing);
-    expect(find.textContaining('💊 0개 섭취중'), findsNWidgets(2));
+    expect(find.text('보충 필요 영양소'), findsNothing);
+    expect(find.textContaining('섭취중인 영양제 0개'), findsNWidgets(2));
   });
 
   test('alertBorder/alertInk resolve to the amber palette (not red)', () {

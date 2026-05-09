@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,6 +8,14 @@ import 'models/product_model.dart';
 
 class ProductRepository {
   ProductRepository();
+
+  /// Test-only seeded repository. Lets us exercise search/lookup logic
+  /// without going through the asset bundle.
+  @visibleForTesting
+  ProductRepository.withProducts(List<Product> items) {
+    _products.addAll(items);
+    _loaded = true;
+  }
 
   final List<Product> _products = [];
   bool _loaded = false;
@@ -37,11 +46,28 @@ class ProductRepository {
   List<Product> search(String query) {
     final q = query.trim().toLowerCase();
     if (q.isEmpty) return all();
-    return _products
-        .where((p) =>
-            p.name.toLowerCase().contains(q) ||
-            p.category.toLowerCase().contains(q))
+    // 사용자는 약통 라벨을 보면서 "센트룸 맨" / "Centrum Men" / "센트룸맨" /
+    // "센트룸 50+" 같이 다양한 형태로 입력함. 공백을 토큰 구분자로만 쓰고
+    // 각 토큰을 (한글명 / 영문명 / 카테고리) 어느 한 필드에라도 포함되면
+    // 해당 토큰 매칭 성공으로 처리. 모든 토큰이 매칭(AND)되어야 결과에 포함.
+    final tokens = q
+        .split(RegExp(r'\s+'))
+        .where((t) => t.isNotEmpty)
         .toList(growable: false);
+    if (tokens.isEmpty) return all();
+    return _products
+        .where((p) => tokens.every((t) => _matchesToken(p, t)))
+        .toList(growable: false);
+  }
+
+  static bool _matchesToken(Product p, String token) {
+    final t = token.replaceAll(RegExp(r'\s+'), '');
+    if (t.isEmpty) return true;
+    bool fieldHas(String field) =>
+        field.toLowerCase().replaceAll(RegExp(r'\s+'), '').contains(t);
+    return fieldHas(p.name) ||
+        fieldHas(p.englishName) ||
+        fieldHas(p.category);
   }
 
   /// Same category, sorted by ascending price.

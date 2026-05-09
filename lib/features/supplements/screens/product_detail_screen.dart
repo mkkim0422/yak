@@ -161,11 +161,7 @@ class _IntakeSection extends StatelessWidget {
           _SectionTitle('📋 복용 정보'),
           const SizedBox(height: 10),
           _kvRow('시간', product.intakeTiming.koreanLabel),
-          _kvRow(
-            '1회 복용',
-            '${product.dosePerIntake}${product.unit.isEmpty ? '정' : product.unit}',
-          ),
-          _kvRow('1일 횟수', '${product.intakesPerDay}회'),
+          _kvRow('복용량', _doseLine(product)),
           if (product.intakeNote != null && product.intakeNote!.isNotEmpty)
             _kvRow('참고', product.intakeNote!),
           const SizedBox(height: 8),
@@ -202,6 +198,16 @@ class _IntakeSection extends StatelessWidget {
       ),
     );
   }
+}
+
+/// "1일 N회 X정씩" 단일 줄 — n=1이면 "1일 1회 X정", n>=2면 "씩" 접미사로
+/// 분복임을 명시. 이전엔 "1회 복용 / 1일 횟수"로 분리됐던 두 줄을 하나로.
+String _doseLine(Product p) {
+  final unit = p.unit.isEmpty ? '정' : p.unit;
+  final n = p.intakesPerDay;
+  final dose = p.dosePerIntake;
+  if (n <= 1) return '1일 1회 $dose$unit';
+  return '1일 $n회 $dose$unit씩';
 }
 
 class _CategoryBenefitSection extends StatelessWidget {

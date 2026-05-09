@@ -1,5 +1,5 @@
 // Persona-driven branching of the family-add chat after the KDRIs 2025
-// alignment cleanup:
+// alignment cleanup + V1 검진 제거:
 //
 //   * sex (step 4) skipped when relationship implies a sex
 //   * pregnancy/lactation (step 7) only for female 20–50
@@ -8,7 +8,7 @@
 //   * diet (step 11) only for 4+, simplified to 균형/부족
 //   * sleep / stress (steps 12, 13) — DROPPED (no KDRIs RDA)
 //   * medications (step 15) only for 1+
-//   * checkup (step 17) only for 20+
+//   * step 17 = 완료 (former checkup step removed in V1)
 
 import 'package:flutter_test/flutter_test.dart';
 
@@ -145,16 +145,22 @@ void main() {
     });
   });
 
-  group('step 5 (medical disclaimer) — only for under 4', () {
-    test('shown for 0-3', () {
+  group('step 5 (medical disclaimer) — under 14 (보호자 동의 게이트)', () {
+    test('shown for 0-13', () {
       expect(_show(5, rel: Relationship.son, sex: Sex.male, age: 0),
           isTrue);
       expect(_show(5, rel: Relationship.son, sex: Sex.male, age: 3),
           isTrue);
+      expect(_show(5, rel: Relationship.son, sex: Sex.male, age: 4),
+          isTrue);
+      expect(_show(5, rel: Relationship.son, sex: Sex.male, age: 13),
+          isTrue);
     });
 
-    test('hidden for 4+', () {
-      expect(_show(5, rel: Relationship.son, sex: Sex.male, age: 4),
+    test('hidden for 14+', () {
+      expect(_show(5, rel: Relationship.son, sex: Sex.male, age: 14),
+          isFalse);
+      expect(_show(5, rel: Relationship.self, sex: Sex.male, age: 30),
           isFalse);
     });
   });
@@ -172,14 +178,14 @@ void main() {
   });
 
   // ── Persona scenarios — end-to-end "what does this person see?" ──
-  group('persona scenarios — KDRIs 2025 cleaned up', () {
+  group('persona scenarios — KDRIs 2025 + 검진 제거', () {
     int countSteps({
       required Relationship rel,
       required Sex sex,
       required int age,
     }) {
       var n = 0;
-      for (var s = 1; s <= 18; s++) {
+      for (var s = 1; s <= 17; s++) {
         if (debugShouldShowStep(
             step: s, relationship: rel, sex: sex, age: age)) {
           n++;
@@ -188,23 +194,20 @@ void main() {
       return n;
     }
 
-    test('newborn (1세 son) → 9 steps', () {
+    test('newborn (1세 son) → 10 steps', () {
       // Steps shown: 1 rel, 2 name, 3 birth, 5 disclaimer, 6 height,
-      // 8 blood, 14 allergies, 15 meds, 16 products, 18 complete = 10
+      // 8 blood, 14 allergies, 15 meds, 16 products, 17 complete = 10.
       // Not shown: 4 (implied), 7 (male), 9 / 10 / 12 / 13 (dropped),
-      // 11 (under 4), 17 (under 20).
+      // 11 (under 4).
       expect(_show(11, rel: Relationship.son, sex: Sex.male, age: 1),
-          isFalse);
-      expect(_show(17, rel: Relationship.son, sex: Sex.male, age: 1),
           isFalse);
       expect(countSteps(rel: Relationship.son, sex: Sex.male, age: 1), 10);
     });
 
-    test('teen (15세 daughter) → 11 steps', () {
-      // Steps shown: 1, 2, 3, 6, 8, 11, 14, 15, 16, 18 — and now 4? No —
-      // daughter implies female. = 10 steps shown.
-      // 5 disclaimer skipped (over 4), 7 preg skipped (under 20),
-      // 9/10/12/13 dropped, 17 checkup skipped (under 20).
+    test('teen (15세 daughter) → 10 steps', () {
+      // Steps shown: 1, 2, 3, 6, 8, 11, 14, 15, 16, 17 = 10.
+      // 4 implied (daughter), 5 skipped (14+), 7 skipped (under 20),
+      // 9/10/12/13 dropped.
       expect(_show(7, rel: Relationship.daughter, sex: Sex.female, age: 15),
           isFalse);
       expect(_show(9, rel: Relationship.daughter, sex: Sex.female, age: 15),
@@ -217,46 +220,68 @@ void main() {
 
     test('wife 35 (full adult panel) → 11 steps', () {
       // Steps shown: 1, 2, 3, 6, 7 (preg), 8 (blood), 11 (diet),
-      // 14, 15, 16, 17 (checkup), 18. 4 implied. = 12.
+      // 14, 15, 16, 17 (complete) = 11. 4 implied.
       expect(_show(7, rel: Relationship.wife, sex: Sex.female, age: 35),
           isTrue);
       expect(
         countSteps(rel: Relationship.wife, sex: Sex.female, age: 35),
-        12,
+        11,
       );
     });
 
     test('mother 60 (no pregnancy) → 10 steps', () {
-      // Steps shown: 1, 2, 3, 6, 8, 11, 14, 15, 16, 17, 18. 4 implied,
-      // 7 skipped (>50), 9-13 dropped. = 11.
+      // Steps shown: 1, 2, 3, 6, 8, 11, 14, 15, 16, 17 = 10. 4 implied,
+      // 7 skipped (>50), 9-13 dropped.
       expect(_show(7, rel: Relationship.mother, sex: Sex.female, age: 60),
           isFalse);
       expect(_show(9, rel: Relationship.mother, sex: Sex.female, age: 60),
           isFalse);
       expect(
         countSteps(rel: Relationship.mother, sex: Sex.female, age: 60),
-        11,
+        10,
       );
     });
 
     test('self (35세, female) — sex asked too → 12 steps', () {
-      // Steps: 1, 2, 3, 4 (sex asked, self), 6, 7, 8, 11, 14, 15, 16, 17,
-      // 18 = 13.
+      // Steps: 1, 2, 3, 4 (sex asked, self), 6, 7, 8, 11, 14, 15, 16,
+      // 17 = 12.
       expect(_show(4, rel: Relationship.self, sex: Sex.female, age: 35),
           isTrue);
       expect(
         countSteps(rel: Relationship.self, sex: Sex.female, age: 35),
-        13,
+        12,
       );
     });
 
     test('70세 grandparent → 10 steps', () {
-      // 1, 2, 3, 6, 8, 11, 14, 15, 16, 17, 18. 4 implied (mother).
-      // 7 skipped (>50), 9-13 dropped. = 11.
+      // 1, 2, 3, 6, 8, 11, 14, 15, 16, 17 = 10. 4 implied (mother).
+      // 7 skipped (>50), 9-13 dropped.
       expect(
         countSteps(rel: Relationship.mother, sex: Sex.female, age: 70),
-        11,
+        10,
       );
+    });
+  });
+
+  group('legacy JSON 호환 — 검진 필드 제거 후', () {
+    test('lastCheckupDate / checkup_note가 있는 옛 payload도 정상 파싱', () {
+      // 검진 필드 제거 후에도 SecureStorage에 남아있을 수 있는 옛 데이터를
+      // 안전하게 무시해야 함.
+      final raw = {
+        'id': 'm_legacy',
+        'name': '레거시',
+        'relationship': 'self',
+        'birth_year': 1985,
+        'sex': 'male',
+        'last_checkup_date': '2024-05-01T00:00:00.000',
+        'checkup_note': '콜레스테롤 200',
+        'created_at': '2024-01-01T00:00:00.000',
+        'updated_at': '2024-01-01T00:00:00.000',
+      };
+      final m = FamilyMember.fromJson(raw);
+      expect(m.id, 'm_legacy');
+      expect(m.name, '레거시');
+      expect(m.birthYear, 1985);
     });
   });
 }

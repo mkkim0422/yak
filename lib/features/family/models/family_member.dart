@@ -208,18 +208,9 @@ class ManualProductEntry {
         intakeNote: intakeNote ?? this.intakeNote,
       );
 
-  /// Compose a Korean-language schedule line — same shape as Product.scheduleLabel
-  /// but uses '정' as the default unit for manual entries.
-  String get scheduleLabel {
-    final n = intakesPerDay;
-    final dose = dosePerIntake;
-    if (n <= 1) {
-      return '${intakeTiming.koreanLabel} $dose정';
-    }
-    if (n == 2) return '🌅 아침 $dose정 / 🌙 저녁 $dose정';
-    if (n == 3) return '🌅 아침 $dose정 / 🌞 점심 $dose정 / 🌙 저녁 $dose정';
-    return '⏰ 1일 $n회 (라벨 참조)';
-  }
+  /// 사용자 행동 정렬 — 분산 표시 대신 "하루 N정" 단순 형태. 시점은
+  /// [IntakeTimingX.badgeText] 뱃지로 별도 노출 (Product.scheduleLabel과 동일).
+  String get scheduleLabel => '하루 $dailyDose정';
 }
 
 class FamilyMember {
@@ -266,14 +257,6 @@ class FamilyMember {
   // Symptoms
   final List<String> activeSymptomIds;
 
-  /// Last health checkup the member underwent (e.g. 국가 건강검진). Drives
-  /// the annual checkup reminder — the next nudge fires 1 year after this
-  /// date. `null` for members who haven't entered checkup history.
-  final DateTime? lastCheckupDate;
-
-  /// Free-text 200-char memo about the checkup ("콜레스테롤 200, 정상" etc.)
-  final String? checkupNote;
-
   /// Absolute path to a JPEG copied into app-internal storage. Null means
   /// fall back to [avatarEmoji]. Cleared when the user resets the photo.
   final String? profileImagePath;
@@ -308,8 +291,6 @@ class FamilyMember {
     this.currentProductIds = const [],
     this.manualProducts = const [],
     this.activeSymptomIds = const [],
-    this.lastCheckupDate,
-    this.checkupNote,
     this.profileImagePath,
     required this.createdAt,
     required this.updatedAt,
@@ -441,8 +422,6 @@ class FamilyMember {
         'current_product_ids': currentProductIds,
         'manual_products': manualProducts.map((p) => p.toJson()).toList(),
         'active_symptom_ids': activeSymptomIds,
-        'last_checkup_date': lastCheckupDate?.toIso8601String(),
-        'checkup_note': checkupNote,
         'profile_image_path': profileImagePath,
         'created_at': createdAt.toIso8601String(),
         'updated_at': updatedAt.toIso8601String(),
@@ -504,17 +483,10 @@ class FamilyMember {
       activeSymptomIds: ((json['active_symptom_ids'] as List?) ?? const [])
           .map((e) => e.toString())
           .toList(),
-      lastCheckupDate: _parseDate(json['last_checkup_date']),
-      checkupNote: json['checkup_note'] as String?,
       profileImagePath: json['profile_image_path'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
     );
-  }
-
-  static DateTime? _parseDate(Object? raw) {
-    if (raw is! String || raw.isEmpty) return null;
-    return DateTime.tryParse(raw);
   }
 
   FamilyMember copyWith({
@@ -538,8 +510,6 @@ class FamilyMember {
     List<String>? currentProductIds,
     List<ManualProductEntry>? manualProducts,
     List<String>? activeSymptomIds,
-    DateTime? lastCheckupDate,
-    String? checkupNote,
     Object? profileImagePath = _unset,
     DateTime? updatedAt,
   }) =>
@@ -567,8 +537,6 @@ class FamilyMember {
         currentProductIds: currentProductIds ?? this.currentProductIds,
         manualProducts: manualProducts ?? this.manualProducts,
         activeSymptomIds: activeSymptomIds ?? this.activeSymptomIds,
-        lastCheckupDate: lastCheckupDate ?? this.lastCheckupDate,
-        checkupNote: checkupNote ?? this.checkupNote,
         profileImagePath: identical(profileImagePath, _unset)
             ? this.profileImagePath
             : profileImagePath as String?,

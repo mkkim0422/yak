@@ -1,7 +1,10 @@
-// Tier logic for the recommendation cards: 판매량 / 가성비 / 종합추천.
-// 판매량 = highest popularity (persona-eligible).
-// 가성비 = matches the bestseller's ingredient profile but is less promoted.
-// 종합추천 = covers the user's deficit list above the 70% threshold.
+// V2 추천 엔진 — 가성비/종합추천 폐기 후 카테고리 hard filter 통과 후보
+// 중 판매량 점수 상위 3개를 1·2·3위로 반환합니다. 본 테스트는:
+//   * 1·2·3위 정렬이 판매량 점수식(popularity + target + focus)과 일치
+//   * 후보 부족 시 부분 결과 (빈 자리 채움 X)
+//   * RankedProduct.rank가 1·2·3 순서로 부여
+//   * 호환 인자 deficitNutrients가 결과에 영향 없음
+// 을 검증합니다.
 
 import 'package:flutter_test/flutter_test.dart';
 
@@ -27,7 +30,8 @@ class _MemoRepo extends ProductRepository {
 Product _p(
   String id, {
   String name = '',
-  String category = 'multivitamin',
+  String category = 'vitamin_d',
+  String brand = 'b',
   Map<String, double> ingredients = const {},
   int? popularityRank,
   int dailyDose = 1,
@@ -36,7 +40,7 @@ Product _p(
     Product(
       id: id,
       name: name.isEmpty ? id : name,
-      brand: 'b',
+      brand: brand,
       brandType: ProductBrandType.brand,
       category: category,
       unit: '정',
@@ -55,25 +59,19 @@ FamilyMember _adultFemale() => FamilyMember(
       relationship: Relationship.self,
       birthYear: 1990,
       sex: Sex.female,
-      smokingStatus: SmokingStatus.never,
-      drinkingFrequency: DrinkingFrequency.never,
-      dietQuality: DietQuality.average,
-      sleepHours: SleepHours.sevenToNine,
-      stressLevel: StressLevel.low,
-      allergies: const [],
-      medications: const [],
-      currentProductIds: const [],
       createdAt: DateTime(2026, 5, 6),
       updatedAt: DateTime(2026, 5, 6),
     );
 
 void main() {
-  group('판매량 tier — most-popular eligible product wins', () {
-    test('rank 1 surfaces over higher-rank alternatives', () {
+  group('1·2·3위 정렬 — 판매량 점수 상위 3개', () {
+    test('rank 1/30/80 → 1·2·3위 부여', () {
       final repo = _MemoRepo([
-        _p('big_pop', popularityRank: 1,
+        _p('big', popularityRank: 1,
             ingredients: {'vitamin_d_iu': 1000}),
-        _p('mid_pop', popularityRank: 50,
+        _p('mid', popularityRank: 30,
+            ingredients: {'vitamin_d_iu': 1000}),
+        _p('small', popularityRank: 80,
             ingredients: {'vitamin_d_iu': 1000}),
       ]);
       final recs = NutrientRecommender(repo).recommend(
@@ -84,26 +82,40 @@ void main() {
         ],
       );
       expect(recs, isNotEmpty);
-      final bestseller =
-          recs.first.picks.firstWhere((r) => r.tier == kTierBestseller);
-      expect(bestseller.product.id, 'big_pop');
+      final picks = recs.first.picks;
+      expect(picks.map((p) => p.product.id).toList(),
+          ['big', 'mid', 'small']);
+      expect(picks.map((p) => p.rank).toList(), [1, 2, 3]);
+    });
+
+    test('후보 4개+ → 상위 3개만 반환', () {
+      final repo = _MemoRepo([
+        _p('a', popularityRank: 1, ingredients: {'vitamin_d_iu': 1000}),
+        _p('b', popularityRank: 5, ingredients: {'vitamin_d_iu': 1000}),
+        _p('c', popularityRank: 10, ingredients: {'vitamin_d_iu': 1000}),
+        _p('d', popularityRank: 50, ingredients: {'vitamin_d_iu': 1000}),
+        _p('e', popularityRank: 100, ingredients: {'vitamin_d_iu': 1000}),
+      ]);
+      final recs = NutrientRecommender(repo).recommend(
+        member: _adultFemale(),
+        nutrients: const [
+          (key: 'vitamin_d_iu', displayName: '비타민D',
+              recommended: 1000.0, unit: 'IU'),
+        ],
+      );
+      expect(recs.first.picks.length, 3);
+      expect(
+        recs.first.picks.map((p) => p.product.id).toList(),
+        ['a', 'b', 'c'],
+      );
     });
   });
 
-  group('가성비 tier — similar ingredients, less promoted', () {
-    test("matches bestseller's profile but with weaker popularity", () {
-      // 'pop' is the bestseller. 'value' has the same ingredients but a
-      // weaker popularity rank — exactly what 가성비 should surface.
+  group('후보 부족 시 부분 결과 — 빈 자리 채움 X', () {
+    test('후보 1개 → rank 1만 반환', () {
       final repo = _MemoRepo([
-        _p('pop',
-            popularityRank: 1,
+        _p('only', popularityRank: 5,
             ingredients: {'vitamin_d_iu': 1000}),
-        _p('value',
-            popularityRank: 80,
-            ingredients: {'vitamin_d_iu': 1000}),
-        _p('different',
-            popularityRank: 30,
-            ingredients: {'vitamin_d_iu': 200}), // ratio < 0.5 → no match
       ]);
       final recs = NutrientRecommender(repo).recommend(
         member: _adultFemale(),
@@ -112,17 +124,15 @@ void main() {
               recommended: 1000.0, unit: 'IU'),
         ],
       );
-      final value = recs.first.picks
-          .where((r) => r.tier == kTierValue)
-          .toList();
-      expect(value, isNotEmpty);
-      expect(value.first.product.id, 'value');
+      expect(recs.first.picks.length, 1);
+      expect(recs.first.picks.first.rank, 1);
+      expect(recs.first.picks.first.product.id, 'only');
     });
 
-    test('tier dropped silently when no similar alternative exists', () {
+    test('후보 2개 → rank 1·2만 반환', () {
       final repo = _MemoRepo([
-        _p('only_one', popularityRank: 1,
-            ingredients: {'vitamin_d_iu': 1000}),
+        _p('a', popularityRank: 5, ingredients: {'vitamin_d_iu': 1000}),
+        _p('b', popularityRank: 50, ingredients: {'vitamin_d_iu': 1000}),
       ]);
       final recs = NutrientRecommender(repo).recommend(
         member: _adultFemale(),
@@ -131,56 +141,46 @@ void main() {
               recommended: 1000.0, unit: 'IU'),
         ],
       );
-      expect(recs.first.picks.any((r) => r.tier == kTierValue), isFalse);
+      expect(recs.first.picks.map((p) => p.rank).toList(), [1, 2]);
+    });
+
+    test('후보 0개 → row 자체 미표시', () {
+      final repo = _MemoRepo([
+        _p('iron_only', category: 'iron',
+            ingredients: {'iron_mg': 14}, popularityRank: 1),
+      ]);
+      final recs = NutrientRecommender(repo).recommend(
+        member: _adultFemale(),
+        nutrients: const [
+          (key: 'vitamin_d_iu', displayName: '비타민D',
+              recommended: 800.0, unit: 'IU'),
+        ],
+      );
+      expect(recs, isEmpty);
     });
   });
 
-  group('종합추천 tier — covers deficit list above 70%', () {
-    test('multivitamin covering 3/3 deficits surfaces as 종합추천', () {
-      final repo = _MemoRepo([
-        _p('narrow_d', popularityRank: 1, category: 'vitamin_d',
-            ingredients: {'vitamin_d_iu': 1000}),
-        _p('similar_d', popularityRank: 80, category: 'vitamin_d',
-            ingredients: {'vitamin_d_iu': 1000}),
-        _p('multi', popularityRank: 5, category: 'multivitamin',
-            ingredients: {
-              'vitamin_d_iu': 400,
-              'magnesium_mg': 200,
-              'vitamin_c_mg': 60,
-            }),
-      ]);
-      final recs = NutrientRecommender(repo).recommend(
+  group('호환 인자 deficitNutrients — V2에서 무시', () {
+    test('deficitNutrients 빈 리스트와 채워진 리스트 결과 동일', () {
+      List<Product> products() => [
+            _p('big', popularityRank: 1,
+                ingredients: {'vitamin_d_iu': 1000}),
+            _p('mid', popularityRank: 30,
+                ingredients: {'vitamin_d_iu': 1000}),
+          ];
+      final without = NutrientRecommender(_MemoRepo(products())).recommend(
         member: _adultFemale(),
-        deficitNutrients: ['vitamin_d_iu', 'magnesium_mg', 'vitamin_c_mg'],
         nutrients: const [
           (key: 'vitamin_d_iu', displayName: '비타민D',
               recommended: 1000.0, unit: 'IU'),
         ],
       );
-      // narrow_d → 판매량 ; similar_d → 가성비 ; multi → 종합추천 (covers 3/3)
-      final tiers = recs.first.picks.map((r) => r.tier).toList();
-      expect(tiers, contains(kTierComprehensive));
-      final comp = recs.first.picks
-          .firstWhere((r) => r.tier == kTierComprehensive);
-      expect(comp.product.id, 'multi');
-    });
-
-    test('tier dropped when nothing reaches the 70% threshold', () {
-      final repo = _MemoRepo([
-        _p('pop', popularityRank: 1,
-            ingredients: {'vitamin_d_iu': 1000}),
-        _p('value', popularityRank: 50,
-            ingredients: {'vitamin_d_iu': 1000}),
-      ]);
-      final recs = NutrientRecommender(repo).recommend(
+      final with_ = NutrientRecommender(_MemoRepo(products())).recommend(
         member: _adultFemale(),
-        // 5 deficits — neither candidate covers > 1/5 = 20%.
         deficitNutrients: const [
           'vitamin_d_iu',
           'magnesium_mg',
-          'vitamin_c_mg',
           'iron_mg',
-          'zinc_mg',
         ],
         nutrients: const [
           (key: 'vitamin_d_iu', displayName: '비타민D',
@@ -188,61 +188,9 @@ void main() {
         ],
       );
       expect(
-        recs.first.picks.any((r) => r.tier == kTierComprehensive),
-        isFalse,
+        without.first.picks.map((p) => p.product.id).toList(),
+        with_.first.picks.map((p) => p.product.id).toList(),
       );
-    });
-
-    test('empty deficit list → 종합추천 tier always skipped', () {
-      final repo = _MemoRepo([
-        _p('pop', popularityRank: 1,
-            ingredients: {'vitamin_d_iu': 1000}),
-        _p('multi', popularityRank: 5, category: 'multivitamin',
-            ingredients: {
-              'vitamin_d_iu': 400,
-              'magnesium_mg': 200,
-              'vitamin_c_mg': 60,
-            }),
-      ]);
-      final recs = NutrientRecommender(repo).recommend(
-        member: _adultFemale(),
-        nutrients: const [
-          (key: 'vitamin_d_iu', displayName: '비타민D',
-              recommended: 1000.0, unit: 'IU'),
-        ],
-      );
-      expect(
-        recs.first.picks.any((r) => r.tier == kTierComprehensive),
-        isFalse,
-      );
-    });
-  });
-
-  group('tier order — 판매량 always first when present', () {
-    test('three-product set yields 판매량 + 가성비 + 종합추천 in that order',
-        () {
-      final repo = _MemoRepo([
-        _p('pop', popularityRank: 1,
-            ingredients: {'vitamin_d_iu': 1000}),
-        _p('value', popularityRank: 80,
-            ingredients: {'vitamin_d_iu': 1000}),
-        _p('multi', popularityRank: 30, category: 'multivitamin',
-            ingredients: {
-              'vitamin_d_iu': 400,
-              'magnesium_mg': 200,
-              'vitamin_c_mg': 60,
-            }),
-      ]);
-      final recs = NutrientRecommender(repo).recommend(
-        member: _adultFemale(),
-        deficitNutrients: ['vitamin_d_iu', 'magnesium_mg', 'vitamin_c_mg'],
-        nutrients: const [
-          (key: 'vitamin_d_iu', displayName: '비타민D',
-              recommended: 1000.0, unit: 'IU'),
-        ],
-      );
-      final tiers = recs.first.picks.map((r) => r.tier).toList();
-      expect(tiers, [kTierBestseller, kTierValue, kTierComprehensive]);
     });
   });
 }

@@ -36,7 +36,6 @@ class AdPolicy {
       case AdSurface.memberPregnant:
       case AdSurface.productDetail:
       case AdSurface.onboarding:
-      case AdSurface.checkupInput:
       case AdSurface.privacyConsent:
       case AdSurface.terms:
       case AdSurface.privacyPolicy:
@@ -57,7 +56,6 @@ enum AdSurface {
   categoryList,
   searchResults,
   onboarding,
-  checkupInput,
   privacyConsent,
   terms,
   privacyPolicy,

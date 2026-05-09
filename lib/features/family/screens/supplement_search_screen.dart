@@ -14,6 +14,7 @@ import '../../../core/theme/app_typography.dart';
 import '../../../core/widgets/alyak_buttons.dart';
 import '../../../core/widgets/alyak_card.dart';
 import '../../../core/widgets/conflict_section.dart';
+import '../../../core/widgets/intake_timing_badge.dart';
 import '../../../core/widgets/product_image.dart';
 import '../../../core/widgets/state_views.dart';
 import '../providers/family_provider.dart';
@@ -163,7 +164,38 @@ class _SupplementSearchScreenState
           daysFromNow: remind,
         );
     if (!mounted) return;
-    context.pop();
+
+    final continueAdding = await showDialog<bool>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r20),
+        ),
+        title: const Text('등록되었어요'),
+        content: Text(
+          '${product.name}을(를) 추가했어요.\n다른 영양제도 등록하실 건가요?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dctx).pop(false),
+            child: const Text('끝내기'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dctx).pop(true),
+            child: const Text('확인'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return;
+    if (continueAdding == true) {
+      _ctrl.clear();
+      setState(() => _query = '');
+    } else {
+      context.pop();
+    }
   }
 }
 
@@ -242,13 +274,21 @@ class _ResultCard extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  product.scheduleLabel,
-                  style: AppTypography.caption.copyWith(
-                    fontSize: 12,
-                    color: AppColors.ink2,
-                  ),
+                const SizedBox(height: 4),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    Text(
+                      product.scheduleLabel,
+                      style: AppTypography.caption.copyWith(
+                        fontSize: 12,
+                        color: AppColors.ink2,
+                      ),
+                    ),
+                    IntakeTimingBadge(timing: product.intakeTiming),
+                  ],
                 ),
                 if (ingredients.isNotEmpty) ...[
                   const SizedBox(height: 4),

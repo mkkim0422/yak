@@ -13,18 +13,26 @@ class ProfilePhotoService {
 
   final ImagePicker _picker;
 
-  Future<XFile?> pickFromCamera() => _picker.pickImage(
+  Future<XFile?> pickFromCamera({
+    double maxDim = 500,
+    int quality = 80,
+  }) =>
+      _picker.pickImage(
         source: ImageSource.camera,
-        maxWidth: 500,
-        maxHeight: 500,
-        imageQuality: 80,
+        maxWidth: maxDim,
+        maxHeight: maxDim,
+        imageQuality: quality,
       );
 
-  Future<XFile?> pickFromGallery() => _picker.pickImage(
+  Future<XFile?> pickFromGallery({
+    double maxDim = 500,
+    int quality = 80,
+  }) =>
+      _picker.pickImage(
         source: ImageSource.gallery,
-        maxWidth: 500,
-        maxHeight: 500,
-        imageQuality: 80,
+        maxWidth: maxDim,
+        maxHeight: maxDim,
+        imageQuality: quality,
       );
 
   /// Copies [src] into app-internal storage and returns the absolute path.
@@ -35,6 +43,20 @@ class ProfilePhotoService {
     final dir = await _profilesDir();
     final fileName =
         '${memberId}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+    final dest = '${dir.path}/$fileName';
+    await File(src.path).copy(dest);
+    return dest;
+  }
+
+  /// 직접 입력 영양제 약통 사진 — `<appDocs>/manual_products/<id>_<ts>.jpg`.
+  /// 라벨 가독성을 위해 호출자는 800px / quality 85 정도로 캡처하길 권장.
+  Future<String> saveForManualProduct({
+    required String idHint,
+    required XFile src,
+  }) async {
+    final dir = await _manualProductsDir();
+    final fileName =
+        '${idHint}_${DateTime.now().millisecondsSinceEpoch}.jpg';
     final dest = '${dir.path}/$fileName';
     await File(src.path).copy(dest);
     return dest;
@@ -61,6 +83,15 @@ class ProfilePhotoService {
   Future<Directory> _profilesDir() async {
     final appDir = await getApplicationDocumentsDirectory();
     final dir = Directory('${appDir.path}/profiles');
+    if (!await dir.exists()) {
+      await dir.create(recursive: true);
+    }
+    return dir;
+  }
+
+  Future<Directory> _manualProductsDir() async {
+    final appDir = await getApplicationDocumentsDirectory();
+    final dir = Directory('${appDir.path}/manual_products');
     if (!await dir.exists()) {
       await dir.create(recursive: true);
     }

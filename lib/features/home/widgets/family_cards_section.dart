@@ -78,195 +78,53 @@ class _EmptyFamilyState extends StatelessWidget {
 }
 
 /// Variants:
-///   1 → large
-///   2 → row of compact
-///   3 → 1 large + 2 compact
-///   4 → 2x2 grid of compact
-///   5+ → 2x2 grid + horizontal mini scroll
+///   1~4명 → large 카드 세로 스택 (보충 필요 영양소는 멤버 상세에서만 노출)
+///   5명+ → compact 2-col 그리드 (작은 카드)
 class _DynamicLayout extends StatelessWidget {
   final List<FamilyMember> members;
   const _DynamicLayout({required this.members});
 
   @override
   Widget build(BuildContext context) {
-    if (members.length == 1) {
-      return FamilyMemberCard(
-        member: members.first,
-        variant: FamilyCardVariant.large,
-      );
+    if (members.length <= 4) {
+      final children = <Widget>[];
+      for (var i = 0; i < members.length; i++) {
+        if (i > 0) children.add(const SizedBox(height: 10));
+        children.add(FamilyMemberCard(
+          member: members[i],
+          variant: FamilyCardVariant.large,
+        ));
+      }
+      return Column(children: children);
     }
-    if (members.length == 2) {
-      return IntrinsicHeight(
+    // 5명+
+    final rows = <Widget>[];
+    for (var i = 0; i < members.length; i += 2) {
+      if (rows.isNotEmpty) rows.add(const SizedBox(height: 10));
+      rows.add(IntrinsicHeight(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Expanded(
               child: FamilyMemberCard(
-                member: members[0],
+                member: members[i],
                 variant: FamilyCardVariant.compact,
               ),
             ),
             const SizedBox(width: 10),
-            Expanded(
-              child: FamilyMemberCard(
-                member: members[1],
-                variant: FamilyCardVariant.compact,
-              ),
-            ),
+            if (i + 1 < members.length)
+              Expanded(
+                child: FamilyMemberCard(
+                  member: members[i + 1],
+                  variant: FamilyCardVariant.compact,
+                ),
+              )
+            else
+              const Expanded(child: SizedBox()),
           ],
         ),
-      );
+      ));
     }
-    if (members.length == 3) {
-      return Column(
-        children: [
-          FamilyMemberCard(
-            member: members[0],
-            variant: FamilyCardVariant.large,
-          ),
-          const SizedBox(height: 10),
-          IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  child: FamilyMemberCard(
-                    member: members[1],
-                    variant: FamilyCardVariant.compact,
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: FamilyMemberCard(
-                    member: members[2],
-                    variant: FamilyCardVariant.compact,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      );
-    }
-    if (members.length == 4) {
-      return _Grid2x2(members: members);
-    }
-    // 5+
-    return Column(
-      children: [
-        _Grid2x2(members: members.sublist(0, 4)),
-        const SizedBox(height: 10),
-        _MiniScroll(members: members.sublist(4)),
-      ],
-    );
-  }
-}
-
-class _Grid2x2 extends StatelessWidget {
-  final List<FamilyMember> members;
-  const _Grid2x2({required this.members});
-
-  @override
-  Widget build(BuildContext context) {
-    Widget row(int a, int b) => IntrinsicHeight(
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: FamilyMemberCard(
-                  member: members[a],
-                  variant: FamilyCardVariant.compact,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: FamilyMemberCard(
-                  member: members[b],
-                  variant: FamilyCardVariant.compact,
-                ),
-              ),
-            ],
-          ),
-        );
-
-    return Column(
-      children: [
-        row(0, 1),
-        const SizedBox(height: 10),
-        row(2, 3),
-      ],
-    );
-  }
-}
-
-class _MiniScroll extends StatelessWidget {
-  final List<FamilyMember> members;
-  const _MiniScroll({required this.members});
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 130,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.zero,
-        itemCount: members.length + 1,
-        separatorBuilder: (_, _) => const SizedBox(width: 10),
-        itemBuilder: (context, index) {
-          if (index == members.length) {
-            return _AddSlot(
-              onTap: () => context.push('/onboarding/family-add'),
-            );
-          }
-          return SizedBox(
-            width: 110,
-            child: FamilyMemberCard(
-              member: members[index],
-              variant: FamilyCardVariant.mini,
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _AddSlot extends StatelessWidget {
-  final VoidCallback onTap;
-  const _AddSlot({required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(AppRadius.r14),
-        onTap: onTap,
-        child: Container(
-          width: 110,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(AppRadius.r14),
-            border: Border.all(
-              color: AppColors.hairline,
-              width: 1.5,
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('＋', style: TextStyle(fontSize: 18, color: AppColors.muted)),
-              const SizedBox(height: 4),
-              Text(
-                '가족 추가',
-                style: AppTypography.caption.copyWith(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    return Column(children: rows);
   }
 }
