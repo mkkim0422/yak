@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/data/kdris_2025.dart';
 import '../../../core/data/models/product_model.dart';
+import '../../../core/data/models/user_product_photo.dart';
 import '../../../core/data/nutrient_evaluation.dart';
 import '../../../core/data/nutrient_labels.dart';
 import '../../../core/data/product_category_meta.dart';
@@ -19,6 +23,7 @@ import '../../../core/widgets/product_image.dart';
 import '../../../core/widgets/state_views.dart';
 import '../../family/models/family_member.dart';
 import '../../family/providers/family_provider.dart';
+import '../providers/user_product_photo_provider.dart';
 
 /// Detail page for a curated product (250-DB entry). Renders photo,
 /// dosage, category benefit, ingredients table, cautions and external
@@ -79,6 +84,8 @@ class ProductDetailScreen extends ConsumerWidget {
         children: [
           _Header(product: product),
           const SizedBox(height: 16),
+          _MyPhotosSection(productId: product.id),
+          const SizedBox(height: 16),
           _IntakeSection(product: product),
           const SizedBox(height: 16),
           _CategoryBenefitSection(meta: meta, category: product.category),
@@ -133,6 +140,266 @@ class _Header extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// 사용자가 큐레이션 영양제(250 DB)에 자기 사진을 부착할 수 있는 섹션.
+/// 사진 0장 → 안내 + "내 사진 추가" 버튼.
+/// 사진 1+장 → 가로 스크롤 썸네일 + 끝에 "+" 타일. 썸네일 탭 → 삭제 다이얼로그.
+class _MyPhotosSection extends ConsumerWidget {
+  final String productId;
+  const _MyPhotosSection({required this.productId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncPhotos = ref.watch(userProductPhotosProvider(productId));
+    return AlyakCard(
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _SectionTitle('📸 내 사진'),
+          const SizedBox(height: 4),
+          Text(
+            '약통 라벨이나 복용 모습을 남기면 다음 구매·관리에 도움돼요.',
+            style: AppTypography.caption.copyWith(
+              fontSize: 11.5,
+              color: AppColors.muted,
+            ),
+          ),
+          const SizedBox(height: 10),
+          asyncPhotos.when(
+            loading: () => const SizedBox(
+              height: 96,
+              child: Center(
+                child: SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            ),
+            error: (_, _) => _AddPhotoButton(
+              onTap: () => _pick(context, ref),
+            ),
+            data: (photos) => photos.isEmpty
+                ? _AddPhotoButton(onTap: () => _pick(context, ref))
+                : _PhotoStrip(
+                    photos: photos,
+                    onAdd: () => _pick(context, ref),
+                    onTapPhoto: (p) => _confirmDelete(context, ref, p),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _pick(BuildContext context, WidgetRef ref) async {
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      backgroundColor: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(AppRadius.r20),
+        ),
+      ),
+      builder: (sctx) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.photo_camera_outlined),
+              title: const Text('카메라 촬영'),
+              onTap: () => Navigator.of(sctx).pop(ImageSource.camera),
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library_outlined),
+              title: const Text('사진 보관함'),
+              onTap: () => Navigator.of(sctx).pop(ImageSource.gallery),
+            ),
+            ListTile(
+              leading: const Icon(Icons.close),
+              title: const Text('취소'),
+              onTap: () => Navigator.of(sctx).pop(),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (source == null) return;
+    final repo = ref.read(userProductPhotoRepositoryProvider);
+    final src = source == ImageSource.camera
+        ? await repo.pickFromCamera()
+        : await repo.pickFromGallery();
+    if (src == null) return;
+    await repo.add(productId: productId, src: src);
+    ref.invalidate(userProductPhotosProvider(productId));
+  }
+
+  Future<void> _confirmDelete(
+    BuildContext context,
+    WidgetRef ref,
+    UserProductPhoto photo,
+  ) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (dctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r20),
+        ),
+        title: const Text('사진을 삭제할까요?'),
+        content: const Text('이 사진은 기기에서 완전히 삭제됩니다.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dctx).pop(false),
+            child: const Text('취소'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dctx).pop(true),
+            child: const Text('삭제'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    final repo = ref.read(userProductPhotoRepositoryProvider);
+    await repo.remove(productId: productId, photoId: photo.id);
+    ref.invalidate(userProductPhotosProvider(productId));
+  }
+}
+
+class _AddPhotoButton extends StatelessWidget {
+  final VoidCallback onTap;
+  const _AddPhotoButton({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppRadius.r12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.r12),
+        onTap: onTap,
+        child: Container(
+          height: 96,
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.r12),
+            border: Border.all(color: AppColors.divider, width: 1.5),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.add_a_photo_outlined,
+                  size: 18, color: AppColors.primary),
+              const SizedBox(width: 8),
+              Text(
+                '내 사진 추가',
+                style: AppTypography.title.copyWith(
+                  fontSize: 14,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PhotoStrip extends StatelessWidget {
+  final List<UserProductPhoto> photos;
+  final VoidCallback onAdd;
+  final void Function(UserProductPhoto) onTapPhoto;
+  const _PhotoStrip({
+    required this.photos,
+    required this.onAdd,
+    required this.onTapPhoto,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 96,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.zero,
+        itemCount: photos.length + 1,
+        separatorBuilder: (_, _) => const SizedBox(width: 8),
+        itemBuilder: (context, index) {
+          if (index == photos.length) {
+            return _AddTile(onTap: onAdd);
+          }
+          final p = photos[index];
+          return _PhotoTile(photo: p, onTap: () => onTapPhoto(p));
+        },
+      ),
+    );
+  }
+}
+
+class _PhotoTile extends StatelessWidget {
+  final UserProductPhoto photo;
+  final VoidCallback onTap;
+  const _PhotoTile({required this.photo, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      borderRadius: BorderRadius.circular(AppRadius.r12),
+      clipBehavior: Clip.antiAlias,
+      color: AppColors.divider,
+      child: InkWell(
+        onTap: onTap,
+        child: SizedBox(
+          width: 96,
+          height: 96,
+          child: Image.file(
+            File(photo.photoPath),
+            fit: BoxFit.cover,
+            errorBuilder: (_, _, _) => const Center(
+              child: Icon(Icons.broken_image_outlined,
+                  size: 24, color: AppColors.muted),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AddTile extends StatelessWidget {
+  final VoidCallback onTap;
+  const _AddTile({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppRadius.r12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.r12),
+        onTap: onTap,
+        child: Container(
+          width: 96,
+          height: 96,
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.r12),
+            border: Border.all(color: AppColors.divider, width: 1.5),
+          ),
+          child: const Center(
+            child: Icon(Icons.add_a_photo_outlined,
+                size: 22, color: AppColors.primary),
+          ),
+        ),
+      ),
     );
   }
 }

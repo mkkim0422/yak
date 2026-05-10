@@ -11,7 +11,8 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
 
-    <!-- 사진: 프로필 사진 등록 — 멤버 수정 화면에서만 호출. -->
+    <!-- 사진: 프로필 / 영양제 사진 등록 — 가족 멤버 수정·영양제 상세·
+         직접 입력 화면에서 호출. 권한 자체는 V1 출시 전부터 동일. -->
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
