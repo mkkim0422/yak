@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../core/data/kdris_2025.dart';
 import '../../../core/data/models/product_model.dart';
 import '../../../core/data/models/user_product_photo.dart';
+import '../../../core/data/models/user_product_review.dart';
 import '../../../core/data/nutrient_evaluation.dart';
 import '../../../core/data/nutrient_labels.dart';
 import '../../../core/data/product_category_meta.dart';
@@ -24,6 +25,7 @@ import '../../../core/widgets/state_views.dart';
 import '../../family/models/family_member.dart';
 import '../../family/providers/family_provider.dart';
 import '../providers/user_product_photo_provider.dart';
+import '../providers/user_product_review_provider.dart';
 
 /// Detail page for a curated product (250-DB entry). Renders photo,
 /// dosage, category benefit, ingredients table, cautions and external
@@ -85,6 +87,8 @@ class ProductDetailScreen extends ConsumerWidget {
           _Header(product: product),
           const SizedBox(height: 16),
           _MyPhotosSection(productId: product.id),
+          const SizedBox(height: 16),
+          _MyReviewSection(productId: product.id),
           const SizedBox(height: 16),
           _IntakeSection(product: product),
           const SizedBox(height: 16),
@@ -400,6 +404,278 @@ class _AddTile extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// 큐레이션 영양제에 대한 사용자 단일 후기. V1 정책: productId 당 1개
+/// 고정(덮어쓰기). 후기 없음→"후기 작성" 버튼, 있음→본문+수정/삭제.
+/// 입력은 200자 multiline 다이얼로그(글자수 표시).
+class _MyReviewSection extends ConsumerWidget {
+  final String productId;
+  const _MyReviewSection({required this.productId});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncReview = ref.watch(userProductReviewProvider(productId));
+    return AlyakCard(
+      padding: const EdgeInsets.all(14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _SectionTitle('📝 내 후기'),
+          const SizedBox(height: 4),
+          Text(
+            '본인만 볼 수 있어요. 외부에 공유되지 않아요.',
+            style: AppTypography.caption.copyWith(
+              fontSize: 11.5,
+              color: AppColors.muted,
+            ),
+          ),
+          const SizedBox(height: 10),
+          asyncReview.when(
+            loading: () => const SizedBox(
+              height: 56,
+              child: Center(
+                child: SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+              ),
+            ),
+            error: (_, _) => _ReviewEmpty(
+              onTap: () => _edit(context, ref, current: null),
+            ),
+            data: (review) => review == null
+                ? _ReviewEmpty(
+                    onTap: () => _edit(context, ref, current: null),
+                  )
+                : _ReviewBody(
+                    review: review,
+                    onEdit: () => _edit(context, ref, current: review),
+                    onDelete: () => _confirmDelete(context, ref),
+                  ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _edit(
+    BuildContext context,
+    WidgetRef ref, {
+    required UserProductReview? current,
+  }) async {
+    final result = await showDialog<String>(
+      context: context,
+      builder: (dctx) => _ReviewEditDialog(initial: current?.review ?? ''),
+    );
+    if (result == null) return; // 취소
+    final repo = ref.read(userProductReviewRepositoryProvider);
+    await repo.save(productId: productId, text: result);
+    ref.invalidate(userProductReviewProvider(productId));
+  }
+
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (dctx) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.r20),
+        ),
+        title: const Text('후기를 삭제할까요?'),
+        content: const Text('작성한 후기가 기기에서 완전히 삭제됩니다.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dctx).pop(false),
+            child: const Text('취소'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(dctx).pop(true),
+            child: const Text('삭제'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true) return;
+    final repo = ref.read(userProductReviewRepositoryProvider);
+    await repo.clear(productId);
+    ref.invalidate(userProductReviewProvider(productId));
+  }
+}
+
+class _ReviewEmpty extends StatelessWidget {
+  final VoidCallback onTap;
+  const _ReviewEmpty({required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.surface,
+      borderRadius: BorderRadius.circular(AppRadius.r12),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.r12),
+        onTap: onTap,
+        child: Container(
+          height: 56,
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(AppRadius.r12),
+            border: Border.all(color: AppColors.divider, width: 1.5),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.edit_outlined,
+                  size: 18, color: AppColors.primary),
+              const SizedBox(width: 8),
+              Text(
+                '후기 작성',
+                style: AppTypography.title.copyWith(
+                  fontSize: 14,
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ReviewBody extends StatelessWidget {
+  final UserProductReview review;
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
+  const _ReviewBody({
+    required this.review,
+    required this.onEdit,
+    required this.onDelete,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: AppColors.primarySoft,
+            borderRadius: BorderRadius.circular(AppRadius.r12),
+          ),
+          child: Text(
+            review.review,
+            style: AppTypography.body2.copyWith(
+              fontSize: 13.5,
+              color: AppColors.ink,
+              height: 1.5,
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            TextButton.icon(
+              onPressed: onEdit,
+              icon: const Icon(Icons.edit_outlined, size: 16),
+              label: const Text('수정'),
+            ),
+            TextButton.icon(
+              onPressed: onDelete,
+              icon: const Icon(Icons.delete_outline, size: 16),
+              label: const Text('삭제'),
+              style: TextButton.styleFrom(foregroundColor: AppColors.danger),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _ReviewEditDialog extends StatefulWidget {
+  final String initial;
+  const _ReviewEditDialog({required this.initial});
+
+  @override
+  State<_ReviewEditDialog> createState() => _ReviewEditDialogState();
+}
+
+class _ReviewEditDialogState extends State<_ReviewEditDialog> {
+  late final TextEditingController _ctrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = TextEditingController(text: widget.initial);
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: AppColors.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppRadius.r20),
+      ),
+      title: const Text('내 후기'),
+      content: AnimatedBuilder(
+        animation: _ctrl,
+        builder: (context, _) {
+          final len = _ctrl.text.length;
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              SizedBox(
+                width: double.maxFinite,
+                child: TextField(
+                  controller: _ctrl,
+                  maxLength: UserProductReview.kMaxReviewLength,
+                  maxLines: 5,
+                  minLines: 3,
+                  autofocus: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: '예: 흡수가 잘 되는 느낌이에요',
+                    counterText: '',
+                  ),
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '$len / ${UserProductReview.kMaxReviewLength}',
+                style: AppTypography.caption.copyWith(
+                  fontSize: 11,
+                  color: AppColors.muted,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('취소'),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(context).pop(_ctrl.text),
+          child: const Text('저장'),
+        ),
+      ],
     );
   }
 }

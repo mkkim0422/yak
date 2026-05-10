@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/data/models/product_model.dart';
+import '../../../core/data/models/user_product_review.dart';
 import '../../../core/data/product_repository.dart';
 import '../../../core/notifications/notification_provider.dart';
 import '../../../core/services/conflict_checker.dart';
@@ -64,6 +65,7 @@ class _ManualSupplementInputScreenState
   final _customIntakes = TextEditingController();
   final _customCategory = TextEditingController();
   final _intakeNote = TextEditingController();
+  final _review = TextEditingController();
 
   String _category = _categories.first;
   IntakeTiming _timing = IntakeTiming.anyTimeAfterMeal;
@@ -138,6 +140,7 @@ class _ManualSupplementInputScreenState
         }
         _intakeNote.text = entry.intakeNote ?? '';
         _imagePath = entry.imagePath;
+        _review.text = entry.review ?? '';
       }
     }
   }
@@ -151,6 +154,7 @@ class _ManualSupplementInputScreenState
     _customIntakes.dispose();
     _customCategory.dispose();
     _intakeNote.dispose();
+    _review.dispose();
     super.dispose();
   }
 
@@ -321,6 +325,10 @@ class _ManualSupplementInputScreenState
     final note = _intakeNote.text.trim().isEmpty
         ? null
         : _intakeNote.text.trim();
+    // 후기 메모는 [UserProductReview.sanitize]로 trim/태그 제거/200자 cap.
+    // 빈 문자열은 null로 저장(모델 의미: "후기 없음").
+    final reviewSanitized = UserProductReview.sanitize(_review.text);
+    final review = reviewSanitized.isEmpty ? null : reviewSanitized;
 
     final controller = ref.read(familyControllerProvider);
     final member = controller.getMember(widget.memberId);
@@ -329,9 +337,9 @@ class _ManualSupplementInputScreenState
     if (_editing != null) {
       // copyWith의 `imagePath ?? this.imagePath` 패턴이 null 전달을 흡수하므로
       // 사진 제거 케이스를 위해 명시적으로 새 인스턴스 구성. ingredients /
-      // priceKrw / startedAt 등은 기존 값을 그대로 보존. V1.x 예정 필드
-      // (userPhotoPath / endedAt / review)도 편집 시 손실되지 않도록 그대로
-      // 전달 — V1엔 UI 노출이 없어 사용자가 직접 변경할 수 없음.
+      // priceKrw / startedAt 등은 기존 값을 그대로 보존. userPhotoPath /
+      // endedAt 은 V1.x 예정 필드라 V1엔 사용자 입력 경로가 없어 그대로
+      // 전달. review 는 단계 8부터 본 화면에서 직접 편집.
       final updatedEntry = ManualProductEntry(
         id: _editing!.id,
         name: name,
@@ -345,7 +353,7 @@ class _ManualSupplementInputScreenState
         ingredients: _editing!.ingredients,
         startedAt: _editing!.startedAt,
         endedAt: _editing!.endedAt,
-        review: _editing!.review,
+        review: review,
         intakeTiming: timing,
         dosePerIntake: dose,
         intakesPerDay: intakes,
@@ -369,6 +377,7 @@ class _ManualSupplementInputScreenState
         imagePath: _imagePath,
         ingredients: const {},
         startedAt: DateTime.now(),
+        review: review,
         intakeTiming: timing,
         dosePerIntake: dose,
         intakesPerDay: intakes,
@@ -616,6 +625,18 @@ class _ManualSupplementInputScreenState
               hintText: '예: 공복 또는 식전 30분, 분복 권장',
             ),
             maxLines: 2,
+          ),
+          const SizedBox(height: 12),
+          _label('내 후기 (선택, ${UserProductReview.kMaxReviewLength}자 이내)'),
+          TextField(
+            controller: _review,
+            maxLength: UserProductReview.kMaxReviewLength,
+            maxLines: 4,
+            minLines: 2,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: '예: 흡수가 잘 되는 느낌이에요',
+            ),
           ),
           const SizedBox(height: 24),
           PrimaryButton(
