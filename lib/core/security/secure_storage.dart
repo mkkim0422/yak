@@ -54,6 +54,13 @@ class SecureKeys {
   static const String reorderDate = 'alyak.reorder.date';
   static const String sessionLastActive = 'alyak.session.lastActive';
 
+  /// Admin 모드 인증 잠금 카운터/만료. 비밀번호 해시 자체는 빌드 시
+  /// `--dart-define=ADMIN_PASSWORD_HASH=...`로 주입되어 SecureStorage엔
+  /// 저장하지 않음 — APK 유출 시 해시가 디바이스 저장소에서 발견되지
+  /// 않도록. 본 두 키는 잠금 상태 영속용.
+  static const String adminFailCount = 'alyak.admin.fail_count';
+  static const String adminLockedUntil = 'alyak.admin.locked_until';
+
   static String familyDraft(String memberId) => 'alyak.family.draft.$memberId';
   static String checkin(String memberId, String yyyymmdd) =>
       'alyak.checkin.$memberId.$yyyymmdd';

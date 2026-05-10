@@ -9,6 +9,8 @@ import '../core/security/session_guard.dart';
 import '../core/theme/app_colors.dart';
 import '../core/theme/app_typography.dart';
 import '../core/widgets/state_views.dart';
+import '../features/admin/screens/admin_login_screen.dart';
+import '../features/admin/screens/admin_stats_screen.dart';
 import '../features/current_check/screens/current_check_screen.dart';
 import '../features/family/models/family_member.dart';
 import '../features/family/providers/family_provider.dart';
@@ -213,8 +215,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/admin',
-        builder: (context, state) =>
-            const _Placeholder(title: '관리자'),
+        builder: (context, state) => const _AdminGate(),
       ),
     ],
   );
@@ -389,6 +390,28 @@ class _NotFoundScreen extends StatelessWidget {
         retryLabel: '홈으로',
         onRetry: () => context.go('/home'),
       ),
+    );
+  }
+}
+
+/// 인메모리 인증 게이트 — 미인증 시 [AdminLoginScreen], 인증 통과 시
+/// [AdminStatsScreen]. 앱 재시작 / 라우트 재진입 시 다시 인증 필요. 보안상
+/// 토큰을 SecureStorage에 두지 않음.
+class _AdminGate extends StatefulWidget {
+  const _AdminGate();
+
+  @override
+  State<_AdminGate> createState() => _AdminGateState();
+}
+
+class _AdminGateState extends State<_AdminGate> {
+  bool _authed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    if (_authed) return const AdminStatsScreen();
+    return AdminLoginScreen(
+      onAuthenticated: () => setState(() => _authed = true),
     );
   }
 }

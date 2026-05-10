@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter/services.dart';
 
 import '../../../core/notifications/notification_provider.dart';
+import '../../../core/security/admin_auth_service.dart';
 import '../../../core/security/secure_storage.dart';
 import '../../../core/services/data_export_service.dart';
 import '../../../core/theme/app_colors.dart';
@@ -29,6 +30,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   TimeOfDay _evening = const TimeOfDay(hour: 20, minute: 0);
   int _reorderLeadDays = 3;
   bool _loaded = false;
+
+  /// "앱 정보" 항목 이스터에그 — 7번 연속 탭 시 /admin 라우트 진입.
+  /// 빌드에 ADMIN_PASSWORD_HASH 가 주입되지 않은 빌드(소비자용)는 비활성
+  /// 토스트 후 무시.
+  int _appInfoTaps = 0;
+  DateTime? _lastAppInfoTap;
 
   Future<void> _load() async {
     if (_loaded) return;
@@ -136,6 +143,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ),
       );
     }
+  }
+
+  /// 7번 연속 탭(2초 이내) → /admin. 비활성 빌드는 묵묵히 무시.
+  void _onAppInfoTap() {
+    final now = DateTime.now();
+    if (_lastAppInfoTap != null &&
+        now.difference(_lastAppInfoTap!) > const Duration(seconds: 2)) {
+      _appInfoTaps = 0;
+    }
+    _lastAppInfoTap = now;
+    _appInfoTaps++;
+    if (_appInfoTaps < 7) return;
+    _appInfoTaps = 0;
+    if (!AdminAuthService().isEnabled) return;
+    context.push('/admin');
   }
 
   Future<void> _confirmWipe() async {
@@ -336,10 +358,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 title: '면책 조항',
                 onTap: () => context.push('/disclaimer'),
               ),
-              const _SettingItem(
+              _SettingItem(
                 emoji: 'ℹ️',
                 title: '앱 정보',
                 sub: '버전 1.0.0',
+                onTap: _onAppInfoTap,
               ),
             ],
           ),
